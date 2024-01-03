@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <section class="article-area">
+        <div style="width: 60%;">
+            <div style="display: flex; flex-direction: column;">
+            @foreach (var article in Model.Articles.OrderByDescending(x => x.UpdatedDate))
+            {
+                <article>
+                    <div>
+                        <img style="width: 100%;" src="@article.ImagePath" alt="Card image cap">
+                    </div>
+                    
+                    <div class="article-text">
+                        <h5>@article.Title</h5>
+                        <p>@article.CreatedDate</p>
+                        <a href="@Model.GetFinalDirectory(article)" class="btn btn-primary">Link</a>
+                    </div>
+                </article>
+            }
+            </div>
+        </div>
+        <aside style="width: 40%; height: 100%; border: 1px solid lightgray; padding: 10px;">
+            <div>
+                <h2>Follow the Cryptozoic team on X for more game updates!</h2>
+                <a href="https://twitter.com/Cryptozoic?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow Cryptozoic</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+            <div>
+                <h2>Share feedback with the creator of this website</h2>
+                <a href="https://twitter.com/intent/tweet?screen_name=itderrickh&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-show-count="false">Tweet to itderrickh</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>            
+        </aside>
+    </section>
+
+
+    <style>
+        section.article-area {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        article {
+            border: 1px solid lightgray;
+            margin: 0px 5px 10px 5px;
+        }
+
+        article .article-text {
+            padding: 10px 5px;
+        }
+
+        aside {
+            margin-bottom: 10px;
+        }
+    </style>
+</div>

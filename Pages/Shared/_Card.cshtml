@@ -1,0 +1,25 @@
+﻿@model Models.CardViewModel
+
+<div style="width: 120px;"
+     class="card-container"
+     data-id="@Model.Card.Id"
+     data-card-image="@("/CardImages/" + Model.Card.ImageUrl)"
+     data-card-type="@Model.Card.CardType"
+     data-landscape="@(Model.Card.Landscape.HasValue ? Model.Card.Landscape.ToString() : "")"
+     data-name="@Model.Card.Name"
+     data-ability="@Model.Card.Ability"
+     data-cost="@(Model.Card.Cost.HasValue ? Model.Card.Cost.ToString() : "")"
+     data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
+     data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
+    <div class="card">
+        <img src="@("/CardImages/" + Model.Card.ImageUrl)" style="width: 100%;" />
+        @if (Model.IsAddable)
+        {
+            <div class="card-overlay add"></div>
+        }
+        @if (Model.IsDeleteable)
+        {
+            <div class="card-overlay remove"></div>
+        }
+    </div>
+</div>

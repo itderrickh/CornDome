@@ -1,0 +1,169 @@
+﻿@page
+@model CornDome.Pages.CardDatabaseModel
+@{
+    ViewData["Title"] = "Card Database";
+}
+
+<div>
+    <fieldset id="filterBox">
+        <legend>Filters</legend>
+        <div class="filter-group">
+            <label for="cardTypeFilter">Card Type: </label>
+            <select id="cardTypeFilter">
+                <option value="">- None -</option>
+                <option value="@CardType.Creature">Creature</option>
+                <option value="@CardType.Spell">Spell</option>
+                <option value="@CardType.Building">Building</option>
+                <option value="@CardType.Hero">Hero</option>
+                <option value="@CardType.Landscape">Landscape</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="landscapeFilter">Landscape: </label>
+            <select id="landscapeFilter">
+                <option value="">- None -</option>
+                <option value="@Landscape.BluePlains">Blue Plains</option>
+                <option value="@Landscape.CornFields">Cornfields</option>
+                <option value="@Landscape.UselessSwamp">Useless Swamp</option>
+                <option value="@Landscape.SandyLands">SandyLands</option>
+                <option value="@Landscape.NiceLands">NiceLands</option>
+                <option value="@Landscape.IcyLands">IcyLands</option>
+                <option value="@Landscape.Rainbow">Rainbow</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="nameFilter">Name: </label>
+            <input type="text" id="nameFilter" />
+        </div>
+        <div class="filter-group">
+            <label for="abilityFilter">Ability: </label>
+            <input type="text" id="abilityFilter" />
+        </div>
+        <div class="filter-group">
+            <label for="costFilter">Cost: </label>
+            <input type="number" id="costFilter" />
+        </div>
+        <div class="filter-group">
+            <label for="attackFilter">Attack: </label>
+            <input type="number" id="attackFilter" />
+        </div>
+        <div class="filter-group">
+            <label for="defenseFilter">Defense: </label>
+            <input type="number" id="defenseFilter" />
+        </div>
+    </fieldset>
+</div>
+
+<div>
+    <div style="display: flex; flex-wrap: wrap;">
+        @foreach (var card in Model.Cards)
+        {
+            CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true };
+            <a asp-page="/Card" asp-route-id="@card.Id">
+                <partial name="_Card" model="cvm" />
+            </a>
+        }
+    </div>
+</div>
+
+<script>
+    var filterFunctions = {
+        cardType: '',
+        landscape: '',
+        attack: null,
+        defense: null,
+        cost: null,
+        name: '',
+        ability: ''
+    };
+
+    function filterDataset() {
+        var elements = document.querySelectorAll('.card-container');
+        for (var ele of elements) {
+            var actions = [];
+            if (filterFunctions.cardType !== "")
+                actions.push(ele.dataset.cardType === filterFunctions.cardType)
+            if (filterFunctions.landscape !== "")
+                actions.push(ele.dataset.landscape === filterFunctions.landscape);
+            if (filterFunctions.cost !== null)
+                actions.push(parseInt(ele.dataset.cost) === filterFunctions.cost);
+            if (filterFunctions.attack !== null)
+                actions.push(parseInt(ele.dataset.attack) === filterFunctions.attack);
+            if (filterFunctions.defense !== null)
+                actions.push(parseInt(ele.dataset.defense) === filterFunctions.defense);
+            if (filterFunctions.name !== '')
+                actions.push(ele.dataset.name.indexOf(filterFunctions.name) > -1);
+            if (filterFunctions.ability !== '')
+                actions.push(ele.dataset.ability.indexOf(filterFunctions.ability) > -1);
+
+            if (actions.every(v => v)) {
+                ele.style.display = "inherit";
+            } else {
+                ele.style.display = "none";
+            }
+        }
+    }
+
+    document.getElementById("cardTypeFilter").onchange = function () {
+        filterFunctions.cardType = this.value;
+        filterDataset();
+    };
+
+    document.getElementById("landscapeFilter").onchange = function () {
+        filterFunctions.landscape = this.value;
+        filterDataset();
+    };
+
+    document.getElementById("costFilter").oninput = function () {
+        filterFunctions.cost = this.value !== "" ? parseInt(this.value) : null;
+        filterDataset();
+    };
+
+    document.getElementById("attackFilter").oninput = function () {
+        filterFunctions.attack = this.value !== "" ? parseInt(this.value) : null;
+        filterDataset();
+    };
+
+    document.getElementById("defenseFilter").oninput = function () {
+        filterFunctions.defense = this.value !== "" ? parseInt(this.value) : null;
+        filterDataset();
+    };
+
+    document.getElementById("abilityFilter").oninput = function () {
+        filterFunctions.ability = this.value;
+        filterDataset();
+    };
+
+    document.getElementById("nameFilter").oninput = function () {
+        filterFunctions.name = this.value;
+        filterDataset();
+    };
+</script>
+
+<style>
+    fieldset {
+        padding: 10px;
+        border: 1px solid lightgray;
+        margin-bottom: 20px;
+    }
+
+    #filterBox .filter-group {
+        margin-bottom: 5px;
+    }
+
+    #filterBox label {
+        width: 25%;
+        text-align: right;
+    }
+
+    #filterBox input, #filterBox select {
+        width: 70%;
+    }
+
+    .card:hover {
+        transform: scale(2);
+        transition: transform .2s;
+        z-index: 1000;
+        position: relative;
+    }
+</style>

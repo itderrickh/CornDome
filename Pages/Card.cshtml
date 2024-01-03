@@ -1,0 +1,65 @@
+﻿@page
+@model CornDome.Pages.CardModel
+@{
+    ViewData["Title"] = Model.QueryCard.Name;
+}
+
+@if (Model.QueryCard == null)
+{
+    <h1>Invalid card ID.</h1>
+}
+else
+{
+    <div>
+        <h1>@Model.QueryCard.Name</h1>
+    </div>
+    <div style="display: flex;">
+        <div style="width: 50%">
+            <img src="@("/CardImages/" + Model.QueryCard.ImageUrl)" />
+        </div>
+        <div style="width: 50%">
+            <div>
+                <span class="bold-label">Card Type: </span><br /><span>@Model.QueryCard.CardType</span>
+            </div>
+            @if (Model.QueryCard.Landscape.HasValue)
+            {
+                <div>
+                    <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(Model.QueryCard.Landscape.Value)</span>
+                </div>
+            }
+            @if (Model.QueryCard.Ability != "")
+            {
+                <div>
+                    <span class="bold-label">Ability: </span><br /><span>@Model.QueryCard.Ability</span>
+                </div>
+            }
+            
+            @if (Model.QueryCard.Cost.HasValue)
+            {
+                <div>
+                    <span class="bold-label">Cost: </span><br /><span>@Model.QueryCard.Cost</span>
+                </div>
+            }
+            
+            @if (Model.QueryCard.Attack.HasValue)
+            {
+                <div>
+                    <span class="bold-label">Attack: </span><br /><span>@Model.QueryCard.Attack</span>
+                </div>
+            }
+            
+            @if (Model.QueryCard.Defense.HasValue)
+            {
+                <div>
+                    <span class="bold-label">Defense: </span><br /><span>@Model.QueryCard.Defense</span>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .bold-label {
+        font-weight: bold;
+    }
+</style>

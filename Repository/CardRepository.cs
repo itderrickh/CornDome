@@ -1,0 +1,44 @@
+﻿using CornDome.Models;
+using System.Text.Json;
+
+namespace CornDome.Repository
+{
+    public interface ICardRepository
+    {
+        IEnumerable<Card> GetAll();
+    }
+    public class CardRepository(string dataDirectory) : ICardRepository
+    {
+        private readonly string _dataDirectory = dataDirectory;
+
+        public IEnumerable<Card> GetAll()
+        {
+            return GetHeroes()
+                .Concat(GetBuildings())
+                .Concat(GetCreatures())
+                .Concat(GetLandscapes())
+                .Concat(GetSpells());
+        }
+
+        private List<Card> GetCardsFromJson(string file)
+        {
+            List<Card> cards = [];
+            var data = File.ReadAllText(Path.Combine(_dataDirectory, file));
+            if (!string.IsNullOrEmpty(data))
+            {
+                cards = JsonSerializer.Deserialize<IEnumerable<Card>>(data).ToList();
+            }
+            return cards;
+        }
+
+        private List<Card> GetHeroes() => GetCardsFromJson("hero.json");
+
+        private List<Card> GetCreatures() => GetCardsFromJson("creature.json");
+
+        private List<Card> GetBuildings() => GetCardsFromJson("building.json");
+
+        private List<Card> GetLandscapes() => GetCardsFromJson("landscape.json");
+
+        private List<Card> GetSpells() => GetCardsFromJson("spell.json");
+    }
+}

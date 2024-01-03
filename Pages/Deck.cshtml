@@ -1,0 +1,40 @@
+﻿@page
+@model CornDome.Pages.DeckModel
+@{
+    ViewData["Title"] = "Deck";
+}
+
+@if (Model.QueryDeck != null)
+{
+    <div style="display: flex;">
+        @if (Model.QueryDeck.Hero != null)
+        {
+            <div style="width: 20%;">
+                <img style="width: 100%;" src="@("/CardImages/" + Model.QueryDeck.Hero.ImageUrl)" />
+            </div>
+        }
+        
+        @foreach (var landscape in Model.QueryDeck.Landscapes)
+        {
+            <div style="width: 20%;">
+                <img style="width: 100%;" src="@("/CardImages/" + landscape.ImageUrl)" />
+            </div>
+        }
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap;">
+        @foreach (var card in Model.QueryDeck.Cards)
+        {
+            <div style="width: 10%;">
+                <img class="deck-card-image" style="width: 100%;" src="@("/CardImages/" + card.ImageUrl)" />
+            </div>
+        }
+    </div>
+
+    <style>
+        .deck-card-image:hover {
+            transform: scale(2);
+            transition: transform .2s;
+        }
+    </style>
+}
