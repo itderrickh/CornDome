@@ -8,15 +8,17 @@ namespace CornDome
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
-
+            
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddSingleton<ICardRepository, CardRepository>(cr => new CardRepository(config["Cards:Data"]));
+            var config = new Config()
+            {
+                AppData = new AppData() { DataPath = builder.Configuration["Cards:Data"], ImagePath = builder.Configuration["Cards:Images"] },
+                Branding = new Branding() { Title = builder.Configuration["Branding:Title"] },
+                ContentStore = new ContentStore() { Articles = builder.Configuration["ContentStore:Articles"], Images = builder.Configuration["ContentStore:Images"] }
+            };
+            builder.Services.AddSingleton(x => config);
+            builder.Services.AddSingleton<ICardRepository, CardRepository>();
 
             var app = builder.Build();
 
@@ -28,17 +30,16 @@ namespace CornDome
                 app.UseHsts();
             }
 
-            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(config["ContentStore:Images"]),
+                FileProvider = new PhysicalFileProvider(config.ContentStore.Images),
                 RequestPath = "/EmbeddedImages"
             });
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(config["Cards:Images"]),
+                FileProvider = new PhysicalFileProvider(config.AppData.ImagePath),
                 RequestPath = "/CardImages"
             });
 

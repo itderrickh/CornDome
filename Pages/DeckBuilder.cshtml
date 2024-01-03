@@ -4,9 +4,9 @@
     Layout = "_LayoutWide";
     ViewData["Title"] = "Deck Builder";
 }
-<div style="display: flex;">
+<div class="builder-area">
     <div class="tool-area">
-        <fieldset>
+        <fieldset class="stats">
             <legend>Stats</legend>
             <div><span class="info-stamp" title="The deck limit is 40 cards."></span> Total Cards: <span id="total-stat">0</span></div>
             <br />
@@ -181,129 +181,6 @@
     </script>
 }
 
-
-<style>
-    #actions .btn {
-        margin-bottom: 5px;
-    }
-    .btn-block {
-        width: 100%;
-        display: block;
-    }
-
-    fieldset {
-        padding: 10px;
-        border: 1px solid lightgray;
-        margin-bottom: 20px;
-    }
-
-    .info-stamp {
-        background-image: url('./img/info.png');
-        background-position: center;
-        background-size: cover;
-        width: 1em;
-        height: 1em;
-        display: inline-block;
-    }
-
-    #filterBox .filter-group {
-        margin-bottom: 5px;
-    }
-
-    #filterBox label {
-        width: 25%;
-        text-align: right;
-    }
-
-    #filterBox input, #filterBox select {
-        width: 70%;
-    }
-
-    .card:hover {
-        transform: scale(2);
-        transition: transform .2s;
-        z-index: 1000;
-        position: relative;
-    }
-
-    .card-overlay {
-        display: none;
-        position: absolute;
-        bottom: 25%;
-        width: 100%;
-        text-align: center;
-        
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        background-size: contain;
-        height: 50px;
-        width: 50px;
-    }
-
-    .deck-card {
-        width: 128px;
-    }
-
-    .add {
-        left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;
-        background-image: url('./img/add.png');
-    }
-
-    .remove {
-        left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;
-        background-image: url('./img/remove.png');
-    }
-
-    .card:hover .card-overlay {
-        display: block;
-        z-index: 1001;
-    }
-
-    .deck-area {
-        width: 50%;
-        margin-right: 10px;
-    }
-
-    .library-area {
-        width: 25%;
-    }
-
-    .tool-area {
-        width: 25%;
-        margin-right: 10px;
-    }
-
-    #deck-hero {
-        min-height: 100px;
-        background-color: lightgray;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        padding: 5px;
-    }
-
-    #deck-landscapes {
-        min-height: 100px;
-        background-color: lightgray;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        padding: 5px;
-    }
-
-    #deck-cards {
-        min-height: 100px;
-        background-color: lightgray;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        padding: 5px;
-    }
-</style>
+@section Styles {
+    <link rel="stylesheet" href="./css/deckbuilder.css" />
+}

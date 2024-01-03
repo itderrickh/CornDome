@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CornDome.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
@@ -26,6 +27,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="top-nav-item" asp-area="" asp-page="/CardDatabase">Card Database</a>
+                        </li>
+                        <li class="nav-item mobile-only">
+                            <a class="top-nav-item" asp-area="" asp-page="/LifeCounter">Life Counter</a>
                         </li>
                         <li class="nav-item">
                             <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank">Card Wars Discord</a>

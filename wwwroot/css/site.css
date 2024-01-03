@@ -53,3 +53,13 @@ body {
     margin-right: auto;
     width: 75%;
 }
+
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 575px) {
+    .mobile-only {
+        display: inherit;
+    }
+}

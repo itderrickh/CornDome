@@ -1,0 +1,37 @@
+﻿section.article-area {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+article {
+    border: 1px solid lightgray;
+    margin: 0px 5px 10px 5px;
+}
+
+    article .article-text {
+        padding: 10px 5px;
+    }
+
+aside {
+    margin-bottom: 10px;
+}
+
+.left-area {
+    width: 60%;
+}
+
+.right-area {
+    width: 40%;
+    height: 100%;
+    border: 1px solid lightgray;
+    padding: 10px;
+}
+
+@media (max-width: 1250px) {
+    .left-area, .right-area {
+        width: 100%;
+    }
+    section.article-area {
+        flex-wrap: wrap;
+    }
+}

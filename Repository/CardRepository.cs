@@ -7,9 +7,9 @@ namespace CornDome.Repository
     {
         IEnumerable<Card> GetAll();
     }
-    public class CardRepository(string dataDirectory) : ICardRepository
+    public class CardRepository(Config config) : ICardRepository
     {
-        private readonly string _dataDirectory = dataDirectory;
+        private readonly string _dataDirectory = config.AppData.DataPath;
 
         public IEnumerable<Card> GetAll()
         {
