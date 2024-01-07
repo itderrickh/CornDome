@@ -24,12 +24,12 @@ function filterDataset() {
             actions.push(parseInt(ele.dataset.defense) === filterFunctions.defense);
         if (filterFunctions.name !== '') {
             var name = ele.dataset.name.toLowerCase();
-            var filterName = filterFunctions.abilitytoLowerCase()
+            var filterName = filterFunctions.ability.toLowerCase()
             actions.push(name.indexOf(filterName) > -1);
         }
         if (filterFunctions.ability !== '') {
             var ability = ele.dataset.ability.toLowerCase();
-            var filterAbility = filterFunctions.abilitytoLowerCase()
+            var filterAbility = filterFunctions.ability.toLowerCase()
             actions.push(ability.indexOf(filterAbility) > -1);
         }
 
