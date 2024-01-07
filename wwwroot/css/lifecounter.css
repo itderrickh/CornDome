@@ -49,8 +49,8 @@ time, mark, audio, video {
     background-image: url('../img/lifebackground.jpg');
     background-size: contain;
     background-position: center;
-    overflow-x: none;
-    overflow-y: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 html, body {
