@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
     <title>@ViewBag.Title</title>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     @RenderBody()
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
