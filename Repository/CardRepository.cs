@@ -17,7 +17,8 @@ namespace CornDome.Repository
                 .Concat(GetBuildings())
                 .Concat(GetCreatures())
                 .Concat(GetLandscapes())
-                .Concat(GetSpells());
+                .Concat(GetSpells())
+                .Concat(GetTeamworks());
         }
 
         private List<Card> GetCardsFromJson(string file)
@@ -40,5 +41,7 @@ namespace CornDome.Repository
         private List<Card> GetLandscapes() => GetCardsFromJson("landscape.json");
 
         private List<Card> GetSpells() => GetCardsFromJson("spell.json");
+
+        private List<Card> GetTeamworks() => GetCardsFromJson("teamwork.json");
     }
 }

@@ -6,7 +6,8 @@
         Spell,
         Building,        
         Landscape,
-        Hero
+        Hero,
+        Teamwork
     }
 
     public static class CardTypeConverter
@@ -25,6 +26,8 @@
                     return "Landscape";
                 case CardType.Hero:
                     return "Hero";
+                case CardType.Teamwork:
+                    return "Teamwork";
                 default:
                     return "";
             }
