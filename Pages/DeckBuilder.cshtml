@@ -132,50 +132,14 @@
     <script src="./js/helpers.js"></script>
     <script src="./js/deckbuilder.rendering.js"></script>
     <script src="./js/deckbuilder.handlers.js"></script>
+    <script src="./js/filter.js"></script>
 
     <script>
-        var filterFunctions = {
-            cardType: '',
-            landscape: '',
-            attack: null,
-            defense: null,
-            cost: null,
-            name: '',
-            ability: ''
-        };
-
         var deck = {
             hero: null,
             landscapes: [],
             cards: []
         };
-
-        function filterDataset() {
-            var elements = document.querySelectorAll('.card-container');
-            for (var ele of elements) {
-                var actions = [];
-                if (filterFunctions.cardType !== "")
-                    actions.push(ele.dataset.cardType === filterFunctions.cardType)
-                if (filterFunctions.landscape !== "")
-                    actions.push(ele.dataset.landscape === filterFunctions.landscape);
-                if (filterFunctions.cost !== null)
-                    actions.push(parseInt(ele.dataset.cost) === filterFunctions.cost);
-                if (filterFunctions.attack !== null)
-                    actions.push(parseInt(ele.dataset.attack) === filterFunctions.attack);
-                if (filterFunctions.defense !== null)
-                    actions.push(parseInt(ele.dataset.defense) === filterFunctions.defense);
-                if (filterFunctions.name !== '')
-                    actions.push(ele.dataset.name.indexOf(filterFunctions.name) > -1);
-                if (filterFunctions.ability !== '')
-                    actions.push(ele.dataset.ability.indexOf(filterFunctions.ability) > -1);
-
-                if (actions.every(v => v)) {
-                    ele.style.display = "inherit";
-                } else {
-                    ele.style.display = "none";
-                }
-            }
-        }
 
         buildDeckIfExistsInQuery();
     </script>
