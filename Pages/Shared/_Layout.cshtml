@@ -44,11 +44,23 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @if (ViewData["RenderMode"] != null && ViewData["RenderMode"].ToString() == "wide")
+    {
+        <div class="container-fluid">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+    
 
     <footer class="border-top footer text-muted">
         <div class="disclaimer">
