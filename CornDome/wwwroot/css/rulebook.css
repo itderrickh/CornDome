@@ -1,0 +1,26 @@
+﻿.rulebook-page {
+    width: 33%;
+    margin-bottom: 10px;
+}
+
+.rulebook-page img {
+    width: 100%;
+}
+
+@media (max-width: 2100px) {
+    .rulebook-page {
+        width: 33%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .rulebook-page {
+        width: 50%;
+    }
+}
+
+@media (max-width: 700px) {
+    .rulebook-page {
+        width: 100%;
+    }
+}

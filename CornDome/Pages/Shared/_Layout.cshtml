@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <title>@Configuration.GetSection("Branding")["Title"] - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -13,9 +13,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-image: url('./img/background.webp')">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-image: url('/img/background.webp')">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index"><img style="height: 80px" src="./img/card-dweeb.png" /></a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img style="height: 80px" src="/img/card-dweeb.png" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,6 +31,15 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/CardDatabase">Card Database</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/TournamentResults">Tournament Results</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resources
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Resources/PreconDecklists">Collectors set decklists</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Resources/Rulebook">Official Rulebook</a></li>
                             </ul>
                         </li>
                         <li class="nav-item mobile-only">
