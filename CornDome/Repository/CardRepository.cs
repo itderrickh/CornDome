@@ -20,7 +20,8 @@ namespace CornDome.Repository
             "dbl.json",
             "ftg.json",
             "landscape.json",
-            "promo.json"
+            "promo.json",
+            "cwe.json"
         ];
 
         public IEnumerable<Card> GetAll()
