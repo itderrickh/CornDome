@@ -15,25 +15,17 @@
     {
         public static string ToString(Landscape cardType)
         {
-            switch (cardType)
+            return cardType switch
             {
-                case Landscape.BluePlains:
-                    return "Blue Plains";
-                case Landscape.CornFields:
-                    return "Cornfield";
-                case Landscape.UselessSwamp:
-                    return "Useless Swamp";
-                case Landscape.SandyLands:
-                    return "SandyLands";
-                case Landscape.NiceLands:
-                    return "NiceLands";
-                case Landscape.IcyLands:
-                    return "IcyLands";
-                case Landscape.Rainbow:
-                    return "Rainbow";
-                default:
-                    return "";
-            }
+                Landscape.BluePlains => "Blue Plains",
+                Landscape.CornFields => "Cornfield",
+                Landscape.UselessSwamp => "Useless Swamp",
+                Landscape.SandyLands => "SandyLands",
+                Landscape.NiceLands => "NiceLands",
+                Landscape.IcyLands => "IcyLands",
+                Landscape.Rainbow => "Rainbow",
+                _ => "",
+            };
         }
     }
 }

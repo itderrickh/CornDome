@@ -14,23 +14,16 @@
     {
         public static string ToString(CardType cardType)
         {
-            switch (cardType)
+            return cardType switch
             {
-                case CardType.Creature:
-                    return "Creature";
-                case CardType.Spell:
-                    return "Spell";
-                case CardType.Building:
-                    return "Building";
-                case CardType.Landscape:
-                    return "Landscape";
-                case CardType.Hero:
-                    return "Hero";
-                case CardType.Teamwork:
-                    return "Teamwork";
-                default:
-                    return "";
-            }
+                CardType.Creature => "Creature",
+                CardType.Spell => "Spell",
+                CardType.Building => "Building",
+                CardType.Landscape => "Landscape",
+                CardType.Hero => "Hero",
+                CardType.Teamwork => "Teamwork",
+                _ => "",
+            };
         }
     }
 }
