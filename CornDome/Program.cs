@@ -30,6 +30,8 @@ namespace CornDome
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
+
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
