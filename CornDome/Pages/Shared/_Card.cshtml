@@ -12,7 +12,7 @@
      data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
      data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
     <div class="card">
-        <img src="@("/CardImages/" + Model.Card.ImageUrl)" style="width: 100%;" />
+        <img src="@("/CardImages/" + Model.Card.ImageUrl)" alt="@Model.Card.Name" style="width: 100%;" />
         @if (Model.IsAddable)
         {
             <div class="card-overlay add"></div>

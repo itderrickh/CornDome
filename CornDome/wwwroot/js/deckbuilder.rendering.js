@@ -13,7 +13,7 @@ var template = function (card) {
     element.dataset.defense = card.defense;
     element.dataset.id = card.id;
 
-    element.innerHTML = `<img src="${card.cardImage}" style="width: 100%" /><div class="card-overlay remove"></div>`;
+    element.innerHTML = `<img src="${card.cardImage}" alt="${card.name}" style="width: 100%" /><div class="card-overlay remove"></div>`;
     return element;
 }
 
