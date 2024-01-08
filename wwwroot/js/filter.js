@@ -24,7 +24,7 @@ function filterDataset() {
             actions.push(parseInt(ele.dataset.defense) === filterFunctions.defense);
         if (filterFunctions.name !== '') {
             var name = ele.dataset.name.toLowerCase();
-            var filterName = filterFunctions.ability.toLowerCase()
+            var filterName = filterFunctions.name.toLowerCase()
             actions.push(name.indexOf(filterName) > -1);
         }
         if (filterFunctions.ability !== '') {
