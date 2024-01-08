@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @if (!hostingEnv.IsDevelopment())
+    @if (hostingEnv.IsProduction())
     {
         <base href="https://www.carddweeb.com" target="_top" />
     }
@@ -88,5 +88,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    @if (hostingEnv.IsProduction())
+    {
+        <script src="~/js/anti-domain-swiper.js"></script>
+    }
 </body>
 </html>
