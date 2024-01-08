@@ -35,5 +35,24 @@
                 _ => "",
             };
         }
+
+        public static string UntapSetCode(Set set)
+        {
+            return set switch
+            {
+                Set.FinnVSJake => "cp1",
+                Set.BMOVSLadyRainicorn => "cp2",
+                Set.PrincessBubblegumVSLumpySpacePrincess => "cp3",
+                Set.IceKingVSMarceline => "cp4",
+                Set.LemonGrabVSGunter => "cp5",
+                Set.FionnaVSCake => "cp6",
+                Set.DoublesTournament => "2v2",
+                Set.HeroPack => "hp1",
+                Set.ForTheGlory => "ftg",
+                Set.Promo => "promo",
+                Set.Kickstarter => "ks1",
+                _ => "",
+            };
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace CornDome.Repository
             "ftg.json",
             "landscape.json",
             "promo.json",
+            "ks1.json",
             "cwe.json"
         ];
 
