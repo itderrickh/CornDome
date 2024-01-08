@@ -1,0 +1,22 @@
+﻿.card-detail {
+    display: flex;
+    background-color: rgb(240, 240, 240);
+    padding: 10px
+}
+
+.bold-label {
+    font-weight: bold;
+}
+
+.card-text-section {
+    border-bottom: 1px solid lightgray;
+    padding: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-detail {
+        display: flex;
+        background-color: rgb(15, 15, 15);
+        padding: 10px
+    }
+}
