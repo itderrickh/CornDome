@@ -13,45 +13,43 @@ else
     <div>
         <h1>@Model.QueryCard.Name</h1>
     </div>
-    <div style="display: flex;">
+    <div class="card-detail">
         <div style="width: 50%">
-            <img alt="@Model.QueryCard.Name" src="@("/CardImages/" + Model.QueryCard.ImageUrl)" />
+            <img style="width: 100%; max-width: 500px;" alt="@Model.QueryCard.Name" src="@("/CardImages/" + Model.QueryCard.ImageUrl)" />
         </div>
-        <div style="width: 50%">
-            <div>
+        <div style="width: 50%; padding: 20px;">
+            <div class="card-text-section">
                 <span class="bold-label">Card Type: </span><br /><span>@Model.QueryCard.CardType</span>
             </div>
             @if (Model.QueryCard.Landscape.HasValue)
             {
-                <div>
+                <div class="card-text-section">
                     <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(Model.QueryCard.Landscape.Value)</span>
                 </div>
             }
             @if (Model.QueryCard.Ability != "")
             {
-                <div>
+                <div class="card-text-section">
                     <span class="bold-label">Ability: </span><br /><span>@Model.QueryCard.Ability</span>
                 </div>
             }
             
             @if (Model.QueryCard.Cost.HasValue)
             {
-                <div>
-                    <span class="bold-label">Cost: </span><br /><span>@Model.QueryCard.Cost</span>
+                <div class="card-text-section">
+                    <span class="bold-label">Cost: </span><span>@Model.QueryCard.Cost</span>
                 </div>
             }
-            
-            @if (Model.QueryCard.Attack.HasValue)
+
+            @if (Model.QueryCard.Attack.HasValue || Model.QueryCard.Defense.HasValue)
             {
-                <div>
-                    <span class="bold-label">Attack: </span><br /><span>@Model.QueryCard.Attack</span>
-                </div>
-            }
-            
-            @if (Model.QueryCard.Defense.HasValue)
-            {
-                <div>
-                    <span class="bold-label">Defense: </span><br /><span>@Model.QueryCard.Defense</span>
+                <div class="card-text-section" style="display: flex">
+                    <div style="width: 50%">
+                        <span class="bold-label">Attack: </span><span>@Model.QueryCard.Attack</span>
+                    </div>
+                    <div>
+                        <span class="bold-label">Defense: </span><span>@Model.QueryCard.Defense</span>
+                    </div>
                 </div>
             }
         </div>
@@ -59,7 +57,18 @@ else
 }
 
 <style>
+    .card-detail {
+        display: flex;
+        background-color: rgb(240, 240, 240);
+        padding: 10px
+    }
+
     .bold-label {
         font-weight: bold;
+    }
+
+    .card-text-section {
+        border-bottom: 1px solid lightgray;
+        padding: 10px;
     }
 </style>
