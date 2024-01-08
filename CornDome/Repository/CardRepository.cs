@@ -10,15 +10,22 @@ namespace CornDome.Repository
     public class CardRepository(Config config) : ICardRepository
     {
         private readonly string _dataDirectory = config.AppData.DataPath;
+        private readonly List<string> _sets = [
+            "cp1.json",
+            "cp2.json",
+            "cp3.json",
+            "cp4.json",
+            "cp5.json",
+            "cp6.json",
+            "dbl.json",
+            "ftg.json",
+            "landscape.json",
+            "promo.json"
+        ];
 
         public IEnumerable<Card> GetAll()
         {
-            return GetHeroes()
-                .Concat(GetBuildings())
-                .Concat(GetCreatures())
-                .Concat(GetLandscapes())
-                .Concat(GetSpells())
-                .Concat(GetTeamworks());
+            return _sets.SelectMany(set => GetCardsFromJson(set));
         }
 
         private List<Card> GetCardsFromJson(string file)
@@ -31,17 +38,5 @@ namespace CornDome.Repository
             }
             return cards;
         }
-
-        private List<Card> GetHeroes() => GetCardsFromJson("hero.json");
-
-        private List<Card> GetCreatures() => GetCardsFromJson("creature.json");
-
-        private List<Card> GetBuildings() => GetCardsFromJson("building.json");
-
-        private List<Card> GetLandscapes() => GetCardsFromJson("landscape.json");
-
-        private List<Card> GetSpells() => GetCardsFromJson("spell.json");
-
-        private List<Card> GetTeamworks() => GetCardsFromJson("teamwork.json");
     }
 }
