@@ -1,5 +1,9 @@
 ﻿@page
 @model CornDome.Pages.TournamentResultsModel
+@{
+    ViewData["Title"] = "Tournament Results";
+}
+
 <div class="accordion" id="tournamentAccordian">
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
@@ -9,7 +13,26 @@
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#tournamentAccordian">
             <div class="accordion-body">
-                We're still collecting tournament results . . .
+                <h3>For this tournament, custom community holiday cards were allowed.</h3>
+                <ul>
+                    <li>Entry - Free</li>
+                    <li>Platform - Untap</li>
+                    <li>Format - Holiday Cards legal</li>
+                    <li>Prizing - Special discord roles</li>
+
+                </ul>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">1st Place - King Pizza Time</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <img style="width: 100%" src="~/img/tournament_results/20240107-first.png" />
+                    </div>
+                </div>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">3rd Place - NotAThotScott</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <img style="width: 100%" src="~/img/tournament_results/20240107-third.png" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
