@@ -18,8 +18,8 @@ namespace CornDome.Pages
 
         private const int cardWidth = 86;
         private const int cardHeight = 120;
-        private const int finalImageWidth = 900;
-        private const int finalImageHeight = 760;
+        private const int finalImageWidth = (borderX * 2) + (cardWidth * 10);
+        private int finalImageHeight;
         private const int borderX = 20;
         private const int borderY = 20;
 
@@ -33,7 +33,10 @@ namespace CornDome.Pages
                 coordinates.Add((borderX + (topX * cardWidth * 2), borderY));
             }
 
-            for (var y = 0; y < 4; y++)
+            var numberOfRows = (int)Math.Round(QueryDeck.Cards.Count / 10m, MidpointRounding.ToPositiveInfinity);
+            finalImageHeight = ((borderY * 2) + (cardHeight * 2) + (numberOfRows * cardHeight));
+
+            for (var y = 0; y < numberOfRows; y++)
             {
                 for (var x = 0; x < 10; x++)
                 {
@@ -56,19 +59,19 @@ namespace CornDome.Pages
             // Hero or blank added
             coordCounter++;
 
-            if (QueryDeck.Landscapes.Count > 0)
+            foreach (var landscape in QueryDeck.Landscapes)
             {
-                foreach (var landscape in QueryDeck.Landscapes)
-                {
-                    var landLoc = coordinates[coordCounter];
-                    using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.ImageUrl));
-                    landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
+                var landLoc = coordinates[coordCounter];
+                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.ImageUrl));
+                landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
 
-                    outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f).BackgroundColor(Color.DarkGray));
-                    coordCounter++;
-                }
+                outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f).BackgroundColor(Color.DarkGray));
+                coordCounter++;
             }
-            else { coordCounter += 4; }
+            
+            // Leave landscape area blank if less than 4
+            if (QueryDeck.Landscapes.Count < 4)
+                coordCounter += (4 - QueryDeck.Landscapes.Count);
             
             foreach (var card in QueryDeck.Cards)
             {
