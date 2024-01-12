@@ -119,7 +119,7 @@ addButtons.forEach(x => x.onclick = function () {
         deck.landscapes.push(cardElement);
         renderLandscapes();
     }
-    else if (deck.cards.length < 40 && cardElement.cardType !== "Landscape" && cardElement.cardType !== "Hero") {
+    else if (cardElement.cardType !== "Landscape" && cardElement.cardType !== "Hero") {
         deck.cards.push(cardElement);
         renderCards();
     }
