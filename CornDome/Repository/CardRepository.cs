@@ -17,7 +17,7 @@ namespace CornDome.Repository
             "cp4.json",
             "cp5.json",
             "cp6.json",
-            "dbl.json",
+            "2v2.json",
             "ftg.json",
             "landscape.json",
             "promo.json",
