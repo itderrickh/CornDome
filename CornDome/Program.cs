@@ -11,13 +11,7 @@ namespace CornDome
             
             // Add services to the container.
             builder.Services.AddRazorPages();
-            var config = new Config()
-            {
-                AppData = new AppData() { DataPath = builder.Configuration["Cards:Data"], ImagePath = builder.Configuration["Cards:Images"] },
-                Branding = new Branding() { Title = builder.Configuration["Branding:Title"] },
-                ContentStore = new ContentStore() { Articles = builder.Configuration["ContentStore:Articles"], Images = builder.Configuration["ContentStore:Images"] }
-            };
-            builder.Services.AddSingleton(x => config);
+            builder.Services.AddSingleton<Config>();
             builder.Services.AddSingleton<ICardRepository, CardRepository>();
 
             var app = builder.Build();
@@ -35,13 +29,13 @@ namespace CornDome
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(config.ContentStore.Images),
+                FileProvider = new PhysicalFileProvider(builder.Configuration["ContentStore:Images"]),
                 RequestPath = "/EmbeddedImages"
             });
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(config.AppData.ImagePath),
+                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
                 RequestPath = "/CardImages"
             });
 
