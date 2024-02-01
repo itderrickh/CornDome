@@ -126,6 +126,12 @@ fieldset {
     padding: 5px;
 }
 
+@media (prefers-color-scheme: dark) {
+    .info-stamp {
+        background-image: url('/img/info-light.png');
+    }
+}
+
 @media (max-width: 1250px) {
     .card:hover {
         transform: scale(1.2);
