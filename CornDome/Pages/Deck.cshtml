@@ -31,6 +31,10 @@
         }
     </div>
 
+    <div>
+        <a asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])">Go To deck builder</a>
+    </div>
+
     <style>
         .deck-card-image:hover {
             transform: scale(2);
