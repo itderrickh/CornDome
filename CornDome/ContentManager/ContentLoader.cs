@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Articles;
+using System.Text.Json;
 
 namespace CornDome.ContentManager
 {
@@ -6,27 +7,16 @@ namespace CornDome.ContentManager
     {
         public IEnumerable<Article> GetContentFromStore(string articlePath, string imagePath)
         {
-            var files = Directory.EnumerateFiles(articlePath, "*.md", SearchOption.AllDirectories);
-            var articles = new List<Article>();
-
-            foreach (var file in files)
+            var articleMap = File.ReadAllText(Path.Combine(articlePath, "articles.json"));
+            var jsonMap = JsonSerializer.Deserialize<IList<Article>>(articleMap);
+            foreach (var item in jsonMap)
             {
-                var createdDate = File.GetCreationTime(file);
-                var modifiedDate = File.GetLastWriteTime(file);
-                var contentFilename = Path.GetFileName(file);
-                var title = contentFilename.Replace(".md", "");
-
-                articles.Add(new Article()
-                {
-                    CreatedDate = createdDate,
-                    UpdatedDate = modifiedDate,
-                    Title = title,
-                    Location = title,
-                    ImagePath = Path.Combine(imagePath, $"{title}.png")
-                });
+                item.CreatedDate = File.GetCreationTime(Path.Combine(articlePath, item.Location));
+                item.UpdatedDate = File.GetLastWriteTime(Path.Combine(articlePath, item.Location));
+                item.ImagePath = Path.Combine(imagePath, item.ImagePath);
             }
 
-            return articles;
+            return jsonMap.OrderByDescending(x => x.UpdatedDate);
         }
     }
 }
