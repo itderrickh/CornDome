@@ -22,5 +22,7 @@ namespace CornDome.Models
         public string Ability { get; set; }
         [JsonPropertyName("imageurl")]
         public required string ImageUrl { get; set; }
+        [JsonPropertyName("set")]
+        public Set? Set { get; set; }
     }
 }

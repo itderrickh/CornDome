@@ -5,7 +5,8 @@ var filterFunctions = {
     defense: null,
     cost: null,
     name: '',
-    ability: ''
+    ability: '',
+    set: null
 };
 
 function filterDataset() {
@@ -31,6 +32,11 @@ function filterDataset() {
             var ability = ele.dataset.ability.toLowerCase();
             var filterAbility = filterFunctions.ability.toLowerCase()
             actions.push(ability.indexOf(filterAbility) > -1);
+        }
+        if (filterFunctions.set !== null) {
+            var set = ele.dataset.set.toLowerCase();
+            var filterSet = filterFunctions.set.toLowerCase()
+            actions.push(set.indexOf(filterSet) > -1);
         }
 
         if (actions.every(v => v)) {
@@ -75,3 +81,8 @@ document.getElementById("nameFilter").oninput = function () {
     filterFunctions.name = this.value;
     filterDataset();
 };
+
+document.getElementById("setFilter").oninput = function () {
+    filterFunctions.set = this.value;
+    filterDataset();
+}

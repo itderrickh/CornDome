@@ -9,6 +9,7 @@
      data-name="@Model.Card.Name"
      data-ability="@Model.Card.Ability"
      data-cost="@(Model.Card.Cost.HasValue ? Model.Card.Cost.ToString() : "")"
+     data-set="@(Model.Card.Set.HasValue ? Model.Card.Set : "")"
      data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
      data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
     <div class="card">

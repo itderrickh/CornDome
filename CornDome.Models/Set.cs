@@ -12,7 +12,8 @@
         HeroPack = 7,
         ForTheGlory = 8,
         Promo = 9,
-        Kickstarter = 10
+        Kickstarter = 10,
+        CommunityCards = 11
     }
 
     public static class SetConverter
