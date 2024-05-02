@@ -33,7 +33,14 @@ else
                     <span class="bold-label">Ability: </span><br /><span>@Model.QueryCard.Ability</span>
                 </div>
             }
-            
+
+            @if (Model.QueryCard.Set.HasValue)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString(Model.QueryCard.Set.Value)</span>
+                </div>
+            }
+
             @if (Model.QueryCard.Cost.HasValue)
             {
                 <div class="card-text-section">
