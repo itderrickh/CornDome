@@ -1,0 +1,257 @@
+﻿@page
+@using System.Text.Json
+@model CornDome.Pages.GoldfishModel
+@{
+}
+
+@if (Model.QueryDeck.Landscapes.Count < 4)
+{
+    <span> Deck does not have required amount of landscapes</span>
+}
+else if (Model.QueryDeck.Cards.Count < 40)
+{
+    <span>Deck does not have enough cards</span>
+}
+else
+{
+    <div style="display: flex;">
+        <div class="drop-landscape" id="landscape1" data-landscape="landscape1" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div>
+                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[0].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)" />
+            </div>
+            <div class="card-drop">
+            </div>
+        </div>
+        <div class="drop-landscape" id="landscape2" data-landscape="landscape2" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div>
+                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[1].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)" />
+            </div>
+            <div class="card-drop">
+            </div>
+        </div>
+        <div class="drop-landscape" id="landscape3" data-landscape="landscape3" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div>
+                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[2].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)" />
+            </div>
+            <div class="card-drop">
+
+            </div>
+        </div>
+        <div class="drop-landscape" id="landscape4" data-landscape="landscape4" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div>
+                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[3].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)" />
+            </div>
+            <div class="card-drop">
+            </div>
+        </div>
+    </div>
+    <div id="hand" style="display: flex; flex-wrap: wrap;">
+        
+    </div>
+    <div style="display: flex">
+        <div style="width: 10%; margin: 5px"><button type="button" id="drawCard">Draw card</button></div>
+    </div>
+}
+
+@section Styles {
+    <style>
+        .drop-landscape {
+            width: 20%;
+            position: relative;
+        }
+
+        .card-drop {
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            text-align: center;
+            top: 0;
+            height: 60%;
+            width: 60%;
+        }
+
+        #hand .card {
+            width: 10%;
+        }
+
+        .flooped {
+            transform: rotate(-0.25turn);
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        var deck = JSON.parse('@(Html.Raw(JsonSerializer.Serialize(Model.QueryDeck.Cards)))');
+        var applicationState = {
+            hand: [],
+            discard: [],
+            deck: [],
+            field: {
+                spellZone: null,
+                landscape1: {
+                    card: {
+                        flooped: false,
+                        damage: 0,
+                        data: null
+                    },
+                    building: {
+                        flooped: false,
+                        data: null
+                    }
+                },
+                landscape2: {
+                    card: {
+                        flooped: false,
+                        damage: 0,
+                        data: null
+                    },
+                    building: {
+                        flooped: false,
+                        data: null
+                    }
+                },
+                landscape3: {
+                    card: {
+                        flooped: false,
+                        damage: 0,
+                        data: null
+                    },
+                    building: {
+                        flooped: false,
+                        data: null
+                    }
+                },
+                landscape4: {
+                    card: {
+                        flooped: false,
+                        damage: 0,
+                        data: null
+                    },
+                    building: {
+                        flooped: false,
+                        data: null
+                    }
+                }
+            }
+        };
+
+        function render() {
+            // hand
+            var handDrop = document.getElementById("hand");
+            handDrop.innerHTML = "";
+            for (let handCard of applicationState.hand) {
+                let template = handCardTemplate(handCard);
+                handDrop.insertAdjacentHTML("beforeend", template);
+            }
+
+            var landscape1CardDrop = document.querySelector("#landscape1 .card-drop");
+            var landscape2CardDrop = document.querySelector("#landscape2 .card-drop");
+            var landscape3CardDrop = document.querySelector("#landscape3 .card-drop");
+            var landscape4CardDrop = document.querySelector("#landscape4 .card-drop");
+
+            if (applicationState.field.landscape1.card.data != null) {
+                landscape1CardDrop.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.landscape1.card.data);
+                landscape1CardDrop.insertAdjacentHTML("beforeend", template);
+            }
+            if (applicationState.field.landscape2.card.data != null) {
+                landscape2CardDrop.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.landscape2.card.data);
+                landscape2CardDrop.insertAdjacentHTML("beforeend", template);
+            }
+            if (applicationState.field.landscape3.card.data != null) {
+                landscape3CardDrop.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.landscape3.card.data);
+                landscape3CardDrop.insertAdjacentHTML("beforeend", template);
+            }
+            if (applicationState.field.landscape4.card.data != null) {
+                landscape4CardDrop.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.landscape4.card.data);
+                landscape4CardDrop.insertAdjacentHTML("beforeend", template);
+            }
+        }
+
+        function drawCard() {
+            if (applicationState.deck.length > 0)
+                applicationState.hand.push(applicationState.deck.pop());
+            render();
+            handlers();
+        }
+
+        function handlers() {
+            const elements = document.querySelectorAll(".card");
+
+            for (let handCard of elements) {
+                handCard.removeEventListener("dragstart", dragstartHandler);
+                handCard.addEventListener("dragstart", dragstartHandler);
+            }
+
+            const drawButton = document.querySelector('#drawCard');
+            drawButton.removeEventListener('click', drawCard);
+            drawButton.addEventListener('click', drawCard);
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length;
+
+            // While there remain elements to shuffle...
+            while (currentIndex != 0) {
+
+                // Pick a remaining element...
+                let randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+
+                // And swap it with the current element.
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]];
+            }
+        }
+
+        function handCardTemplate(card) {
+            var data = encodeURIComponent(JSON.stringify(card));
+            return `
+                <div draggable="true"
+                    class="card"
+                    data-id="${card.id}"
+                    data-card="${data}">
+                            <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
+                 </div>
+            `;
+        }
+
+        function dragstartHandler(ev) {
+            // Add the target element's id to the data transfer object
+            ev.dataTransfer.setData("text/plain", ev.target.parentElement.dataset.card);
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            // Get the id of the target and add the moved element to the target's DOM
+            if (ev.dataTransfer != null) {
+                const data = ev.dataTransfer.getData("text/plain");
+                let jsonData = JSON.parse(decodeURIComponent(data));
+
+                var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(jsonData['id']);
+                applicationState.hand.splice(locationInHand, 1);
+                applicationState.field[ev.currentTarget.dataset.landscape].card.data = jsonData;
+                render();
+                handlers();
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            applicationState.deck = deck;
+
+            shuffle(applicationState.deck);
+            for (var i = 0; i < 5; i++) {
+                applicationState.hand.push(applicationState.deck.pop());
+            }
+
+            render();
+            handlers();
+        });
+    </script>
+}
