@@ -2,6 +2,7 @@
 @using System.Text.Json
 @model CornDome.Pages.GoldfishModel
 @{
+    ViewData["RenderMode"] = "wide";
 }
 
 @if (Model.QueryDeck.Landscapes.Count < 4)
@@ -14,49 +15,84 @@ else if (Model.QueryDeck.Cards.Count < 40)
 }
 else
 {
-    <div style="display: flex;">
-        <div class="drop-landscape" id="landscape1" data-landscape="landscape1" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div>
-                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[0].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)" />
+    <div class="game-board">
+        <div id="deck" class="deck">
+            deck
+        </div>
+        <!--<div class="landscape drop-landscape" id="landscape1" data-landscape="landscape1" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div style="width: 100%;">
+                <img class="card-image" alt="@Model.QueryDeck.Landscapes[0].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)" />
             </div>
             <div class="card-drop">
             </div>
         </div>
-        <div class="drop-landscape" id="landscape2" data-landscape="landscape2" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div>
-                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[1].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)" />
+        <div class="landscape drop-landscape" id="landscape2" data-landscape="landscape2" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div style="width: 100%;">
+                <img class="card-image" alt="@Model.QueryDeck.Landscapes[1].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)" />
             </div>
             <div class="card-drop">
             </div>
         </div>
-        <div class="drop-landscape" id="landscape3" data-landscape="landscape3" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div>
-                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[2].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)" />
+        <div class="landscape drop-landscape" id="landscape3" data-landscape="landscape3" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div style="width: 100%;">
+                <img class="card-image" alt="@Model.QueryDeck.Landscapes[2].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)" />
             </div>
             <div class="card-drop">
 
             </div>
         </div>
-        <div class="drop-landscape" id="landscape4" data-landscape="landscape4" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div>
-                <img style="width: 100%;" alt="@Model.QueryDeck.Landscapes[3].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)" />
+        <div class="landscape drop-landscape" id="landscape4" data-landscape="landscape4" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
+            <div style="width: 100%;">
+                <img class="card-image" alt="@Model.QueryDeck.Landscapes[3].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)" />
             </div>
             <div class="card-drop">
             </div>
+        </div>-->
+        <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
+        <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
+        <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
+        <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
+
+        <div class="discard">
+            discard
         </div>
     </div>
     <div id="hand" style="display: flex; flex-wrap: wrap;">
         
     </div>
-    <div style="display: flex">
-        <div style="width: 10%; margin: 5px"><button type="button" id="drawCard">Draw card</button></div>
-    </div>
+
+    <context-menu target-class="card" id="cardMenu"></context-menu>
+    <context-menu target-id="deck" id="deckMenu"></context-menu>
 }
 
 @section Styles {
     <style>
+        .game-board {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .deck, .discard {
+            width: 300px;
+            border: 1px solid white;
+            border-radius: 3px;
+        }
+
+        .card-image {
+            height: 100%;
+            width: 100%;
+        }
+
+        .landscape {
+            display: flex;
+            flex: 1 1 auto;
+        }
+
         .drop-landscape {
-            width: 20%;
             position: relative;
         }
 
@@ -83,8 +119,22 @@ else
 }
 
 @section Scripts {
+    <script src="~/js/goldfish/contextMenu.js"></script>
+    <script src="~/js/goldfish/landscape.js"></script>
+
+    <script>
+        const cardMenu = document.getElementById('cardMenu');
+        const deckMenu = document.getElementById('deckMenu');
+        
+    </script>
     <script>
         var deck = JSON.parse('@(Html.Raw(JsonSerializer.Serialize(Model.QueryDeck.Cards)))');
+        var zones = {
+            hand: document.getElementById('hand'),
+            discard: document.getElementById('discard'),
+            deck: document.getElementById('deck')
+        };
+
         var applicationState = {
             hand: [],
             discard: [],
@@ -140,11 +190,10 @@ else
 
         function render() {
             // hand
-            var handDrop = document.getElementById("hand");
-            handDrop.innerHTML = "";
+            zones.hand.innerHTML = "";
             for (let handCard of applicationState.hand) {
-                let template = handCardTemplate(handCard);
-                handDrop.insertAdjacentHTML("beforeend", template);
+                let template = handCardTemplate(handCard, false);
+                zones.hand.insertAdjacentHTML("beforeend", template);
             }
 
             var landscape1CardDrop = document.querySelector("#landscape1 .card-drop");
@@ -154,22 +203,22 @@ else
 
             if (applicationState.field.landscape1.card.data != null) {
                 landscape1CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape1.card.data);
+                let template = handCardTemplate(applicationState.field.landscape1.card.data, applicationState.field.landscape1.card.flooped);
                 landscape1CardDrop.insertAdjacentHTML("beforeend", template);
             }
             if (applicationState.field.landscape2.card.data != null) {
                 landscape2CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape2.card.data);
+                let template = handCardTemplate(applicationState.field.landscape2.card.data, applicationState.field.landscape2.card.flooped);
                 landscape2CardDrop.insertAdjacentHTML("beforeend", template);
             }
             if (applicationState.field.landscape3.card.data != null) {
                 landscape3CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape3.card.data);
+                let template = handCardTemplate(applicationState.field.landscape3.card.data, applicationState.field.landscape3.card.flooped);
                 landscape3CardDrop.insertAdjacentHTML("beforeend", template);
             }
             if (applicationState.field.landscape4.card.data != null) {
                 landscape4CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape4.card.data);
+                let template = handCardTemplate(applicationState.field.landscape4.card.data, applicationState.field.landscape4.card.flooped);
                 landscape4CardDrop.insertAdjacentHTML("beforeend", template);
             }
         }
@@ -179,19 +228,6 @@ else
                 applicationState.hand.push(applicationState.deck.pop());
             render();
             handlers();
-        }
-
-        function handlers() {
-            const elements = document.querySelectorAll(".card");
-
-            for (let handCard of elements) {
-                handCard.removeEventListener("dragstart", dragstartHandler);
-                handCard.addEventListener("dragstart", dragstartHandler);
-            }
-
-            const drawButton = document.querySelector('#drawCard');
-            drawButton.removeEventListener('click', drawCard);
-            drawButton.addEventListener('click', drawCard);
         }
 
         function shuffle(array) {
@@ -210,11 +246,46 @@ else
             }
         }
 
-        function handCardTemplate(card) {
+        function handlers() {
+            const elements = document.querySelectorAll(".card");
+
+            for (let handCard of elements) {
+                handCard.removeEventListener("dragstart", dragstartHandler);
+                handCard.addEventListener("dragstart", dragstartHandler);
+            }
+
+            elements.forEach((card) => {
+                card.addEventListener('contextmenu', (event) => {
+                    event.preventDefault();  // Disable default browser context menu
+                    cardMenu.showMenu(event.pageX, event.pageY);
+                });
+            });
+
+            // Context Menus
+            const cardMenuItems = [
+                { label: 'Floop', action: null },
+                { label: 'Discard', action: null },
+                { label: 'Activate', action: null }
+            ];
+            cardMenu.setMenuItems(cardMenuItems);
+            const deckMenuItems = [
+                { label: 'Draw', action: drawCard },
+                { label: 'Shuffle', action: null }
+            ];
+            deckMenu.setMenuItems(deckMenuItems);
+
+            zones.deck.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+                deckMenu.showMenu(event.pageX, event.pageY);
+            });
+        }
+
+        function handCardTemplate(card, flooped) {
             var data = encodeURIComponent(JSON.stringify(card));
+            var floopClass = flooped ? 'flooped' : '';
             return `
                 <div draggable="true"
-                    class="card"
+                    class="card ${floopClass}"
                     data-id="${card.id}"
                     data-card="${data}">
                             <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
@@ -227,20 +298,13 @@ else
             ev.dataTransfer.setData("text/plain", ev.target.parentElement.dataset.card);
         }
 
-        function dropHandler(ev) {
-            ev.preventDefault();
-            // Get the id of the target and add the moved element to the target's DOM
-            if (ev.dataTransfer != null) {
-                const data = ev.dataTransfer.getData("text/plain");
-                let jsonData = JSON.parse(decodeURIComponent(data));
-
-                var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(jsonData['id']);
-                applicationState.hand.splice(locationInHand, 1);
-                applicationState.field[ev.currentTarget.dataset.landscape].card.data = jsonData;
-                render();
-                handlers();
-            }
-        }
+        document.addEventListener('landscape-card-drop', (event) => {
+            const cardData = event.detail.cardData;
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(cardData['id']);
+            applicationState.hand.splice(locationInHand, 1);
+            render();
+            handlers();
+        });
 
         window.addEventListener("DOMContentLoaded", () => {
             applicationState.deck = deck;
