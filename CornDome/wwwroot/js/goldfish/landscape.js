@@ -10,6 +10,7 @@
         .landscape {
             display: flex;
             flex: 1 1 auto;
+            width: 15em;
         }
 
         .drop-landscape {
@@ -43,6 +44,10 @@
         }
         .flooped {
             transform: rotate(-0.25turn);
+        }
+
+        .card-image {
+            width: 100%;
         }
         </style>
         <context-menu target-class="card" class="landscape-card-menu"></context-menu>

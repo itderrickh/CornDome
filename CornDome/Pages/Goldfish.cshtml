@@ -17,52 +17,30 @@ else
 {
     <div class="game-board">
         <div id="deck" class="deck">
-            deck
+            Deck
         </div>
-        <!--<div class="landscape drop-landscape" id="landscape1" data-landscape="landscape1" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div style="width: 100%;">
-                <img class="card-image" alt="@Model.QueryDeck.Landscapes[0].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)" />
-            </div>
-            <div class="card-drop">
-            </div>
-        </div>
-        <div class="landscape drop-landscape" id="landscape2" data-landscape="landscape2" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div style="width: 100%;">
-                <img class="card-image" alt="@Model.QueryDeck.Landscapes[1].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)" />
-            </div>
-            <div class="card-drop">
-            </div>
-        </div>
-        <div class="landscape drop-landscape" id="landscape3" data-landscape="landscape3" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div style="width: 100%;">
-                <img class="card-image" alt="@Model.QueryDeck.Landscapes[2].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)" />
-            </div>
-            <div class="card-drop">
 
-            </div>
-        </div>
-        <div class="landscape drop-landscape" id="landscape4" data-landscape="landscape4" ondrop="dropHandler(event)" ondragover="event.preventDefault()">
-            <div style="width: 100%;">
-                <img class="card-image" alt="@Model.QueryDeck.Landscapes[3].Name" src="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)" />
-            </div>
-            <div class="card-drop">
-            </div>
-        </div>-->
         <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
         <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
         <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
         <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
 
-        <div class="discard">
-            discard
+        <div id="spellzone" ondragover="event.preventDefault()">
+            <span>Spell Zone</span>
+            <div class="cardslot"></div>
+        </div>
+
+        <div id="discard">
+            <span>Discard</span>
+            <div class="cardslot"></div>
         </div>
     </div>
-    <div id="hand" style="display: flex; flex-wrap: wrap;">
-        
+    <div id="hand" style="display: flex; flex-wrap: wrap; gap: 5px;">
     </div>
 
     <context-menu target-class="card" id="cardMenu"></context-menu>
     <context-menu target-id="deck" id="deckMenu"></context-menu>
+    <context-menu target-id="spellzone" id="spellzoneMenu"></context-menu>
 }
 
 @section Styles {
@@ -72,40 +50,35 @@ else
             justify-content: center;
             gap: 20px;
             width: 90%;
-            max-width: 1000px;
-            margin: 0 auto;
+            margin: 0 auto 10px auto;
         }
 
-        .deck, .discard {
-            width: 300px;
+        #deck, #discard, #spellzone {
+            width: 200px;
             border: 1px solid white;
             border-radius: 3px;
         }
 
         .card-image {
-            height: 100%;
-            width: 100%;
+        
+        }
+
+        #spellzone, #discard, #deck {
+            display: block;
+            position: relative;
+            padding: 5px;
+        }
+
+        #spellzone .cardslot, #discard .cardslot {
+            margin-top: 10px;
         }
 
         .landscape {
-            display: flex;
-            flex: 1 1 auto;
+            display: block;
         }
 
         .drop-landscape {
             position: relative;
-        }
-
-        .card-drop {
-            position: absolute;
-            margin-left: auto;
-            margin-right: auto;
-            left: 0;
-            right: 0;
-            text-align: center;
-            top: 0;
-            height: 60%;
-            width: 60%;
         }
 
         #hand .card {
@@ -125,6 +98,7 @@ else
     <script>
         const cardMenu = document.getElementById('cardMenu');
         const deckMenu = document.getElementById('deckMenu');
+        const spellzoneMenu = document.getElementById('spellzoneMenu');
         
     </script>
     <script>
@@ -189,37 +163,27 @@ else
         };
 
         function render() {
-            // hand
             zones.hand.innerHTML = "";
             for (let handCard of applicationState.hand) {
                 let template = handCardTemplate(handCard, false);
                 zones.hand.insertAdjacentHTML("beforeend", template);
             }
 
-            var landscape1CardDrop = document.querySelector("#landscape1 .card-drop");
-            var landscape2CardDrop = document.querySelector("#landscape2 .card-drop");
-            var landscape3CardDrop = document.querySelector("#landscape3 .card-drop");
-            var landscape4CardDrop = document.querySelector("#landscape4 .card-drop");
+            if (applicationState.field.spellZone !== null) {
+                var spellzone = document.querySelector("#spellzone .cardslot");
+                spellzone.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.spellZone, false);
+                spellzone.insertAdjacentHTML("beforeend", template);
+            } else {
+                var spellzone = document.querySelector("#spellzone .cardslot");
+                spellzone.innerHTML = "";
+            }
 
-            if (applicationState.field.landscape1.card.data != null) {
-                landscape1CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape1.card.data, applicationState.field.landscape1.card.flooped);
-                landscape1CardDrop.insertAdjacentHTML("beforeend", template);
-            }
-            if (applicationState.field.landscape2.card.data != null) {
-                landscape2CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape2.card.data, applicationState.field.landscape2.card.flooped);
-                landscape2CardDrop.insertAdjacentHTML("beforeend", template);
-            }
-            if (applicationState.field.landscape3.card.data != null) {
-                landscape3CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape3.card.data, applicationState.field.landscape3.card.flooped);
-                landscape3CardDrop.insertAdjacentHTML("beforeend", template);
-            }
-            if (applicationState.field.landscape4.card.data != null) {
-                landscape4CardDrop.innerHTML = "";
-                let template = handCardTemplate(applicationState.field.landscape4.card.data, applicationState.field.landscape4.card.flooped);
-                landscape4CardDrop.insertAdjacentHTML("beforeend", template);
+            if (applicationState.discard.length > 0) {
+                var discardPile = document.querySelector("#discard .cardslot");
+                discardPile.innerHTML = "";
+                let template = handCardTemplate(applicationState.discard[applicationState.discard.length - 1], false);
+                discardPile.insertAdjacentHTML("beforeend", template);
             }
         }
 
@@ -247,7 +211,7 @@ else
         }
 
         function handlers() {
-            const elements = document.querySelectorAll(".card");
+            const elements = document.querySelectorAll("#hand .card");
 
             for (let handCard of elements) {
                 handCard.removeEventListener("dragstart", dragstartHandler);
@@ -263,7 +227,6 @@ else
 
             // Context Menus
             const cardMenuItems = [
-                { label: 'Floop', action: null },
                 { label: 'Discard', action: null },
                 { label: 'Activate', action: null }
             ];
@@ -278,6 +241,28 @@ else
                 event.preventDefault();
                 deckMenu.showMenu(event.pageX, event.pageY);
             });
+
+            const spellzoneMenuItems = [
+                { label: 'Discard', action: discardFromSpellZone }
+            ];
+            spellzoneMenu.setMenuItems(spellzoneMenuItems);
+
+            const spellzone = document.getElementById('spellzone');
+            spellzone.removeEventListener("drop", spellzoneDrop);
+            spellzone.addEventListener('drop', spellzoneDrop);
+            spellzone.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+                spellzoneMenu.showMenu(event.pageX, event.pageY);
+            });
+        }
+
+        function discardFromSpellZone() {
+            var card = applicationState.field.spellZone;
+            applicationState.discard.push(card);
+            applicationState.field.spellZone = null;
+
+            render();
+            handlers();
         }
 
         function handCardTemplate(card, flooped) {
@@ -296,6 +281,19 @@ else
         function dragstartHandler(ev) {
             // Add the target element's id to the data transfer object
             ev.dataTransfer.setData("text/plain", ev.target.parentElement.dataset.card);
+        }
+
+        function spellzoneDrop(ev) {
+            ev.preventDefault();
+            const rawData = ev.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+            applicationState.hand.splice(locationInHand, 1);
+
+            applicationState.field.spellZone = card;
+            render();
+            handlers();
         }
 
         document.addEventListener('landscape-card-drop', (event) => {
