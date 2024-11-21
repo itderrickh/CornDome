@@ -35,8 +35,15 @@ else
             <div class="cardslot"></div>
         </div>
     </div>
-    <div id="hand" style="display: flex; flex-wrap: wrap; gap: 5px;">
+
+    <div id="control-board">
+        <div id="lifetotal">
+            
+        </div>
+        <div id="hand" style="">
+        </div>
     </div>
+    
 
     <context-menu target-class="card" id="cardMenu"></context-menu>
     <context-menu target-id="deck" id="deckMenu"></context-menu>
@@ -45,12 +52,25 @@ else
 
 @section Styles {
     <style>
-        .game-board {
+        .game-board, #control-board {
             display: flex;
             justify-content: center;
             gap: 20px;
             width: 90%;
             margin: 0 auto 10px auto;
+        }
+
+
+        #hand {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            flex-basis: 80%;
+        }
+
+        #lifetotal {
+            flex-basis: 20%;
         }
 
         #deck, #discard, #spellzone {
@@ -82,7 +102,7 @@ else
         }
 
         #hand .card {
-            width: 10%;
+            width: 17%;
         }
 
         .flooped {
@@ -221,14 +241,13 @@ else
             elements.forEach((card) => {
                 card.addEventListener('contextmenu', (event) => {
                     event.preventDefault();  // Disable default browser context menu
-                    cardMenu.showMenu(event.pageX, event.pageY);
+                    cardMenu.showMenu(event.pageX, event.pageY, event.target);
                 });
             });
 
             // Context Menus
             const cardMenuItems = [
-                { label: 'Discard', action: null },
-                { label: 'Activate', action: null }
+                { label: 'Discard', action: discardFromHand }
             ];
             cardMenu.setMenuItems(cardMenuItems);
             const deckMenuItems = [
@@ -239,7 +258,7 @@ else
 
             zones.deck.addEventListener('contextmenu', (event) => {
                 event.preventDefault();
-                deckMenu.showMenu(event.pageX, event.pageY);
+                deckMenu.showMenu(event.pageX, event.pageY, event.target);
             });
 
             const spellzoneMenuItems = [
@@ -252,7 +271,7 @@ else
             spellzone.addEventListener('drop', spellzoneDrop);
             spellzone.addEventListener('contextmenu', (event) => {
                 event.preventDefault();
-                spellzoneMenu.showMenu(event.pageX, event.pageY);
+                spellzoneMenu.showMenu(event.pageX, event.pageY, event.target);
             });
         }
 
@@ -260,6 +279,16 @@ else
             var card = applicationState.field.spellZone;
             applicationState.discard.push(card);
             applicationState.field.spellZone = null;
+
+            render();
+            handlers();
+        }
+
+        function discardFromHand(target) {
+            var id = parseInt(target.parentElement.dataset.id, 10);
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(id);
+            var card = applicationState.hand.splice(locationInHand, 1);
+            applicationState.discard.push(card[0]);
 
             render();
             handlers();

@@ -144,7 +144,7 @@
         const cardElement = this.shadowRoot.querySelector('.card');
         cardElement.addEventListener('contextmenu', (event) => {
             event.preventDefault();  // Disable default browser context menu
-            this.cardMenu.showMenu(event.layerX, event.layerY);
+            this.cardMenu.showMenu(event.layerX, event.layerY, event.target);
         });
     }
 

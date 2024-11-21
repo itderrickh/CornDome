@@ -1,6 +1,7 @@
 ﻿class ContextMenu extends HTMLElement {
     constructor() {
         super();
+        this.target = null;
         const shadow = this.attachShadow({ mode: 'open' });
 
         // Create styles for the context menu
@@ -64,7 +65,7 @@
             if (target !== null) {
                 target.addEventListener('contextmenu', (event) => {
                     event.preventDefault();
-                    this.showMenu(event.pageX, event.pageY);
+                    this.showMenu(event.pageX, event.pageY, event.target);
                 });
             }
         }
@@ -76,7 +77,7 @@
                 targets.forEach((targ) => {
                     targ.addEventListener('contextmenu', (event) => {
                         event.preventDefault();
-                        this.showMenu(event.pageX, event.pageY);
+                        this.showMenu(event.pageX, event.pageY, event.target);
                     });
                 });
             }
@@ -99,10 +100,11 @@
     }
 
     // Show the context menu at specified position
-    showMenu(x, y) {
+    showMenu(x, y, target = null) {
         this.menu.style.left = `${x}px`;
         this.menu.style.top = `${y}px`;
         this.menu.style.display = 'block';
+        this.target = target;
         this.renderMenuItems();
     }
 
@@ -126,7 +128,7 @@
             if (item.action && typeof item.action === 'function') {
                 menuItem.addEventListener('click', (event) => {
                     event.stopPropagation(); // Prevent hiding the menu immediately
-                    item.action();
+                    item.action(this.target);
                     this.hideMenu(); // Hide the menu after action
                 });
             }
