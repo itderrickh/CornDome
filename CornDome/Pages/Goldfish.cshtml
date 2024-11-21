@@ -18,7 +18,12 @@ else
 {
     <div class="game-board">
         <div id="deck" class="deck">
-            Deck
+            <span>Deck (<span id="deck-size"></span>)</span>
+            <div class="cardslot">
+                <div class="card-placeholder">
+                    <img src="/img/lifebackground.jpg" />
+                </div>
+            </div>
         </div>
 
         <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
@@ -80,8 +85,16 @@ else
             border-radius: 3px;
         }
 
-        .card-image {
-        
+        .card-placeholder {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
         }
 
         #spellzone, #discard, #deck {
@@ -184,6 +197,13 @@ else
         };
 
         function render() {
+            var deckSize = document.getElementById('deck-size');
+
+            deckSize.textContent = applicationState.deck.length;
+            if (applicationState.deck.length === 0) {
+                document.querySelector('#deck .cardslot img').src = "";
+            }
+
             zones.hand.innerHTML = "";
             for (let handCard of applicationState.hand) {
                 let template = handCardTemplate(handCard, false);
