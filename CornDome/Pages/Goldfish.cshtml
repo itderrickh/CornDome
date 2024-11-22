@@ -550,19 +550,25 @@ else
 
         function spellzoneDrop(ev) {
             ev.preventDefault();
-            const rawData = ev.dataTransfer.getData('text');
-            const card = JSON.parse(decodeURIComponent(rawData));
 
-            if (applicationState.field.spellZone !== null) {
-                document.dispatchEvent(new CustomEvent('discard-card', { detail: applicationState.field.spellZone }));
+            try {
+                const rawData = ev.dataTransfer.getData('text');
+                const card = JSON.parse(decodeURIComponent(rawData));
+
+                if (applicationState.field.spellZone !== null) {
+                    document.dispatchEvent(new CustomEvent('discard-card', { detail: applicationState.field.spellZone }));
+                }
+
+                var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+                applicationState.hand.splice(locationInHand, 1);
+
+                applicationState.field.spellZone = card;
+                render();
+                handlers();
             }
-
-            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
-            applicationState.hand.splice(locationInHand, 1);
-
-            applicationState.field.spellZone = card;
-            render();
-            handlers();
+            catch (ex) {
+                console.error('Object is not droppable: ' + ex);
+            }
         }
 
         document.addEventListener('landscape-card-drop', (event) => {

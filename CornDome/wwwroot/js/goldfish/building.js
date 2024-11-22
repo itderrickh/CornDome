@@ -50,28 +50,34 @@
 
     handleDrop(event) {
         event.preventDefault();
-        const rawData = event.dataTransfer.getData('text');
-        const card = JSON.parse(decodeURIComponent(rawData));
 
-        if (this.card) {
-            this.discard();
+        try {
+            const rawData = event.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            if (this.card) {
+                this.discard();
+            }
+
+            this.setCard(card);
+            this.dispatchEvent(new CustomEvent('building-card-drop', {
+                detail: {
+                    building: this.getAttribute('data-building'),
+                    cardData: card,
+                },
+                bubbles: true,
+                composed: true
+            }));
         }
-
-        this.setCard(card);
-        this.dispatchEvent(new CustomEvent('building-card-drop', {
-            detail: {
-                building: this.getAttribute('data-building'),
-                cardData: card,
-            },
-            bubbles: true,
-            composed: true
-        }));
+        catch (ex) {
+            console.error('Object is not droppable: ' + ex);
+        }
     }
 
     cardTemplate(card) {
         var data = encodeURIComponent(JSON.stringify(card));
         return `
-                <div draggable="true"
+                <div
                     class="card"
                     data-id="${card.id}"
                     data-card="${data}">

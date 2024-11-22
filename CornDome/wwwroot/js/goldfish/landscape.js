@@ -131,30 +131,36 @@
 
     handleDrop(event) {
         event.preventDefault();
-        const rawData = event.dataTransfer.getData('text');
-        const card = JSON.parse(decodeURIComponent(rawData));
 
-        if (this.card) {
-            this.removeCard();
+        try {
+            const rawData = event.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            if (this.card) {
+                this.removeCard();
+            }
+
+            this.setCard(card);
+            this.dispatchEvent(new CustomEvent('landscape-card-drop', {
+                detail: {
+                    landscape: this.getAttribute('data-landscape'),
+                    cardData: card,
+                },
+                bubbles: true,
+                composed: true
+            }));
         }
-
-        this.setCard(card);
-        this.dispatchEvent(new CustomEvent('landscape-card-drop', {
-            detail: {
-                landscape: this.getAttribute('data-landscape'),
-                cardData: card,
-            },
-            bubbles: true,
-            composed: true
-        }));
+        catch (ex) {
+            console.error('Object is not droppable: ' + ex);
+        }
     }
 
-    handCardTemplate(card, flooped) {
+    handCardTemplate(card) {
         var data = encodeURIComponent(JSON.stringify(card));
-        var floopClass = flooped ? 'flooped' : '';
+        var floopClass = this.flooped ? 'flooped' : '';
         return `
-                    <div draggable="true"
-                        class="card ${floopClass}"
+                    <div
+                        class="landscape-card ${floopClass}"
                         data-id="${card.id}"
                         data-card="${data}">
                                 <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
@@ -167,11 +173,11 @@
 
         const cardDrop = this.shadowRoot.querySelector('.card-drop');
         cardDrop.innerHTML = "";
-        let template = handCardTemplate(card, false);
+        let template = this.handCardTemplate(card);
         cardDrop.insertAdjacentHTML("beforeend", template);
 
 
-        const cardElement = this.shadowRoot.querySelector('.hand-card');
+        const cardElement = this.shadowRoot.querySelector('.landscape-card');
         cardElement.addEventListener('contextmenu', (event) => {
             event.preventDefault();  // Disable default browser context menu
             this.cardMenu.showMenu(event.pageX, event.pageY, event.target);
@@ -201,10 +207,10 @@
 
     floop() {
         if (this.flooped) {
-            this.shadowRoot.querySelector('.hand-card').classList.remove('flooped');
+            this.shadowRoot.querySelector('.landscape-card').classList.remove('flooped');
         }
         else {
-            this.shadowRoot.querySelector('.hand-card').classList.add('flooped');
+            this.shadowRoot.querySelector('.landscape-card').classList.add('flooped');
         }
 
         this.flooped = !this.flooped;
