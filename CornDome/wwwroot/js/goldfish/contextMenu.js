@@ -86,6 +86,7 @@
 
         // Hide the menu when clicking outside
         document.addEventListener('click', this.hideMenu);
+        document.addEventListener('close-all-menus', this.hideMenu);
     }
 
     disconnectedCallback() {
@@ -97,6 +98,7 @@
         }
 
         document.removeEventListener('click', this.hideMenu);
+        document.removeEventListener('close-all-menus', this.hideMenu);
     }
 
     // Show the context menu at specified position
@@ -127,9 +129,9 @@
             // Add click handler if defined
             if (item.action && typeof item.action === 'function') {
                 menuItem.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent hiding the menu immediately
+                    event.preventDefault();
                     item.action(this.target);
-                    this.hideMenu(); // Hide the menu after action
+                    document.createEvent(new CustomEvent('close-all-menus'));
                 });
             }
 

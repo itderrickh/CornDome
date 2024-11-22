@@ -187,57 +187,28 @@ else
             field: {
                 spellZone: null,
                 landscape1: {
-                    card: {
-                        flooped: false,
-                        damage: 0,
-                        data: null
-                    }
-                    
+                    card: null
                 },
                 building1: {
                     flooped: false,
                     data: null
                 },
                 landscape2: {
-                    card: {
-                        flooped: false,
-                        damage: 0,
-                        data: null
-                    },
-                    building: {
-                        flooped: false,
-                        data: null
-                    }
+                    card: null
                 },
                 building2: {
                     flooped: false,
                     data: null
                 },
                 landscape3: {
-                    card: {
-                        flooped: false,
-                        damage: 0,
-                        data: null
-                    },
-                    building: {
-                        flooped: false,
-                        data: null
-                    }
+                    card: null
                 },
                 building3: {
                     flooped: false,
                     data: null
                 },
                 landscape4: {
-                    card: {
-                        flooped: false,
-                        damage: 0,
-                        data: null
-                    },
-                    building: {
-                        flooped: false,
-                        data: null
-                    }
+                    card: null
                 },
                 building4: {
                     flooped: false,
@@ -388,8 +359,9 @@ else
 
         function discardFromSpellZone() {
             var card = applicationState.field.spellZone;
-            applicationState.discard.push(card);
             applicationState.field.spellZone = null;
+
+            document.dispatchEvent(new CustomEvent('discard-card', { detail: card }));
 
             render();
             handlers();
@@ -399,7 +371,8 @@ else
             var id = parseInt(target.parentElement.dataset.id, 10);
             var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(id);
             var card = applicationState.hand.splice(locationInHand, 1);
-            applicationState.discard.push(card[0]);
+
+            document.dispatchEvent(new CustomEvent('discard-card', { detail: card[0] }));
 
             render();
             handlers();
@@ -492,6 +465,22 @@ else
             const cardData = event.detail.cardData;
             var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(cardData['id']);
             applicationState.hand.splice(locationInHand, 1);
+            render();
+            handlers();
+        });
+
+        document.addEventListener('discard-card', (event) => {
+            const cardData = event.detail;
+            applicationState.discard.push(cardData);
+
+            render();
+            handlers();
+        });
+
+        document.addEventListener('to-hand', (event) => {
+            const cardData = event.detail;
+            applicationState.hand.push(cardData);
+
             render();
             handlers();
         });
