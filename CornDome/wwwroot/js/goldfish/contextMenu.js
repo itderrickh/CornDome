@@ -14,19 +14,21 @@
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            width: 150px;
+            z-index: 2000;
+            width: 154px;
         }
         .custom-menu ul {
             list-style: none;
             margin: 0;
             padding: 0;
+            z-index: 2001;
         }
         .custom-menu ul li {
             padding: 10px;
             cursor: pointer;
             color: #000 !important;
             border-bottom: 1px solid #eee;
+            z-index: 2002;
         }
         .custom-menu ul li:hover {
             background-color: #f0f0f0;
@@ -111,7 +113,7 @@
     }
 
     // Hide the context menu
-    hideMenu() {
+    hideMenu(event) {
         this.menu.style.display = 'none';
     }
 

@@ -61,24 +61,24 @@ else
         </div>
     </div>
     
-
     <context-menu target-class="card" id="cardMenu"></context-menu>
     <context-menu target-id="deck" id="deckMenu"></context-menu>
     <context-menu target-id="spellzone" id="spellzoneMenu"></context-menu>
     <context-menu target-id="discard" id="discardMenu"></context-menu>
 
     <!-- Modal for Deck and Discard -->
-    <div id="deckModal" class="modal">
+    <div id="deckModal" class="cd-modal">
+        <context-menu target-class="deckCard" id="deckSubMenu"></context-menu>
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('deckModal')">Close</button>
             <ul id="deckList"></ul>
         </div>
     </div>
 
-    <div id="discardModal" class="modal">
+    <div id="discardModal" class="cd-modal">
+        <context-menu target-class="discardCard" id="discardSubMenu"></context-menu>
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('discardModal')">Close</button>
-            <h3>Cards in Discard</h3>
             <ul id="discardList"></ul>
         </div>
     </div>
@@ -97,7 +97,6 @@ else
         .building, .landscape {
             height: 300px;
             width: 200px;
-            border: 1px solid white;
             border-radius: 3px;
         }
 
@@ -164,7 +163,7 @@ else
         }
 
         /* Modal Styling */
-        .modal {
+        .cd-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -174,6 +173,7 @@ else
             background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
+            color: #000;
         }
 
         .modal-content {
@@ -198,10 +198,15 @@ else
         #deckList, #discardList {
             display: flex;
             flex-wrap: wrap;
+            list-style: none;
         }
 
         #deckList li, #discardList li {
             width: 100px;
+        }
+
+        context-menu {
+            z-index: 5000;
         }
 
     </style>
@@ -217,6 +222,8 @@ else
         const deckMenu = document.getElementById('deckMenu');
         const discardMenu = document.getElementById('discardMenu');
         const spellzoneMenu = document.getElementById('spellzoneMenu');
+        const discardSubMenu = document.getElementById('discardSubMenu');
+        const deckSubMenu = document.getElementById('deckSubMenu');
     </script>
 
     <script>
@@ -317,11 +324,24 @@ else
             const deckList = document.getElementById('deckList');
             deckList.innerHTML = ''; // Clear the current deck list
 
-            applicationState.deck.forEach(card => {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = handCardTemplate(card);
-                deckList.appendChild(listItem);
-            });
+            if (applicationState.deck.length > 0) {
+                applicationState.deck.forEach((card, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'deckCard';
+                    listItem.innerHTML = handCardTemplate(card);
+                    listItem.dataset.index = index;
+
+                    listItem.addEventListener('contextmenu', (event) => {
+                        event.preventDefault();
+                        deckSubMenu.showMenu(event.pageX, event.pageY, event.target);
+                    });
+
+                    deckList.appendChild(listItem);
+                });
+            } else {
+                deckList.innerHTML = "No cards in deck";
+            }
+            
 
             openModal('deckModal');
         }
@@ -330,11 +350,22 @@ else
             const discardList = document.getElementById('discardList');
             discardList.innerHTML = ''; // Clear the current deck list
 
-            applicationState.discard.forEach(card => {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = handCardTemplate(card);
-                discardList.appendChild(listItem);
-            });
+            if (applicationState.discard.length > 0) {
+                applicationState.discard.forEach((card, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'discardCard';
+                    listItem.innerHTML = handCardTemplate(card);
+                    listItem.dataset.index = index;
+
+                    listItem.addEventListener('contextmenu', (event) => {
+                        event.preventDefault();
+                        discardSubMenu.showMenu(event.pageX, event.pageY, event.target);
+                    });
+                    discardList.appendChild(listItem);
+                });
+            } else {
+                discardList.innerHTML = "No cards in the discard pile";
+            }         
 
             openModal('discardModal');
         }
@@ -386,6 +417,55 @@ else
                 { label: 'Discard', action: discardFromSpellZone }
             ];
             spellzoneMenu.setMenuItems(spellzoneMenuItems);
+
+            // Discard Sub Menu
+            const discardSubMenuItems = [
+                { label: 'To Hand', action: discardToHand },
+                { label: 'To Top Deck', action: discardToDeck }
+            ];
+            discardSubMenu.setMenuItems(discardSubMenuItems);
+
+            // Deck Sub Menu
+            const deckSubMenuItems = [
+                { label: 'To Hand', action: deckToHand },
+                { label: 'To Discard', action: deckToDiscard }
+            ];
+            deckSubMenu.setMenuItems(deckSubMenuItems);
+        }
+
+        function discardToHand(target) {
+            var locationInDiscard = target.parentElement.parentElement.dataset.index;
+            var card = applicationState.discard.splice(locationInDiscard, 1)[0];
+
+            document.dispatchEvent(new CustomEvent('to-hand', { detail: card }));
+            viewDiscard();
+        }
+
+        function discardToDeck(target) {
+            var locationInDiscard = target.parentElement.parentElement.dataset.index;
+            var card = applicationState.discard.splice(locationInDiscard, 1)[0];
+
+            applicationState.deck.push(card);
+            viewDiscard();
+
+            render();
+            handlers();
+        }
+
+        function deckToHand(target) {
+            var locationInDeck = target.parentElement.parentElement.dataset.index;
+            var card = applicationState.deck.splice(locationInDeck, 1)[0];
+
+            document.dispatchEvent(new CustomEvent('to-hand', { detail: card }));
+            viewDeck();
+        }
+
+        function deckToDiscard(target) {
+            var locationInDeck = target.parentElement.parentElement.dataset.index;
+            var card = applicationState.deck.splice(locationInDeck, 1)[0];
+
+            document.dispatchEvent(new CustomEvent('discard-card', { detail: card }));
+            viewDeck();
         }
 
         function handlers() {
@@ -436,8 +516,10 @@ else
         }
 
         function mill() {
-            let card = applicationState.deck.pop();
-            document.dispatchEvent(new CustomEvent('discard-card', { detail: card }));
+            if (applicationState.deck.length > 0) {
+                let card = applicationState.deck.pop();
+                document.dispatchEvent(new CustomEvent('discard-card', { detail: card }));
+            }
 
             render();
             handlers();
