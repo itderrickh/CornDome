@@ -11,9 +11,6 @@ namespace CornDome.Pages
         public IEnumerable<Card> Cards { get; set; }
         public Deck QueryDeck { get; set; } = null;
 
-        public List<Card> Hand { get; set; } = new List<Card>();
-        public Stack<Card> RemainingDeck { get; set; }
-
         public void OnGet()
         {
             Cards = _cardRepository.GetAll();
@@ -25,13 +22,6 @@ namespace CornDome.Pages
         private void BuildDeckFromQuery()
         {
             QueryDeck = Deck.GetFromQuery(Request.Query["deck"], Cards);
-
-            RemainingDeck = new Stack<Card>(QueryDeck.Cards.Shuffle());
-
-            for (int i = 0; i < 5; i++)
-            {
-                Hand.Add(RemainingDeck.Pop());
-            }
         }
     }
 }

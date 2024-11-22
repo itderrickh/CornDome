@@ -8,11 +8,15 @@
 
 @if (Model.QueryDeck.Landscapes.Count < 4)
 {
-    <span> Deck does not have required amount of landscapes</span>
+    <div class="container" style="margin: 50px; text-align: center;">
+        <span> Deck does not have required amount of landscapes</span>
+    </div>
 }
 else if (Model.QueryDeck.Cards.Count < 40)
 {
-    <span>Deck does not have enough cards</span>
+    <div class="container" style="margin: 50px; text-align: center;">
+        <span>Deck does not have enough cards</span>
+    </div>
 }
 else
 {
@@ -40,7 +44,7 @@ else
                 <cd-building id="building3" data-building="building3" style="width: 25%;"></cd-building>
                 <cd-building id="building4" data-building="building4" style="width: 25%;"></cd-building>
             </div>
-        </div>  
+        </div>
 
         <div id="spellzone" ondragover="event.preventDefault()">
             <span>Spell Zone</span>
@@ -55,12 +59,11 @@ else
 
     <div id="control-board">
         <div id="lifetotal">
-            
         </div>
         <div id="hand" style="">
         </div>
     </div>
-    
+
     <context-menu target-class="card" id="cardMenu"></context-menu>
     <context-menu target-id="deck" id="deckMenu"></context-menu>
     <context-menu target-id="spellzone" id="spellzoneMenu"></context-menu>
@@ -82,9 +85,8 @@ else
             <ul id="discardList"></ul>
         </div>
     </div>
-}
 
-@section Styles {
+    @section Styles {
     <style>
         .game-board, #control-board {
             display: flex;
@@ -131,9 +133,9 @@ else
             padding: 5px;
         }
 
-        #spellzone .cardslot, #discard .cardslot, #deck .cardslot {
-            margin-top: 10px;
-        }
+            #spellzone .cardslot, #discard .cardslot, #deck .cardslot {
+                margin-top: 10px;
+            }
 
         .landscape {
             display: block;
@@ -196,18 +198,18 @@ else
             list-style: none;
         }
 
-        #deckList li, #discardList li {
-            width: 100px;
-        }
+            #deckList li, #discardList li {
+                width: 100px;
+            }
 
         context-menu {
             z-index: 5000;
         }
 
     </style>
-}
+    }
 
-@section Scripts {
+    @section Scripts {
     <script src="~/js/goldfish/contextMenu.js"></script>
     <script src="~/js/goldfish/landscape.js"></script>
     <script src="~/js/goldfish/building.js"></script>
@@ -336,7 +338,7 @@ else
             } else {
                 deckList.innerHTML = "No cards in deck";
             }
-            
+
 
             openModal('deckModal');
         }
@@ -360,7 +362,7 @@ else
                 });
             } else {
                 discardList.innerHTML = "No cards in the discard pile";
-            }         
+            }
 
             openModal('discardModal');
         }
@@ -534,13 +536,13 @@ else
         function handCardTemplate(card) {
             var data = encodeURIComponent(JSON.stringify(card));
             return `
-                <div draggable="true"
-                    class="hand-card"
-                    data-id="${card.id}"
-                    data-card="${data}">
-                            <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
-                 </div>
-            `;
+                                <div draggable="true"
+                                    class="hand-card"
+                                    data-id="${card.id}"
+                                    data-card="${data}">
+                                            <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
+                                 </div>
+                            `;
         }
 
         function dragstartHandler(ev) {
@@ -615,4 +617,6 @@ else
             handlers();
         });
     </script>
+    }
 }
+
