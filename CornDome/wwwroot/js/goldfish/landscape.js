@@ -19,6 +19,7 @@
         .drop-landscape {
             position: relative;
             height: 100%;
+            margin: 0 auto;
         }
 
         .card-drop {
@@ -49,7 +50,7 @@
         .damage { color: red; }
         .frozen { color: blue; }
         .flooped {
-            transform: rotate(-0.25turn);
+            transform: rotate(0.25turn);
         }
 
         .landscape-background {
@@ -134,6 +135,10 @@
         const rawData = event.dataTransfer.getData('text');
         const card = JSON.parse(decodeURIComponent(rawData));
 
+        if (this.card) {
+            this.removeCard();
+        }
+
         this.setCard(card);
         this.dispatchEvent(new CustomEvent('landscape-card-drop', {
             detail: {
@@ -171,9 +176,7 @@
         cardElement.addEventListener('contextmenu', (event) => {
             event.preventDefault();  // Disable default browser context menu
             this.cardMenu.showMenu(event.pageX, event.pageY, event.target);
-        });
-
-        
+        }); 
     }
 
     resetLandscape() {

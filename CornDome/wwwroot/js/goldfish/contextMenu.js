@@ -131,7 +131,7 @@
                 menuItem.addEventListener('click', (event) => {
                     event.preventDefault();
                     item.action(this.target);
-                    document.createEvent(new CustomEvent('close-all-menus'));
+                    document.dispatchEvent(new CustomEvent('close-all-menus'));
                 });
             }
 
