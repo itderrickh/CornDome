@@ -145,6 +145,11 @@ document.getElementById("permalinkExport").onclick = function () {
     alert('Copied to clipboard!');
 };
 
+document.getElementById("tryoutButton").onclick = function () {
+    var newURL = window.location.protocol + "//" + window.location.host + "/Goldfish" + window.location.search;
+    window.location.href = newURL;
+}
+
 var addButtons = document.querySelectorAll('.add');
 addButtons.forEach(x => x.onclick = function () {
     var dataset = x.parentElement.parentElement.dataset;
