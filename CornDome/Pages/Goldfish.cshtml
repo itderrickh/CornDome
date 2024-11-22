@@ -26,15 +26,15 @@ else
             </div>
         </div>
 
-        <div style="display: flex; position: relative; flex-wrap: wrap;">
-            <div style="display: flex; width: 100%;">
+        <div style="display: flex; position: relative; flex-wrap: wrap; width: 55%;">
+            <div style="display: flex; width: 100%; height: 65%">
                 <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
                 <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
                 <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
                 <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
             </div>
 
-            <div style="display: flex; width: 100%;">
+            <div style="display: flex; width: 100%; height: 35%">
                 <cd-building id="building1" data-building="building1" style="width: 25%;"></cd-building>
                 <cd-building id="building2" data-building="building2" style="width: 25%;"></cd-building>
                 <cd-building id="building3" data-building="building3" style="width: 25%;"></cd-building>
@@ -92,12 +92,7 @@ else
             gap: 20px;
             width: 95%;
             margin: 0 auto 10px auto;
-        }
-
-        .building, .landscape {
-            height: 300px;
-            width: 200px;
-            border-radius: 3px;
+            height: 60vh;
         }
 
         #hand {
@@ -146,8 +141,8 @@ else
         }
 
 
-        #hand .card {
-            width: 17%;
+        #hand .hand-card {
+            width: 16%;
         }
 
         .card-drop {
@@ -469,7 +464,7 @@ else
         }
 
         function handlers() {
-            const elements = document.querySelectorAll("#hand .card");
+            const elements = document.querySelectorAll("#hand .hand-card");
 
             for (let handCard of elements) {
                 handCard.removeEventListener("dragstart", dragstartHandler);
@@ -540,7 +535,7 @@ else
             var data = encodeURIComponent(JSON.stringify(card));
             return `
                 <div draggable="true"
-                    class="card"
+                    class="hand-card"
                     data-id="${card.id}"
                     data-card="${data}">
                             <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />

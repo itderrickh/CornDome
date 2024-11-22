@@ -13,7 +13,6 @@
         .landscape {
             display: flex;
             flex: 1 1 auto;
-            width: 15em;
         }
 
         .drop-landscape {
@@ -41,8 +40,8 @@
             left: 0;
             right: 0;
             text-align: center;
-            top: 67%;
-            width: 40%;
+            top: 60%;
+            width: 80%;
             background-color: white;
             font-weight: bold;
         }
@@ -56,7 +55,7 @@
         .landscape-background {
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: center;
+            background-position: top;
             height: 100%;
             width: 100%;
         }
@@ -172,7 +171,7 @@
         cardDrop.insertAdjacentHTML("beforeend", template);
 
 
-        const cardElement = this.shadowRoot.querySelector('.card');
+        const cardElement = this.shadowRoot.querySelector('.hand-card');
         cardElement.addEventListener('contextmenu', (event) => {
             event.preventDefault();  // Disable default browser context menu
             this.cardMenu.showMenu(event.pageX, event.pageY, event.target);
@@ -202,10 +201,10 @@
 
     floop() {
         if (this.flooped) {
-            this.shadowRoot.querySelector('.card').classList.remove('flooped');
+            this.shadowRoot.querySelector('.hand-card').classList.remove('flooped');
         }
         else {
-            this.shadowRoot.querySelector('.card').classList.add('flooped');
+            this.shadowRoot.querySelector('.hand-card').classList.add('flooped');
         }
 
         this.flooped = !this.flooped;

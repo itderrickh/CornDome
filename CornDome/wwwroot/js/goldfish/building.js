@@ -9,12 +9,20 @@
         <style>
         .building {
             position: relative;
-            height: 200px;
-            width: 133px;
+            height: 100%;
+            max-width: 133px;
             margin: 0 auto;
         }
         .flooped {
             transform: rotate(0.25turn);
+        }
+
+        .card-drop {
+            height: 100%;
+        }
+
+        .card {
+            height: 100%;
         }
         </style>
         <context-menu target-class="building" class="building-menu"></context-menu>
@@ -60,12 +68,24 @@
         }));
     }
 
+    cardTemplate(card) {
+        var data = encodeURIComponent(JSON.stringify(card));
+        return `
+                <div draggable="true"
+                    class="card"
+                    data-id="${card.id}"
+                    data-card="${data}">
+                            <img class="deck-card-image" alt="${card.name}" style = "height: 100%;" src="/CardImages/${card.imageurl}" />
+                 </div>
+            `;
+    }
+
     setCard(card) {
         this.card = card;
 
         const cardDrop = this.shadowRoot.querySelector('.card-drop');
         cardDrop.innerHTML = "";
-        let template = handCardTemplate(card, false);
+        let template = this.cardTemplate(card);
         cardDrop.insertAdjacentHTML("beforeend", template);
 
         this.buildingMenu = this.shadowRoot.querySelector('.building-menu');
