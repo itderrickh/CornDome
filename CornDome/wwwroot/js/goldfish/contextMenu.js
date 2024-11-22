@@ -10,7 +10,7 @@
         /* Custom context menu styles */
         .custom-menu {
             display: none;
-            position: absolute;
+            position: fixed;
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -77,7 +77,7 @@
                 targets.forEach((targ) => {
                     targ.addEventListener('contextmenu', (event) => {
                         event.preventDefault();
-                        this.showMenu(event.pageX, event.pageY, event.target);
+                        this.showMenu(event.clientX, event.clientY, event.target);
                     });
                 });
             }

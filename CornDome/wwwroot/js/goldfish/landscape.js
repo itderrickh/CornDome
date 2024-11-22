@@ -15,6 +15,7 @@
 
         .drop-landscape {
             position: relative;
+            height: 100%;
         }
 
         .card-drop {
@@ -36,7 +37,7 @@
             left: 0;
             right: 0;
             text-align: center;
-            top: 60%;
+            top: 67%;
             color: red;
             width: 40%;
             background-color: white;
@@ -46,14 +47,18 @@
             transform: rotate(-0.25turn);
         }
 
-        .card-image {
+        .landscape-background {
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100%;
             width: 100%;
         }
+
         </style>
         <context-menu target-class="card" class="landscape-card-menu"></context-menu>
         <div class="landscape drop-landscape" ondrop="this.dispatchEvent(new CustomEvent('card-drop', { detail: event, bubbles: true }));" ondragover="event.preventDefault()">
-            <div style="width: 100%;">
-                <img class="card-image" />
+            <div class="landscape-background" style="width: 100%;">
             </div>
             <div class="card-drop">
             </div>
@@ -69,9 +74,10 @@
     // Attribute changes handling
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'landscape-image') {
-            this.shadowRoot.querySelector('.card-image').src = newValue;
+            this.shadowRoot.querySelector('.landscape-background').style.backgroundImage = `url(${newValue})`;
+            //this.shadowRoot.querySelector('.card-image').src = newValue;
         } else if (name === 'alt-text') {
-            this.shadowRoot.querySelector('.card-image').alt = newValue;
+            //this.shadowRoot.querySelector('.card-image').alt = newValue;
         }
     }
 
@@ -144,7 +150,7 @@
         const cardElement = this.shadowRoot.querySelector('.card');
         cardElement.addEventListener('contextmenu', (event) => {
             event.preventDefault();  // Disable default browser context menu
-            this.cardMenu.showMenu(event.layerX, event.layerY, event.target);
+            this.cardMenu.showMenu(event.pageX, event.pageY, event.target);
         });
     }
 

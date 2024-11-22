@@ -26,10 +26,21 @@ else
             </div>
         </div>
 
-        <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
-        <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
-        <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
-        <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
+        <div style="display: flex; position: relative; flex-wrap: wrap;">
+            <div style="display: flex; width: 100%;">
+                <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
+                <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
+                <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
+                <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
+            </div>
+
+            <div style="display: flex; width: 100%;">
+                <div style="width: 25%;" id="building1" class="building" ondragover="event.preventDefault()"><div class="card-drop"></div></div>
+                <div style="width: 25%;" id="building2" class="building" ondragover="event.preventDefault()"><div class="card-drop"></div></div>
+                <div style="width: 25%;" id="building3" class="building" ondragover="event.preventDefault()"><div class="card-drop"></div></div>
+                <div style="width: 25%;" id="building4" class="building" ondragover="event.preventDefault()"><div class="card-drop"></div></div>
+            </div>
+        </div>  
 
         <div id="spellzone" ondragover="event.preventDefault()">
             <span>Spell Zone</span>
@@ -62,10 +73,16 @@ else
             display: flex;
             justify-content: center;
             gap: 20px;
-            width: 90%;
+            width: 95%;
             margin: 0 auto 10px auto;
         }
 
+        .building, .landscape {
+            height: 300px;
+            width: 200px;
+            border: 1px solid white;
+            border-radius: 3px;
+        }
 
         #hand {
             display: flex;
@@ -80,7 +97,7 @@ else
         }
 
         #deck, #discard, #spellzone {
-            width: 200px;
+            width: 15%;
             border: 1px solid white;
             border-radius: 3px;
         }
@@ -103,17 +120,15 @@ else
             padding: 5px;
         }
 
-        #spellzone .cardslot, #discard .cardslot {
+        #spellzone .cardslot, #discard .cardslot, #deck .cardslot {
             margin-top: 10px;
         }
 
         .landscape {
             display: block;
+            width: 25%;
         }
 
-        .drop-landscape {
-            position: relative;
-        }
 
         #hand .card {
             width: 17%;
@@ -121,6 +136,24 @@ else
 
         .flooped {
             transform: rotate(-0.25turn);
+        }
+
+        .building {
+            position: relative;
+            height: 200px;
+            width: 133px;
+        }
+
+        .card-drop {
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            text-align: center;
+            top: 0;
+            height: 60%;
+            width: 60%;
         }
     </style>
 }
@@ -140,7 +173,11 @@ else
         var zones = {
             hand: document.getElementById('hand'),
             discard: document.getElementById('discard'),
-            deck: document.getElementById('deck')
+            deck: document.getElementById('deck'),
+            building1: document.querySelector('#building1 .card-drop'),
+            building2: document.querySelector('#building2 .card-drop'),
+            building3: document.querySelector('#building3 .card-drop'),
+            building4: document.querySelector('#building4 .card-drop'),
         };
 
         var applicationState = {
@@ -154,11 +191,12 @@ else
                         flooped: false,
                         damage: 0,
                         data: null
-                    },
-                    building: {
-                        flooped: false,
-                        data: null
                     }
+                    
+                },
+                building1: {
+                    flooped: false,
+                    data: null
                 },
                 landscape2: {
                     card: {
@@ -171,6 +209,10 @@ else
                         data: null
                     }
                 },
+                building2: {
+                    flooped: false,
+                    data: null
+                },
                 landscape3: {
                     card: {
                         flooped: false,
@@ -182,6 +224,10 @@ else
                         data: null
                     }
                 },
+                building3: {
+                    flooped: false,
+                    data: null
+                },
                 landscape4: {
                     card: {
                         flooped: false,
@@ -192,7 +238,11 @@ else
                         flooped: false,
                         data: null
                     }
-                }
+                },
+                building4: {
+                    flooped: false,
+                    data: null
+                },
             }
         };
 
@@ -225,6 +275,30 @@ else
                 discardPile.innerHTML = "";
                 let template = handCardTemplate(applicationState.discard[applicationState.discard.length - 1], false);
                 discardPile.insertAdjacentHTML("beforeend", template);
+            }
+
+            if (applicationState.field.building1.data !== null) {
+                zones.building1.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.building1.data, false);
+                zones.building1.insertAdjacentHTML("beforeend", template);
+            }
+
+            if (applicationState.field.building2.data !== null) {
+                zones.building2.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.building2.data, false);
+                zones.building2.insertAdjacentHTML("beforeend", template);
+            }
+
+            if (applicationState.field.building3.data !== null) {
+                zones.building3.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.building3.data, false);
+                zones.building3.insertAdjacentHTML("beforeend", template);
+            }
+
+            if (applicationState.field.building4.data !== null) {
+                zones.building4.innerHTML = "";
+                let template = handCardTemplate(applicationState.field.building4.data, false);
+                zones.building4.insertAdjacentHTML("beforeend", template);
             }
         }
 
@@ -294,6 +368,22 @@ else
                 event.preventDefault();
                 spellzoneMenu.showMenu(event.pageX, event.pageY, event.target);
             });
+
+            const building1 = document.getElementById('building1');
+            building1.removeEventListener('drop', building1Drop);
+            building1.addEventListener('drop', building1Drop);
+
+            const building2 = document.getElementById('building2');
+            building2.removeEventListener('drop', building2Drop);
+            building2.addEventListener('drop', building2Drop);
+
+            const building3 = document.getElementById('building3');
+            building3.removeEventListener('drop', building3Drop);
+            building3.addEventListener('drop', building3Drop);
+
+            const building4 = document.getElementById('building4');
+            building4.removeEventListener('drop', building4Drop);
+            building4.addEventListener('drop', building4Drop);
         }
 
         function discardFromSpellZone() {
@@ -342,6 +432,58 @@ else
             applicationState.hand.splice(locationInHand, 1);
 
             applicationState.field.spellZone = card;
+            render();
+            handlers();
+        }
+
+        function building1Drop(ev) {
+            ev.preventDefault();
+            const rawData = ev.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+            applicationState.hand.splice(locationInHand, 1);
+
+            applicationState.field.building1.data = card;
+            render();
+            handlers();
+        }
+
+        function building2Drop(ev) {
+            ev.preventDefault();
+            const rawData = ev.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+            applicationState.hand.splice(locationInHand, 1);
+
+            applicationState.field.building2.data = card;
+            render();
+            handlers();
+        }
+
+        function building3Drop(ev) {
+            ev.preventDefault();
+            const rawData = ev.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+            applicationState.hand.splice(locationInHand, 1);
+
+            applicationState.field.building3.data = card;
+            render();
+            handlers();
+        }
+
+        function building4Drop(ev) {
+            ev.preventDefault();
+            const rawData = ev.dataTransfer.getData('text');
+            const card = JSON.parse(decodeURIComponent(rawData));
+
+            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+            applicationState.hand.splice(locationInHand, 1);
+
+            applicationState.field.building4.data = card;
             render();
             handlers();
         }
