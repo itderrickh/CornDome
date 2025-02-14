@@ -3,13 +3,10 @@ using System.Text.Json;
 
 namespace CornDome.Repository
 {
-    public interface ICardRepository
+    [Obsolete]
+    public class JsonCardRepository(JsonRepositoryConfig config) : ICardRepository
     {
-        IEnumerable<Card> GetAll();
-    }
-    public class CardRepository(Config config) : ICardRepository
-    {
-        private readonly string _dataDirectory = config.AppData.DataPath;
+        private readonly string _dataDirectory = config.DataPath;
         private readonly List<string> _sets = [
             "cp1.json",
             "cp2.json",

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CornDome.Repository", "CornDome.Repository\CornDome.Repository.csproj", "{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{574D9361-909E-448B-8F13-5071B043E658}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{574D9361-909E-448B-8F13-5071B043E658}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{574D9361-909E-448B-8F13-5071B043E658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

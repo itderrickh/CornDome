@@ -12,7 +12,10 @@ namespace CornDome
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
-            builder.Services.AddSingleton<ICardRepository, CardRepository>();
+            builder.Services.AddSingleton<JsonRepositoryConfig>();
+            //builder.Services.AddSingleton<SqliteRepositoryConfig>();
+            builder.Services.AddSingleton<ICardRepository, JsonCardRepository>();
+            //builder.Services.AddSingleton<ICardRepository, SqliteCardRepository>();
 
             var app = builder.Build();
 

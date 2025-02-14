@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CornDome.Models\CornDome.Models.csproj" />
+    <ProjectReference Include="..\CornDome.Repository\CornDome.Repository.csproj" />
   </ItemGroup>
 
 </Project>
