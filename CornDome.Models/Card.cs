@@ -23,6 +23,7 @@ namespace CornDome.Models
         [JsonPropertyName("imageurl")]
         public required string ImageUrl { get; set; }
         [JsonPropertyName("set")]
-        public Set? Set { get; set; }
+        public Set? CardSet { get; set; }
+        public int? Revision { get; set; }
     }
 }
