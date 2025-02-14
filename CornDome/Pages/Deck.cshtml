@@ -10,14 +10,14 @@
         @if (Model.QueryDeck.Hero != null)
         {
             <div style="width: 20%;">
-                <img style="width: 100%;" alt="@Model.QueryDeck.Hero.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.ImageUrl)" />
+                <img style="width: 100%;" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.LatestRevision.GetRegularImage)" />
             </div>
         }
         
         @foreach (var landscape in Model.QueryDeck.Landscapes)
         {
             <div style="width: 20%;">
-                <img style="width: 100%;" alt="@landscape.Name" src="@("/CardImages/" + landscape.ImageUrl)" />
+                <img style="width: 100%;" alt="@landscape.LatestRevision.Name" src="@("/CardImages/" + landscape.LatestRevision.GetRegularImage)" />
             </div>
         }
     </div>
@@ -26,7 +26,7 @@
         @foreach (var card in Model.QueryDeck.Cards)
         {
             <div style="width: 10%;">
-                <img class="deck-card-image" alt="@card.Name" style="width: 100%;" src="@("/CardImages/" + card.ImageUrl)" />
+                <img class="deck-card-image" alt="@card.LatestRevision.Name" style="width: 100%;" src="@("/CardImages/" + card.LatestRevision.GetRegularImage)" />
             </div>
         }
     </div>

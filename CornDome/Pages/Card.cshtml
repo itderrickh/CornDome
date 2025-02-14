@@ -1,7 +1,11 @@
 ﻿@page
 @model CornDome.Pages.CardModel
 @{
-    ViewData["Title"] = Model.QueryCard.Name;
+    ViewData["Title"] = Model.QueryCard.LatestRevision.Name;
+
+    var selectedRevision = Model.QueryCard.LatestRevision;
+    if (Model.RevisionId != null)
+        selectedRevision = Model.QueryCard.Revisions.FirstOrDefault(x => x.Id == Model.RevisionId);
 }
 
 @if (Model.QueryCard == null)
@@ -11,52 +15,79 @@
 else
 {
     <div>
-        <h1>@Model.QueryCard.Name</h1>
+        <h1>@selectedRevision.Name</h1>
     </div>
     <div class="card-detail">
         <div style="width: 50%">
-            <img style="width: 100%; max-width: 500px;" alt="@Model.QueryCard.Name" src="@("/CardImages/" + Model.QueryCard.ImageUrl)" />
+            <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetRegularImage)" />
         </div>
         <div style="width: 50%; padding: 20px;">
             <div class="card-text-section">
-                <span class="bold-label">Card Type: </span><br /><span>@Model.QueryCard.CardType</span>
+                <span class="bold-label">Card Type: </span><br /><span>@selectedRevision.CardType</span>
             </div>
-            @if (Model.QueryCard.Landscape.HasValue)
+            @if (selectedRevision.Landscape.HasValue)
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(Model.QueryCard.Landscape.Value)</span>
+                    <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(selectedRevision.Landscape.Value)</span>
                 </div>
             }
-            @if (Model.QueryCard.Ability != "")
+            @if (selectedRevision.Ability != "")
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Ability: </span><br /><span>@Model.QueryCard.Ability</span>
-                </div>
-            }
-
-            @if (Model.QueryCard.Set.HasValue)
-            {
-                <div class="card-text-section">
-                    <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString(Model.QueryCard.Set.Value)</span>
+                    <span class="bold-label">Ability: </span><br /><span>@selectedRevision.Ability</span>
                 </div>
             }
 
-            @if (Model.QueryCard.Cost.HasValue)
+            @if (selectedRevision.CardSet.HasValue)
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Cost: </span><span>@Model.QueryCard.Cost</span>
+                    <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString(selectedRevision.CardSet.Value)</span>
                 </div>
             }
 
-            @if (Model.QueryCard.Attack.HasValue || Model.QueryCard.Defense.HasValue)
+            @if (selectedRevision.Cost.HasValue)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Cost: </span><span>@selectedRevision.Cost</span>
+                </div>
+            }
+
+            @if (selectedRevision.Attack.HasValue || selectedRevision.Defense.HasValue)
             {
                 <div class="card-text-section" style="display: flex">
                     <div style="width: 50%">
-                        <span class="bold-label">Attack: </span><span>@Model.QueryCard.Attack</span>
+                        <span class="bold-label">Attack: </span><span>@selectedRevision.Attack</span>
                     </div>
                     <div>
-                        <span class="bold-label">Defense: </span><span>@Model.QueryCard.Defense</span>
+                        <span class="bold-label">Defense: </span><span>@selectedRevision.Defense</span>
                     </div>
+                </div>
+            }
+
+            @if (Model.QueryCard.Revisions.Count > 0)
+            {
+                <div class="card-text-section" style="display: flex">
+                    <span class="bold-label">Revisions: </span>
+                    <br /><br />
+                    @foreach (var rev in Model.QueryCard.Revisions)
+                    {
+                        <div>
+                            <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
+                            @if (rev.GetSmallImage != null)
+                            {
+                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallImage)" />
+                            }
+                            else if (rev.GetRegularImage != null)
+                            {
+                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetRegularImage)" />
+                            }
+                            else
+                            {
+                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargeImage)" />
+                            }
+
+                        </div>
+                    }
                 </div>
             }
         </div>

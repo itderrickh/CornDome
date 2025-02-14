@@ -12,8 +12,7 @@
         HeroPack = 7,
         ForTheGlory = 8,
         Promo = 9,
-        Kickstarter = 10,
-        CommunityCards = 11
+        Kickstarter = 10
     }
 
     public static class SetConverter
@@ -33,7 +32,6 @@
                 Set.ForTheGlory => "For The Glory",
                 Set.Promo => "Promo",
                 Set.Kickstarter => "Kickstarter",
-                Set.CommunityCards => "Community Cards",
                 _ => "",
             };
         }
@@ -53,7 +51,6 @@
                 Set.ForTheGlory => "ftg",
                 Set.Promo => "promo",
                 Set.Kickstarter => "ks1",
-                Set.CommunityCards => "cwe",
                 _ => "",
             };
         }

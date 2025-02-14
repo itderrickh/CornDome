@@ -13,7 +13,7 @@ namespace CornDome.Pages
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         private readonly Config config = configuration;
-        public IEnumerable<Card> Cards { get; set; }
+        public IEnumerable<CardFullDetails> Cards { get; set; }
         public Deck QueryDeck { get; set; } = null;
 
         private const int cardWidth = 86;
@@ -50,7 +50,7 @@ namespace CornDome.Pages
             if (QueryDeck.Hero != null)
             {
                 var heroLoc = coordinates[coordCounter];
-                using var heroImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.ImageUrl));
+                using var heroImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetRegularImage));
                 heroImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
 
                 outputImage.Mutate(o => o.DrawImage(heroImage, new Point(heroLoc.Item1, heroLoc.Item2), 1f));
@@ -62,7 +62,7 @@ namespace CornDome.Pages
             foreach (var landscape in QueryDeck.Landscapes)
             {
                 var landLoc = coordinates[coordCounter];
-                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.ImageUrl));
+                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetRegularImage));
                 landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
 
                 outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f).BackgroundColor(Color.DarkGray));
@@ -76,7 +76,7 @@ namespace CornDome.Pages
             foreach (var card in QueryDeck.Cards)
             {
                 var cardLoc = coordinates[coordCounter];
-                using var cardImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.ImageUrl)));
+                using var cardImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetRegularImage)));
                 cardImage.Mutate(ci => ci.Resize(new Size(cardWidth, cardHeight)));
 
                 outputImage.Mutate(o => o.DrawImage(cardImage, new Point(cardLoc.Item1, cardLoc.Item2), 1f));

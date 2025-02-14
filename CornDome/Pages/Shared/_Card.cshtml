@@ -1,19 +1,30 @@
 ﻿@model Models.CardViewModel
 
+@{
+    var cardImage = Model.Card.LatestRevision.GetRegularImage;
+
+    if (Model.CardImageType == CardImageType.XSmall)
+        cardImage = Model.Card.LatestRevision.GetExtraSmallImage;
+    else if (Model.CardImageType == CardImageType.Small)
+        cardImage = Model.Card.LatestRevision.GetSmallImage;
+    else if (Model.CardImageType == CardImageType.Large)
+        cardImage = Model.Card.LatestRevision.GetLargeImage;
+}
+
 <div style="width: 120px;"
      class="card-container"
      data-id="@Model.Card.Id"
-     data-card-image="@("/CardImages/" + Model.Card.ImageUrl)"
-     data-card-type="@Model.Card.CardType"
-     data-landscape="@(Model.Card.Landscape.HasValue ? Model.Card.Landscape.ToString() : "")"
-     data-name="@Model.Card.Name"
-     data-ability="@Model.Card.Ability"
-     data-cost="@(Model.Card.Cost.HasValue ? Model.Card.Cost.ToString() : "")"
-     data-set="@(Model.Card.Set.HasValue ? Model.Card.Set : "")"
-     data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
-     data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
+     data-card-image="@("/CardImages/" + cardImage)"
+     data-card-type="@Model.Card.LatestRevision.CardType"
+     data-landscape="@(Model.Card.LatestRevision.Landscape.HasValue ? Model.Card.LatestRevision.Landscape.ToString() : "")"
+     data-name="@Model.Card.LatestRevision.Name"
+     data-ability="@Model.Card.LatestRevision.Ability"
+     data-cost="@(Model.Card.LatestRevision.Cost.HasValue ? Model.Card.LatestRevision.Cost.ToString() : "")"
+     data-set="@(Model.Card.LatestRevision.CardSet.HasValue ? Model.Card.LatestRevision.CardSet : "")"
+     data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
+     data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
     <div class="card">
-        <img src="@("/CardImages/" + Model.Card.ImageUrl)" alt="@Model.Card.Name" style="width: 100%;" />
+        <img src="@("/CardImages/" + cardImage)" alt="@Model.Card.LatestRevision.Name" style="width: 100%;" />
         @if (Model.IsAddable)
         {
             <div class="card-overlay add"></div>

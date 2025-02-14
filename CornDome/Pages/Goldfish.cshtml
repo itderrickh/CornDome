@@ -32,10 +32,10 @@ else
 
         <div style="display: flex; position: relative; flex-wrap: wrap; width: 55%;">
             <div style="display: flex; width: 100%; height: 65%">
-                <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].ImageUrl)"></cd-landscape>
-                <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].ImageUrl)"></cd-landscape>
-                <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].ImageUrl)"></cd-landscape>
-                <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].ImageUrl)"></cd-landscape>
+                <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].LatestRevision.GetRegularImage)"></cd-landscape>
             </div>
 
             <div style="display: flex; width: 100%; height: 35%">
@@ -528,7 +528,7 @@ else
 
         function discardFromHand(target) {
             var id = parseInt(target.parentElement.dataset.id, 10);
-            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(id);
+            var locationInHand = applicationState.hand.map(function (x) { return x.Id; }).indexOf(id);
             var card = applicationState.hand.splice(locationInHand, 1);
 
             document.dispatchEvent(new CustomEvent('discard-card', { detail: card[0] }));
@@ -542,9 +542,9 @@ else
             return `
                                 <div draggable="true"
                                     class="hand-card"
-                                    data-id="${card.id}"
+                                    data-id="${card.Id}"
                                     data-card="${data}">
-                                            <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
+                                            <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "width: 100%;" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
                                  </div>
                             `;
         }
@@ -565,7 +565,7 @@ else
                     document.dispatchEvent(new CustomEvent('discard-card', { detail: applicationState.field.spellZone }));
                 }
 
-                var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(card['id']);
+                var locationInHand = applicationState.hand.map(function (x) { return x.Id; }).indexOf(card['Id']);
                 applicationState.hand.splice(locationInHand, 1);
 
                 applicationState.field.spellZone = card;
@@ -579,7 +579,7 @@ else
 
         document.addEventListener('landscape-card-drop', (event) => {
             const cardData = event.detail.cardData;
-            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(cardData['id']);
+            var locationInHand = applicationState.hand.map(function (x) { return x.Id; }).indexOf(cardData['Id']);
             applicationState.hand.splice(locationInHand, 1);
             render();
             handlers();
@@ -587,7 +587,7 @@ else
 
         document.addEventListener('building-card-drop', (event) => {
             const cardData = event.detail.cardData;
-            var locationInHand = applicationState.hand.map(function (x) { return x.id; }).indexOf(cardData['id']);
+            var locationInHand = applicationState.hand.map(function (x) { return x.Id; }).indexOf(cardData['Id']);
             applicationState.hand.splice(locationInHand, 1);
             render();
             handlers();

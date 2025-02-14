@@ -79,9 +79,9 @@
         return `
                 <div
                     class="card"
-                    data-id="${card.id}"
+                    data-id="${card.Id}"
                     data-card="${data}">
-                            <img class="deck-card-image" alt="${card.name}" style = "height: 100%;" src="/CardImages/${card.imageurl}" />
+                            <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "height: 100%;" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
                  </div>
             `;
     }

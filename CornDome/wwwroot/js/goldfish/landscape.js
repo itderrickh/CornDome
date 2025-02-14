@@ -161,9 +161,9 @@
         return `
                     <div
                         class="landscape-card ${floopClass}"
-                        data-id="${card.id}"
+                        data-id="${card.Id}"
                         data-card="${data}">
-                                <img class="deck-card-image" alt="${card.name}" style = "width: 100%;" src="/CardImages/${card.imageurl}" />
+                                <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "width: 100%;" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
                      </div>
                 `;
     }

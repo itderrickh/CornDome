@@ -19,13 +19,22 @@ namespace CornDome.Repository
             "landscape.json",
             "promo.json",
             "ks1.json",
-            "hp1.json",
-            "cwe.json"
+            "hp1.json"
         ];
 
-        public IEnumerable<Card> GetAll()
+        public IEnumerable<Card> GetAll2()
         {
             return _sets.SelectMany(set => GetCardsFromJson(set));
+        }
+
+        public CardFullDetails? GetCard(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<CardFullDetails> ICardRepository.GetAll()
+        {
+            throw new NotImplementedException();
         }
 
         private List<Card> GetCardsFromJson(string file)

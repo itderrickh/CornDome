@@ -2,11 +2,11 @@
 {
     public class Deck
     {
-        public Card Hero { get; set; }
-        public List<Card> Landscapes { get; set; } = [];
-        public List<Card> Cards { get; set; } = [];
+        public CardFullDetails Hero { get; set; }
+        public List<CardFullDetails> Landscapes { get; set; } = [];
+        public List<CardFullDetails> Cards { get; set; } = [];
 
-        public static Deck GetFromQuery(string query, IEnumerable<Card> cards)
+        public static Deck GetFromQuery(string query, IEnumerable<CardFullDetails> cards)
         {
             var deckToReturn = new Deck();
             var converted = Convert.FromBase64String(query);

@@ -7,14 +7,18 @@ namespace CornDome.Pages
     public class CardModel(ICardRepository cardRepository) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
-        public IEnumerable<Card> Cards { get; set; }
-        public Card QueryCard { get; set; } = null;
+        public CardFullDetails QueryCard { get; set; } = null;
+        public int? RevisionId { get; set; } = null;
 
         public void OnGet()
         {
             var queryId = Request.Query["id"];
-            Cards = _cardRepository.GetAll();
-            QueryCard = Cards.FirstOrDefault(x => x.Id == int.Parse(queryId));
+            QueryCard = _cardRepository.GetCard(int.Parse(queryId));
+
+            var revisionNumber = Request.Query["revision"];
+            var gotRevision = int.TryParse(revisionNumber, out int rev);
+            if (gotRevision)
+                RevisionId = rev;
         }
     }
 }

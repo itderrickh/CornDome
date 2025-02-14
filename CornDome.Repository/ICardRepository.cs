@@ -4,6 +4,7 @@ namespace CornDome.Repository
 {
     public interface ICardRepository
     {
-        IEnumerable<Card> GetAll();
+        IEnumerable<CardFullDetails> GetAll();
+        CardFullDetails? GetCard(int id);
     }
 }
