@@ -8,14 +8,14 @@ namespace CornDome
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
-            builder.Services.AddSingleton<JsonRepositoryConfig>();
-            //builder.Services.AddSingleton<SqliteRepositoryConfig>();
-            builder.Services.AddSingleton<ICardRepository, JsonCardRepository>();
-            //builder.Services.AddSingleton<ICardRepository, SqliteCardRepository>();
+            //builder.Services.AddSingleton<JsonRepositoryConfig>();
+            builder.Services.AddSingleton<SqliteRepositoryConfig>();
+            //builder.Services.AddSingleton<ICardRepository, JsonCardRepository>();
+            builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
 
             var app = builder.Build();
 

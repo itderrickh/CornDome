@@ -24,5 +24,6 @@ namespace CornDome.Models
         public required string ImageUrl { get; set; }
         [JsonPropertyName("set")]
         public Set? Set { get; set; }
+        public int? Revision { get; set; }
     }
 }
