@@ -31,7 +31,7 @@ else
                     <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(selectedRevision.Landscape.Value)</span>
                 </div>
             }
-            @if (selectedRevision.Ability != "")
+            @if (!string.IsNullOrEmpty(selectedRevision.Ability))
             {
                 <div class="card-text-section">
                     <span class="bold-label">Ability: </span><br /><span>@selectedRevision.Ability</span>

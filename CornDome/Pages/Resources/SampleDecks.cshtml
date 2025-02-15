@@ -1,0 +1,52 @@
+﻿@page
+@model CornDome.Pages.Resources.SampleDecksModel
+@{
+    ViewData["Title"] = "Sample Decks";
+}
+
+<div>
+    <div style="margin-bottom: 40px;">
+        <h1>Sample Decks</h1>
+
+        <p>The following sample decks have been provided by Card Wars Discord community member PichuisPro.</p>
+    </div>
+    <div>
+        <h3>Woadic Chief FTK</h3>
+        <p>The strategy of this deck is to combine <a asp-page="/Card" asp-route-id="52">Woadic Chief</a> with many cheap 0 cost spells to try to reach 25 damage in the first turn.</p>
+
+        <h5>Tips for play:</h5>
+        <ul>
+            <li>You can use <a asp-page="/Card" asp-route-id="108">Unempty Coffin</a> to discount the cost on <a asp-page="/Card" asp-route-id="52">Woadic Chief</a></li>
+            <li><a asp-page="/Card" asp-route-id="380">Scorching Serve</a> removes creatures in opposing lands if necessary</li>
+            <li>An alternative win-condition is using <a asp-page="/Card" asp-route-id="432">Blue Slimey</a> to remove a creature in the opposing land and using <a asp-page="/Card" asp-route-id="154">Subliminal Strength</a> to raise the damage</li>
+            <li><a asp-page="/Card" asp-route-id="89">Red Eyeling</a> can recur 0 cost spells to help further dig and increase <a asp-page="/Card" asp-route-id="52">Woadic Chiefs</a> damage</li>
+            <li>The chosen Hero <a asp-page="/Card" asp-route-id="317">Grand Prix</a> allows you to gain more benefits from Slimeys, Red Eyeling, and <a asp-page="/Card" asp-route-id="441">Djini Ghost</a> floops!</li>
+        </ul>
+    </div>
+
+    <h6>Click the following image to view the full deck in detail</h6>
+    <div style="width: 100%; padding: 10px; margin-bottom: 40px;">
+        <a href="https://www.carddweeb.com/Deck?deck=MzE3OzA6Miw4OjEsMTI6MTs1MjozLDU5OjMsODk6MywxMDg6MiwxNTM6MywxNTQ6MiwxOTM6MywyOTg6MSwzMDA6MywzMDM6MSwzODA6MywzODQ6MSw0MzI6Myw0NDE6Myw0NjA6Myw1MzQ6Myw1NDk6Mw==">
+            <img style="width: 100%" src="~/img/sample_decks/strong.png" />
+        </a>
+    </div>
+
+    <div>
+        <h3>Off-Meta Party God Lane Shift</h3>
+        <p>The strategy of this deck is to move creatures across your empty lanes to accrue big damage.</p>
+
+        <h5>Tips for play:</h5>
+        <ul>
+            <li>Each creature has benefits to changing lanes. Payoffs like <a asp-page="/Card" asp-route-id="62">Woad Blood</a> can push through big damage or KO opposing creatures.</li>
+            <li>Keep a lane open to move creatures on, if your opponent tries to block your damage, shift to that lane and use your pump spells to push more damage.</li>
+        </ul>
+    </div>
+
+    <div style="width: 100%; padding: 10px;">
+        <a href="https://www.carddweeb.com/Deck?deck=NTQwOzA6MiwxMjoyOzQ2OjMsNTM6Myw2MToyLDYyOjMsOTI6MiwzMjk6MywzMzk6MywzNDM6Myw0NjU6Myw1MDk6Myw1MTY6Miw1MjU6Myw1NDE6Miw1NDI6Miw1NDk6Mw==">
+            <img style="width: 100%" src="~/img/sample_decks/offmeta.png" />
+        </a>
+    </div>
+
+</div>
+
