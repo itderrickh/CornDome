@@ -69,25 +69,27 @@ else
                 <div class="card-text-section" style="display: flex">
                     <span class="bold-label">Revisions: </span>
                     <br /><br />
-                    @foreach (var rev in Model.QueryCard.Revisions)
-                    {
-                        <div>
-                            <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
-                            @if (rev.GetSmallImage != null)
-                            {
-                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallImage)" />
-                            }
-                            else if (rev.GetRegularImage != null)
-                            {
-                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetRegularImage)" />
-                            }
-                            else
-                            {
-                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargeImage)" />
-                            }
+                    <div>
+                        @foreach (var rev in Model.QueryCard.Revisions)
+                        {
+                            <div>
+                                <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
+                                @if (rev.GetSmallImage != null)
+                                {
+                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallImage)" />
+                                }
+                                else if (rev.GetRegularImage != null)
+                                {
+                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetRegularImage)" />
+                                }
+                                else
+                                {
+                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargeImage)" />
+                                }
 
-                        </div>
-                    }
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </div>
