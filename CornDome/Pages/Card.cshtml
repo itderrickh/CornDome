@@ -66,13 +66,15 @@ else
 
             @if (Model.QueryCard.Revisions.Count > 0)
             {
-                <div class="card-text-section" style="display: flex">
-                    <span class="bold-label">Revisions: </span>
-                    <br /><br />
+                <div class="card-text-section">
                     <div>
+                        <span class="bold-label">Revisions: </span>
+                    </div>
+                    <br />
+                    <div style="display: flex">
                         @foreach (var rev in Model.QueryCard.Revisions)
                         {
-                            <div>
+                            <div style="width: 50%">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
                                 @if (rev.GetSmallImage != null)
                                 {
