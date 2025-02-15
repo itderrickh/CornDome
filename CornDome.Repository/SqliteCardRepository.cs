@@ -43,7 +43,8 @@ namespace CornDome.Repository
                 }
             }
 
-            return data.Values;
+            return data.Values
+                .OrderBy(x => x.LatestRevision.Name);
         }
 
         public CardFullDetails? GetCard(int id)
