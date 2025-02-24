@@ -20,8 +20,12 @@ namespace CornDome.Middleware
                     previousRoute = prevUrl.AbsolutePath;
                 }
 
-                // Log in format: (FromRoute, ToRoute, HitCount)
-                await loggingRepository.LogRouteChange(previousRoute, currentRoute);
+                // Ignore admin routing
+                if (!currentRoute.Contains("/Admin") || !previousRoute.Contains("/Admin"))
+                {
+                    // Log in format: (FromRoute, ToRoute, HitCount)
+                    await loggingRepository.LogRouteChange(previousRoute, currentRoute);
+                }                
             }
             catch { } // Silently ignore if failed, for now
 
