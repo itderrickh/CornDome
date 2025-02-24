@@ -1,3 +1,4 @@
+using CornDome.Middleware;
 using CornDome.Repository;
 using Microsoft.Extensions.FileProviders;
 
@@ -12,10 +13,22 @@ namespace CornDome
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
-            //builder.Services.AddSingleton<JsonRepositoryConfig>();
+
+            // Configurations
             builder.Services.AddSingleton<SqliteRepositoryConfig>();
-            //builder.Services.AddSingleton<ICardRepository, JsonCardRepository>();
+            builder.Services.AddSingleton<UserRepositoryConfig>();
+
+            // Repositories
+            builder.Services.AddTransient<ILoggingRepository, LoggingRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+            builder.Services.AddAuthentication("Cookies")
+                .AddCookie("Cookies", options =>
+                {
+                    options.LoginPath = "/Admin/Login"; // Redirect unauthenticated users here
+                });
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -42,10 +55,11 @@ namespace CornDome
                 RequestPath = "/CardImages"
             });
 
+            if (!app.Environment.IsDevelopment())
+                app.UseMiddleware<RouteLogger>();
+
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.MapRazorPages();
 
             app.Run();

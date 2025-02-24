@@ -4,6 +4,6 @@ namespace CornDome.Repository
 {
     public class SqliteRepositoryConfig(IConfiguration configuration)
     {
-        public string DbPath { get; set; } = configuration["Cards:DatabasePath"] ?? "";
+        public string DbPath { get; set; } = configuration["Database:CardPath"] ?? "";
     }
 }
