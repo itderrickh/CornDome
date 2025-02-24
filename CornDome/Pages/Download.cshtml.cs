@@ -6,6 +6,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System.Collections.Concurrent;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 
 namespace CornDome.Pages
@@ -25,8 +27,18 @@ namespace CornDome.Pages
         private const int borderY = 20;
 
         public string ImageString { get; set; }
+        public ConcurrentDictionary<string, Image<Rgb24>> imageCache = new();
         public byte[] CreateCoordinates()
         {
+            Parallel.ForEach(QueryDeck.Cards, card =>
+            {
+                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
+                if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
+                {
+                    imageCache[cardPath] = Image.Load<Rgb24>(cardPath);
+                }
+            });
+
             // X, Y
             var coordinates = new List<(int, int)>();
             for (var topX = 0; topX < 5; topX++)
@@ -48,45 +60,78 @@ namespace CornDome.Pages
             var coordCounter = 0;
             using var outputImage = new Image<Rgba32>(finalImageWidth, finalImageHeight);
 
+            // Load Hero Image
             if (QueryDeck.Hero != null)
             {
-                var heroLoc = coordinates[coordCounter];
-                using var heroImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage));
-                heroImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
-
-                outputImage.Mutate(o => o.DrawImage(heroImage, new Point(heroLoc.Item1, heroLoc.Item2), 1f));
+                var heroPath = Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage);
+                if (System.IO.File.Exists(heroPath))
+                {
+                    imageCache[heroPath] = Image.Load<Rgb24>(heroPath);
+                }
             }
 
-            // Hero or blank added
+            // Load Landscape Images
+            foreach (var landscape in QueryDeck.Landscapes)
+            {
+                var landPath = Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage);
+                if (!imageCache.ContainsKey(landPath) && System.IO.File.Exists(landPath))
+                {
+                    imageCache[landPath] = Image.Load<Rgb24>(landPath);
+                }
+            }
+
+            // Load Card Images
+            foreach (var card in QueryDeck.Cards)
+            {
+                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
+                if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
+                {
+                    imageCache[cardPath] = Image.Load<Rgb24>(cardPath);
+                }
+            }
+
+            // **DRAW IMAGES FROM CACHE**
+            if (QueryDeck.Hero != null && imageCache.TryGetValue(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage), out var heroImage))
+            {
+                var heroLoc = coordinates[coordCounter];
+                heroImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
+                outputImage.Mutate(o => o.DrawImage(heroImage, new Point(heroLoc.Item1, heroLoc.Item2), 1f));
+            }
             coordCounter++;
 
             foreach (var landscape in QueryDeck.Landscapes)
             {
                 var landLoc = coordinates[coordCounter];
-                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage));
-                landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
-
-                outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f).BackgroundColor(Color.DarkGray));
+                var landPath = Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage);
+                if (imageCache.TryGetValue(landPath, out var landImage))
+                {
+                    landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
+                    outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f));
+                }
                 coordCounter++;
             }
-            
-            // Leave landscape area blank if less than 4
-            if (QueryDeck.Landscapes.Count < 4)
-                coordCounter += (4 - QueryDeck.Landscapes.Count);
-            
+
             foreach (var card in QueryDeck.Cards)
             {
                 var cardLoc = coordinates[coordCounter];
-                using var cardImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage)));
-                cardImage.Mutate(ci => ci.Resize(new Size(cardWidth, cardHeight)));
-
-                outputImage.Mutate(o => o.DrawImage(cardImage, new Point(cardLoc.Item1, cardLoc.Item2), 1f));
+                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
+                if (imageCache.TryGetValue(cardPath, out var cardImage))
+                {
+                    cardImage.Mutate(ci => ci.Resize(new Size(cardWidth, cardHeight)));
+                    outputImage.Mutate(o => o.DrawImage(cardImage, new Point(cardLoc.Item1, cardLoc.Item2), 1f));
+                }
                 coordCounter++;
             }
 
+            // Dispose of cached images to free memory
+            foreach (var img in imageCache.Values)
+            {
+                img.Dispose();
+            }
+
             using var stream = new MemoryStream();
-            outputImage.Save(stream, new PngEncoder()); // Save as PNG to memory stream
-            stream.Seek(0, SeekOrigin.Begin); // Reset stream position
+            outputImage.Save(stream, new PngEncoder());
+            stream.Seek(0, SeekOrigin.Begin);
 
             return stream.ToArray();
         }

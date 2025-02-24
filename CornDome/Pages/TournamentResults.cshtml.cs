@@ -9,7 +9,9 @@ namespace CornDome.Pages
         public List<Tournament> Tournaments { get; set; } = [];
         public void OnGet()
         {
-            Tournaments = tournamentRepository.GetAllTournaments();
+            Tournaments = tournamentRepository.GetAllTournaments()
+                .OrderByDescending(x => x.TournamentDate)
+                .ToList();
         }
     }
 }

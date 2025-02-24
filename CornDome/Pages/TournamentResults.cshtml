@@ -8,13 +8,13 @@
 <div class="accordion" id="tournamentAccordian">
     @for (var i = 0; i < Model.Tournaments.Count; i++)
     {
-        <div class="accordion-item">
+        <div class="accordion-item collapsed">
             <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(i)" aria-expanded="true" aria-controls="collapse@(i)">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(i)" aria-expanded="true" aria-controls="collapse@(i)">
                     @Model.Tournaments[i].TournamentDate.ToShortDateString() @Model.Tournaments[i].TournamentName
                 </button>
             </h2>
-            <div id="collapse@(i)" class="accordion-collapse collapse show" aria-labelledby="heading@(i)" data-bs-parent="#tournamentAccordian">
+            <div id="collapse@(i)" class="accordion-collapse collapse" aria-labelledby="heading@(i)" data-bs-parent="#tournamentAccordian">
                 <div class="accordion-body">
                     @foreach (var result in Model.Tournaments[i].TournamentResults.OrderBy(x => x.Placement))
                     {
@@ -22,7 +22,6 @@
                             <h3 style="border-bottom: 1px solid lightgray;">Placement @result.Placement - @result.Name</h3>
                             <div style="width: 100%; padding: 10px;">
                                 <a asp-page="/Deck" asp-route-deck="@result.Decklist">
-                                    Deck
                                     <img style="width: 100%" src="/Download?deck=@result.Decklist" />
                                 </a>
                             </div>
