@@ -6,7 +6,6 @@ namespace CornDome.Repository
 {
     public class SqliteCardRepository(SqliteRepositoryConfig config) : ICardRepository
     {
-
         public IEnumerable<CardFullDetails> GetAll()
         {
             using var con = new SQLiteConnection(config.DbPath);
