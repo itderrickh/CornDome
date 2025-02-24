@@ -21,7 +21,7 @@ namespace CornDome.Middleware
                 }
 
                 // Ignore admin routing
-                if (!currentRoute.Contains("/Admin") || !previousRoute.Contains("/Admin"))
+                if (!currentRoute.Contains("/Admin") && !previousRoute.Contains("/Admin"))
                 {
                     // Log in format: (FromRoute, ToRoute, HitCount)
                     await loggingRepository.LogRouteChange(previousRoute, currentRoute);
