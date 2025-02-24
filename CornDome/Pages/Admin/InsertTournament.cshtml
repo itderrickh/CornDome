@@ -1,0 +1,55 @@
+﻿@page
+@model CornDome.Pages.Admin.InsertTournamentModel
+@{
+    ViewData["Title"] = "Insert Tournament";
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="TournamentDate">Tournament Date</label>
+        <input asp-for="Tournament.TournamentDate" type="date" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="TournamentName">Tournament Name</label>
+        <input asp-for="Tournament.TournamentName" type="text" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="TournamentDescription">Tournament Description</label>
+        <input asp-for="Tournament.TournamentDescription" type="text" class="form-control" required />
+    </div>
+
+    <h3>Tournament Results</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Placement</th>
+                <th>Player Name</th>
+                <th>Decklist</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Results.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="Results[i].Placement" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="Results[i].Name" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="Results[i].Decklist" class="form-control" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+

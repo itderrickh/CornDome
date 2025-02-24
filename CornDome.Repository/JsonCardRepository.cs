@@ -32,6 +32,11 @@ namespace CornDome.Repository
             throw new NotImplementedException();
         }
 
+        public IEnumerable<CardFullDetails> GetCardsFromQuery(List<string> query)
+        {
+            throw new NotImplementedException();
+        }
+
         IEnumerable<CardFullDetails> ICardRepository.GetAll()
         {
             throw new NotImplementedException();

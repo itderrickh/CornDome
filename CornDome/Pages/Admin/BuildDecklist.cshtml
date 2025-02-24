@@ -1,0 +1,32 @@
+﻿@page
+@model CornDome.Pages.Admin.BuildDecklistModel
+@{
+    ViewData["Title"] = "Build Decklist";
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="Username">Decklist</label>
+        <textarea id="Query" name="Query" rows="20" class="form-control" required></textarea>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+@if (Model.Cards != null && Model.Cards.Count() > 0)
+{
+    <a asp-page="/Deck" asp-route-deck="@Model.DeckSlug">@Model.DeckSlug</a>
+    <ul>
+        @foreach (var card in Model.Cards)
+        {
+            <li>@card.Id @card.LatestRevision.Name @card.LatestRevision.RevisionNumber</li>
+        }
+    </ul>
+}

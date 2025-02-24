@@ -29,9 +29,9 @@
         public int? Attack { get; set; }
         public int? Defense { get; set; }
         public Set? CardSet { get; set; }
-        public List<CardImage> CardImages { get; set; } = new List<CardImage>();
+        public List<CardImage> CardImages { get; set; } = [];
 
-        public string? GetExtraSmallImage
+        public string GetExtraSmallImage
         {
             get
             {
@@ -39,7 +39,7 @@
             }
         }
 
-        public string? GetSmallImage
+        public string GetSmallImage
         { 
             get
             {
@@ -47,7 +47,7 @@
             }
         }
 
-        public string? GetRegularImage
+        public string GetRegularImage
         {
             get
             {
@@ -55,11 +55,11 @@
             }
         }
 
-        public string? GetLargeImage
+        public string GetLargeImage
         {
             get
             {
-                return CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Large)?.ImageUrl;
+                return CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Large)?.ImageUrl ?? "";
             }
         }
     }

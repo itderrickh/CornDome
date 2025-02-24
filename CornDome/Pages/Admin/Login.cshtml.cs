@@ -17,6 +17,17 @@ namespace CornDome.Pages.Admin
 
         public string ErrorMessage { get; set; }
 
+        public string ReturnUrl { get; set; } = "/Admin/Index"; // Default to home
+
+        private void ValidateUrl()
+        {
+            var returnUrl = Request.Query["ReturnUrl"];
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                ReturnUrl = returnUrl;
+            }
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             var user = userRepository.GetUserByUsername(Username);
@@ -40,7 +51,8 @@ namespace CornDome.Pages.Admin
 
                 await HttpContext.SignInAsync(principal);
 
-                return RedirectToPage("/Admin/Index"); // Redirect to a protected page
+                ValidateUrl();
+                return LocalRedirect(ReturnUrl); // Redirect to a protected page
             }
 
             ErrorMessage = "Invalid username or password.";

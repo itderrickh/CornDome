@@ -20,6 +20,7 @@ namespace CornDome
 
             // Repositories
             builder.Services.AddTransient<ILoggingRepository, LoggingRepository>();
+            builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
 

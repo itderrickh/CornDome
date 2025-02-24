@@ -6,5 +6,6 @@ namespace CornDome.Repository
     {
         IEnumerable<CardFullDetails> GetAll();
         CardFullDetails? GetCard(int id);
+        IEnumerable<CardFullDetails> GetCardsFromQuery(List<string> query);
     }
 }

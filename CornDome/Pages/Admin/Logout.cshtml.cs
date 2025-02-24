@@ -9,7 +9,7 @@ namespace CornDome.Pages.Admin
         public async Task<IActionResult> OnGetAsync()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToPage("/Login");
+            return RedirectToPage("/Admin/Login");
         }
     }
 }

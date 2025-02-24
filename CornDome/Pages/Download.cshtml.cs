@@ -1,5 +1,6 @@
 using CornDome.Models;
 using CornDome.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
@@ -24,7 +25,7 @@ namespace CornDome.Pages
         private const int borderY = 20;
 
         public string ImageString { get; set; }
-        public void CreateCoordinates()
+        public byte[] CreateCoordinates()
         {
             // X, Y
             var coordinates = new List<(int, int)>();
@@ -50,7 +51,7 @@ namespace CornDome.Pages
             if (QueryDeck.Hero != null)
             {
                 var heroLoc = coordinates[coordCounter];
-                using var heroImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetRegularImage));
+                using var heroImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage));
                 heroImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
 
                 outputImage.Mutate(o => o.DrawImage(heroImage, new Point(heroLoc.Item1, heroLoc.Item2), 1f));
@@ -62,7 +63,7 @@ namespace CornDome.Pages
             foreach (var landscape in QueryDeck.Landscapes)
             {
                 var landLoc = coordinates[coordCounter];
-                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetRegularImage));
+                using var landImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage));
                 landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
 
                 outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f).BackgroundColor(Color.DarkGray));
@@ -76,24 +77,30 @@ namespace CornDome.Pages
             foreach (var card in QueryDeck.Cards)
             {
                 var cardLoc = coordinates[coordCounter];
-                using var cardImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetRegularImage)));
+                using var cardImage = Image.Load<Rgba32>(Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage)));
                 cardImage.Mutate(ci => ci.Resize(new Size(cardWidth, cardHeight)));
 
                 outputImage.Mutate(o => o.DrawImage(cardImage, new Point(cardLoc.Item1, cardLoc.Item2), 1f));
                 coordCounter++;
             }
 
-            ImageString = outputImage.ToBase64String(PngFormat.Instance);
+            using var stream = new MemoryStream();
+            outputImage.Save(stream, new PngEncoder()); // Save as PNG to memory stream
+            stream.Seek(0, SeekOrigin.Begin); // Reset stream position
+
+            return stream.ToArray();
         }
         
-        public void OnGet()
+        public IActionResult OnGet()
         {
             Cards = _cardRepository.GetAll();
 
             if (Request.QueryString.HasValue)
                 QueryDeck = Deck.GetFromQuery(Request.Query["deck"], Cards);
 
-            CreateCoordinates();
+            var image = CreateCoordinates();
+
+            return File(image, "image/png", "download.png");
         }
     }
 }
