@@ -23,10 +23,4 @@
     <ProjectReference Include="..\CornDome.Repository\CornDome.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="card_database.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
