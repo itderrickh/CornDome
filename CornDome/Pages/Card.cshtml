@@ -27,6 +27,11 @@ else
             {
                 <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetSmallImage)" />
             }
+
+            @if (selectedRevision.CardSet > Set.Kickstarter1)
+            {
+                <p style="margin-top: 20px;">* Card images from Kickstarter #2 may be blurry until we get better scans.</p>
+            }
         </div>
         <div style="width: 50%; padding: 20px;">
             <div class="card-text-section">
