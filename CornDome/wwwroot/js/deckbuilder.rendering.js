@@ -74,6 +74,7 @@ function renderData() {
     var sandylandsStatField = document.getElementById('sl-stat');
     var icylandsStatField = document.getElementById('il-stat');
     var rainbowStatField = document.getElementById('rb-stat');
+    var lavaflatsStatField = document.getElementById('lf-stat');
 
     bluePlainsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "BluePlains").length;
     cornfieldStatField.innerHTML = deck.cards.filter((x) => x.landscape === "CornFields").length;
@@ -82,6 +83,7 @@ function renderData() {
     sandylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "SandyLands").length;
     icylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "IcyLands").length;
     rainbowStatField.innerHTML = deck.cards.filter((x) => x.landscape === "Rainbow").length;
+    lavaflatsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "LavaFlats").length;
 }
 
 function buildDeckIfExistsInQuery() {

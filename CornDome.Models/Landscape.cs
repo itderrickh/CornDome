@@ -8,7 +8,8 @@
         SandyLands,
         NiceLands,
         IcyLands,
-        Rainbow
+        Rainbow,
+        LavaFlats,
     }
 
     public static class LandscapeConverter
@@ -24,6 +25,7 @@
                 Landscape.NiceLands => "NiceLands",
                 Landscape.IcyLands => "IcyLands",
                 Landscape.Rainbow => "Rainbow",
+                Landscape.LavaFlats => "LavaFlats",
                 _ => "",
             };
         }

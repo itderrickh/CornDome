@@ -12,7 +12,12 @@
         HeroPack = 7,
         ForTheGlory = 8,
         Promo = 9,
-        Kickstarter = 10
+        Kickstarter1 = 10,
+        FlamePrincessVSFern = 11,
+        PrismoVSTheLich = 12,
+        PeppermintButlerVSMagicMan = 13,
+        Kickstarter2 = 14,
+        DarklandsExpansion = 15
     }
 
     public static class SetConverter
@@ -31,7 +36,12 @@
                 Set.HeroPack => "Hero Pack",
                 Set.ForTheGlory => "For The Glory",
                 Set.Promo => "Promo",
-                Set.Kickstarter => "Kickstarter",
+                Set.Kickstarter1 => "Kickstarter #1",
+                Set.FlamePrincessVSFern => "Flame Princess Vs Fern",
+                Set.PrismoVSTheLich => "Prismo Vs The Lich",
+                Set.PeppermintButlerVSMagicMan => "Peppermint Butler Vs Magic Man",
+                Set.Kickstarter2 => "Kickstarter #2",
+                Set.DarklandsExpansion => "DarkLands Expansion",
                 _ => "",
             };
         }
@@ -50,7 +60,12 @@
                 Set.HeroPack => "hp1",
                 Set.ForTheGlory => "ftg",
                 Set.Promo => "promo",
-                Set.Kickstarter => "ks1",
+                Set.Kickstarter1 => "ks1",
+                Set.FlamePrincessVSFern => "cp7",
+                Set.PrismoVSTheLich => "cp8",
+                Set.PeppermintButlerVSMagicMan => "cp9",
+                Set.Kickstarter2 => "ks2",
+                Set.DarklandsExpansion => "dl1",
                 _ => "",
             };
         }
