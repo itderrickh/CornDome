@@ -19,7 +19,14 @@ else
     </div>
     <div class="card-detail">
         <div style="width: 50%">
-            <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetRegularImage)" />
+            @if (!string.IsNullOrEmpty(selectedRevision.GetRegularImage))
+            {
+                <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetRegularImage)" />
+            }
+            else // Try smaller image if regular isn't available (only important for early first prints. Will eventually fill in regular images)
+            {
+                <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetSmallImage)" />
+            }
         </div>
         <div style="width: 50%; padding: 20px;">
             <div class="card-text-section">
