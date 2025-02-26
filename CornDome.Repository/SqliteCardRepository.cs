@@ -12,7 +12,8 @@ namespace CornDome.Repository
             {
                 if (cardRevisions.Any(x => x.Id == cardImage.RevisionId))
                 {
-                    cardRevisions.FirstOrDefault(x => x.Id == cardImage.RevisionId).CardImages.Add(cardImage);
+                    var latestRevision = cardRevisions.FirstOrDefault(x => x.Id == cardImage.RevisionId);
+                    latestRevision?.CardImages.Add(cardImage);
                 }
             }
 

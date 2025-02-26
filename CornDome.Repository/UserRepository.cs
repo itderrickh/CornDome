@@ -6,12 +6,12 @@ namespace CornDome.Repository
 {
     public interface IUserRepository
     {
-        User GetUserByUsername(string username);
+        User? GetUserByUsername(string username);
     }
 
     public class UserRepository(UserRepositoryConfig config) : IUserRepository
     {
-        public User GetUserByUsername(string username)
+        public User? GetUserByUsername(string username)
         {
             using var con = new SQLiteConnection(config.DbPath);
             con.Open();
