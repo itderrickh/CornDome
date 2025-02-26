@@ -9,6 +9,16 @@
     <h3>Good morning, @(Model.LoggedInUser.Username)!</h3>
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
 <div class="container my-3">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -18,7 +28,7 @@
             <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab" aria-controls="upload" aria-selected="false">Upload</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Future Reserved</button>
+            <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
         </li>
     </ul>
 
@@ -50,9 +60,39 @@
             <p><a target="_blank" asp-page="/Admin/InsertTournament">Insert Tournament</a></p>
             <p><a target="_blank" asp-page="/Admin/BuildDecklist">Create Decklist String from Real List</a></p>
         </div>
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-            <h2 class="mb-3">Future Reserved</h2>
-            <p class="lead">This is the Future Reserved tab content.</p>
+        <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+            <h2 class="mb-3">Feedback</h2>
+            <form>
+
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>CardId</th>
+                        <th>RevisionId</th>
+                        <th>Feedback<th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var feedbackRequest in Model.FeedbackRequests.OrderBy(x => x.CardId))
+                    {
+                        <tr>
+                            <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId" asp-route-revision="@feedbackRequest.RevisionId">Link</a></td>
+                            <td>@feedbackRequest.CardId</td>
+                            <td>@feedbackRequest.RevisionId</td>
+                            <td>@feedbackRequest.Feedback</td>
+                            <td>
+                                <form method="post" asp-page-handler="DeleteFeedback">
+                                    <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" style="display: none;" />
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

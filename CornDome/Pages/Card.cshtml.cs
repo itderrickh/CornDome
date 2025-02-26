@@ -1,10 +1,14 @@
 using CornDome.Models;
 using CornDome.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages
 {
-    public class CardModel(ICardRepository cardRepository) : PageModel
+    [IgnoreAntiforgeryToken]
+    [AllowAnonymous]
+    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public CardFullDetails QueryCard { get; set; } = null;
@@ -19,6 +23,17 @@ namespace CornDome.Pages
             var gotRevision = int.TryParse(revisionNumber, out int rev);
             if (gotRevision)
                 RevisionId = rev;
+        }
+
+        public IActionResult OnPostFeedback([FromBody] FeedbackRequest feedbackRequest)
+        {
+            if (feedbackRequest == null || string.IsNullOrEmpty(feedbackRequest.Feedback))
+            {
+                return new JsonResult(new { success = false });
+            }
+
+            var result = feedbackRepository.AddFeedback(feedbackRequest);
+            return new JsonResult(new { success = result > 0 });
         }
     }
 }

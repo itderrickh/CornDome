@@ -100,14 +100,91 @@ else
                                 {
                                     <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargeImage)" />
                                 }
-
                             </div>
                         }
                     </div>
                 </div>
             }
+
+            <div class="card-text-section">
+                <div id="feedback-section">
+                    <div>
+                        <a class="bold-label" onclick="showFeedbackForm()" style="cursor: pointer;">Something wrong? </a>
+                    </div>
+                    <div id="feedback-form" style="margin-top: 10px; display: none;">
+                        <div class="form-group">
+                            <label for="feedback">Feedback: </label>
+                            <input name="feedback" id="feedback-input" type="text" class="form-control" required placeholder="What is incorrect on this page?" />
+                            <input name="card" id="feedback-card" type="hidden" class="form-control" value="@selectedRevision.CardId" />
+                            <input name="revision" id="feedback-revision" type="hidden" class="form-control" value="@selectedRevision.Id" />
+                        </div>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <button type="button" id="feedback-submit" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="feedback-result" style="display: none;">
+                    <span id="feedback-success">Thank you for your feedback!</span>
+                    <span id="feedback-error">An error happened while submitting feedback.</span>
+                </div>
+            </div>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script>
+        function showFeedbackForm() {
+            document.getElementById("feedback-form").style.display = "block";
+        }
+
+        function hideFeedbackForm() {
+            document.getElementById("feedback-form").style.display = "none";
+        }
+
+        function submitFeedback() {
+            var text = document.getElementById("feedback-input").value;
+            var card = document.getElementById("feedback-card").value;
+            var revision = document.getElementById("feedback-revision").value;
+
+            hideFeedbackForm();
+
+            var feedbackForm = {
+                feedback: text,
+                cardId: parseInt(card, 10),
+                revisionId: parseInt(revision, 10)
+            };
+
+            fetch('/Card?handler=Feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify(feedbackForm)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("feedback-success").style.display = "block";
+                        document.getElementById("feedback-error").style.display = "none";
+                    } else {
+                        document.getElementById("feedback-error").style.display = "block";
+                        document.getElementById("feedback-success").style.display = "none";
+                    }
+
+                    document.getElementById("feedback-result").style.display = "block";
+                    document.getElementById("feedback-section").style.display = "none";
+                    document.getElementById("feedback-input").value = "";
+
+                    setTimeout(function () {
+                        document.getElementById("feedback-result").style.display = "none";
+                        document.getElementById("feedback-section").style.display = "block";
+                    }, 5000);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
+    </script>
 }
 
 @section Styles {

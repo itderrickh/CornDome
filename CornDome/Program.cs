@@ -23,6 +23,7 @@ namespace CornDome
             builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
 
             builder.Services.AddAuthentication("Cookies")
                 .AddCookie("Cookies", options =>
