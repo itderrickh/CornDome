@@ -102,9 +102,9 @@
 </div>
 
 @section Scripts {
-    <script src="./js/filter.js?version=@DateTime.Now.ToString("MMddyyyy")"></script>
+    <script src="./js/filter.js" asp-append-version="true"></script>
 }
 
 @section Styles {
-    <link rel="stylesheet" href="./css/carddatabase.css?version=@DateTime.Now.ToString("MMddyyyy")" />
+    <link rel="stylesheet" href="./css/carddatabase.css" asp-append-version="true" />
 }

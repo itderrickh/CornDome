@@ -154,10 +154,10 @@
 </div>
 
 @section Scripts {
-    <script src="./js/helpers.js?version=@DateTime.Now.ToString("MMddyyyy")"></script>
-    <script src="./js/deckbuilder.rendering.js?version=@DateTime.Now.ToString("MMddyyyy")"></script>
-    <script src="./js/deckbuilder.handlers.js?version=@DateTime.Now.ToString("MMddyyyy")"></script>
-    <script src="./js/filter.js?version=@DateTime.Now.ToString("MMddyyyy")"></script>
+    <script src="./js/helpers.js" asp-append-version="true"></script>
+    <script src="./js/deckbuilder.rendering.js" asp-append-version="true"></script>
+    <script src="./js/deckbuilder.handlers.js" asp-append-version="true"></script>
+    <script src="./js/filter.js" asp-append-version="true"></script>
 
     <script>
         var deck = {
@@ -171,5 +171,5 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="./css/deckbuilder.css?version=@DateTime.Now.ToString("MMddyyyy")" />
+    <link rel="stylesheet" href="./css/deckbuilder.css" asp-append-version="true" />
 }
