@@ -84,7 +84,7 @@ else
                     </div>
                     <br />
                     <div style="display: flex">
-                        @foreach (var rev in Model.QueryCard.Revisions)
+                        @foreach (var rev in Model.QueryCard.Revisions.OrderBy(x => x.RevisionNumber))
                         {
                             <div style="width: 50%">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
