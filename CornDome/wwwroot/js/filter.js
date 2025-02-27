@@ -1,6 +1,6 @@
 var filterFunctions = {
     cardType: '',
-    landscape: '',
+    landscape: [],
     attack: null,
     defense: null,
     cost: null,
@@ -15,8 +15,8 @@ function filterDataset() {
         var actions = [];
         if (filterFunctions.cardType !== "")
             actions.push(ele.dataset.cardType === filterFunctions.cardType)
-        if (filterFunctions.landscape !== "")
-            actions.push(ele.dataset.landscape === filterFunctions.landscape);
+        if (filterFunctions.landscape.length > 0)
+            actions.push(filterFunctions.landscape.indexOf(ele.dataset.landscape) > -1);
         if (filterFunctions.cost !== null)
             actions.push(parseInt(ele.dataset.cost) === filterFunctions.cost);
         if (filterFunctions.attack !== null)
@@ -52,10 +52,19 @@ document.getElementById("cardTypeFilter").onchange = function () {
     filterDataset();
 };
 
-document.getElementById("landscapeFilter").onchange = function () {
-    filterFunctions.landscape = this.value;
-    filterDataset();
-};
+var landscapeCheckboxes = document.querySelectorAll(".landscape-checkbox");
+landscapeCheckboxes.forEach(x => {
+    x.onchange = function () {
+        if (this.checked) {
+            filterFunctions.landscape.push(this.value);
+        } else {
+            var indexToRemove = filterFunctions.landscape.indexOf(this.value);
+            filterFunctions.landscape.splice(indexToRemove, 1);
+        }
+
+        filterDataset();
+    }
+});
 
 document.getElementById("costFilter").oninput = function () {
     filterFunctions.cost = this.value !== "" ? parseInt(this.value) : null;

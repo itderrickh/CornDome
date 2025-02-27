@@ -26,13 +26,35 @@ fieldset {
     margin-bottom: 5px;
 }
 
-#filterBox label {
+#filterBox .filter-label {
     width: 25%;
     text-align: right;
 }
 
-#filterBox input, #filterBox select {
+#filterBox input[type="text"],
+#filterBox input[type="number"],
+#filterBox select {
     width: 70%;
+}
+
+#checkbox-filter-group {
+    display: flex;
+}
+
+#checkbox-filter-group label {
+    margin-top: 10px;
+    width: 45%;
+}
+
+#filterBox #checkboxes {
+    margin-left: 20px;
+    text-align: left;
+    width: 70%;
+}
+
+#filterBox #checkboxes div {
+    text-align: left;
+    width: 50%;
 }
 
 .card:hover {

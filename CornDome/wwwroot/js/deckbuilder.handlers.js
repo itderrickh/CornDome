@@ -3,10 +3,19 @@ document.getElementById("cardTypeFilter").onchange = function () {
     filterDataset();
 };
 
-document.getElementById("landscapeFilter").onchange = function () {
-    filterFunctions.landscape = this.value;
-    filterDataset();
-};
+var landscapeCheckboxes = document.querySelectorAll(".landscape-checkbox");
+landscapeCheckboxes.forEach(x => {
+    x.onchange = function () {
+        if (this.checked) {
+            filterFunctions.landscape.append(this.value);
+        } else {
+            var indexToRemove = filterFunctions.landscape.indexOf(this.value);
+            filterFunctions.landscape.splice(indexToRemove, 1);
+        }
+
+        filterDataset();
+    }
+});
 
 document.getElementById("costFilter").oninput = function () {
     filterFunctions.cost = this.value !== "" ? parseInt(this.value) : null;

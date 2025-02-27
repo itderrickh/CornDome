@@ -8,7 +8,7 @@
     <fieldset id="filterBox">
         <legend>Filters</legend>
         <div class="filter-group">
-            <label for="cardTypeFilter">Card Type: </label>
+            <label for="cardTypeFilter" class="filter-label">Card Type: </label>
             <select id="cardTypeFilter">
                 <option value="">- None -</option>
                 <option value="@CardType.Creature">Creature</option>
@@ -20,21 +20,7 @@
             </select>
         </div>
         <div class="filter-group">
-            <label for="landscapeFilter">Landscape: </label>
-            <select id="landscapeFilter">
-                <option value="">- None -</option>
-                <option value="@Landscape.BluePlains">Blue Plains</option>
-                <option value="@Landscape.CornFields">Cornfields</option>
-                <option value="@Landscape.UselessSwamp">Useless Swamp</option>
-                <option value="@Landscape.SandyLands">SandyLands</option>
-                <option value="@Landscape.NiceLands">NiceLands</option>
-                <option value="@Landscape.IcyLands">IcyLands</option>
-                <option value="@Landscape.Rainbow">Rainbow</option>
-                <option value="@Landscape.LavaFlats">LavaFlats</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="setFilter">Set: </label>
+            <label for="setFilter" class="filter-label">Set: </label>
             <select id="setFilter">
                 <option value="">- None -</option>
                 <option value="@Set.FinnVSJake">@SetConverter.ToString(Set.FinnVSJake)</option>
@@ -56,24 +42,49 @@
             </select>
         </div>
         <div class="filter-group">
-            <label for="nameFilter">Name: </label>
+            <label for="nameFilter" class="filter-label">Name: </label>
             <input type="text" id="nameFilter" />
         </div>
         <div class="filter-group">
-            <label for="abilityFilter">Ability: </label>
+            <label for="abilityFilter" class="filter-label">Ability: </label>
             <input type="text" id="abilityFilter" />
         </div>
         <div class="filter-group">
-            <label for="costFilter">Cost: </label>
+            <label for="costFilter" class="filter-label">Cost: </label>
             <input type="number" id="costFilter" />
         </div>
         <div class="filter-group">
-            <label for="attackFilter">Attack: </label>
+            <label for="attackFilter" class="filter-label">Attack: </label>
             <input type="number" id="attackFilter" />
         </div>
         <div class="filter-group">
-            <label for="defenseFilter">Defense: </label>
+            <label for="defenseFilter" class="filter-label">Defense: </label>
             <input type="number" id="defenseFilter" />
+        </div>
+        <div class="filter-group" id="checkbox-filter-group">
+            <label for="cardTypeFilter" class="filter-label">Landscape: </label>
+            <div id="checkboxes">
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.BluePlains" /> Blue Plains</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.CornFields" /> Cornfields</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.UselessSwamp" /> Useless Swamp</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.SandyLands" /> SandyLands</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.NiceLands" /> NiceLands</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.IcyLands" /> IcyLands</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.Rainbow" /> Rainbow</label>
+                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@Landscape.LavaFlats" /> LavaFlats</label>
+            </div>
+
+            @* <select id="landscapeFilter">
+            <option value="">- None -</option>
+            <option value="@Landscape.BluePlains">Blue Plains</option>
+            <option value="@Landscape.CornFields">Cornfields</option>
+            <option value="@Landscape.UselessSwamp">Useless Swamp</option>
+            <option value="@Landscape.SandyLands">SandyLands</option>
+            <option value="@Landscape.NiceLands">NiceLands</option>
+            <option value="@Landscape.IcyLands">IcyLands</option>
+            <option value="@Landscape.Rainbow">Rainbow</option>
+            <option value="@Landscape.LavaFlats">LavaFlats</option>
+            </select> *@
         </div>
     </fieldset>
 </div>
