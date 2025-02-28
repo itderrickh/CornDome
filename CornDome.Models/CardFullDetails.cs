@@ -62,6 +62,17 @@
                 return CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Large)?.ImageUrl ?? "";
             }
         }
+
+        public string GetLargestImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Large)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Regular)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.Small)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageType == CardImageType.XSmall)?.ImageUrl ?? "";
+            }
+        }
     }
 
     public class CardFullDetails

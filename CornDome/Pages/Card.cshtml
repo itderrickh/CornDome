@@ -19,14 +19,7 @@ else
     </div>
     <div class="card-detail">
         <div style="width: 50%">
-            @if (!string.IsNullOrEmpty(selectedRevision.GetRegularImage))
-            {
-                <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetRegularImage)" />
-            }
-            else // Try smaller image if regular isn't available (only important for early first prints. Will eventually fill in regular images)
-            {
-                <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetSmallImage)" />
-            }
+            <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
 
             @if (selectedRevision.CardSet > Set.Kickstarter1)
             {
@@ -88,18 +81,8 @@ else
                         {
                             <div style="width: 50%">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
-                                @if (rev.GetSmallImage != null)
-                                {
-                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallImage)" />
-                                }
-                                else if (rev.GetRegularImage != null)
-                                {
-                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetRegularImage)" />
-                                }
-                                else
-                                {
-                                    <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargeImage)" />
-                                }
+                                
+                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargestImage)" />
                             </div>
                         }
                     </div>
