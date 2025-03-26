@@ -5,19 +5,45 @@
     ViewData["RenderMode"] = "wide";
 }
 
-<div style="display: flex; flex-wrap: wrap;">
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-01.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-02.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-03.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-04.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-05.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-06.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-07.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-08.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-09.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-10.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-11.png" /></div>
-    <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-12.png" /></div>
+<div class="my-3">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-tab-rulebook" type="button" role="tab" aria-controls="new" aria-selected="true">Ultimate Collection Rulebook</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="old-tab" data-bs-toggle="tab" data-bs-target="#old-tab-rulebook" type="button" role="tab" aria-controls="old" aria-selected="false">Original Rulebook</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="new-tab-rulebook" role="tabpanel" aria-labelledby="new-tab">
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="rulebook-page rulebook-page-cover"><img alt="Rulebook page image 1" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-1.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 2" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-2.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 3" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-3.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 4" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-4.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 5" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-5.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 6" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-6.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image 7" src="~/img/rulebook/ATCW.ULT.COLL.RULEBK-7.png" /></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="old-tab-rulebook" role="tabpanel" aria-labelledby="old-tab">
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-01.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-02.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-03.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-04.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-05.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-06.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-07.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-08.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-09.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-10.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-11.png" /></div>
+                <div class="rulebook-page"><img alt="Rulebook page image" src="~/img/rulebook/AdventureTimeCardWarsFinnvsJake-12.png" /></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Styles {
