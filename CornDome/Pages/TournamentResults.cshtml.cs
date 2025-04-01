@@ -11,6 +11,7 @@ namespace CornDome.Pages
         {
             Tournaments = tournamentRepository.GetAllTournaments()
                 .OrderByDescending(x => x.TournamentDate)
+                .Where(x => x.TournamentDate > DateTime.Now.AddDays(-90))
                 .ToList();
         }
     }

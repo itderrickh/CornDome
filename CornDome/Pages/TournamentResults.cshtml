@@ -16,6 +16,14 @@
             </h2>
             <div id="collapse@(i)" class="accordion-collapse collapse" aria-labelledby="heading@(i)" data-bs-parent="#tournamentAccordian">
                 <div class="accordion-body">
+
+                    @if (!string.IsNullOrEmpty(Model.Tournaments[i].TournamentDescription))
+                    {
+                        <div style="margin-bottom: 20px;">
+                            <h3>Tournament Details</h3>
+                            <p>@Model.Tournaments[i].TournamentDescription</p>
+                        </div>
+                    }
                     @foreach (var result in Model.Tournaments[i].TournamentResults.OrderBy(x => x.Placement))
                     {
                         <div style="width: 100%; margin-bottom: 20px;">
