@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Markdig" Version="0.34.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.14" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.0" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
@@ -21,6 +22,13 @@
   <ItemGroup>
     <ProjectReference Include="..\CornDome.Models\CornDome.Models.csproj" />
     <ProjectReference Include="..\CornDome.Repository\CornDome.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Account\Login.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

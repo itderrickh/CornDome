@@ -1,5 +1,11 @@
+using CornDome.Handlers;
 using CornDome.Middleware;
+using CornDome.Models;
 using CornDome.Repository;
+using CornDome.Stores;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 
 namespace CornDome
@@ -18,19 +24,48 @@ namespace CornDome
             builder.Services.AddSingleton<SqliteRepositoryConfig>();
             builder.Services.AddSingleton<UserRepositoryConfig>();
 
+            builder.Services.AddScoped<IUserStore<User>, UserStore>();
+
             // Repositories
+            builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+            builder.Services.AddTransient<IRoleRepository, RoleRepository>();
             builder.Services.AddTransient<ILoggingRepository, LoggingRepository>();
             builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
 
-            builder.Services.AddAuthentication("Cookies")
-                .AddCookie("Cookies", options =>
-                {
-                    options.LoginPath = "/Admin/Login"; // Redirect unauthenticated users here
-                });
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";  // Change if you have a custom login page
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+
+            builder.Services.AddIdentity<User, Role>(options =>
+            {
+                // Identity options here (e.g., password settings)
+            })
+                .AddDefaultTokenProviders()
+                .AddUserStore<UserStore>()
+                .AddRoleStore<RoleStore>()
+                .AddSignInManager<SignInManager<User>>();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin", policy =>
+                    policy.Requirements.Add(new PermissionRequirement(1))); // 1 = Admin
+                options.AddPolicy("tournamentAdmin", policy =>
+                    policy.Requirements.Add(new PermissionRequirement(2))); // 2 = TournamentAdmin
+            });
 
             var app = builder.Build();
 
@@ -42,7 +77,7 @@ namespace CornDome
                 app.UseHsts();
             }
 
-            app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
+            //app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
@@ -61,6 +96,7 @@ namespace CornDome
                 app.UseMiddleware<RouteLogger>();
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapRazorPages();
 

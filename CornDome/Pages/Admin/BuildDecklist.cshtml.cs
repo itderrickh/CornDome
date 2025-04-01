@@ -1,11 +1,13 @@
 using CornDome.Models;
 using CornDome.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
 
 namespace CornDome.Pages.Admin
 {
+    [Authorize(Policy = "admin")]
     public class BuildDecklistModel(ICardRepository cardRepository) : PageModel
     {
         [BindProperty]

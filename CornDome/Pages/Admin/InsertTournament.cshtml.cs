@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Policy = "admin")]
     public class InsertTournamentModel(ITournamentRepository tournamentRepository) : PageModel
     {
         [BindProperty]

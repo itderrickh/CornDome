@@ -67,7 +67,31 @@
                             <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank">Card Wars Discord</a>
                         </li>
                     </ul>
-                </div>                
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Account
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                                    
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Account/Index">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Account/Logout">Log Out</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-page="/Account/Login" class="btn btn-primary">Login with Google</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>

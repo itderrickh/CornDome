@@ -4,10 +4,11 @@ using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace CornDome.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Policy = "admin")]
     public class IndexModel(IUserRepository userRepository, ILoggingRepository loggingRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         public User LoggedInUser { get; set; }
@@ -20,7 +21,8 @@ namespace CornDome.Pages.Admin
         {
             if (User.Identity.IsAuthenticated)
             {
-                LoggedInUser = userRepository.GetUserByUsername(User.Identity.Name);
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                LoggedInUser = userRepository.GetUserByEmail(userEmail);
             }
 
             RouteLogs = await loggingRepository.GetAllRouteLogs();
