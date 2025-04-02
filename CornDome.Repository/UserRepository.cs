@@ -7,7 +7,6 @@ namespace CornDome.Repository
     public interface IUserRepository
     {
         User? GetUserByEmail(string email);
-        UserPermission? GetUserPermission(string email);
         bool UpdateUser(User user);
         bool CreateUser(User user);
         User? GetUserById(int id);
@@ -44,18 +43,6 @@ namespace CornDome.Repository
             var user = con.QueryFirstOrDefault<User>("SELECT Id, Email, Username FROM User WHERE Username = @Username", new { Username = username });
 
             return user;
-        }
-
-        public UserPermission? GetUserPermission(string email)
-        {
-            using var con = new SQLiteConnection(config.DbPath);
-            con.Open();
-
-            // TODO: Clean this up later to use join
-            var user = GetUserByEmail(email);
-            var permission = con.QueryFirstOrDefault<UserPermission>("SELECT Id, UserId, PermissionLevel FROM UserPermission WHERE UserId = @UserId", new { UserId = user.Id });
-
-            return permission;
         }
 
         public bool UpdateUser(User user)

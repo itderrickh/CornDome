@@ -1,4 +1,3 @@
-using CornDome.Handlers;
 using CornDome.Middleware;
 using CornDome.Models;
 using CornDome.Repository;
@@ -25,15 +24,16 @@ namespace CornDome
             builder.Services.AddSingleton<UserRepositoryConfig>();
 
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
+            builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
             // Repositories
-            builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
             builder.Services.AddTransient<ILoggingRepository, LoggingRepository>();
             builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+            builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -42,7 +42,8 @@ namespace CornDome
             })
             .AddCookie(options =>
             {
-                options.LoginPath = "/Account/Login";  // Change if you have a custom login page
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
             })
             .AddGoogle(options =>
             {
@@ -55,16 +56,16 @@ namespace CornDome
                 // Identity options here (e.g., password settings)
             })
                 .AddDefaultTokenProviders()
-                .AddUserStore<UserStore>()
+                //.AddUserStore<UserStore>()
                 .AddRoleStore<RoleStore>()
+                .AddUserStore<UserRoleStore>()
                 .AddSignInManager<SignInManager<User>>();
 
             builder.Services.AddAuthorization(options =>
             {
+                // Define a policy that allows access only to users with the "Admin" role
                 options.AddPolicy("admin", policy =>
-                    policy.Requirements.Add(new PermissionRequirement(1))); // 1 = Admin
-                options.AddPolicy("tournamentAdmin", policy =>
-                    policy.Requirements.Add(new PermissionRequirement(2))); // 2 = TournamentAdmin
+                    policy.RequireRole("Admin"));  // "Admin" role is required
             });
 
             var app = builder.Build();
@@ -72,7 +73,7 @@ namespace CornDome
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

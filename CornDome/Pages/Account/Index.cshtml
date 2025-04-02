@@ -16,8 +16,8 @@
             <span><b>@Model.LocalUser.Email</b></span>
         </div>
         <div class="form-group">
-            <label for="Username">Username</label>
-            <input asp-for="LocalUser.Username" type="text" class="form-control" />
+            <label for="Username">Username (20 character max)</label>
+            <input asp-for="LocalUser.Username" type="text" maxlength="20" class="form-control" />
         </div>
         <div class="form-group mt-2">
             <button type="submit" class="btn btn-primary">Update</button>

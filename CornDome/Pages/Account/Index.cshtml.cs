@@ -19,8 +19,8 @@ namespace CornDome.Pages.Account
         public LocalUser LocalUser { get; set; } = new LocalUser();
         public void OnGet()
         {
-            var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var loggedInUser = userRepository.GetUserByEmail(userEmail);
+            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUser = userRepository.GetUserById(int.Parse(identifier));
 
             LocalUser.Email = loggedInUser?.Email;
             LocalUser.Username = User.Identity.Name;
@@ -33,18 +33,18 @@ namespace CornDome.Pages.Account
                 return Page();
             }
 
-            var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var loggedInUser = userRepository.GetUserByEmail(userEmail);
+            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUser = userRepository.GetUserById(int.Parse(identifier));
 
             loggedInUser.Username = LocalUser.Username;
             var updated = userRepository.UpdateUser(loggedInUser);
 
             if (updated)
             {
-                TempData["Message"] = $"Username has been updated";
+                TempData["Message"] = $"Username has been updated. Please re-login to display these changes.";
             }
 
-            LocalUser.Email = userEmail;
+            LocalUser.Email = loggedInUser.Email;
             LocalUser.Username = LocalUser.Username;
 
             return Page();

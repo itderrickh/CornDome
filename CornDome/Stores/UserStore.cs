@@ -1,7 +1,6 @@
 ﻿using CornDome.Models;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Identity;
-using System.Data;
 
 namespace CornDome.Stores
 {
