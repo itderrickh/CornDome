@@ -1,0 +1,21 @@
+﻿@page
+@model CornDome.Pages.Tournaments.DeleteModel
+@{
+    ViewData["Title"] = "Edit Tournament";
+}
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["status"]">@TempData["Message"]</div>
+    }
+    <form method="post" asp-page-handler="DeleteTournament">
+        <input type="hidden" asp-for="Tournament.Id" />
+
+        <h3>Are you sure you want to delete this?</h3>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>

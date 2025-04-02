@@ -8,9 +8,11 @@ namespace CornDome.Repository
         int InsertTournament(Tournament tournament);
         int InsertTournament(Tournament tournament, List<TournamentResult> results);
         bool UpdateTournament(int id, Tournament tournament);
+        bool DeleteTournament(int id);
         List<Tournament> GetAllTournaments();
         Tournament GetById(int id);
         bool RegisterForTournament(Tournament tournament, TournamentRegistration registration);
+        List<TournamentRegistration> GetAllRegisteredUsers(int tournamentId);
     }
 
     public class TournamentRepository(IDbConnectionFactory dbConnectionFactory) : ITournamentRepository
@@ -117,6 +119,34 @@ namespace CornDome.Repository
 
             var result = con.Execute(REGISTER_TOURNAMENT_QUERY, registration);
             return result > 0;
+        }
+
+        private const string GET_REGISTRATIONS_QUERY = @"
+            SELECT UserId, TournamentId, Deck FROM TournamentRegistration
+            WHERE TournamentId = @TournamentId;
+        ";
+        public List<TournamentRegistration> GetAllRegisteredUsers(int tournamentId)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var registrations = con.Query<TournamentRegistration>(GET_REGISTRATIONS_QUERY, new { TournamentId = tournamentId });
+            var users = con.Query<User>("SELECT Id, Username FROM User WHERE Id IN @Ids", new { Ids = registrations.Select(x => x.UserId) });
+
+            foreach (var registration in registrations)
+            {
+                registration.User = users.FirstOrDefault(x => x.Id == registration.UserId);
+            }
+            return registrations.ToList();
+        }
+
+        public bool DeleteTournament(int tournamentId)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var deleted = con.Execute("DELETE FROM Tournament WHERE Id = @TournamentId", new { TournamentId = tournamentId });
+            return deleted > 0;
         }
     }
 }
