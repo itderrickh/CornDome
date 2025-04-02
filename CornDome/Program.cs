@@ -35,7 +35,30 @@ namespace CornDome
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
-            Console.WriteLine(builder.Configuration["Authentication:Google:ClientId"]);
+            string clientId = "";
+            string clientSecret = "";
+
+            if (!string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientId"]))
+            {
+                clientId = builder.Configuration["Authentication:Google:ClientId"];
+            }
+            else
+            {
+                clientId = Environment.GetEnvironmentVariable("Authentication__Google__ClientId");
+            }
+
+            if (!string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientSecret"]))
+            {
+                clientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            }
+            else
+            {
+                clientSecret = Environment.GetEnvironmentVariable("Authentication__Google__ClientSecret");
+            }
+
+            Console.WriteLine($"ClientId: {clientId}");
+            Console.WriteLine($"ClientSecret: {clientSecret}");
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -48,8 +71,8 @@ namespace CornDome
             })
             .AddGoogle(options =>
             {
-                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
             });
 
             builder.Services.AddIdentity<User, Role>(options =>
