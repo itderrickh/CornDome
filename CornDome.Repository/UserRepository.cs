@@ -13,11 +13,11 @@ namespace CornDome.Repository
         User? GetUserByUsername(string username);
     }
 
-    public class UserRepository(UserRepositoryConfig config) : IUserRepository
+    public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRepository
     {
         public User? GetUserByEmail(string email)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var user = con.QueryFirstOrDefault<User>("SELECT Id, Email, UserName FROM User WHERE Email = @Email", new { Email = email });
@@ -27,7 +27,7 @@ namespace CornDome.Repository
 
         public User? GetUserById(int id)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var user = con.QueryFirstOrDefault<User>("SELECT Id, Email, Username FROM User WHERE Id = @Id", new { Id = id });
@@ -37,7 +37,7 @@ namespace CornDome.Repository
 
         public User? GetUserByUsername(string username)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var user = con.QueryFirstOrDefault<User>("SELECT Id, Email, Username FROM User WHERE Username = @Username", new { Username = username });
@@ -47,7 +47,7 @@ namespace CornDome.Repository
 
         public bool UpdateUser(User user)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var value = con.Execute("UPDATE User SET Username = @Username WHERE Email = @Email", new { Email = user.Email, Username = user.Username });
@@ -56,7 +56,7 @@ namespace CornDome.Repository
 
         public bool CreateUser(User user)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var value = con.Execute("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.Username });

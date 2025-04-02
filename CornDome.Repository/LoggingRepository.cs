@@ -1,6 +1,5 @@
 ﻿using CornDome.Models.Logging;
 using Dapper;
-using System.Data.SQLite;
 
 namespace CornDome.Repository
 {
@@ -10,7 +9,7 @@ namespace CornDome.Repository
         Task<IEnumerable<RouteLog>> GetAllRouteLogs();
     }
 
-    public class LoggingRepository(UserRepositoryConfig config) : ILoggingRepository
+    public class LoggingRepository(IDbConnectionFactory dbConnectionFactory) : ILoggingRepository
     {
         private const string INSERT_QUERY = @"
             INSERT INTO RouteLogging (FromRoute, ToRoute, HitCount)
@@ -25,7 +24,7 @@ namespace CornDome.Repository
 
         public async Task<int> LogRouteChange(string fromRoute, string toRoute)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var result = await con.ExecuteAsync(INSERT_QUERY, new { FromRoute = fromRoute, ToRoute = toRoute });
@@ -35,7 +34,7 @@ namespace CornDome.Repository
 
         public async Task<IEnumerable<RouteLog>> GetAllRouteLogs()
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var results = await con.QueryAsync<RouteLog>(GETALL_QUERY);

@@ -1,10 +1,16 @@
 ﻿using CornDome.Models;
 using Dapper;
-using System.Data.SQLite;
 
 namespace CornDome.Repository
 {
-    public class SqliteCardRepository(SqliteRepositoryConfig config) : ICardRepository
+    public interface ICardRepository
+    {
+        IEnumerable<CardFullDetails> GetAll();
+        CardFullDetails? GetCard(int id);
+        IEnumerable<CardFullDetails> GetCardsFromQuery(List<string> query);
+    }
+
+    public class SqliteCardRepository(IDbConnectionFactory dbConnectionFactory) : ICardRepository
     {
         private Dictionary<int, CardFullDetails> FillOutRevisionDetails(IEnumerable<CardRevision> cardRevisions, IEnumerable<CardImage> cardImages)
         {
@@ -39,7 +45,7 @@ namespace CornDome.Repository
 
         public IEnumerable<CardFullDetails> GetAll()
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateCardDbConnection();
             con.Open();
 
             var cardRevisions = con.Query<CardRevision>("SELECT id, revisionNumber, cardId, name, typeId as cardType, ability, landscapeId as landscape, cost, attack, defense, setId as cardset FROM card_revision");
@@ -55,7 +61,7 @@ namespace CornDome.Repository
 
         public CardFullDetails? GetCard(int id)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateCardDbConnection();
             con.Open();
 
             CardFullDetails output = new()
@@ -83,7 +89,7 @@ namespace CornDome.Repository
 
         public IEnumerable<CardFullDetails> GetCardsFromQuery(List<string> query)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateCardDbConnection();
             con.Open();
 
             var querystring = @"

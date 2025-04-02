@@ -10,7 +10,7 @@ namespace CornDome.Repository
         List<Tournament> GetAllTournaments();
     }
 
-    public class TournamentRepository(UserRepositoryConfig config) : ITournamentRepository
+    public class TournamentRepository(IDbConnectionFactory dbConnectionFactory) : ITournamentRepository
     {
         private const string INSERT_TOURNAMENT_QUERY = @"
             INSERT INTO
@@ -30,7 +30,7 @@ namespace CornDome.Repository
 
         public int InsertTournament(Tournament tournament, List<TournamentResult> results)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var tournamentId = con.QueryFirstOrDefault<int>(INSERT_TOURNAMENT_QUERY, new { TournamentDate = tournament.TournamentDate.ToShortDateString(), tournament.TournamentName, tournament.TournamentDescription });
@@ -46,7 +46,7 @@ namespace CornDome.Repository
 
         public List<Tournament> GetAllTournaments()
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             var tournamentResults = con.Query<TournamentResult>("SELECT Id, TournamentId, Placement, Name, Decklist FROM TournamentResult");

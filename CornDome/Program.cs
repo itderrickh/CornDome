@@ -3,7 +3,6 @@ using CornDome.Models;
 using CornDome.Repository;
 using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 
@@ -20,8 +19,7 @@ namespace CornDome
             builder.Services.AddSingleton<Config>();
 
             // Configurations
-            builder.Services.AddSingleton<SqliteRepositoryConfig>();
-            builder.Services.AddSingleton<UserRepositoryConfig>();
+            builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();

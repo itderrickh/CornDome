@@ -14,13 +14,11 @@ namespace CornDome.Repository
         IEnumerable<User> GetUsersInRole(Role role);
     }
 
-    public class UserRoleRepository(UserRepositoryConfig config) : IUserRoleRepository
+    public class UserRoleRepository(IDbConnectionFactory dbConnectionFactory) : IUserRoleRepository
     {
-        private readonly UserRepositoryConfig _config = config;
-
         public bool AddToRole(User user, Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "INSERT INTO UserRole (UserId, RoleId) VALUES (@UserId, @RoleId)";
@@ -30,7 +28,7 @@ namespace CornDome.Repository
 
         public IEnumerable<Role> GetRolesForUser(User user)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = @"
@@ -43,7 +41,7 @@ namespace CornDome.Repository
 
         public IEnumerable<User> GetUsersInRole(Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = @"
@@ -56,7 +54,7 @@ namespace CornDome.Repository
 
         public bool IsInRole(User user, Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "SELECT UserId, RoleId FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
@@ -66,7 +64,7 @@ namespace CornDome.Repository
 
         public bool RemoveFromRole(User user, Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "DELETE FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";

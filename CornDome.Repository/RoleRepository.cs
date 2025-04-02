@@ -1,6 +1,5 @@
 ﻿using CornDome.Models;
 using Dapper;
-using System.Data.SQLite;
 
 namespace CornDome.Repository
 {
@@ -12,13 +11,11 @@ namespace CornDome.Repository
         Role? FindById(int id);
         Role? FindByName(string roleName);
     }
-    public class RoleRepository(SqliteRepositoryConfig config) : IRoleRepository
-    {
-        private SqliteRepositoryConfig _config { get; set; } = config;
-        
+    public class RoleRepository(IDbConnectionFactory dbConnectionFactory) : IRoleRepository
+    {        
         public bool CreateRole(Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "INSERT INTO Roles (Id, Name) VALUES (@Id, @Name)";
@@ -28,7 +25,7 @@ namespace CornDome.Repository
 
         public bool UpdateRole(Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "UPDATE Roles SET Name = @Name WHERE Id = @Id";
@@ -38,7 +35,7 @@ namespace CornDome.Repository
 
         public bool DeleteRole(Role role)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "DELETE FROM Roles WHERE Id = @Id";
@@ -48,7 +45,7 @@ namespace CornDome.Repository
 
         public Role? FindById(int roleId)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "SELECT * FROM Roles WHERE Id = @RoleId";
@@ -57,7 +54,7 @@ namespace CornDome.Repository
 
         public Role? FindByName(string roleName)
         {
-            using var con = new SQLiteConnection(config.DbPath);
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
             string sql = "SELECT * FROM Roles WHERE Name = @RoleName";
