@@ -4,6 +4,7 @@ using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
+using System.Collections;
 
 namespace CornDome
 {
@@ -58,6 +59,11 @@ namespace CornDome
 
             Console.WriteLine($"ClientId: {clientId}");
             Console.WriteLine($"ClientSecret: {clientSecret}");
+
+            foreach (var env in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>())
+            {
+                Console.WriteLine($"{env.Key}: {env.Value}");
+            }
 
             builder.Services.AddAuthentication(options =>
             {
