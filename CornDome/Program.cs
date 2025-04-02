@@ -57,14 +57,6 @@ namespace CornDome
                 clientSecret = Environment.GetEnvironmentVariable("Authentication__Google__ClientSecret");
             }
 
-            Console.WriteLine($"ClientId: {clientId}");
-            Console.WriteLine($"ClientSecret: {clientSecret}");
-
-            foreach (var env in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>())
-            {
-                Console.WriteLine($"{env.Key}: {env.Value}");
-            }
-
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
