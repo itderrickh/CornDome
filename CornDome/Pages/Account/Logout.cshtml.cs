@@ -1,4 +1,4 @@
-using CornDome.Models;
+using CornDome.Models.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

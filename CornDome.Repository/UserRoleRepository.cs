@@ -1,7 +1,5 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Users;
 using Dapper;
-using System.Data;
-using System.Data.SQLite;
 
 namespace CornDome.Repository
 {

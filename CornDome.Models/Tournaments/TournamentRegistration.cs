@@ -1,4 +1,6 @@
-﻿namespace CornDome.Models
+﻿using CornDome.Models.Users;
+
+namespace CornDome.Models.Tournaments
 {
     public class TournamentRegistration
     {

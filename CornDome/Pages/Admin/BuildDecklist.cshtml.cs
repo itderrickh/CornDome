@@ -1,4 +1,4 @@
-using CornDome.Models;
+using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ namespace CornDome.Pages.Admin
 
         public string ErrorMessage { get; set; }
 
-        public IEnumerable<CardFullDetails> Cards { get; set; }
+        public IEnumerable<Card> Cards { get; set; }
         public Dictionary<string, int> Deck { get; set; } = [];
         public string DeckSlug { get; set; }
 
@@ -41,16 +41,16 @@ namespace CornDome.Pages.Admin
             var queryCards = cardRepository.GetCardsFromQuery(dbQueryLines);
             
             // Filter out multiple landscapes
-            var allLandscapes = queryCards.Where(x => x.LatestRevision.CardType == CardType.Landscape);
+            var allLandscapes = queryCards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Landscape);
             var exactLandscapes = allLandscapes.GroupBy(x => x.LatestRevision.Name).Select(x => x.OrderBy(y => y.Id).First());
 
-            var realCards = queryCards.Where(x => x.LatestRevision.CardType != CardType.Landscape);
+            var realCards = queryCards.Where(x => x.LatestRevision.TypeId != (int)CardTypeEnum.Landscape);
 
             Cards = realCards.Union(exactLandscapes);
 
-            var hero = Cards.FirstOrDefault(x => x.LatestRevision.CardType == CardType.Hero);
-            var landscapes = Cards.Where(x => x.LatestRevision.CardType == CardType.Landscape);
-            var cards = Cards.Where(x => x.LatestRevision.CardType != CardType.Hero && x.LatestRevision.CardType != CardType.Landscape);
+            var hero = Cards.FirstOrDefault(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Hero);
+            var landscapes = Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Landscape);
+            var cards = Cards.Where(x => x.LatestRevision.TypeId != (int)CardTypeEnum.Hero && x.LatestRevision.TypeId != (int)CardTypeEnum.Landscape);
 
             var utf8String = Encoding.UTF8.GetBytes(string.Join(";", hero.LatestRevision.CardId, PackString(landscapes), PackString(cards)));
             DeckSlug = Convert.ToBase64String(utf8String);
@@ -58,7 +58,7 @@ namespace CornDome.Pages.Admin
             return Page();
         }
 
-        private string PackString(IEnumerable<CardFullDetails> cards)
+        private string PackString(IEnumerable<Card> cards)
         {
             var cardStrings = cards.Select(x => x.LatestRevision.CardId + ":" + Deck[x.LatestRevision.Name.ToLower()]);
             return string.Join(',', cardStrings);

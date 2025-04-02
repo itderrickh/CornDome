@@ -1,5 +1,16 @@
-﻿namespace CornDome.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CornDome.Models.Cards
 {
+    [Table("set")]
+    public class CardSet
+    {
+        public int Id { get; set; }
+        public string Value { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+    }
+
     public enum Set
     {
         FinnVSJake = 0,

@@ -1,4 +1,4 @@
-﻿namespace CornDome.Models
+﻿namespace CornDome.Models.Tournaments
 {
     public class TournamentResult
     {

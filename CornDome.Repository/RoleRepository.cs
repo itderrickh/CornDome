@@ -1,4 +1,4 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Users;
 using Dapper;
 
 namespace CornDome.Repository

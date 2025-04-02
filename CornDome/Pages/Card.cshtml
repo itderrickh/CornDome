@@ -21,7 +21,7 @@ else
         <div style="width: 50%">
             <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
 
-            @if (selectedRevision.CardSet > Set.Kickstarter1)
+            @if (selectedRevision.SetId > (int)Set.Kickstarter1)
             {
                 <p style="margin-top: 20px;">* Card images from Kickstarter #2 may be blurry until we get better scans.</p>
             }
@@ -30,10 +30,10 @@ else
             <div class="card-text-section">
                 <span class="bold-label">Card Type: </span><br /><span>@selectedRevision.CardType</span>
             </div>
-            @if (selectedRevision.Landscape.HasValue)
+            @if (selectedRevision.Landscape != null)
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString(selectedRevision.Landscape.Value)</span>
+                    <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString((LandscapeEnum)selectedRevision.LandscapeId)</span>
                 </div>
             }
             @if (!string.IsNullOrEmpty(selectedRevision.Ability))
@@ -43,10 +43,10 @@ else
                 </div>
             }
 
-            @if (selectedRevision.CardSet.HasValue)
+            @if (selectedRevision.CardSet != null)
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString(selectedRevision.CardSet.Value)</span>
+                    <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString((Set)selectedRevision.SetId)</span>
                 </div>
             }
 

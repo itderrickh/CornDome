@@ -1,4 +1,4 @@
-using CornDome.Models;
+using CornDome.Models.Tournaments;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
