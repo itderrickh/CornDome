@@ -45,8 +45,6 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/CardDatabase">Card Database</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/TournamentResults">Tournament Results (beta)</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -60,14 +58,46 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/SampleDecks">Sample Decks</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a class="top-nav-item" asp-area="" asp-page="/Tournaments/Index">Tournaments</a>
+                        </li>
                         <li class="nav-item mobile-only">
                             <a class="top-nav-item" asp-area="" asp-page="/LifeCounter">Life Counter</a>
                         </li>
                         <li class="nav-item">
-                            <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank">Card Wars Discord</a>
+                            <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 36px; height: 36px;" src="~/img/discord.png" /></a>
                         </li>
                     </ul>
-                </div>                
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Hello, @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                                    
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Account/Index">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Index">Admin Panel</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Account/Logout">Log Out</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-page="/Account/Login" class="btn btn-primary">Login with Google</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>

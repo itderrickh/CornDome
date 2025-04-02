@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +8,6 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.Collections.Concurrent;
-using System.Security.Cryptography.X509Certificates;
 using System.Web;
 
 namespace CornDome.Pages
@@ -16,7 +16,7 @@ namespace CornDome.Pages
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         private readonly Config config = configuration;
-        public IEnumerable<CardFullDetails> Cards { get; set; }
+        public IEnumerable<Card> Cards { get; set; }
         public Deck QueryDeck { get; set; } = null;
 
         private const int cardWidth = 86;

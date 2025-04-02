@@ -4,8 +4,8 @@ var template = function (card) {
 
     element.dataset.ability = card.ability;
     element.dataset.cardImage = card.cardImage;
-    element.dataset.cardType = card.cardType;
-    element.dataset.landscape = card.landscape;
+    element.dataset.cardType = card.typeId;
+    element.dataset.landscape = card.landscapeId;
     element.dataset.name = card.name;
     element.dataset.ability = card.ability;
     element.dataset.cost = card.cost;
@@ -58,11 +58,11 @@ function renderData() {
     heroesStatField.innerHTML = deck.hero !== null ? 1 : 0;
     landscapesStatField.innerHTML = deck.landscapes.length;
 
-    var creatureCount = deck.cards.filter((x) => x.cardType === "Creature").length;
+    var creatureCount = deck.cards.filter((x) => x.cardType === CardType.Creature).length;
     creatureStatField.innerHTML = creatureCount;
-    var spellCount = deck.cards.filter((x) => x.cardType === "Spell").length;
+    var spellCount = deck.cards.filter((x) => x.cardType === CardType.Spell).length;
     spellStatField.innerHTML = spellCount;
-    var buildingCount = deck.cards.filter((x) => x.cardType === "Building").length;
+    var buildingCount = deck.cards.filter((x) => x.cardType === CardType.Building).length;
     buildingStatField.innerHTML = buildingCount;
 
     totalStatField.innerHTML = creatureCount + spellCount + buildingCount;
@@ -76,14 +76,14 @@ function renderData() {
     var rainbowStatField = document.getElementById('rb-stat');
     var lavaflatsStatField = document.getElementById('lf-stat');
 
-    bluePlainsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "BluePlains").length;
-    cornfieldStatField.innerHTML = deck.cards.filter((x) => x.landscape === "CornFields").length;
-    uselessSwampStatField.innerHTML = deck.cards.filter((x) => x.landscape === "UselessSwamp").length;
-    nicelandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "NiceLands").length;
-    sandylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "SandyLands").length;
-    icylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "IcyLands").length;
-    rainbowStatField.innerHTML = deck.cards.filter((x) => x.landscape === "Rainbow").length;
-    lavaflatsStatField.innerHTML = deck.cards.filter((x) => x.landscape === "LavaFlats").length;
+    bluePlainsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.BluePlains).length;
+    cornfieldStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.CornFields).length;
+    uselessSwampStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.UselessSwamp).length;
+    nicelandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.NiceLands).length;
+    sandylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.SandyLands).length;
+    icylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.IcyLands).length;
+    rainbowStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.Rainbow).length;
+    lavaflatsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.LavaFlats).length;
 }
 
 function buildDeckIfExistsInQuery() {

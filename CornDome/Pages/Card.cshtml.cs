@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace CornDome.Pages
     public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
-        public CardFullDetails QueryCard { get; set; } = null;
+        public Card QueryCard { get; set; } = null;
         public int? RevisionId { get; set; } = null;
 
         public void OnGet()

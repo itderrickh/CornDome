@@ -105,7 +105,7 @@ document.getElementById("decklistExport").onclick = function () {
     }
 
     var creatures = {};
-    for (var creature of deck.cards.filter((x) => x.cardType === "Creature")) {
+    for (var creature of deck.cards.filter((x) => x.cardType === CardType.Creature)) {
         if (!creatures.hasOwnProperty(creature.name))
             creatures[creature.name] = 1;
         else
@@ -113,7 +113,7 @@ document.getElementById("decklistExport").onclick = function () {
     }
 
     var spells = {};
-    for (var spell of deck.cards.filter((x) => x.cardType === "Spell")) {
+    for (var spell of deck.cards.filter((x) => x.cardType === CardType.Spell)) {
         if (!spells.hasOwnProperty(spell.name))
             spells[spell.name] = 1;
         else
@@ -121,7 +121,7 @@ document.getElementById("decklistExport").onclick = function () {
     }
 
     var buildings = {};
-    for (var building of deck.cards.filter((x) => x.cardType === "Building")) {
+    for (var building of deck.cards.filter((x) => x.cardType === CardType.Building)) {
         if (!buildings.hasOwnProperty(building.name))
             buildings[building.name] = 1;
         else
@@ -174,15 +174,15 @@ addButtons.forEach(x => x.onclick = function () {
         id: dataset.id
     };
 
-    if (cardElement.cardType === "Hero") {
+    if (cardElement.cardType === CardType.Hero) {
         deck.hero = cardElement;
         renderHero();
     }
-    else if (cardElement.cardType === "Landscape" && deck.landscapes.length < 4) {
+    else if (cardElement.cardType === CardType.Landscape && deck.landscapes.length < 4) {
         deck.landscapes.push(cardElement);
         renderLandscapes();
     }
-    else if (cardElement.cardType !== "Landscape" && cardElement.cardType !== "Hero") {
+    else if (cardElement.cardType !== CardType.Landscape && cardElement.cardType !== CardType.Hero) {
         deck.cards.push(cardElement);
         renderCards();
     }
@@ -194,11 +194,11 @@ function setupRemoveClicks() {
     removeButtons.forEach(x => x.onclick = function () {
         var dataset = x.parentElement.dataset;
 
-        if (dataset.cardType === "Hero") {
+        if (dataset.cardType === CardType.Hero) {
             deck.hero = null;
             renderHero();
         }
-        else if (dataset.cardType === "Landscape") {
+        else if (dataset.cardType === CardType.Landscape) {
             var index = deck.landscapes.map(function (e) { return e.id; }).indexOf(dataset.id);
             deck.landscapes.splice(index, 1);
             renderLandscapes();

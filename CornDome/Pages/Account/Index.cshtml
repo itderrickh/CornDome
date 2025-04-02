@@ -1,0 +1,26 @@
+﻿@page
+@model CornDome.Pages.Account.IndexModel
+@{
+}
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <h1>User Settings</h1>
+    <form method="post">
+        <div class="form-group">
+            <label for="Email">Email:</label>
+            <span><b>@Model.LocalUser.Email</b></span>
+        </div>
+        <div class="form-group">
+            <label for="Username">Username (20 character max)</label>
+            <input asp-for="LocalUser.Username" type="text" maxlength="20" class="form-control" />
+        </div>
+        <div class="form-group mt-2">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>

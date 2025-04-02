@@ -1,0 +1,116 @@
+﻿@page
+@model CornDome.Pages.Tournaments.TournamentResultsModel
+@{
+    ViewData["Title"] = "Tournament Results";
+}
+
+<h2>Last 3 Months Results:</h2>
+<div class="accordion" id="tournamentAccordian">
+    @for (var i = 0; i < Model.Tournaments.Count; i++)
+    {
+        <div class="accordion-item collapsed">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(i)" aria-expanded="true" aria-controls="collapse@(i)">
+                    @Model.Tournaments[i].TournamentDate.ToShortDateString() @Model.Tournaments[i].TournamentName
+                </button>
+            </h2>
+            <div id="collapse@(i)" class="accordion-collapse collapse" aria-labelledby="heading@(i)" data-bs-parent="#tournamentAccordian">
+                <div class="accordion-body">
+
+                    @if (!string.IsNullOrEmpty(Model.Tournaments[i].TournamentDescription))
+                    {
+                        <div style="margin-bottom: 20px;">
+                            <h3>Tournament Details</h3>
+                            <p>@Model.Tournaments[i].TournamentDescription</p>
+                        </div>
+                    }
+                    @foreach (var result in Model.Tournaments[i].TournamentResults.OrderBy(x => x.Placement))
+                    {
+                        <div style="width: 100%; margin-bottom: 20px;">
+                            <h3 style="border-bottom: 1px solid lightgray;">Placement @result.Placement - @result.Name</h3>
+                            <div style="width: 100%; padding: 10px;">
+                                <a asp-page="/Deck" asp-route-deck="@result.Decklist">
+                                    Click Here for the decklist
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@* <div class="accordion" id="tournamentAccordian">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                February 4th, 2024
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#tournamentAccordian">
+            <div class="accordion-body">
+                <div style="margin-bottom: 20px;">
+                    <h3>Tournament Details</h3>
+                    <img src="~/img/02042024-tournament.webp" style="width: 50%" />
+                </div>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">1st Place - JeffPattonMagic</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <a href="https://www.carddweeb.com/Deck?deck=MTE0OzA6MiwxNjoyOzM4OjIsNTk6MywxMDg6MiwxMzY6MiwxNzI6MiwxNzg6MywxODA6MywxODM6MiwyNDM6MiwzMDE6MywzNzA6MiwzOTM6Myw0MDE6Miw1Mjc6Myw1Mjg6Myw1Mjk6Miw1MzM6Miw1MzQ6Myw1NDk6Myw1NTE6Mw==">
+                            <img style="width: 100%" src="~/img/tournament_results/20240204-first.png" />
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                January 7th, 2024
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#tournamentAccordian">
+            <div class="accordion-body">
+                <h3>For this tournament, custom community holiday cards were allowed.</h3>
+                <ul>
+                    <li>Entry - Free</li>
+                    <li>Platform - Untap</li>
+                    <li>Format - Holiday Cards legal</li>
+                    <li>Prizing - Special discord roles</li>
+
+                </ul>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">1st Place - King Pizza Time</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <a href="https://www.carddweeb.com/Deck?deck=MTAwMDE7MDoyLDExOjEsMTQ6MTs0OToxLDEwODozLDEzMDozLDE1MzoyLDIzMjozLDI0NjoyLDI3OTozLDMwMDozLDMwMzozLDMyMzozLDM4MTozLDQ1MzozLDQ2MDozLDU0OTozLDU1MToy">
+                            <img style="width: 100%" src="~/img/tournament_results/20240107-first.png" />
+                        </a>
+                    </div>
+                </div>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">2nd Place - kyoob</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <a href="https://www.carddweeb.com/Deck?deck=MTAwMDE7MDoyLDE0OjI7NTk6Miw2MToyLDc3OjEsODQ6MSwxMDc6MiwxMDg6MywxNTQ6MiwyMzI6MywyNDY6MywyNDc6MSwyNTY6MSwzMDA6MiwzMDM6MywzMzk6MSwzODA6MiwzODQ6MSwzODY6MSwzOTA6MSw0MzM6Miw1NDc6Miw1NDk6Miw1NTE6Mg==">
+                            <img style="width: 100%" src="~/img/tournament_results/20240107-second.png" />
+                        </a>
+                    </div>
+                </div>
+                <div style="width: 100%; margin-bottom: 20px;">
+                    <h3 style="border-bottom: 1px solid lightgray;">3rd Place - NotAThotScott</h3>
+                    <div style="width: 100%; padding: 10px;">
+                        <a href="https://www.carddweeb.com/Deck?deck=MTAwMDE7MDoyLDExOjEsMTQ6MTs4NToxLDEwODozLDEzMDozLDE0MjoxLDIyNToxLDIzMjozLDI0NjoyLDI0NzoxLDI1NjoxLDI3OTozLDMwMDozLDMwMzozLDMyMzozLDM4MTozLDM4NjoxLDQyODoxLDQ2MDozLDU0OToxLDU1MToz">
+                            <img style="width: 100%" src="~/img/tournament_results/20240107-third.png" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tournament-results.css" asp-append-version="true" />
+}

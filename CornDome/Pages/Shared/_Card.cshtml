@@ -3,11 +3,11 @@
 @{
     var cardImage = Model.Card.LatestRevision.GetRegularImage;
 
-    if (Model.CardImageType == CardImageType.XSmall)
+    if (Model.CardImageType == CardImageTypeEnum.XSmall)
         cardImage = Model.Card.LatestRevision.GetExtraSmallImage;
-    else if (Model.CardImageType == CardImageType.Small)
+    else if (Model.CardImageType == CardImageTypeEnum.Small)
         cardImage = Model.Card.LatestRevision.GetSmallImage;
-    else if (Model.CardImageType == CardImageType.Large)
+    else if (Model.CardImageType == CardImageTypeEnum.Large)
         cardImage = Model.Card.LatestRevision.GetLargeImage;
 }
 
@@ -15,12 +15,12 @@
      class="card-container"
      data-id="@Model.Card.Id"
      data-card-image="@("/CardImages/" + cardImage)"
-     data-card-type="@Model.Card.LatestRevision.CardType"
-     data-landscape="@(Model.Card.LatestRevision.Landscape.HasValue ? Model.Card.LatestRevision.Landscape.ToString() : "")"
+     data-card-type="@Model.Card.LatestRevision.TypeId"
+     data-landscape="@(Model.Card.LatestRevision.LandscapeId)"
      data-name="@Model.Card.LatestRevision.Name"
      data-ability="@Model.Card.LatestRevision.Ability"
      data-cost="@(Model.Card.LatestRevision.Cost.HasValue ? Model.Card.LatestRevision.Cost.ToString() : "")"
-     data-set="@(Model.Card.LatestRevision.CardSet.HasValue ? Model.Card.LatestRevision.CardSet : "")"
+     data-set="@(Model.Card.LatestRevision.SetId)"
      data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
      data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
     <div class="card">

@@ -21,3 +21,9 @@ For the database:
 `cd /appdata/CardWarsData`
 
 `git pull`
+
+For the google login:
+
+`export Authentication__Google__ClientId="your-client-id"`
+
+`export Authentication__Google__ClientSecret="your-client-secret"`
