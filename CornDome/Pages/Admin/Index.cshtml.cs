@@ -1,5 +1,4 @@
 using CornDome.Models;
-using CornDome.Models.Logging;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +8,9 @@ using System.Security.Claims;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class IndexModel(IUserRepository userRepository, ILoggingRepository loggingRepository, IFeedbackRepository feedbackRepository) : PageModel
+    public class IndexModel(IUserRepository userRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         public User LoggedInUser { get; set; }
-        public IEnumerable<RouteLog> RouteLogs { get; set; }
         public List<FeedbackRequest> FeedbackRequests { get; set; }
         [BindProperty]
         public int DeleteFeedbackId { get; set; }
@@ -25,7 +23,6 @@ namespace CornDome.Pages.Admin
                 LoggedInUser = userRepository.GetUserByEmail(userEmail);
             }
 
-            RouteLogs = await loggingRepository.GetAllRouteLogs();
             FeedbackRequests = feedbackRepository.GetAllFeedback();
         }
 

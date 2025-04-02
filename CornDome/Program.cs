@@ -1,4 +1,3 @@
-using CornDome.Middleware;
 using CornDome.Models;
 using CornDome.Repository;
 using CornDome.Stores;
@@ -26,7 +25,6 @@ namespace CornDome
 
             // Repositories
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
-            builder.Services.AddTransient<ILoggingRepository, LoggingRepository>();
             builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, SqliteCardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -90,9 +88,6 @@ namespace CornDome
                 FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
                 RequestPath = "/CardImages"
             });
-
-            if (!app.Environment.IsDevelopment())
-                app.UseMiddleware<RouteLogger>();
 
             app.UseRouting();
             app.UseAuthentication();

@@ -22,10 +22,7 @@
 <div class="container my-3">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="route-tab" data-bs-toggle="tab" data-bs-target="#route" type="button" role="tab" aria-controls="route" aria-selected="true">Route Logs</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab" aria-controls="upload" aria-selected="false">Upload</button>
+            <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab" aria-controls="upload" aria-selected="false">Upload</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
@@ -33,29 +30,7 @@
     </ul>
 
     <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade show active" id="route" role="tabpanel" aria-labelledby="route-tab">
-            <h2 class="mb-3">Route Logs</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>From Route</th>
-                        <th>To Route</th>
-                        <th>Hit Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var routeRecord in Model.RouteLogs.OrderByDescending(x => x.HitCount))
-                    {
-                        <tr>
-                            <td>@routeRecord.FromRoute</td>
-                            <td>@routeRecord.ToRoute</td>
-                            <td>@routeRecord.HitCount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-pane fade" id="upload" role="tabpanel" aria-labelledby="upload-tab">
+        <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="upload-tab">
             <h2 class="mb-3">Upload Tournament Tools</h2>
             <p><a target="_blank" asp-page="/Admin/InsertTournament">Insert Tournament</a></p>
             <p><a target="_blank" asp-page="/Admin/BuildDecklist">Create Decklist String from Real List</a></p>

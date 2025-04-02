@@ -9,13 +9,10 @@ namespace CornDome.Pages.Account
 {
     public class ExternalLoginCallbackModel(IUserRepository userRepository, SignInManager<User> signInManager) : PageModel
     {
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly SignInManager<User> _signInManager = signInManager;
-
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             // Get external login info
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return RedirectToPage("/Account/Login");
@@ -23,32 +20,43 @@ namespace CornDome.Pages.Account
 
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             // Check if the user already exists in your local database
-            var user = _userRepository.GetUserByEmail(email);
+            var user = userRepository.GetUserByEmail(email);
 
             if (user == null)
             {
-                // The user doesn't exist in your local database, so create a new user
+                // Max length on name
                 var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                var trimmedName = name.Length > 20 ? name[..20] : name;
 
                 // Create a new ApplicationUser with external login details
-                user = new User
+                var createdUser = new User
                 {
-                    Username = name,
+                    Username = trimmedName,
                     Email = email
                 };
 
                 // Create the user in the database
-                var result = userRepository.CreateUser(user);
+                var result = userRepository.CreateUser(createdUser);
                 if (!result)
                 {
                     // Handle errors (add to ModelState, return to login page, etc.)
                     ModelState.AddModelError(string.Empty, "User creation failed");
                     return Page();
                 }
+
+                // Pull details from DB
+                user = userRepository.GetUserByEmail(email);
+            }
+
+            if (user == null)
+            {
+                // Handle errors (add to ModelState, return to login page, etc.)
+                ModelState.AddModelError(string.Empty, "User creation failed");
+                return Page();
             }
 
             // If the user is found, sign them in
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await signInManager.SignInAsync(user, isPersistent: false);
 
             // Redirect the user to their return URL or default page
             return RedirectToLocal(returnUrl);
