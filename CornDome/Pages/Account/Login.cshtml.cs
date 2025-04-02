@@ -13,6 +13,7 @@ namespace CornDome.Pages.Account
         public IActionResult OnGet()
         {
             var redirectUrl = Url.Page("/Account/ExternalLoginCallback", pageHandler: null, values: null, protocol: Request.Scheme);
+            Console.WriteLine(redirectUrl);
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
