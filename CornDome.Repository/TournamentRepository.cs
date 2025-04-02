@@ -1,22 +1,24 @@
 ﻿using CornDome.Models;
 using Dapper;
-using System.Data.SQLite;
 
 namespace CornDome.Repository
 {
     public interface ITournamentRepository
     {
+        int InsertTournament(Tournament tournament);
         int InsertTournament(Tournament tournament, List<TournamentResult> results);
+        bool UpdateTournament(int id, Tournament tournament);
         List<Tournament> GetAllTournaments();
+        Tournament GetById(int id);
     }
 
     public class TournamentRepository(IDbConnectionFactory dbConnectionFactory) : ITournamentRepository
     {
         private const string INSERT_TOURNAMENT_QUERY = @"
             INSERT INTO
-	            Tournament (TournamentDate, Name, Description)
+	            Tournament (TournamentDate, Name, Description, Status)
             VALUES 
-	            (@TournamentDate, @TournamentName, @TournamentDescription);
+	            (@TournamentDate, @TournamentName, @TournamentDescription, @Status);
 
             SELECT LAST_INSERT_ROWID();
         ";
@@ -28,6 +30,26 @@ namespace CornDome.Repository
 	            (@TournamentId, @Placement, @Name, @Decklist);
         ";
 
+        private const string UPDATE_TOURNAMENT_QUERY = @"
+            UPDATE Tournament
+            SET
+                TournamentDate = @TournamentDate,
+                Name = @TournamentName,
+                Description = @TournamentDescription,
+                Status = @Status
+            WHERE Id = @TournamentId;
+        ";
+
+        public int InsertTournament(Tournament tournament)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var tournamentId = con.QueryFirstOrDefault<int>(INSERT_TOURNAMENT_QUERY, new { TournamentDate = tournament.TournamentDate.ToShortDateString(), tournament.TournamentName, tournament.TournamentDescription, Status = TournamentStatus.NotActive });
+
+            return tournamentId;
+        }
+
         public int InsertTournament(Tournament tournament, List<TournamentResult> results)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
@@ -38,7 +60,7 @@ namespace CornDome.Repository
             foreach (var resultItem in results)
             {
                 if (!string.IsNullOrEmpty(resultItem.Decklist) || !string.IsNullOrEmpty(resultItem.Name))
-                    con.Execute(INSERT_RESULT_QUERY, new { TournamentId = tournamentId, resultItem.Placement, resultItem.Name, resultItem.Decklist });
+                    con.Execute(INSERT_RESULT_QUERY, new { TournamentId = tournamentId, resultItem.Placement, resultItem.Name, resultItem.Decklist, Status = 1 });
             }
 
             return tournamentId;
@@ -50,7 +72,7 @@ namespace CornDome.Repository
             con.Open();
 
             var tournamentResults = con.Query<TournamentResult>("SELECT Id, TournamentId, Placement, Name, Decklist FROM TournamentResult");
-            var tournaments = con.Query<Tournament>("SELECT Id, TournamentDate, Name AS TournamentName, Description AS TournamentDescription from Tournament");
+            var tournaments = con.Query<Tournament>("SELECT Id, TournamentDate, Name AS TournamentName, Description AS TournamentDescription, Status from Tournament");
 
             foreach (var tournament in tournaments)
             {
@@ -58,6 +80,26 @@ namespace CornDome.Repository
             }
 
             return tournaments.ToList();
+        }
+
+        public Tournament GetById(int id)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var tournament = con.QueryFirstOrDefault<Tournament>("SELECT Id, TournamentDate, Name AS TournamentName, Description AS TournamentDescription, Status from Tournament WHERE Id = @Id", new { Id = id });
+
+            return tournament;
+        }
+
+        public bool UpdateTournament(int id, Tournament tournament)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var changed = con.Execute(UPDATE_TOURNAMENT_QUERY, new { TournamentId = id, TournamentDate = tournament.TournamentDate.ToShortDateString(), tournament.TournamentName, tournament.TournamentDescription, Status = tournament.Status });
+
+            return changed > 0;
         }
     }
 }

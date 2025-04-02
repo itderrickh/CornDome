@@ -1,0 +1,45 @@
+﻿@page
+@model CornDome.Pages.Tournaments.EditModel
+@{
+    ViewData["Title"] = "Edit Tournament";
+}
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["status"]">@TempData["Message"]</div>
+    }
+    <form method="post" asp-page-handler="EditTournament">
+        <input type="hidden" asp-for="Tournament.Id" />
+
+        <div class="form-group">
+            <label for="TournamentDate">Tournament Date</label>
+            <input asp-for="Tournament.TournamentDate" type="date" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="TournamentName">Tournament Name</label>
+            <input asp-for="Tournament.TournamentName" type="text" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="TournamentDescription">Tournament Description</label>
+            <input asp-for="Tournament.TournamentDescription" type="text" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Status">Status</label>
+            <select asp-for="Tournament.Status" class="form-control">
+                <option value="@TournamentStatus.NotActive">Not Active</option>
+                <option value="@TournamentStatus.OpenForSignups">Open For Signups</option>
+                <option value="@TournamentStatus.ClosedForSignups">Closed For Signups</option>
+                <option value="@TournamentStatus.Ongoing">Ongoing</option>
+                <option value="@TournamentStatus.Completed">Completed</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>

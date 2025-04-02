@@ -45,8 +45,6 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/CardDatabase">Card Database</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/TournamentResults">Tournament Results (beta)</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -58,6 +56,18 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/Rulebook">Official Rulebook</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/SampleDecks">Sample Decks</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Tournaments
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Results">Tournament Results (beta)</a></li>
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Index">Tournaments</a></li>
+                                }
                             </ul>
                         </li>
                         <li class="nav-item mobile-only">
