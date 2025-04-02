@@ -10,6 +10,7 @@ namespace CornDome.Repository
         bool UpdateTournament(int id, Tournament tournament);
         List<Tournament> GetAllTournaments();
         Tournament GetById(int id);
+        bool RegisterForTournament(Tournament tournament, TournamentRegistration registration);
     }
 
     public class TournamentRepository(IDbConnectionFactory dbConnectionFactory) : ITournamentRepository
@@ -38,6 +39,13 @@ namespace CornDome.Repository
                 Description = @TournamentDescription,
                 Status = @Status
             WHERE Id = @TournamentId;
+        ";
+
+        private const string REGISTER_TOURNAMENT_QUERY = @"
+            INSERT INTO
+                TournamentRegistration (UserId, TournamentId, Deck)
+            VALUES
+                (@UserId, @TournamentId, @Deck);
         ";
 
         public int InsertTournament(Tournament tournament)
@@ -100,6 +108,15 @@ namespace CornDome.Repository
             var changed = con.Execute(UPDATE_TOURNAMENT_QUERY, new { TournamentId = id, TournamentDate = tournament.TournamentDate.ToShortDateString(), tournament.TournamentName, tournament.TournamentDescription, Status = tournament.Status });
 
             return changed > 0;
+        }
+
+        public bool RegisterForTournament(Tournament tournament, TournamentRegistration registration)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var result = con.Execute(REGISTER_TOURNAMENT_QUERY, registration);
+            return result > 0;
         }
     }
 }

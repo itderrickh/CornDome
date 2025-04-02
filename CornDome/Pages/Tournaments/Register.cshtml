@@ -1,0 +1,24 @@
+﻿@page
+@model CornDome.Pages.Tournaments.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-@TempData["Status"]">@TempData["Message"]</div>
+    }
+    else
+    {
+        <div>
+            <h1>@Model.Tournament.TournamentName</h1>
+            <p>@Model.Tournament.TournamentDescription</p>
+            <p>@Model.Tournament.TournamentDate</p>
+        </div>
+        <form method="post">
+            <label for="Deck">Deck Url:</label> <input type="text" asp-for="Deck" required />
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    }
+</div>

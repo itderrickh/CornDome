@@ -50,7 +50,7 @@
                             <td>@tournament.TournamentDate.ToShortDateString()</td>
                             @if (tournament.Status == TournamentStatus.OpenForSignups)
                             {
-                                <td><a>Sign Up</a></td>
+                                <td><a asp-page="/Tournaments/Register" asp-route-id="@tournament.Id">Sign Up</a></td>
                             }
                             else if (tournament.Status == TournamentStatus.NotActive)
                             {
