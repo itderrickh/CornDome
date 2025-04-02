@@ -13,6 +13,8 @@ namespace CornDome
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration.AddEnvironmentVariables();
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
