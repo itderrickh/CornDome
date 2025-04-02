@@ -34,8 +34,9 @@ namespace CornDome
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
-            
 
+            Console.WriteLine("ClientId: ");
+            Console.WriteLine(builder.Configuration["Authentication:Google:ClientId"]);
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
