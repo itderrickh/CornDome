@@ -4,8 +4,8 @@ var template = function (card) {
 
     element.dataset.ability = card.ability;
     element.dataset.cardImage = card.cardImage;
-    element.dataset.cardType = card.typeId;
-    element.dataset.landscape = card.landscapeId;
+    element.dataset.cardType = card.cardType;
+    element.dataset.landscape = card.landscape;
     element.dataset.name = card.name;
     element.dataset.ability = card.ability;
     element.dataset.cost = card.cost;
