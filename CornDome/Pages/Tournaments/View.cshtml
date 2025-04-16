@@ -25,9 +25,9 @@
                 {
                     <tr>
                         <td>@user.User.UserName</td>
-                        @if (Model.Tournament.Status == TournamentStatus.Completed)
+                        @if (Model.Tournament.Status == TournamentStatus.Completed || User.IsInRole("Admin"))
                         {
-                            <td><a href="@user.Deck" target="_blank">Link</a></td>
+                            <td><a asp-page="/Deck" asp-route-deck="@user.Deck" target="_blank">Link</a></td>
                         }
                         else
                         {

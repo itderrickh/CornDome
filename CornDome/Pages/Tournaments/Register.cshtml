@@ -8,17 +8,70 @@
     @if (TempData["Message"] != null)
     {
         <div class="alert alert-@TempData["Status"]">@TempData["Message"]</div>
+
+        <div>
+            <a asp-page="/Tournaments/View" asp-route-id="@Model.TournamentId">Back to tournament</a><br /><a asp-page="/Tournaments/Index">Tournament home</a>
+        </div>
     }
     else
     {
         <div>
             <h1>@Model.Tournament.TournamentName</h1>
             <p>@Model.Tournament.TournamentDescription</p>
-            <p>@Model.Tournament.TournamentDate</p>
+            <p>@Model.Tournament.TournamentDate.ToShortDateString()</p>
         </div>
-        <form method="post">
-            <label for="Deck">Deck Url:</label> <input type="text" asp-for="Deck" required />
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        @if (Model.ActiveRegistration != null)
+        {
+            @if (Model.Tournament.Status == TournamentStatus.OpenForSignups || Model.Tournament.Status == TournamentStatus.ClosedForSignups)
+            {
+                <div class="alert alert-success">
+                    <h4>You are already registered for this event. You can update your registration until the organizer locks in decklists.</h4>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+                    <div class="form-group mb-3">
+                        <label for="Deck">Deck Url:</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
+                            <input type="text" class="form-control" asp-for="Deck" value="@Model.ActiveRegistration.Deck" required />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" asp-page-handler="UpdateRegistration">Update Registration</button>
+                    <button type="submit" class="btn btn-danger" asp-page-handler="CancelRegistration">Cancel Registration</button>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <h4>You can no longer make changes to your decklist. The tournament is read-only</h4>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="Deck">Deck Url:</label>
+
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
+                        <input type="text" class="form-control" asp-for="Deck" value="@Model.ActiveRegistration.Deck" disabled />
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <form method="post" asp-page-handler="CreateRegistration">
+                <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+                <div class="form-group mb-3">
+                    <label for="Deck">Deck Url:</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
+                        <input type="text" class="form-control" asp-for="Deck" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Registration</button>
+            </form>
+        }
     }
 </div>

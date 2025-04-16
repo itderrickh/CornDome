@@ -14,6 +14,9 @@ namespace CornDome.Repository
         Tournament GetById(int id);
         bool RegisterForTournament(Tournament tournament, TournamentRegistration registration);
         List<TournamentRegistration> GetAllRegisteredUsers(int tournamentId);
+        TournamentRegistration? GetRegistration(int userId, int tournamentId);
+        bool DeleteRegistration(int userId, int tournamentId);
+        bool UpdateRegistration(TournamentRegistration updatedRegistration);
     }
 
     public class TournamentRepository(IDbConnectionFactory dbConnectionFactory) : ITournamentRepository
@@ -148,6 +151,50 @@ namespace CornDome.Repository
 
             var deleted = con.Execute("DELETE FROM Tournament WHERE Id = @TournamentId", new { TournamentId = tournamentId });
             return deleted > 0;
+        }
+
+        private const string GET_REGISTRATIONS_BY_USERNAME_QUERY = @"
+            SELECT UserId, TournamentId, Deck FROM TournamentRegistration
+            WHERE UserId = @UserId AND TournamentId = @TournamentId;
+        ";
+        public TournamentRegistration? GetRegistration(int userId, int tournamentId)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var registration = con.Query<TournamentRegistration>(GET_REGISTRATIONS_BY_USERNAME_QUERY, new { UserId = userId, TournamentId = tournamentId });
+
+            return registration.FirstOrDefault();
+        }
+
+        private const string UPDATE_REGISTRATION_QUERY = @"
+            UPDATE TournamentRegistration
+            SET
+                Deck = @Deck
+            WHERE UserId = @UserId AND TournamentId = @TournamentId;
+        ";
+        public bool UpdateRegistration(TournamentRegistration updatedRegistration)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var updated = con.Execute(UPDATE_REGISTRATION_QUERY, new { updatedRegistration.Deck, updatedRegistration.UserId, updatedRegistration.TournamentId });
+
+            return updated > 0;
+        }
+
+        private const string DELETE_REGISTRATION_QUERY = @"
+            DELETE FROM TournamentRegistration
+            WHERE UserId = @UserId AND TournamentId = @TournamentId;
+        ";
+        public bool DeleteRegistration(int userId, int tournamentId)
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var updated = con.Execute(DELETE_REGISTRATION_QUERY, new { UserId = userId, TournamentId = tournamentId });
+
+            return updated > 0;
         }
     }
 }
