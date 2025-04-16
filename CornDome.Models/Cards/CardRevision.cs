@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Cards
 {
@@ -18,6 +19,7 @@ namespace CornDome.Models.Cards
         public int? Defense { get; set; }
 
         public ICollection<CardImage> CardImages { get; set; } = [];
+        [JsonIgnore]
         public Card Card { get; set; }
         public CardSet CardSet { get; set; }
         public CardType CardType { get; set; }

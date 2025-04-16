@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Cards
 {
@@ -11,6 +12,7 @@ namespace CornDome.Models.Cards
         public string ImageUrl { get; set; } = string.Empty;
 
         public CardImageType CardImageType { get; set; }
+        [JsonIgnore]
         public CardRevision Revision { get; set; }
     }
 }
