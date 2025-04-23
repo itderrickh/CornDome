@@ -1,5 +1,6 @@
 using CornDome.Models.Users;
 using CornDome.Repository;
+using CornDome.Repository.Tournaments;
 using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,7 @@ namespace CornDome
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
             builder.Services.AddDbContext<CardDatabaseContext>(options => new ContextFactory(builder.Configuration).CreateCardContext(options));
+            builder.Services.AddDbContext<TournamentContext>(options => new ContextFactory(builder.Configuration).CreateTournamentContext(options));
 
             // Repositories
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();

@@ -7,7 +7,6 @@ namespace CornDome.Repository
     public interface ITournamentRepository
     {
         int InsertTournament(Tournament tournament);
-        int InsertTournament(Tournament tournament, List<TournamentResult> results);
         bool UpdateTournament(int id, Tournament tournament);
         bool DeleteTournament(int id);
         List<Tournament> GetAllTournaments();
@@ -64,34 +63,12 @@ namespace CornDome.Repository
             return tournamentId;
         }
 
-        public int InsertTournament(Tournament tournament, List<TournamentResult> results)
-        {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
-
-            var tournamentId = con.QueryFirstOrDefault<int>(INSERT_TOURNAMENT_QUERY, new { TournamentDate = tournament.TournamentDate.ToShortDateString(), tournament.TournamentName, tournament.TournamentDescription });
-
-            foreach (var resultItem in results)
-            {
-                if (!string.IsNullOrEmpty(resultItem.Decklist) || !string.IsNullOrEmpty(resultItem.Name))
-                    con.Execute(INSERT_RESULT_QUERY, new { TournamentId = tournamentId, resultItem.Placement, resultItem.Name, resultItem.Decklist, Status = 1 });
-            }
-
-            return tournamentId;
-        }
-
         public List<Tournament> GetAllTournaments()
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            var tournamentResults = con.Query<TournamentResult>("SELECT Id, TournamentId, Placement, Name, Decklist FROM TournamentResult");
             var tournaments = con.Query<Tournament>("SELECT Id, TournamentDate, Name AS TournamentName, Description AS TournamentDescription, Status from Tournament");
-
-            foreach (var tournament in tournaments)
-            {
-                tournament.TournamentResults = tournamentResults.Where(x => x.TournamentId == tournament.Id).ToList();
-            }
 
             return tournaments.ToList();
         }
