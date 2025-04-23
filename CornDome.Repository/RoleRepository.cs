@@ -10,6 +10,7 @@ namespace CornDome.Repository
         bool DeleteRole(Role role);
         Role? FindById(int id);
         Role? FindByName(string roleName);
+        public IEnumerable<Role> GetAll();
     }
     public class RoleRepository(IDbConnectionFactory dbConnectionFactory) : IRoleRepository
     {        
@@ -18,7 +19,7 @@ namespace CornDome.Repository
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            string sql = "INSERT INTO Roles (Id, Name) VALUES (@Id, @Name)";
+            string sql = "INSERT INTO Role (Id, Name) VALUES (@Id, @Name)";
             var result = con.Execute(sql, role);
             return result > 0;
         }
@@ -28,7 +29,7 @@ namespace CornDome.Repository
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            string sql = "UPDATE Roles SET Name = @Name WHERE Id = @Id";
+            string sql = "UPDATE Role SET Name = @Name WHERE Id = @Id";
             var result = con.Execute(sql, role);
             return result > 0;
         }
@@ -38,7 +39,7 @@ namespace CornDome.Repository
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            string sql = "DELETE FROM Roles WHERE Id = @Id";
+            string sql = "DELETE FROM Role WHERE Id = @Id";
             var result = con.Execute(sql, role);
             return result > 0;
         }
@@ -48,7 +49,7 @@ namespace CornDome.Repository
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            string sql = "SELECT * FROM Roles WHERE Id = @RoleId";
+            string sql = "SELECT * FROM Role WHERE Id = @RoleId";
             return con.QueryFirstOrDefault<Role>(sql, new { RoleId = roleId });
         }
 
@@ -57,8 +58,17 @@ namespace CornDome.Repository
             using var con = dbConnectionFactory.CreateMasterDbConnection();
             con.Open();
 
-            string sql = "SELECT * FROM Roles WHERE Name = @RoleName";
+            string sql = "SELECT * FROM Role WHERE Name = @RoleName";
             return con.QueryFirstOrDefault<Role>(sql, new { RoleName = roleName });
+        }
+
+        public IEnumerable<Role> GetAll()
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            string sql = "SELECT * FROM Role";
+            return con.Query<Role>(sql);
         }
     }
 }

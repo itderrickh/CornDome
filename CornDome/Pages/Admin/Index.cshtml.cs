@@ -9,10 +9,13 @@ using System.Security.Claims;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class IndexModel(IUserRepository userRepository, IFeedbackRepository feedbackRepository) : PageModel
+    public class IndexModel(IUserRepository userRepository, IFeedbackRepository feedbackRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository) : PageModel
     {
         public User LoggedInUser { get; set; }
         public List<FeedbackRequest> FeedbackRequests { get; set; }
+        public List<User> Users { get; set; }
+        public List<UserRole> UserRoles { get; set; }
+        public List<Role> Roles { get; set; }
         [BindProperty]
         public int DeleteFeedbackId { get; set; }
 
@@ -25,6 +28,9 @@ namespace CornDome.Pages.Admin
             }
 
             FeedbackRequests = feedbackRepository.GetAllFeedback();
+            Users = userRepository.GetAll().ToList();
+            UserRoles = userRoleRepository.GetAll().ToList();
+            Roles = roleRepository.GetAll().ToList();
         }
 
         public IActionResult OnPostDeleteFeedback()

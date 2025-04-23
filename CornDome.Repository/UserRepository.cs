@@ -10,6 +10,7 @@ namespace CornDome.Repository
         bool CreateUser(User user);
         User? GetUserById(int id);
         User? GetUserByUsername(string username);
+        IEnumerable<User> GetAll();
     }
 
     public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRepository
@@ -61,6 +62,16 @@ namespace CornDome.Repository
             var value = con.Execute("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.Username });
 
             return value > 0;
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            var users = con.Query<User>("SELECT Id, Email, Username FROM User");
+
+            return users;
         }
     }
 }

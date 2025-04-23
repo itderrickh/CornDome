@@ -10,6 +10,7 @@ namespace CornDome.Repository
         bool IsInRole(User user, Role role);
         IEnumerable<Role> GetRolesForUser(User user);
         IEnumerable<User> GetUsersInRole(Role role);
+        IEnumerable<UserRole> GetAll();
     }
 
     public class UserRoleRepository(IDbConnectionFactory dbConnectionFactory) : IUserRoleRepository
@@ -68,6 +69,16 @@ namespace CornDome.Repository
             string sql = "DELETE FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
             var result = con.Execute(sql, new { UserId = user.Id, RoleId = role.Id });
             return result > 0;
+        }
+
+        public IEnumerable<UserRole> GetAll()
+        {
+            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            con.Open();
+
+            string sql = "SELECT UserId, RoleId FROM UserRole";
+            var result = con.Query<UserRole>(sql);
+            return result;
         }
     }
 }

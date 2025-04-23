@@ -27,20 +27,19 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="user-access-tab" data-bs-toggle="tab" data-bs-target="#user-access" type="button" role="tab" aria-controls="user-access" aria-selected="false">User Access</button>
+        </li>
     </ul>
 
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="upload-tab">
             <h2 class="mb-3">Upload Tournament Tools</h2>
-            <p><a target="_blank" asp-page="/Admin/InsertTournament">Insert Tournament</a></p>
             <p><a target="_blank" asp-page="/Admin/BuildDecklist">Create Decklist String from Real List</a></p>
         </div>
         <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
             <h2 class="mb-3">Feedback</h2>
-            <form>
-
-            </form>
-            <table>
+            <table class="table table-light table-striped" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Link</th>
@@ -63,6 +62,38 @@
                                     <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" style="display: none;" />
                                     <button type="submit" class="btn btn-primary">Delete</button>
                                 </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="user-access" role="tabpanel" aria-labelledby="user-access-tab">
+            <h2 class="mb-3">User Management</h2>
+            <table class="table table-light table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users.OrderBy(x => x.UserName))
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Email</td>
+                            <td>@user.UserName</td>
+                            <td>
+                                <ul>
+                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
+                                    {
+                                        <li>@Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name</li>
+                                    }
+                                </ul>
                             </td>
                         </tr>
                     }
