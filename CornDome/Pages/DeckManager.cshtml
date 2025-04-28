@@ -1,11 +1,13 @@
 ﻿@page
 @model CornDome.Pages.DeckManagerModel
 @{
+    ViewData["Title"] = "Deck Manager";
 }
 
 <div class="container">
     <h1>Saved decks</h1>
-    <table class="table table-light table-striped" style="width: 100%;" id="deckTable">
+    <p><strong>Please note: Decks saved here will be deleted if you delete the browser data for this site.</strong></p>
+    <table class="table table-light table-striped mb-3" style="width: 100%;" id="deckTable">
         <thead>
             <tr>
                 <th>Name</th>
@@ -17,10 +19,28 @@
 
         </tbody>
     </table>
+    <button type="button" class="btn btn-primary" onclick="backUpDecks()">Back Up Decks</button>
+    <button type="button" class="btn btn-primary" onclick="displayRestoreDecks()">Restore Decks</button>
+
+    <div style="display: none;" id="backupArea">
+        <div class="form-group">
+            <label>Save this to a text file on your device:</label>
+            <textarea id="backupField" style="width: 100%;" rows="10"></textarea>
+        </div>
+    </div>
+
+    <div style="display: none;" id="restoreArea">
+        <div class="form-group">
+            <label>Input the file contents saved earlier:</label>
+            <textarea id="restoreField" style="width: 100%;" rows="10"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="restoreDecks()">Restore contents</button>
+    </div>
+    
 </div>
 
 @section Scripts {
-    <script src="./js/deckStorage.js"></script>
+    <script src="./js/deckStorage.js" asp-append-version="true"></script>
     <script>
         async function saveDeck(event) {
             var input = event.srcElement.previousElementSibling;
@@ -48,8 +68,6 @@
             try {
                 await db.open();
 
-                const deckToUpdate = await db.getById(id);
-
                 const result = await db.deleteDeck(id);
 
                 event.srcElement.parentNode.parentElement.remove();
@@ -69,6 +87,7 @@
 
                 var table = document.getElementById("deckTable");
                 var tbody = table.getElementsByTagName("tbody")[0];
+                tbody.innerHTML = "";
                 for (var i = 0; i < allDecks.length; i++) {
                     var row = tbody.insertRow(0);
 
@@ -87,10 +106,60 @@
                     cell3.innerHTML = deleteButton;
                 }
             } catch (ex) {
-                alert("Error adding deck: ", ex);
+                alert("Error displaying decks: ", ex);
             }
         }
 
         displayDecks();
+    </script>
+    <script>
+        async function backUpDecks() {
+            var restoreArea = document.getElementById("restoreArea");
+            restoreArea.style.display = "none";
+
+            var backupArea = document.getElementById("backupArea");
+            var backupField = document.getElementById("backupField");
+            backupArea.style.display = "block";
+
+            var db = new DecksDatabase();
+
+            try {
+                await db.open();
+
+                const allDecks = await db.getAll();
+
+                backupField.value = JSON.stringify(allDecks, null, 2);
+            } catch (ex) {
+
+            }
+        }
+
+        async function displayRestoreDecks() {
+            var restoreArea = document.getElementById("restoreArea");
+            restoreArea.style.display = "block";
+            var backupArea = document.getElementById("backupArea");
+            backupArea.style.display = "none";
+        }
+
+        async function restoreDecks() {
+            var restoreField = document.getElementById("restoreField");
+            var newDb = JSON.parse(restoreField.value);
+
+            newDb.forEach(function(v) { delete v.id });
+
+            var db = new DecksDatabase();
+
+            try {
+                await db.open();
+
+                await db.deleteAll();
+
+                await db.addMultiple(newDb);
+
+                await displayDecks();
+            } catch (ex) {
+                alert("Error restoring db: ", ex);
+            }
+        }
     </script>
 }

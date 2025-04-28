@@ -135,4 +135,59 @@
             request.onerror = (event) => reject(event.target.error);
         });
     }
+
+    // Delete all decks
+    deleteAll() {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject('Database not open');
+                return;
+            }
+
+            const transaction = this.db.transaction(this.storeName, 'readwrite');
+            const store = transaction.objectStore(this.storeName);
+            const request = store.clear();
+
+            request.onsuccess = () => resolve('All decks deleted successfully');
+            request.onerror = (event) => reject(event.target.error);
+        });
+    }
+
+    // Add multiple decks
+    addMultiple(decksArray) {
+        return new Promise((resolve, reject) => {
+            if (!this.db) {
+                reject('Database not open');
+                return;
+            }
+
+            const transaction = this.db.transaction(this.storeName, 'readwrite');
+            const store = transaction.objectStore(this.storeName);
+
+            let completed = 0;
+            let hasError = false;
+
+            decksArray.forEach((deck, index) => {
+                const request = store.add(deck);
+
+                request.onsuccess = () => {
+                    completed++;
+                    if (completed === decksArray.length && !hasError) {
+                        resolve('All decks added successfully');
+                    }
+                };
+
+                request.onerror = (event) => {
+                    if (!hasError) {
+                        hasError = true;
+                        reject(`Failed to add deck at index ${index}: ${event.target.error}`);
+                    }
+                };
+            });
+
+            if (decksArray.length === 0) {
+                resolve('No decks to add');
+            }
+        });
+    }
 }

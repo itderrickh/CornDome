@@ -32,6 +32,13 @@ namespace CornDome.Pages.Tournaments
 
         public IActionResult OnPostCreateRegistration()
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Status"] = "danger";
+                TempData["Message"] = "There was an issue while trying to register";
+                return Page();
+            }
+
             Deck = Deck.Replace("http://carddweeb.com/Deck?deck=", "")
                 .Replace("https://carddweeb.com/Deck?deck=", "")
                 .Replace("http://www.carddweeb.com/Deck?deck=", "")
@@ -64,6 +71,13 @@ namespace CornDome.Pages.Tournaments
 
         public IActionResult OnPostUpdateRegistration()
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Status"] = "danger";
+                TempData["Message"] = "There was an issue while trying to register";
+                return Page();
+            }
+
             Deck = Deck.Replace("http://carddweeb.com/Deck?deck=", "")
                 .Replace("https://carddweeb.com/Deck?deck=", "")
                 .Replace("http://www.carddweeb.com/Deck?deck=", "")
@@ -81,6 +95,13 @@ namespace CornDome.Pages.Tournaments
             if (isValidToUpdate)
             {
                 var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == int.Parse(userId) && x.TournamentId == TournamentId);
+                // Handle the case when they resubmit the same list
+                if (registration.Deck == Deck)
+                {
+                    TempData["Status"] = "success";
+                    TempData["Message"] = "Updated registration successfully!";
+                    return Page();
+                }
 
                 registration.Deck = Deck;
                 updated = tournamentContext.SaveChanges() > 0;
