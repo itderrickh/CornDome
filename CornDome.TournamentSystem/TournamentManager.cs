@@ -150,88 +150,6 @@ namespace CornDome.TournamentSystem
             return false;
         }
 
-        //public bool PairNextRound()
-        //{
-        //    if (!AllMatchesCompleted())
-        //        return false;
-
-        //    var isSuccess = false;
-        //    CurrentRound += 1;
-
-        //    var roundAdded = context.Rounds.Add(new Round()
-        //    {
-        //        TournamentId = Tournament.Id,
-        //        RoundNumber = CurrentRound,
-        //    });
-        //    var wasRoundAdded = context.SaveChanges() > 0;
-
-        //    if (wasRoundAdded)
-        //    {
-        //        List<Match> pairings = [];
-
-        //        var matchHistory = context.Matches.Where(x => x.TournamentId == Tournament.Id);
-
-        //        // Step 2: Shuffle the standings list (mimicking sample(frac=1) in pandas)
-        //        Random rng = new();
-        //        var sortedStandings = Players.OrderBy(x => rng.Next()).ToList();
-
-        //        sortedStandings = sortedStandings.OrderByDescending(s => s.Stats.Points).ThenByDescending(s => s.Stats.OMW).ToList();
-
-        //        // Step 3: Create a list of player names (to pair)
-        //        List<Player> playerList = new List<Player>(sortedStandings);
-
-        //        // Step 4: Begin pairing process
-        //        while (playerList.Count > 0)
-        //        {
-        //            Player primaryPlayer = playerList[0]; // The first player to match
-        //            List<Player> previouslyPlayed = [];
-
-        //            // Check match history to determine who the primary player has already played
-        //            foreach (var match in matchHistory)
-        //            {
-        //                if (match.Player1Id == primaryPlayer.User.Id)
-        //                {
-        //                    var otherPlayer = sortedStandings.SingleOrDefault(x => x.User.Id == match.Player2Id);
-        //                    previouslyPlayed.Add(otherPlayer);
-        //                }
-        //                else if (match.Player2Id == primaryPlayer.User.Id)
-        //                {
-        //                    var otherPlayer = sortedStandings.SingleOrDefault(x => x.User.Id == match.Player1Id);
-        //                    previouslyPlayed.Add(otherPlayer);
-        //                }
-        //            }
-
-        //            // Step 5: Find the next highest available player who hasn't played against the primary player
-        //            for (int i = 1; i < playerList.Count; i++)
-        //            {
-        //                Player opponent = playerList[i];
-
-        //                // If they haven't played each other before, pair them and remove both from the list
-        //                if (!previouslyPlayed.Contains(opponent))
-        //                {
-        //                    pairings.Add(new Match()
-        //                    {
-        //                        Player1Id = primaryPlayer.User.Id,
-        //                        Player2Id = opponent.User.Id,
-        //                        Result = MatchResult.Incomplete,
-        //                        TournamentId = Tournament.Id,
-        //                        RoundId = roundAdded.Entity.Id
-        //                    });
-        //                    playerList.RemoveAt(i); // Remove the opponent from the list
-        //                    playerList.RemoveAt(0); // Remove the primary player from the list
-        //                    break;
-        //                }
-        //            }
-        //        }
-
-        //        context.Matches.AddRange(pairings);
-        //        var wereMatchesAdded = context.SaveChanges() > 0;
-        //        isSuccess = wereMatchesAdded;
-        //    }
-
-        //    return isSuccess;
-        //}
-
         public bool PairNextRound()
         {
             if (!AllMatchesCompleted())
@@ -365,7 +283,8 @@ namespace CornDome.TournamentSystem
         public int NumberOfRounds()
         {
             int playerCount = Players.Count;
-            return (int)Math.Ceiling(Math.Log2(playerCount));
+            var roundCount = (int)Math.Ceiling(Math.Log2(playerCount));
+            return roundCount == 0 ? 1 : roundCount;
         }
     }
 }

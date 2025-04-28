@@ -10,7 +10,71 @@
     <p>@Model.Tournament.TournamentDate.ToShortDateString()</p>
     <p>@Model.Tournament.TournamentDescription</p>
 
-    @if (Model.Tournament.Status != TournamentStatus.Completed)
+    @if (Model.Tournament.Status == TournamentStatus.Ongoing)
+    {
+        <h3>Pairings</h3>
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var match in Model.TournamentManager.GetRound().Matches)
+                {
+                    var user1 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player1Id);
+                    var user2 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player2Id);
+                    <tr>
+                        <td>
+                            @if (match.Result == MatchResult.Player1Wins)
+                            {
+                                <p style="color: green;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                            }
+                            else if (match.Result == MatchResult.Tie)
+                            {
+                                <p style="color: goldenrod;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                            }
+                            else if (match.Result == MatchResult.Player2Wins)
+                            {
+                                <p style="color: red;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                            }
+                            else
+                            {
+                                <p>@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                            }
+                        </td>
+                        <td>
+                            @if (user2 == null)
+                            {
+                                <strong>Bye</strong>
+                            }
+                            else
+                            {
+                                @if (match.Result == MatchResult.Player2Wins)
+                                {
+                                    <p style="color: green;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                }
+                                else if (match.Result == MatchResult.Tie)
+                                {
+                                    <p style="color: goldenrod;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                }
+                                else if (match.Result == MatchResult.Player1Wins)
+                                {
+                                    <p style="color: red;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                }
+                                else
+                                {
+                                    <p>@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.Tournament.Status != TournamentStatus.Completed)
     {
         <h3>Registrations</h3>
         @if (Model.RegisteredUsers.Any())
