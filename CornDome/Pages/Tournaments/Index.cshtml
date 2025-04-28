@@ -167,6 +167,7 @@
                             <th>Date</th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -175,6 +176,7 @@
                             <tr>
                                 <td><a asp-page="View" asp-route-id="@tournament.Id">@tournament.TournamentName</a></td>
                                 <td>@tournament.TournamentDate.ToShortDateString()</td>
+                                <td><a asp-page="/Tournaments/Manage" asp-route-id="@tournament.Id">Manage</a></td>
                                 <td><a asp-page="/Tournaments/Edit" asp-route-id="@tournament.Id">Edit</a></td>
                                 <td><a asp-page="/Tournaments/Delete" asp-route-id="@tournament.Id">Delete</a></td>
                             </tr>
