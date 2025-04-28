@@ -51,13 +51,8 @@
                 <div class="alert alert-danger">
                     <h4>You can no longer make changes to your decklist. The tournament is read-only</h4>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="Deck">Deck Url:</label>
-
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
-                        <input type="text" class="form-control" asp-for="Deck" value="@Model.ActiveRegistration.Deck" disabled />
-                    </div>
+                <div>
+                    Submitted deck: <a asp-page="/Deck" asp-route-deck="@Model.ActiveRegistration.Deck" target="_blank">link</a>
                 </div>
             }
         }
