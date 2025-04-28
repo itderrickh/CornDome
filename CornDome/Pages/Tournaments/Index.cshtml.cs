@@ -1,11 +1,11 @@
 using CornDome.Models.Tournaments;
-using CornDome.Repository;
+using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
-    public class IndexModel(ITournamentRepository tournamentRepository) : PageModel
+    public class IndexModel(TournamentContext tournamentContext) : PageModel
     {
         [BindProperty]
         public Tournament TournamentToInsert { get; set; }
@@ -13,7 +13,7 @@ namespace CornDome.Pages.Tournaments
         public List<Tournament> AllTournaments { get; set; }
         public void OnGet()
         {
-            AllTournaments = tournamentRepository.GetAllTournaments();
+            AllTournaments = tournamentContext.Tournaments.ToList();
         }
 
         public IActionResult OnPostInsertTournament()
@@ -32,7 +32,8 @@ namespace CornDome.Pages.Tournaments
                 return Page();
             }
 
-            var result = tournamentRepository.InsertTournament(TournamentToInsert);
+            tournamentContext.Tournaments.Add(TournamentToInsert);
+            var result = tournamentContext.SaveChanges();
 
             if (result > 0)
             {
@@ -45,7 +46,7 @@ namespace CornDome.Pages.Tournaments
                 TempData["Message"] = "Tournament Not Added";
             }
 
-            AllTournaments = tournamentRepository.GetAllTournaments();
+            AllTournaments = tournamentContext.Tournaments.ToList();
             return Page();
         }
     }

@@ -1,5 +1,5 @@
 using CornDome.Models.Tournaments;
-using CornDome.Repository;
+using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace CornDome.Pages.Tournaments
 {
     [Authorize]
-    public class RegisterModel(ITournamentRepository tournamentRepository) : PageModel
+    public class RegisterModel(TournamentContext tournamentContext) : PageModel
     {
         [BindProperty]
         public int TournamentId { get; set; }
@@ -22,16 +22,23 @@ namespace CornDome.Pages.Tournaments
         {
             var queryId = Request.Query["id"];
             TournamentId = int.Parse(queryId);
-            Tournament = tournamentRepository.GetById(TournamentId);
+            Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var userIdValid = int.TryParse(userId, out int integerUserId);
-            var registration = tournamentRepository.GetRegistration(integerUserId, TournamentId);
+            var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == integerUserId && x.TournamentId == TournamentId);
             ActiveRegistration = registration;
         }
 
         public IActionResult OnPostCreateRegistration()
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Status"] = "danger";
+                TempData["Message"] = "There was an issue while trying to register";
+                return Page();
+            }
+
             Deck = Deck.Replace("http://carddweeb.com/Deck?deck=", "")
                 .Replace("https://carddweeb.com/Deck?deck=", "")
                 .Replace("http://www.carddweeb.com/Deck?deck=", "")
@@ -47,8 +54,9 @@ namespace CornDome.Pages.Tournaments
                     UserId = integerUserId
                 };
 
-                var result = tournamentRepository.RegisterForTournament(Tournament, registration);
-                if (result)
+                tournamentContext.Registrations.Add(registration);
+                var result = tournamentContext.SaveChanges();
+                if (result > 0)
                 {
                     TempData["Status"] = "success";
                     TempData["Message"] = "Successfully registered!";
@@ -63,12 +71,19 @@ namespace CornDome.Pages.Tournaments
 
         public IActionResult OnPostUpdateRegistration()
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Status"] = "danger";
+                TempData["Message"] = "There was an issue while trying to register";
+                return Page();
+            }
+
             Deck = Deck.Replace("http://carddweeb.com/Deck?deck=", "")
                 .Replace("https://carddweeb.com/Deck?deck=", "")
                 .Replace("http://www.carddweeb.com/Deck?deck=", "")
                 .Replace("https://www.carddweeb.com/Deck?deck=", "");
 
-            var tournament = tournamentRepository.GetById(TournamentId);
+            var tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -79,10 +94,17 @@ namespace CornDome.Pages.Tournaments
             var isValidToUpdate = isTournamentEditable && isUserValid;
             if (isValidToUpdate)
             {
-                var registration = tournamentRepository.GetRegistration(int.Parse(userId), TournamentId);
+                var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == int.Parse(userId) && x.TournamentId == TournamentId);
+                // Handle the case when they resubmit the same list
+                if (registration.Deck == Deck)
+                {
+                    TempData["Status"] = "success";
+                    TempData["Message"] = "Updated registration successfully!";
+                    return Page();
+                }
 
                 registration.Deck = Deck;
-                updated = tournamentRepository.UpdateRegistration(registration);
+                updated = tournamentContext.SaveChanges() > 0;
 
                 if (updated)
                 {
@@ -99,7 +121,7 @@ namespace CornDome.Pages.Tournaments
 
         public IActionResult OnPostCancelRegistration()
         {
-            var tournament = tournamentRepository.GetById(TournamentId);
+            var tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -109,7 +131,10 @@ namespace CornDome.Pages.Tournaments
             var isValidToUpdate = isTournamentEditable && isUserValid;
             if (isValidToUpdate)
             {
-                updated = tournamentRepository.DeleteRegistration(int.Parse(userId), TournamentId);
+                var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == int.Parse(userId) && x.TournamentId == TournamentId);
+                tournamentContext.Registrations.Remove(registration);
+
+                updated = tournamentContext.SaveChanges() > 0;
 
                 if (updated)
                 {

@@ -45,6 +45,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/CardDatabase">Card Database</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/DeckManager">Deck Manager</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -80,6 +81,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
                                     
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Account/Index">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     @if (User.IsInRole("Admin"))
                                     {

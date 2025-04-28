@@ -10,38 +10,67 @@
     <p>@Model.Tournament.TournamentDate.ToShortDateString()</p>
     <p>@Model.Tournament.TournamentDescription</p>
 
-    <h3>Registrations</h3>
-    @if (Model.RegisteredUsers.Any())
+    @if (Model.Tournament.Status != TournamentStatus.Completed)
     {
-        <table class="table table-light">
-            <thead>
-                <tr>
-                    <th>Participant</th>
-                    <th>Deck</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model.RegisteredUsers)
-                {
+        <h3>Registrations</h3>
+        @if (Model.RegisteredUsers.Any())
+        {
+            <table class="table table-light">
+                <thead>
                     <tr>
-                        <td>@user.User.UserName</td>
-                        @if (Model.Tournament.Status == TournamentStatus.Completed || User.IsInRole("Admin"))
-                        {
-                            <td><a asp-page="/Deck" asp-route-deck="@user.Deck" target="_blank">Link</a></td>
-                        }
-                        else
-                        {
-                            <td>Decklist will be available after the tournament</td>   
-                        }
+                        <th>Participant</th>
+                        <th>Deck</th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.RegisteredUsers)
+                    {
+                        <tr>
+                            <td>@user.User.UserName</td>
+                            @if (Model.Tournament.Status == TournamentStatus.Completed || User.IsInRole("Admin"))
+                            {
+                                <td><a asp-page="/Deck" asp-route-deck="@user.Deck" target="_blank">Link</a></td>
+                            }
+                            else
+                            {
+                                <td>Decklist will be available after the tournament</td>
+                            }
+                        </tr>
+                    }
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Nobody has signed up yet.</p>
+        }
     }
     else
     {
-        <p>Nobody has signed up yet.</p>
+        <h3>Standings</h3>
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>OMW</th>
+                    <th>Decklist</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.TournamentManager.GetStandings().OrderByDescending(x => x.Stats.Points))
+                {
+                    <tr>
+                        <td>@user.User.UserName</td>
+                        <td>@($"{user.Stats.Wins}-{user.Stats.Losses}-{user.Stats.Ties}") (@user.Stats.Points)</td>
+                        <td>@user.Stats.OMW</td>
+                        <td>
+                            <a asp-page="/Deck" asp-route-deck="@Model.RegisteredUsers.SingleOrDefault(x => x.UserId == user.User.Id).Deck" target="_blank">Link</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
-
 </div>

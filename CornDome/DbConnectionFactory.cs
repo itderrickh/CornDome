@@ -18,6 +18,11 @@ namespace CornDome
             return CreateConnection("MasterDb");
         }
 
+        public IDbConnection CreateTournamentDbConnection()
+        {
+            return CreateConnection("TournamentDb");
+        }
+
         private IDbConnection CreateConnection(string connectionName)
         {
             var connectionString = _configuration.GetConnectionString(connectionName);

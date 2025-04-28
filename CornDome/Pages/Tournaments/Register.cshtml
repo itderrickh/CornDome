@@ -24,23 +24,26 @@
         {
             @if (Model.Tournament.Status == TournamentStatus.OpenForSignups || Model.Tournament.Status == TournamentStatus.ClosedForSignups)
             {
-                <div class="alert alert-success">
-                    <h4>You are already registered for this event. You can update your registration until the organizer locks in decklists.</h4>
+                <div class="alert alert-success mb-3">
+                    <h4>You are already registered for this event. You can update your registration until the organizer locks in decklists. View submission: <a asp-page="/Deck" asp-route-deck="@Model.ActiveRegistration.Deck" target="_blank">link</a></h4>
                 </div>
 
-                <form method="post">
+                <form method="post" class="mb-3">
                     <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
                     <div class="form-group mb-3">
-                        <label for="Deck">Deck Url:</label>
-
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
-                            <input type="text" class="form-control" asp-for="Deck" value="@Model.ActiveRegistration.Deck" required />
-                        </div>
+                        <label for="Deck">New submission: </label>
+                        <select asp-for="Deck" id="updateDeck" class="form-control" required>
+                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-primary" asp-page-handler="UpdateRegistration">Update Registration</button>
+                </form>
+                <form method="post">
+                    <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
                     <button type="submit" class="btn btn-danger" asp-page-handler="CancelRegistration">Cancel Registration</button>
+
+                    <br />
+                    <strong><p>Please note: If you modify or delete the submitted deck AFTER registering, the changes will not be reflected unless you resubmit your decklist.</p></strong>
                 </form>
             }
             else
@@ -48,13 +51,8 @@
                 <div class="alert alert-danger">
                     <h4>You can no longer make changes to your decklist. The tournament is read-only</h4>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="Deck">Deck Url:</label>
-
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
-                        <input type="text" class="form-control" asp-for="Deck" value="@Model.ActiveRegistration.Deck" disabled />
-                    </div>
+                <div>
+                    Submitted deck: <a asp-page="/Deck" asp-route-deck="@Model.ActiveRegistration.Deck" target="_blank">link</a>
                 </div>
             }
         }
@@ -63,15 +61,51 @@
             <form method="post" asp-page-handler="CreateRegistration">
                 <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
                 <div class="form-group mb-3">
-                    <label for="Deck">Deck Url:</label>
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1">http://carddweeb.com/Deck?deck=</span>
-                        <input type="text" class="form-control" asp-for="Deck" required />
-                    </div>
+                    <label for="Deck">Deck you're submitting: </label>
+                    <select asp-for="Deck" id="addDeck" class="form-control" required>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit Registration</button>
+                <br />
+                <strong><p>Please note: If you modify or delete the submitted deck AFTER registering, the changes will not be reflected unless you resubmit your decklist.</p></strong>
             </form>
         }
     }
 </div>
+
+@section Scripts {
+    <script src="../js/deckStorage.js" asp-append-version="true"></script>
+    <script>
+        async function populateDeckView(field) {
+            var db = new DecksDatabase();
+
+            try {
+                await db.open();
+
+                const allDecks = await db.getAll();
+
+                for (var i = 0; i < allDecks.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = allDecks[i].content;
+                    option.text = allDecks[i].name;
+
+                    field.appendChild(option);
+                }
+            } catch (ex) {
+                alert("Error loading decks: ", ex);
+            }
+        }
+
+        var addDeck = document.getElementById("addDeck");
+        var updateDeck = document.getElementById("updateDeck");
+
+        if (addDeck) {
+            populateDeckView(addDeck);
+        }
+
+        if (updateDeck) {
+            populateDeckView(updateDeck);
+        }
+    </script>
+}

@@ -30,3 +30,21 @@ function deckToQuery() {
         window.history.pushState({ path: newurl }, '', newurl);
     }
 }
+
+function getFormattedDateTime() {
+    const currentDate = new Date();
+    const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = months[currentDate.getMonth()];
+    const year = currentDate.getFullYear();
+
+    let hours = currentDate.getHours();
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    // Convert hours from 24-hour format to 12-hour format
+    hours = hours % 12;
+    if (hours === 0) hours = 12;  // Adjust for midnight case (0 becomes 12)
+
+    return `${month}/${day}/${year} ${hours}:${minutes} ${ampm}`;
+}

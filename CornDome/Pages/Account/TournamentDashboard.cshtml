@@ -1,0 +1,31 @@
+﻿@page
+@model CornDome.Pages.Account.TournamentDashboardModel
+@{
+}
+
+<div class="container">
+
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>Tournament</th>
+                <th>Date</th>
+                <th>Decklist</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reg in Model.Registrations)
+            {
+                <tr>
+                    <td><strong>@reg.Tournament.TournamentName</strong></td>
+                    <td><strong>@reg.Tournament.TournamentDate</strong></td>
+                    <td><a asp-page="/Deck" asp-route-deck="reg.Deck" target="_blank">Link</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @foreach (var reg in Model.Registrations)
+    {
+        
+    }
+</div>

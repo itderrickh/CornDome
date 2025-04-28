@@ -27,3 +27,8 @@ For the google login:
 `export Authentication__Google__ClientId="your-client-id"`
 
 `export Authentication__Google__ClientSecret="your-client-secret"`
+
+For the migrations:
+
+`dotnet ef migrations add [Name] --context TournamentContext --project CornDome.Repository --startup-project CornDome`
+`dotnet ef database update --context TournamentContext --project CornDome.Repository --startup-project CornDome`

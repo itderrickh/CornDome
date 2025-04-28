@@ -17,10 +17,4 @@ namespace CornDome.Models.Cards
             }
         }
     }
-
-    
-
-    
-
-    
 }

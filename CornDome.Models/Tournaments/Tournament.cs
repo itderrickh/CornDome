@@ -1,4 +1,6 @@
-﻿namespace CornDome.Models.Tournaments
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CornDome.Models.Tournaments
 {
     public enum TournamentStatus
     {
@@ -9,6 +11,7 @@
         Completed = 4
     }
 
+    [Table("tournament")]
     public class Tournament
     {
         public int Id { get; set; }
@@ -16,6 +19,8 @@
         public string TournamentName { get; set; }
         public string TournamentDescription { get; set; }
         public TournamentStatus Status { get; set; }
-        public List<TournamentResult> TournamentResults { get; set; } = [];
+
+        public virtual List<Round> Rounds { get; set; }
+        public virtual List<TournamentRegistration> Registrations { get; set; }
     }
 }
