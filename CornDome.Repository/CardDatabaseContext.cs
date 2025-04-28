@@ -3,7 +3,7 @@ using CornDome.Models.Cards;
 
 namespace CornDome.Repository
 {
-    public class CardDatabaseContext(DbContextOptions options) : DbContext(options)
+    public class CardDatabaseContext(DbContextOptions<CardDatabaseContext> options) : DbContext(options)
     {
         public DbSet<Card> Cards { get; set; }
         public DbSet<CardRevision> CardRevisions { get; set; }

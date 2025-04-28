@@ -6,22 +6,18 @@ namespace CornDome
 {
     public class ContextFactory(IConfiguration configuration)
     {
-        public CardDatabaseContext CreateCardContext(DbContextOptionsBuilder builder)
+        public void CreateCardContext(DbContextOptionsBuilder builder)
         {
             var connectionString = configuration.GetConnectionString("CardsDb");
 
             builder.UseSqlite(connectionString);
-
-            return new CardDatabaseContext(builder.Options);
         }
 
-        public TournamentContext CreateTournamentContext(DbContextOptionsBuilder builder)
+        public void CreateTournamentContext(DbContextOptionsBuilder builder)
         {
             var connectionString = configuration.GetConnectionString("TournamentDb");
 
             builder.UseSqlite(connectionString);
-
-            return new TournamentContext(builder.Options);
         }
     }
 }

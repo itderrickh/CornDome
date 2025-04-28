@@ -1,0 +1,96 @@
+﻿@page
+@model CornDome.Pages.DeckManagerModel
+@{
+}
+
+<div class="container">
+    <h1>Saved decks</h1>
+    <table class="table table-light table-striped" style="width: 100%;" id="deckTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Link</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="./js/deckStorage.js"></script>
+    <script>
+        async function saveDeck(event) {
+            var input = event.srcElement.previousElementSibling;
+            var id = parseInt(event.srcElement.dataset.id);
+            
+            var db = new DecksDatabase();
+            try {
+                await db.open();
+
+                const deckToUpdate = await db.getById(id);
+                deckToUpdate.name = input.value;
+
+                const result = await db.updateDeck(id, deckToUpdate);
+                alert(result);
+            } catch (ex) {
+                alert("Error saving deck: ", ex);
+            }
+        }
+
+        async function deleteDeck(event) {
+            var input = event.srcElement.previousElementSibling;
+            var id = parseInt(event.srcElement.dataset.id);
+
+            var db = new DecksDatabase();
+            try {
+                await db.open();
+
+                const deckToUpdate = await db.getById(id);
+
+                const result = await db.deleteDeck(id);
+
+                event.srcElement.parentNode.parentElement.remove();
+                alert(result);
+            } catch (ex) {
+                alert("Error deleting deck: ", ex);
+            }
+        }
+
+        async function displayDecks() {
+            var db = new DecksDatabase();
+
+            try {
+                await db.open();
+
+                const allDecks = await db.getAll();
+
+                var table = document.getElementById("deckTable");
+                var tbody = table.getElementsByTagName("tbody")[0];
+                for (var i = 0; i < allDecks.length; i++) {
+                    var row = tbody.insertRow(0);
+
+                    var cell1 = row.insertCell(0);
+                    var deckNameInput = `
+                        <input class="name" type="text" value="${allDecks[i].name}" style="width: 50%;" />
+                        <button type="button" class="btn btn-primary" data-id="${allDecks[i].id}" onclick="saveDeck(event)">Save</button>`;
+                    cell1.innerHTML = deckNameInput;
+
+                    var cell2 = row.insertCell(1);
+                    var linkContent = `<a href="/Deck?deck=${allDecks[i].content}" target="_blank">Link</a>`;
+                    cell2.innerHTML = linkContent;
+
+                    var cell3 = row.insertCell(2);
+                    var deleteButton = `<button type="button" class="btn btn-danger" data-id="${allDecks[i].id}" onclick="deleteDeck(event)">Delete</button>`;
+                    cell3.innerHTML = deleteButton;
+                }
+            } catch (ex) {
+                alert("Error adding deck: ", ex);
+            }
+        }
+
+        displayDecks();
+    </script>
+}

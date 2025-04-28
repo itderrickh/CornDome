@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CornDome.Repository", "CornDome.Repository\CornDome.Repository.csproj", "{7B38B6A9-D71B-445D-9037-D6C33C43AF1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CornDome.TournamentSystem", "CornDome.TournamentSystem\CornDome.TournamentSystem.csproj", "{9D34A480-8754-4A4F-8FE4-622908A06116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CornDome.TournamentSystem", "CornDome.TournamentSystem\CornDome.TournamentSystem.csproj", "{9D34A480-8754-4A4F-8FE4-622908A06116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CornDome.Playground", "CornDome.Playground\CornDome.Playground.csproj", "{EAD72308-A215-4DC5-997D-B28FBBFBBDEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CornDome.Playground", "CornDome.Playground\CornDome.Playground.csproj", "{EAD72308-A215-4DC5-997D-B28FBBFBBDEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,7 +5,6 @@ using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
-using System.Collections;
 
 namespace CornDome
 {
@@ -32,7 +31,6 @@ namespace CornDome
 
             // Repositories
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
-            builder.Services.AddTransient<ITournamentRepository, TournamentRepository>();
             builder.Services.AddTransient<ICardRepository, CardRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();

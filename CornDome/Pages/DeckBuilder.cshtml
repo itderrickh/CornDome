@@ -32,6 +32,7 @@
             <button id="decklistExport" type="button" class="btn btn-lg btn-block btn-primary">Copy decklist to clipboard</button>
             <button id="permalinkExport" type="button" class="btn btn-lg btn-block btn-primary">Copy permalink to clipboard</button>
             <button id="tryoutButton" type="button" class="btn btn-lg btn-block btn-primary">Try it out</button>
+            <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
             <!--<button id="" type="button" class="btn btn-lg btn-block btn-primary">Data Dive</button>-->
         </fieldset>
     </div>
@@ -156,6 +157,7 @@
 @section Scripts {
     <script src="./js/enums.js" asp-append-version="true"></script>
     <script src="./js/helpers.js" asp-append-version="true"></script>
+    <script src="./js/deckStorage.js" asp-append-version="true"></script>
     <script src="./js/deckbuilder.rendering.js" asp-append-version="true"></script>
     <script src="./js/deckbuilder.handlers.js" asp-append-version="true"></script>
     <script src="./js/filter.js" asp-append-version="true"></script>
