@@ -23,26 +23,38 @@ namespace CornDome.Repository.Tournaments
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Tournament>()
+            var tournament = modelBuilder.Entity<Tournament>();
+            var round = modelBuilder.Entity<Round>();
+            var match = modelBuilder.Entity<Match>();
+            var tournamentRegistration = modelBuilder.Entity<TournamentRegistration>();
+
+            tournament
                 .HasMany(c => c.Rounds)
                 .WithOne(cr => cr.Tournament)
                 .HasForeignKey(cr => cr.TournamentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Round>()
+            tournament
+                .HasMany(tr => tr.Registrations)
+                .WithOne(tr => tr.Tournament)
+                .HasForeignKey(tr => tr.TournamentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            round
                 .HasMany(cr => cr.Matches)
                 .WithOne(ci => ci.Round)
                 .HasForeignKey(ci => ci.RoundId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Match>()
+            match
                 .HasOne(cr => cr.Tournament)
                 .WithMany()
                 .HasForeignKey(cr => cr.TournamentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<TournamentRegistration>()
-                .Ignore(tr => tr.User)
+            tournamentRegistration
+                .Ignore(tr => tr.User);
+            tournamentRegistration
                 .HasOne(tr => tr.Tournament)
                 .WithMany(t => t.Registrations)
                 .HasForeignKey(tr => tr.TournamentId)

@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CornDome.Models\CornDome.Models.csproj" />
     <ProjectReference Include="..\CornDome.Repository\CornDome.Repository.csproj" />
+    <ProjectReference Include="..\CornDome.TournamentSystem\CornDome.TournamentSystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>
