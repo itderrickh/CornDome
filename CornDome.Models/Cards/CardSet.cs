@@ -28,7 +28,8 @@ namespace CornDome.Models.Cards
         PrismoVSTheLich = 12,
         PeppermintButlerVSMagicMan = 13,
         Kickstarter2 = 14,
-        DarklandsExpansion = 15
+        DarklandsExpansion = 15,
+        CustomCards = 16
     }
 
     public static class SetConverter
@@ -53,6 +54,7 @@ namespace CornDome.Models.Cards
                 Set.PeppermintButlerVSMagicMan => "Peppermint Butler Vs Magic Man",
                 Set.Kickstarter2 => "Kickstarter #2",
                 Set.DarklandsExpansion => "DarkLands Expansion",
+                Set.CustomCards => "Custom Community Cards",
                 _ => "",
             };
         }
@@ -77,6 +79,7 @@ namespace CornDome.Models.Cards
                 Set.PeppermintButlerVSMagicMan => "cp9",
                 Set.Kickstarter2 => "ks2",
                 Set.DarklandsExpansion => "dl1",
+                Set.CustomCards => "custom",
                 _ => "",
             };
         }
