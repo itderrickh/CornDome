@@ -25,12 +25,14 @@ namespace CornDome.TournamentSystem
                 .ThenInclude(r => r.Matches)
                 .FirstOrDefault(x => x.Id == tournamentId);
 
-            users = userRepo.GetAll().ToList();
             SetupState();
         }
 
-        private void SetupState()
+        private async void SetupState()
         {
+            var allUsers = await userRepo.GetAll();
+            users = allUsers.ToList();
+
             CurrentRound = Tournament.Rounds.Any() ? Tournament.Rounds.Max(x => x.RoundNumber) : 0;
 
             CreatePlayerListFromRegistrations();

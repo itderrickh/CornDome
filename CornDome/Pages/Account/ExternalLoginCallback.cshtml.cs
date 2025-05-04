@@ -20,7 +20,7 @@ namespace CornDome.Pages.Account
 
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             // Check if the user already exists in your local database
-            var user = userRepository.GetUserByEmail(email);
+            var user = await userRepository.GetUserByEmail(email);
 
             if (user == null)
             {
@@ -36,7 +36,7 @@ namespace CornDome.Pages.Account
                 };
 
                 // Create the user in the database
-                var result = userRepository.CreateUser(createdUser);
+                var result = await userRepository.CreateUser(createdUser);
                 if (!result)
                 {
                     // Handle errors (add to ModelState, return to login page, etc.)
@@ -45,7 +45,7 @@ namespace CornDome.Pages.Account
                 }
 
                 // Pull details from DB
-                user = userRepository.GetUserByEmail(email);
+                user = await userRepository.GetUserByEmail(email);
             }
 
             if (user == null)

@@ -17,16 +17,16 @@ namespace CornDome.Pages.Account
     {
         [BindProperty]
         public LocalUser LocalUser { get; set; } = new LocalUser();
-        public void OnGet()
+        public async void OnGet()
         {
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
             LocalUser.Email = loggedInUser?.Email;
             LocalUser.Username = User.Identity.Name;
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
             if (!ModelState.IsValid)
             {
@@ -34,10 +34,10 @@ namespace CornDome.Pages.Account
             }
 
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
             loggedInUser.Username = LocalUser.Username;
-            var updated = userRepository.UpdateUser(loggedInUser);
+            var updated = await userRepository.UpdateUser(loggedInUser);
 
             if (updated)
             {

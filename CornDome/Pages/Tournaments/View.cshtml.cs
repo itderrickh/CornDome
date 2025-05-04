@@ -15,12 +15,13 @@ namespace CornDome.Pages.Tournaments
         public TournamentManager TournamentManager { get; set; }
 
         public int TournamentId { get; set; }
-        public void OnGet()
+        public async void OnGet()
         {
             var queryId = Request.Query["id"];
             TournamentId = int.Parse(queryId);
 
-            Users = userRepository.GetAll().ToList();
+            var users = await userRepository.GetAll();
+            Users = users.ToList();
             Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
             RegisteredUsers = tournamentContext.Registrations.Where(x => x.TournamentId == Tournament.Id).ToList();
 

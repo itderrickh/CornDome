@@ -24,13 +24,16 @@ namespace CornDome.Pages.Admin
             if (User.Identity.IsAuthenticated)
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                LoggedInUser = userRepository.GetUserByEmail(userEmail);
+                LoggedInUser = await userRepository.GetUserByEmail(userEmail);
             }
 
             FeedbackRequests = feedbackRepository.GetAllFeedback();
-            Users = userRepository.GetAll().ToList();
-            UserRoles = userRoleRepository.GetAll().ToList();
-            Roles = roleRepository.GetAll().ToList();
+            var users = await userRepository.GetAll();
+            Users = users.ToList();
+            var userRoles = await userRoleRepository.GetAll();
+            UserRoles = userRoles.ToList();
+            var roles = await roleRepository.GetAll();
+            Roles = roles.ToList();
         }
 
         public IActionResult OnPostDeleteFeedback()

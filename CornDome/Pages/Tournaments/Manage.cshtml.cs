@@ -36,7 +36,7 @@ namespace CornDome.Pages.Tournaments
             Load();
         }
 
-        private void Load()
+        private async void Load()
         {
             if (TournamentId <= 0)
             {
@@ -50,7 +50,8 @@ namespace CornDome.Pages.Tournaments
                 .SingleOrDefault(x => x.Id == TournamentId);
 
             Registrations = [.. tournamentContext.Registrations.Where(x => x.TournamentId == Tournament.Id)];
-            Users = userRepository.GetAll().ToList();
+            var allUsers = await userRepository.GetAll();
+            Users = allUsers.ToList();
 
             foreach (var user in Registrations)
             {

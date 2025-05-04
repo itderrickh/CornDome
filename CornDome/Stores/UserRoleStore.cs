@@ -10,11 +10,10 @@ namespace CornDome.Stores
         private readonly IRoleRepository _roleRepository = roleRepository;
         private readonly IUserRepository _userRepository = userRepository;
 
-        public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        public async Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            var role = _roleRepository.FindByName(roleName);
-            _userRoleRepository.AddToRole(user, role);
-            return Task.CompletedTask;
+            var role = await _roleRepository.FindByName(roleName);
+            await _userRoleRepository.AddToRole(user, role);
         }
 
         public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -29,78 +28,79 @@ namespace CornDome.Stores
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            var result = _userRepository.CreateUser(new User() { Email = user.Email, Username = user.UserName });
+            var result = await _userRepository.CreateUser(new User() { Email = user.Email, Username = user.UserName });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "User creation failed." });
         }
 
         public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            var result = _userRepository.UpdateUser(new User() { Username = user.UserName, Email = user.Email });
+            var result = await _userRepository.UpdateUser(new User() { Username = user.UserName, Email = user.Email });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "User update failed." });
         }
 
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            var result = _userRepository.GetUserById(int.Parse(userId));
+            var result = await _userRepository.GetUserById(int.Parse(userId));
             return result;
         }
 
         public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            var result = _userRepository.GetUserByUsername(normalizedUserName);
+            var result = await _userRepository.GetUserByUsername(normalizedUserName);
             return result;
         }
 
         public async Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            var result = _userRepository.GetUserByEmail(normalizedEmail);
+            var result = await _userRepository.GetUserByEmail(normalizedEmail);
             return result;
         }
 
-        public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            return user.NormalizedUserName;
+            return Task.FromResult(user.NormalizedUserName);
         }
 
         public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            var roles = _userRoleRepository.GetRolesForUser(user);
+            var roles = await _userRoleRepository.GetRolesForUser(user);
             return roles.Select(x => x.Name).ToList();
         }
 
-        public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            return user.Id.ToString();
+            return Task.FromResult(user.Id.ToString());
         }
 
-        public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            return user.UserName;
+            return Task.FromResult(user.UserName);
         }
 
-        public async Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
             user.UserName = userName;
+            return Task.CompletedTask;
         }
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            var role = _roleRepository.FindByName(roleName);
-            return _userRoleRepository.GetUsersInRole(role).ToList();
+            var role = await _roleRepository.FindByName(roleName);
+            var usersInRole = await _userRoleRepository.GetUsersInRole(role);
+            return usersInRole.ToList();
         }
 
         public async Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            var role = _roleRepository.FindByName(roleName);
-            var isInRole = _userRoleRepository.IsInRole(user, role);
+            var role = await _roleRepository.FindByName(roleName);
+            var isInRole = await _userRoleRepository.IsInRole(user, role);
             return isInRole;
         }
 
-        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        public async Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            var role = _roleRepository.FindByName(roleName);
-            _userRoleRepository.RemoveFromRole(user, role);
-            return Task.CompletedTask;
+            var role = await _roleRepository.FindByName(roleName);
+            await _userRoleRepository.RemoveFromRole(user, role);
         }
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
