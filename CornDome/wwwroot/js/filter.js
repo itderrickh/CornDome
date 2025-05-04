@@ -6,7 +6,8 @@ var filterFunctions = {
     cost: null,
     name: '',
     ability: '',
-    set: null
+    set: null,
+    customCards: false
 };
 
 function filterDataset() {
@@ -37,6 +38,9 @@ function filterDataset() {
             var set = ele.dataset.set.toLowerCase();
             var filterSet = filterFunctions.set.toLowerCase()
             actions.push(set.indexOf(filterSet) > -1);
+        }
+        if (!filterFunctions.customCards) {
+            actions.push(ele.dataset.custom !== "True");
         }
 
         if (actions.every(v => v)) {
@@ -95,3 +99,8 @@ document.getElementById("setFilter").oninput = function () {
     filterFunctions.set = this.value;
     filterDataset();
 }
+
+document.getElementById("customCardFilter").onchange = function () {
+    filterFunctions.customCards = this.checked;
+    filterDataset();
+};

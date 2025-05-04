@@ -9,11 +9,14 @@
         cardImage = Model.Card.LatestRevision.GetSmallImage;
     else if (Model.CardImageType == CardImageTypeEnum.Large)
         cardImage = Model.Card.LatestRevision.GetLargeImage;
+
+    var customCardStyle = Model.Card.IsCustomCard ? "display: none;" : "";
 }
 
-<div style="width: 120px;"
+<div style="width: 120px; @customCardStyle"
      class="card-container"
      data-id="@Model.Card.Id"
+     data-custom="@Model.Card.IsCustomCard"
      data-card-image="@("/CardImages/" + cardImage)"
      data-card-type="@Model.Card.LatestRevision.TypeId"
      data-landscape="@(Model.Card.LatestRevision.LandscapeId)"
