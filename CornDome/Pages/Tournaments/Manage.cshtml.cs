@@ -89,11 +89,11 @@ namespace CornDome.Pages.Tournaments
             return Page();
         }
 
-        public IActionResult OnPostAddUser()
+        public async Task<IActionResult> OnPostAddUser()
         {
             if (UserToAddId != -1 && TournamentId > -1)
             {
-                var user = userRepository.GetUserById(UserToAddId);
+                var user = await userRepository.GetUserById(UserToAddId);
                 var reg = new TournamentRegistration()
                 {
                     Deck = "Test",

@@ -116,7 +116,7 @@ namespace CornDome.TournamentSystem
                         var opponentStats = opponent.Stats;
                         if (opponentStats != null && opponentStats.Played > 0)
                         {
-                            double opponentWinRate = opponentStats.Points / opponentStats.Played;
+                            double opponentWinRate = opponentStats.Wins / opponentStats.Played;
                             opponentWinRates.Add(opponentWinRate);
                         }
                     }
@@ -179,7 +179,7 @@ namespace CornDome.TournamentSystem
                 var sortedStandings = Players.OrderBy(x => rng.Next()).ToList();
                 sortedStandings = sortedStandings.OrderByDescending(s => s.Stats.Points).ThenByDescending(s => s.Stats.OMW).ToList();
 
-                List<Player> playerList = new List<Player>(sortedStandings);
+                List<Player> playerList = new(sortedStandings);
 
                 // Handle bye if odd number of players
                 if (playerList.Count % 2 != 0)

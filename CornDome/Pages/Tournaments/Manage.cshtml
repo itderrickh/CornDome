@@ -18,7 +18,7 @@
                 <option value="@user.Id">@user.UserName</option>
             }
         </select>
-        <button>Add User</button>
+        <button class="btn btn-primary">Add User</button>
     </form>
 
     @if (Model.Registrations.Any())
@@ -81,14 +81,14 @@
         <h1>The tournament is now complete</h1>
         <form method="post" asp-page-handler="EndTournament">
             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-            <button>End Tournament</button>
+            <button class="btn btn-primary">End Tournament</button>
         </form>
     }
     else if (Model.TournamentManager.GetRound() == null)
     {
         <form method="post" asp-page-handler="AddRound">
             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-            <button>Pair Next Round</button>
+            <button class="btn btn-primary">Pair Next Round</button>
         </form>
     }
     else
@@ -162,7 +162,7 @@
         {
             <form method="post" asp-page-handler="AddRound">
                 <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                <button>Pair Next Round</button>
+                <button class="btn btn-primary">Pair Next Round</button>
             </form>
         }
     }
