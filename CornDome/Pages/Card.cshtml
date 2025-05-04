@@ -21,12 +21,23 @@ else
         <div style="width: 50%">
             <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
 
-            @if (selectedRevision.SetId > (int)Set.Kickstarter1)
+            @if (selectedRevision.SetId == (int)Set.DarklandsExpansion
+            || selectedRevision.SetId == (int)Set.FlamePrincessVSFern
+            || selectedRevision.SetId == (int)Set.PeppermintButlerVSMagicMan
+            || selectedRevision.SetId == (int)Set.PrismoVSTheLich
+            || selectedRevision.SetId == (int)Set.Kickstarter2)
             {
                 <p style="margin-top: 20px;">* Card images from Kickstarter #2 may be blurry until we get better scans.</p>
             }
         </div>
         <div style="width: 50%; padding: 20px;">
+            @if (Model.QueryCard.IsCustomCard)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">This is a custom card made from the CardWars discord and is NOT official</span>
+                </div>
+            }
+
             <div class="card-text-section">
                 <span class="bold-label">Card Type: </span><br /><span>@selectedRevision.CardType.Value</span>
             </div>
