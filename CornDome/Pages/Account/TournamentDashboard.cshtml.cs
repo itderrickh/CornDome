@@ -1,29 +1,47 @@
 using CornDome.Models.Tournaments;
+using CornDome.Models.Users;
+using CornDome.Repository;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CornDome.Pages.Account
 {
     [Authorize]
-    public class TournamentDashboardModel(TournamentContext tournamentContext) : PageModel
+    public class TournamentDashboardModel(TournamentContext tournamentContext, IUserRepository userRepository) : PageModel
     {
         public List<TournamentRegistration> Registrations { get; set; }
-        public void OnGet()
+        public int UserId { get; set; }
+        public List<User> Players { get; set; }
+        public async void OnGet()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            //Registrations = tournamentContext.Tournaments
-            //    .Include(x => x.Registrations)
-            //    .SelectMany(x => x.Registrations)
-            //    .Where(x => x.UserId == int.Parse(userId))
-            //    .ToList();
             Registrations = tournamentContext.Registrations
                 .Include(x => x.Tournament)
-                .Where(x => x.UserId == int.Parse(userId))
+                .ThenInclude(t => t.Rounds)
+                .ThenInclude(r => r.Matches)
+                .Where(x => x.UserId == UserId)
                 .ToList();
+
+            var allUsers = await userRepository.GetAll();
+            Players = allUsers.ToList();
+        }
+
+
+        [BindProperty]
+        public int PostMatchId { get; set; }
+        [BindProperty]
+        public int PostTournamentId { get; set; }
+        [BindProperty]
+        public MatchResult PostResult { get; set; }
+
+        public async Task<IActionResult> OnPostMatchResult()
+        {
+            return Page();
         }
     }
 }

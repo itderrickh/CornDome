@@ -154,6 +154,13 @@ namespace CornDome.TournamentSystem
 
         public bool PairNextRound()
         {
+            if (Tournament.Status != TournamentStatus.Ongoing)
+            {
+                var edit = context.Tournaments.FirstOrDefault(x => x.Id == Tournament.Id);
+                edit.Status = TournamentStatus.Ongoing;
+                context.SaveChanges();
+            }
+
             if (!AllMatchesCompleted())
                 return false;
 

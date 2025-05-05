@@ -1,31 +1,147 @@
 ﻿@page
 @model CornDome.Pages.Account.TournamentDashboardModel
 @{
+    ViewData["Title"] = "Tournament Dashboard";
 }
 
-<div class="container">
+<div class="container my-3">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="current-tab" data-bs-toggle="tab" data-bs-target="#current" type="button" role="tab" aria-controls="current" aria-selected="false">
+                Current Tournament Pairings
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">
+                Tournament History
+            </button>
+        </li>
+    </ul>
 
-    <table class="table table-light">
-        <thead>
-            <tr>
-                <th>Tournament</th>
-                <th>Date</th>
-                <th>Decklist</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var reg in Model.Registrations)
-            {
-                <tr>
-                    <td><strong>@reg.Tournament.TournamentName</strong></td>
-                    <td><strong>@reg.Tournament.TournamentDate</strong></td>
-                    <td><a asp-page="/Deck" asp-route-deck="reg.Deck" target="_blank">Link</a></td>
-                </tr>
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="current-tab">
+            @{
+                var liveTournaments = Model.Registrations.Select(x => x.Tournament).Where(x => x.Status == TournamentStatus.Ongoing);
             }
-        </tbody>
-    </table>
+
+            @foreach (var tournament in liveTournaments)
+            {
+                var currentRound = tournament.Rounds.OrderByDescending(x => x.RoundNumber).FirstOrDefault();
+                var currentMatch = currentRound.Matches.FirstOrDefault(x => x.Player1Id == Model.UserId || x.Player2Id == Model.UserId);
+                var isPlayer1 = currentMatch.Player1Id == Model.UserId;
+                var player1 = Model.Players.FirstOrDefault(x => x.Id == currentMatch.Player1Id);
+                var player2 = Model.Players.FirstOrDefault(x => x.Id == currentMatch.Player2Id);
+
+                <div class="container p-5 text-center bg-body rounded-3 mb-2">
+                    <div class="row">
+                        <div class="col-4">
+                            <h5>Tournament: <a asp-page="/Tournaments/View" asp-route-id="@tournament.Id">@tournament.TournamentName</a></h5>
+                            <h5>Round: @(currentRound.RoundNumber + 1)</h5>
+                        </div>
+                        <div class="col-4">
+                            <h3>@player1.UserName VS @player2.UserName</h3>
+                        </div>
+                        <div class="col-4">
+                            @if (currentMatch.Result == MatchResult.Incomplete)
+                            {
+                                <form method="post" asp-page-handler="MatchResult">
+                                    <input type="hidden" asp-for="PostMatchId" value="@currentMatch.Id" />
+                                    @if (isPlayer1)
+                                    {
+                                        <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
+                                    }
+                                    <input type="hidden" asp-for="PostTournamentId" value="@tournament.Id" />
+                                    <button class="btn btn-success" type="submit">
+                                        <span>Report Win</span>
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-page-handler="MatchResult">
+                                    <input type="hidden" asp-for="PostMatchId" value="@currentMatch.Id" />
+                                    @if (isPlayer1)
+                                    {
+                                        <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
+                                    }
+                                    <input type="hidden" asp-for="PostTournamentId" value="@tournament.Id" />
+                                    <button class="btn btn-danger" type="submit">
+                                        <span>Report Loss</span>
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-page-handler="MatchResult">
+                                    <input type="hidden" asp-for="PostMatchId" value="@currentMatch.Id" />
+                                    <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
+                                    <input type="hidden" asp-for="PostTournamentId" value="@tournament.Id" />
+                                    <button class="btn btn-primary" type="submit">Tie</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span>
+                                    Result has been reported:
+                                    @if (currentMatch.Result == MatchResult.Player1Wins)
+                                    {
+                                        <span>@player1.UserName wins</span>
+                                    }
+                                    else if (currentMatch.Result == MatchResult.Player2Wins)
+                                    {
+                                        <span>@player2.UserName wins</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Tie</span>
+                                    }
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <table class="table table-light">
+                <thead>
+                    <tr>
+                        <th>Tournament</th>
+                        <th>Date</th>
+                        <th>Decklist</th>
+                        <th>Standings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reg in Model.Registrations.Where(x => x.Tournament.Status == TournamentStatus.Completed))
+                    {
+                        <tr>
+                            <td><strong>@reg.Tournament.TournamentName</strong></td>
+                            <td><strong>@reg.Tournament.TournamentDate</strong></td>
+                            <td><a asp-page="/Deck" asp-route-deck="@reg.Deck" target="_blank">Link</a></td>
+                            <td><a asp-page="/Tournaments/View" asp-route-id="@reg.TournamentId" target="_blank">Link</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     @foreach (var reg in Model.Registrations)
     {
-        
+
     }
 </div>
+
+@section Styles {
+    <style>
+        .bg-body {
+            background-color: rgba(43,48,53) !important;
+        }
+    </style>
+}
