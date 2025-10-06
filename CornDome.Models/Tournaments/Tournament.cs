@@ -19,6 +19,7 @@ namespace CornDome.Models.Tournaments
         public string TournamentName { get; set; }
         public string TournamentDescription { get; set; }
         public TournamentStatus Status { get; set; }
+        public bool IsOpenList { get; set; }
 
         public virtual List<Round> Rounds { get; set; }
         public virtual List<TournamentRegistration> Registrations { get; set; }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Pages.Tournaments
 {
-    [Authorize(Policy = "admin")]
+    [Authorize(Policy = "tournamentOrganizer")]
     public class ManageModel(TournamentContext tournamentContext, IUserRepository userRepository) : PageModel
     {
         public Tournament Tournament { get; set; }

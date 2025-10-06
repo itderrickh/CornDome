@@ -93,14 +93,14 @@
     }
     else
     {
+        <span>Please note: If you click any match results it will override what the users selected.</span>
         <table class="table table-light">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>Reported Result</th>
                     <th>Player 1</th>
-                    <th></th>
                     <th>Player 2</th>
-                    <th></th>
+                    <th>Match Override Buttons</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,28 +110,30 @@
                 var user2 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player2Id);
                 <tr>
                     <td>
-                        @if (match.Result == MatchResult.Incomplete)
-                        {
-                            <form method="post" asp-page-handler="MatchResult">
-                                <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                                <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
-                                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                                <button class="btn btn-primary" type="submit">Tie</button>
-                            </form>
-                        }
-                    </td>
+                            @if (match.Result == MatchResult.Incomplete)
+                            {
+                                <span>Incomplete</span>
+                            }
+                            else if (match.Result == MatchResult.Player1Wins)
+                            {
+                                <span>Player 1 Wins</span>
+                            }
+                            else if (match.Result == MatchResult.Tie)
+                            {
+                                <span>Tie</span>
+                            }
+                            else if (match.Result == MatchResult.Player2Wins)
+                            {
+                                <span>Player 2 Wins</span>
+                            }
+                            else
+                            {
+                                <span>Bye</span>
+                            }
+                        </td>
+                    
                     <td><p>@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p></td>
-                    <td>
-                        @if (match.Result == MatchResult.Incomplete)
-                        {
-                            <form method="post" asp-page-handler="MatchResult">
-                                <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                                <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
-                                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                                <button class="btn btn-primary" type="submit">Player 1 Wins</button>
-                            </form>
-                        }
-                    </td>
+                    
                     <td>
                         @if (user2 == null)
                         {
@@ -143,15 +145,24 @@
                         }
                     </td>
                     <td>
-                        @if (match.Result == MatchResult.Incomplete)
-                        {
-                            <form method="post" asp-page-handler="MatchResult">
-                                <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                                <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
-                                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                                <button class="btn btn-primary" type="submit">Player 2 Wins</button>
-                            </form>
-                        }
+                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
+                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
+                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                            <button class="btn btn-primary" type="submit">Tie</button>
+                        </form>
+                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
+                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
+                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                            <button class="btn btn-primary" type="submit">Player 1 Wins</button>
+                        </form>
+                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
+                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
+                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                            <button class="btn btn-primary" type="submit">Player 2 Wins</button>
+                        </form>
                     </td>
                 </tr>
             }

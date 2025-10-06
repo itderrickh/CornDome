@@ -1,5 +1,4 @@
 using CornDome.Models.Tournaments;
-using CornDome.Repository;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
-    [Authorize(Policy = "admin")]
+    [Authorize(Policy = "tournamentOrganizer")]
     public class EditModel(TournamentContext tournamentContext) : PageModel
     {
         [BindProperty]

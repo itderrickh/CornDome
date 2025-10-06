@@ -18,6 +18,11 @@ namespace CornDome.Pages.Account
         public List<User> Players { get; set; }
         public async void OnGet()
         {
+            await Load();   
+        }
+
+        private async Task Load()
+        {
             UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             Registrations = tournamentContext.Registrations
@@ -31,7 +36,6 @@ namespace CornDome.Pages.Account
             Players = allUsers.ToList();
         }
 
-
         [BindProperty]
         public int PostMatchId { get; set; }
         [BindProperty]
@@ -41,6 +45,16 @@ namespace CornDome.Pages.Account
 
         public async Task<IActionResult> OnPostMatchResult()
         {
+            var match = tournamentContext.Matches.FirstOrDefault(x => x.Id == PostMatchId);
+
+            if (match.Result == MatchResult.Incomplete)
+            {
+                match.Result = PostResult;
+                tournamentContext.SaveChanges();
+            }
+
+            await Load();
+
             return Page();
         }
     }

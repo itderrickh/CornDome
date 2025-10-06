@@ -88,6 +88,8 @@ namespace CornDome
                 // Define a policy that allows access only to users with the "Admin" role
                 options.AddPolicy("admin", policy =>
                     policy.RequireRole("Admin"));  // "Admin" role is required
+                options.AddPolicy("tournamentOrganizer", policy => 
+                    policy.RequireRole("Admin", "TournamentManager"));
             });
 
             var app = builder.Build();
