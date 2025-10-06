@@ -49,7 +49,7 @@ namespace CornDome.Pages.Tournaments
                 return Page();
             }
 
-            return RedirectToPage("/Tournaments/Index");
+            return RedirectToPage("/Tournaments/Admin");
         }
     }
 }

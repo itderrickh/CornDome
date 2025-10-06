@@ -78,25 +78,13 @@
                 <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.Rainbow)" /> Rainbow</label>
                 <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.LavaFlats)" /> LavaFlats</label>
             </div>
-
-            @* <select id="landscapeFilter">
-            <option value="">- None -</option>
-            <option value="@Landscape.BluePlains">Blue Plains</option>
-            <option value="@Landscape.CornFields">Cornfields</option>
-            <option value="@Landscape.UselessSwamp">Useless Swamp</option>
-            <option value="@Landscape.SandyLands">SandyLands</option>
-            <option value="@Landscape.NiceLands">NiceLands</option>
-            <option value="@Landscape.IcyLands">IcyLands</option>
-            <option value="@Landscape.Rainbow">Rainbow</option>
-            <option value="@Landscape.LavaFlats">LavaFlats</option>
-            </select> *@
         </div>
     </fieldset>
 </div>
 
 <div>
     <div style="display: flex; flex-wrap: wrap;">
-        @foreach (var card in Model.Cards)
+        @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
         {
             CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true, CardImageType = CardImageTypeEnum.XSmall };
             <a asp-page="/Card" asp-route-id="@card.Id">

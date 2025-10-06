@@ -67,15 +67,15 @@ fieldset {
 .card-overlay {
     display: none;
     position: absolute;
-    bottom: 25%;
+    bottom: 50%;
     width: 100%;
     text-align: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
     background-size: contain;
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 30px;
 }
 
 .deck-card {
