@@ -191,7 +191,7 @@ namespace CornDome.TournamentSystem
                 // Handle bye if odd number of players
                 if (playerList.Count % 2 != 0)
                 {
-                    var byeCandidate = playerList.FirstOrDefault(p => !byeHistory.Contains(p.User.Id));
+                    var byeCandidate = playerList.LastOrDefault(p => !byeHistory.Contains(p.User.Id));
                     if (byeCandidate != null)
                     {
                         pairings.Add(new Match()

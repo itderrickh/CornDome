@@ -39,6 +39,10 @@
                             {
                                 <p style="color: red;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
                             }
+                            else if (match.Result == MatchResult.Bye)
+                            {
+                                <p style="color: green;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                            }
                             else
                             {
                                 <p>@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>

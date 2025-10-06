@@ -9,17 +9,22 @@
     <p>@Model.Tournament.TournamentDate.ToShortDateString()</p>
     <p>@Model.Tournament.TournamentDescription</p>
 
-
-    <form method="post" asp-page-handler="AddUser">
-        <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-        <select asp-for="UserToAddId">
-            @foreach (var user in Model.Users)
-            {
-                <option value="@user.Id">@user.UserName</option>
-            }
-        </select>
-        <button class="btn btn-primary">Add User</button>
-    </form>
+    @if (Model.Tournament.Status == TournamentStatus.OpenForSignups || Model.Tournament.Status == TournamentStatus.ClosedForSignups)
+    {
+        <h2>Manual Add:</h2>
+        <span>Note: Manual add can only be done before tournament starts</span>
+        <form method="post" asp-page-handler="AddUser">
+            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+            <select asp-for="UserToAddId">
+                @foreach (var user in Model.Users)
+                {
+                    <option value="@user.Id">@user.UserName</option>
+                }
+            </select>
+            <button class="btn btn-primary">Add User</button>
+        </form>
+    }
+    
 
     @if (Model.Registrations.Any())
     {
@@ -93,14 +98,14 @@
     }
     else
     {
-        <span>Please note: If you click any match results it will override what the users selected.</span>
+        <span>Please note: If you click any match results it will override what the users selected result.</span>
         <table class="table table-light">
             <thead>
                 <tr>
                     <th>Reported Result</th>
                     <th>Player 1</th>
                     <th>Player 2</th>
-                    <th>Match Override Buttons</th>
+                    <th>Match Override</th>
                 </tr>
             </thead>
             <tbody>
@@ -145,6 +150,24 @@
                         }
                     </td>
                     <td>
+                        <form method="post" asp-page-handler="MatchResult">
+                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
+                            <label>Result:</label>
+
+                            <select asp-for="PostResult">
+                                <option value="@MatchResult.Player1Wins">Player 1 Wins</option>
+                                <option value="@MatchResult.Player2Wins">Player 2 Wins</option>
+                                <option value="@MatchResult.Tie">Tie</option>
+                                <option value="@MatchResult.Incomplete">Incomplete</option>
+                                <option value="@MatchResult.Bye">Bye (ONLY USE FOR DATA FIXING)</option>
+                                    
+                            </select>
+
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </form>
+                    </td>
+                    @* <td>
                         <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
                             <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
                             <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
@@ -163,7 +186,7 @@
                             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
                             <button class="btn btn-primary" type="submit">Player 2 Wins</button>
                         </form>
-                    </td>
+                    </td> *@
                 </tr>
             }
             </tbody>
