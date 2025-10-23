@@ -37,7 +37,7 @@ function filterDataset() {
         if (filterFunctions.set !== null) {
             var set = ele.dataset.set.toLowerCase();
             var filterSet = filterFunctions.set.toLowerCase()
-            actions.push(set.indexOf(filterSet) > -1);
+            actions.push(set === filterSet);
         }
         if (!filterFunctions.customCards) {
             actions.push(ele.dataset.custom !== "True");
