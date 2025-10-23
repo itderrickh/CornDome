@@ -130,19 +130,19 @@ document.getElementById("decklistExport").onclick = function () {
 
     var template = "Hero\n";
     if (deck.hero !== null) {
-        template += "* " + deck.hero.name + '\n\n';
+        template += deck.hero.name + '\n\n';
     } else {
         template += "\n";
     }
     template += `Landscapes\n`
 
-    Object.keys(landscapes).forEach(x => template += `* ${landscapes[x]} - ${x}\n`);
+    Object.keys(landscapes).forEach(x => template += `${landscapes[x]} - ${x}\n`);
     template += "\nCreatures\n";
-    Object.keys(creatures).forEach(x => template += `* ${creatures[x]} - ${x}\n`);
+    Object.keys(creatures).forEach(x => template += `${creatures[x]} - ${x}\n`);
     template += "\nSpells\n";
-    Object.keys(spells).forEach(x => template += `* ${spells[x]} - ${x}\n`);
+    Object.keys(spells).forEach(x => template += `${spells[x]} - ${x}\n`);
     template += "\nBuildings\n";
-    Object.keys(buildings).forEach(x => template += `* ${buildings[x]} - ${x}\n`);
+    Object.keys(buildings).forEach(x => template += `${buildings[x]} - ${x}\n`);
     
     navigator.clipboard.writeText(template);
     alert('Copied to clipboard!');
