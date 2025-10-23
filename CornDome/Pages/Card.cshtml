@@ -50,7 +50,13 @@ else
             @if (!string.IsNullOrEmpty(selectedRevision.Ability))
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Ability: </span><br /><span>@selectedRevision.Ability</span>
+                    <span class="bold-label">Ability: </span><br />
+                    <span>
+                        @{
+                            var abilityWithPlaceholders = selectedRevision.Ability.Replace("[ATTACK]", @"<img src=""/img/attack.webp"" style=""width: 20px; height: 20px;"" />");
+                        }
+                        @Html.Raw(abilityWithPlaceholders)
+                    </span>
                 </div>
             }
 
