@@ -83,6 +83,10 @@
     </fieldset>
 </div>
 
+<div class="filter-count text-center">
+    <span id="cards-found"></span>
+</div>
+
 <div>
     <div style="display: flex; flex-wrap: wrap;">
         @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
@@ -97,6 +101,13 @@
 
 @section Scripts {
     <script src="./js/filter.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener("filter-complete", function (e) {
+            console.log(e);
+            document.getElementById("cards-found").innerHTML = `Showing ${e.detail.filteredCount} of ${e.detail.totalElements} cards`;
+        });
+        filterDataset();
+    </script>
 }
 
 @section Styles {

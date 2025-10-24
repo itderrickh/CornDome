@@ -12,6 +12,8 @@ var filterFunctions = {
 
 function filterDataset() {
     var elements = document.querySelectorAll('.card-container');
+    let totalResults = 0;
+    let filteredResults = 0;
     for (var ele of elements) {
         var actions = [];
         if (filterFunctions.cardType !== "")
@@ -34,7 +36,7 @@ function filterDataset() {
             var filterAbility = filterFunctions.ability.toLowerCase()
             actions.push(ability.indexOf(filterAbility) > -1);
         }
-        if (filterFunctions.set !== null) {
+        if (filterFunctions.set !== null && filterFunctions.set !== '') {
             var set = ele.dataset.set.toLowerCase();
             var filterSet = filterFunctions.set.toLowerCase()
             actions.push(set === filterSet);
@@ -45,10 +47,23 @@ function filterDataset() {
 
         if (actions.every(v => v)) {
             ele.style.display = "inherit";
+            filteredResults++;
+            totalResults++;
         } else {
             ele.style.display = "none";
+            totalResults++;
         }
     }
+
+    const filterFinish = new CustomEvent("filter-complete", {
+        bubbles: true,
+        detail: {
+            filteredCount: filteredResults,
+            totalElements: totalResults
+        }
+    });
+
+    document.dispatchEvent(filterFinish);
 }
 
 document.getElementById("cardTypeFilter").onchange = function () {

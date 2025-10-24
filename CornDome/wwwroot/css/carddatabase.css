@@ -1,7 +1,11 @@
 ﻿fieldset {
     padding: 10px;
     border: 1px solid lightgray;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+}
+
+.filter-count {
+    margin-bottom: 15px;
 }
 
 #filterBox .filter-group {
