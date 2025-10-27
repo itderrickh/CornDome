@@ -5,95 +5,104 @@
 }
 
 <div>
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
-        {
-            var revision = Model.EditCard.Revisions.ToList()[i];
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab@(i)" data-bs-toggle="tab" data-bs-target="#tab-content@(i)" type="button" role="tab" aria-controls="tab-content@(i)" aria-selected="false">Revision #@(i)</button>
-            </li>
-        }
-    </ul>
+    <form method="post">
+        <input type="hidden" asp-for="CardId"  />
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
+            {
+                var revision = Model.EditCard.Revisions[i];
+                var isActive = Model.EditCard.Revisions.Count == (i + 1) ? "active" : "";
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @isActive" id="tab@(i)" data-bs-toggle="tab" data-bs-target="#tab-content@(i)" type="button" role="tab" aria-controls="tab-content@(i)" aria-selected="false">Revision #@(i)</button>
+                </li>
+            }
+        </ul>
 
-    <div class="tab-content mt-3" id="myTabContent">
-        @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
-        {
-            var revision = Model.EditCard.Revisions.ToList()[i];
-            <div class="tab-pane fade" id="tab-content@(i)" role="tabpanel" aria-labelledby="tab@(i)">
-                <div class="form-group mb-1">
-                    <label>Name: </label><input type="text" class="form-control" asp-for="EditCard.Revisions.ToList()[i].Name" />
-                </div>
-                <div class="form-group mb-1">
-                    <label>Landscape: </label>
-                    <select class="form-control" asp-for="EditCard.Revisions.ToList()[i].LandscapeId">
-                        <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
-                        <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
-                        <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
-                        <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
-                        <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
-                        <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
-                        <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
-                        <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
-                    </select>
-                </div>
-                <div class="form-group mb-1">
-                    <label>Card Type: </label>
-                    <select class="form-control cardType" asp-for="EditCard.Revisions.ToList()[i].TypeId">
-                        <option value="@((int)CardTypeEnum.Creature)">Creature</option>
-                        <option value="@((int)CardTypeEnum.Spell)">Spell</option>
-                        <option value="@((int)CardTypeEnum.Building)">Building</option>
-                        <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
-                        <option value="@((int)CardTypeEnum.Hero)">Hero</option>
-                        <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
-                    </select>
-                </div>
-
-                <div id="optionalFields">
-                    <div class="form-group mb-1 abilityField">
-                        <label>Ability: </label>
-                        <input type="text" class="form-control" asp-for="EditCard.Revisions.ToList()[i].Ability" />
+        <div class="tab-content mt-3" id="myTabContent">
+            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
+            {
+                var isActive = Model.EditCard.Revisions.Count == (i+1) ? "show active": "";
+                <input type="hidden" asp-for="EditCard.Revisions[i].Id" />
+                <input type="hidden" asp-for="EditCard.Revisions[i].CardId" />
+                <div class="tab-pane fade @isActive" id="tab-content@(i)" role="tabpanel" aria-labelledby="tab@(i)">
+                    <div class="form-group mb-1">
+                        <label>Name: </label><input type="text" class="form-control" asp-for="EditCard.Revisions[i].Name" />
                     </div>
-                    <div class="form-group mb-1 setField">
-                        <label>Set: </label>
-                        <select class="form-control" asp-for="EditCard.Revisions.ToList()[i].SetId">
-                            <option value="">- None -</option>
-                            <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
-                            <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
-                            <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
-                            <option value="@((int)Set.IceKingVSMarceline)">@SetConverter.ToString(Set.IceKingVSMarceline)</option>
-                            <option value="@((int)Set.LemonGrabVSGunter)">@SetConverter.ToString(Set.LemonGrabVSGunter)</option>
-                            <option value="@((int)Set.FionnaVSCake)">@SetConverter.ToString(Set.FionnaVSCake)</option>
-                            <option value="@((int)Set.DoublesTournament)">@SetConverter.ToString(Set.DoublesTournament)</option>
-                            <option value="@((int)Set.HeroPack)">@SetConverter.ToString(Set.HeroPack)</option>
-                            <option value="@((int)Set.ForTheGlory)">@SetConverter.ToString(Set.ForTheGlory)</option>
-                            <option value="@((int)Set.Promo)">@SetConverter.ToString(Set.Promo)</option>
-                            <option value="@((int)Set.Kickstarter1)">@SetConverter.ToString(Set.Kickstarter1)</option>
-                            <option value="@((int)Set.FlamePrincessVSFern)">@SetConverter.ToString(Set.FlamePrincessVSFern)</option>
-                            <option value="@((int)Set.PrismoVSTheLich)">@SetConverter.ToString(Set.PrismoVSTheLich)</option>
-                            <option value="@((int)Set.PeppermintButlerVSMagicMan)">@SetConverter.ToString(Set.PeppermintButlerVSMagicMan)</option>
-                            <option value="@((int)Set.Kickstarter2)">@SetConverter.ToString(Set.Kickstarter2)</option>
-                            <option value="@((int)Set.DarklandsExpansion)">@SetConverter.ToString(Set.DarklandsExpansion)</option>
-                            <option value="@((int)Set.CustomCards)">@SetConverter.ToString(Set.CustomCards)</option>
-                            <option value="@((int)Set.LandOfLegends)">@SetConverter.ToString(Set.LandOfLegends)</option>
+                    <div class="form-group mb-1">
+                        <label>Landscape: </label>
+                        <select class="form-control" asp-for="EditCard.Revisions[i].LandscapeId">
+                            <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
+                            <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
+                            <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
+                            <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
+                            <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
+                            <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
+                            <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
+                            <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
                         </select>
                     </div>
-                    <div class="form-group mb-1 costField">
-                        <label>Cost: </label>
-                        <input type="number" class="form-control" asp-for="EditCard.Revisions.ToList()[i].Cost" />
+                    <div class="form-group mb-1">
+                        <label>Card Type: </label>
+                        <select class="form-control cardType" asp-for="EditCard.Revisions[i].TypeId">
+                            <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                            <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                            <option value="@((int)CardTypeEnum.Building)">Building</option>
+                            <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                            <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                            <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+                        </select>
                     </div>
-                    <div class="form-group mb-1 attackField">
-                        <label>Attack: </label>
-                        <input type="number" class="form-control" asp-for="EditCard.Revisions.ToList()[i].Attack" />
-                    </div>
-                    <div class="form-group mb-1 defenseField">
-                        <label>Defense: </label>
-                        <input type="number" class="form-control" asp-for="EditCard.Revisions.ToList()[i].Defense" />
+
+                    <div id="optionalFields">
+                        <div class="form-group mb-1 abilityField">
+                            <label>Ability: </label>
+                            <input type="text" class="form-control" asp-for="EditCard.Revisions[i].Ability" />
+                        </div>
+                        <div class="form-group mb-1 setField">
+                            <label>Set: </label>
+                            <select class="form-control" asp-for="EditCard.Revisions[i].SetId">
+                                <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
+                                <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
+                                <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
+                                <option value="@((int)Set.IceKingVSMarceline)">@SetConverter.ToString(Set.IceKingVSMarceline)</option>
+                                <option value="@((int)Set.LemonGrabVSGunter)">@SetConverter.ToString(Set.LemonGrabVSGunter)</option>
+                                <option value="@((int)Set.FionnaVSCake)">@SetConverter.ToString(Set.FionnaVSCake)</option>
+                                <option value="@((int)Set.DoublesTournament)">@SetConverter.ToString(Set.DoublesTournament)</option>
+                                <option value="@((int)Set.HeroPack)">@SetConverter.ToString(Set.HeroPack)</option>
+                                <option value="@((int)Set.ForTheGlory)">@SetConverter.ToString(Set.ForTheGlory)</option>
+                                <option value="@((int)Set.Promo)">@SetConverter.ToString(Set.Promo)</option>
+                                <option value="@((int)Set.Kickstarter1)">@SetConverter.ToString(Set.Kickstarter1)</option>
+                                <option value="@((int)Set.FlamePrincessVSFern)">@SetConverter.ToString(Set.FlamePrincessVSFern)</option>
+                                <option value="@((int)Set.PrismoVSTheLich)">@SetConverter.ToString(Set.PrismoVSTheLich)</option>
+                                <option value="@((int)Set.PeppermintButlerVSMagicMan)">@SetConverter.ToString(Set.PeppermintButlerVSMagicMan)</option>
+                                <option value="@((int)Set.Kickstarter2)">@SetConverter.ToString(Set.Kickstarter2)</option>
+                                <option value="@((int)Set.DarklandsExpansion)">@SetConverter.ToString(Set.DarklandsExpansion)</option>
+                                <option value="@((int)Set.CustomCards)">@SetConverter.ToString(Set.CustomCards)</option>
+                                <option value="@((int)Set.LandOfLegends)">@SetConverter.ToString(Set.LandOfLegends)</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-1 costField">
+                            <label>Cost: </label>
+                            <input type="number" class="form-control" asp-for="EditCard.Revisions[i].Cost" />
+                        </div>
+                        <div class="form-group mb-1 attackField">
+                            <label>Attack: </label>
+                            <input type="number" class="form-control" asp-for="EditCard.Revisions[i].Attack" />
+                        </div>
+                        <div class="form-group mb-1 defenseField">
+                            <label>Defense: </label>
+                            <input type="number" class="form-control" asp-for="EditCard.Revisions[i].Defense" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        
-    </div>
+            }
+        </div>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

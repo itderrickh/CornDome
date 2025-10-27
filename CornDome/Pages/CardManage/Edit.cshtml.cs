@@ -9,6 +9,7 @@ namespace CornDome.Pages.CardManage
     [Authorize(Policy = "cardManager")]
     public class EditModel(ICardRepository cardRepository) : PageModel
     {
+        [BindProperty]
         public int CardId { get; set; }
         [BindProperty]
         public Card EditCard { get; set; }
@@ -19,6 +20,19 @@ namespace CornDome.Pages.CardManage
             CardId = int.Parse(queryId);
 
             EditCard = cardRepository.GetCard(CardId);
+        }
+
+        public IActionResult OnPost()
+        {
+            var card = cardRepository.GetCard(CardId);
+
+            if (card != null)
+            {
+                // Do the card update 
+            }
+
+            EditCard = cardRepository.GetCard(CardId);
+            return Page();
         }
     }
 }
