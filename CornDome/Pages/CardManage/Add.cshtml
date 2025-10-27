@@ -1,0 +1,142 @@
+﻿@page
+@model CornDome.Pages.CardManage.AddModel
+@{
+    ViewData["Title"] = "Add Card";
+}
+
+<div>
+    <h2>Add a Card</h2>
+    <form method="post" style="border: 1px solid white; padding: 8px 10px;">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" /> <label class="form-check-label">Is Custom Card?</label>
+        </div>
+        <div class="form-group mb-1">
+            <label>Name: </label><input type="text" class="form-control" />
+        </div>
+        <div class="form-group mb-1">
+            <label>Landscape: </label>
+            <select class="form-control">
+                <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
+                <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
+                <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
+                <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
+                <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
+                <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
+                <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
+                <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
+            </select>
+        </div>
+        <div class="form-group mb-1">
+            <label>Card Type: </label>
+            <select class="form-control" id="cardType">
+                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                <option value="@((int)CardTypeEnum.Building)">Building</option>
+                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+            </select>
+        </div>
+
+
+        <div id="optionalFields">
+            <div class="form-group mb-1" id="abilityField">
+                <label>Ability: </label>
+                <input type="text" class="form-control" />
+            </div>
+            <div class="form-group mb-1" id="setField">
+                <label>Set: </label>
+                <select class="form-control">
+                    <option value="">- None -</option>
+                    <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
+                    <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
+                    <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
+                    <option value="@((int)Set.IceKingVSMarceline)">@SetConverter.ToString(Set.IceKingVSMarceline)</option>
+                    <option value="@((int)Set.LemonGrabVSGunter)">@SetConverter.ToString(Set.LemonGrabVSGunter)</option>
+                    <option value="@((int)Set.FionnaVSCake)">@SetConverter.ToString(Set.FionnaVSCake)</option>
+                    <option value="@((int)Set.DoublesTournament)">@SetConverter.ToString(Set.DoublesTournament)</option>
+                    <option value="@((int)Set.HeroPack)">@SetConverter.ToString(Set.HeroPack)</option>
+                    <option value="@((int)Set.ForTheGlory)">@SetConverter.ToString(Set.ForTheGlory)</option>
+                    <option value="@((int)Set.Promo)">@SetConverter.ToString(Set.Promo)</option>
+                    <option value="@((int)Set.Kickstarter1)">@SetConverter.ToString(Set.Kickstarter1)</option>
+                    <option value="@((int)Set.FlamePrincessVSFern)">@SetConverter.ToString(Set.FlamePrincessVSFern)</option>
+                    <option value="@((int)Set.PrismoVSTheLich)">@SetConverter.ToString(Set.PrismoVSTheLich)</option>
+                    <option value="@((int)Set.PeppermintButlerVSMagicMan)">@SetConverter.ToString(Set.PeppermintButlerVSMagicMan)</option>
+                    <option value="@((int)Set.Kickstarter2)">@SetConverter.ToString(Set.Kickstarter2)</option>
+                    <option value="@((int)Set.DarklandsExpansion)">@SetConverter.ToString(Set.DarklandsExpansion)</option>
+                    <option value="@((int)Set.CustomCards)">@SetConverter.ToString(Set.CustomCards)</option>
+                    <option value="@((int)Set.LandOfLegends)">@SetConverter.ToString(Set.LandOfLegends)</option>
+                </select>
+            </div>
+            <div class="form-group mb-1" id="costField">
+                <label>Cost: </label>
+                <input type="number" class="form-control" />
+            </div>
+            <div class="form-group mb-1" id="attackField">
+                <label>Attack: </label>
+                <input type="number" class="form-control" />
+            </div>
+            <div class="form-group mb-1" id="defenseField">
+                <label>Defense: </label>
+                <input type="number" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label>Image: </label>
+            <input class="form-control" type="file" />
+        </div>
+        
+        <div class="form-group mb-1">
+            <button class="btn btn-primary disabled" disabled type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        var availableFields = {
+            all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField'],
+            creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField'],
+            spell: ['abilityField', 'setField', 'costField'],
+            building: ['abilityField', 'setField', 'costField'],
+            hero: ['abilityField', 'setField'],
+            landscape: [],
+            teamwork: ['abilityField', 'setField', 'costField'],
+            none: []
+        };
+
+        document.getElementById("cardType").onchange = function (e) {
+            var fieldsToShow = 'all';
+            var selectedValue = parseInt(e.currentTarget.value, 10);
+            switch (selectedValue) {
+                case 0:
+                    fieldsToShow = 'creature';
+                    break;
+                case 1:
+                    fieldsToShow = 'spell';
+                    break;
+                case 2:
+                    fieldsToShow = 'building';
+                    break;
+                case 4:
+                    fieldsToShow = 'hero';
+                    break;
+                case 3:
+                    fieldsToShow = 'landscape';
+                    break;
+                case 5:
+                    fieldsToShow = 'teamwork';
+                    break;
+            }
+
+            availableFields.all.forEach((value) => {
+                document.getElementById(value).style.display = 'none';
+            });
+
+            availableFields[fieldsToShow].forEach((value) => {
+                document.getElementById(value).style.display = 'inherit';
+            });
+        };
+    </script>
+}

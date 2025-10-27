@@ -7,7 +7,7 @@ namespace CornDome.Models.Cards
     {
         public int Id { get; set; }
         public bool IsCustomCard { get; set; }
-        public ICollection<CardRevision> Revisions { get; set; } = [];
+        public IList<CardRevision> Revisions { get; set; } = [];
         public CardRevision LatestRevision
         {
             get

@@ -1,0 +1,28 @@
+﻿@page
+@model CornDome.Pages.CardManage.IndexModel
+@{
+    ViewData["Title"] = "Card Manager";
+}
+
+<div class="mb-2">
+    <a asp-page="/CardManage/Add">Add a Card</a>
+</div>
+<table class="table table-light">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var card in Model.Cards)
+        {
+            <tr>
+                <td>@card.Id</td>
+                <td>@card.LatestRevision.Name</td>
+                <td><a asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
