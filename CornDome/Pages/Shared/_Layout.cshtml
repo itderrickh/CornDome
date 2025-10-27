@@ -93,6 +93,11 @@
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Admin">Manage Tournaments</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                     }
+                                    @if (User.IsInRole("CardManager") || User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-page="/CardManage/Index">Manage Cards</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Account/Logout">Log Out</a></li>
                                 </ul>
                             </li>
