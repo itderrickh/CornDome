@@ -6,16 +6,16 @@
 
 <div>
     <h2>Add a Card</h2>
-    <form method="post" style="border: 1px solid white; padding: 8px 10px;">
+    <form method="post" enctype="multipart/form-data" style="border: 1px solid white; padding: 8px 10px;">
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" /> <label class="form-check-label">Is Custom Card?</label>
+            <input type="checkbox" class="form-check-input" asp-for="AddCard.IsCustomCard" /> <label class="form-check-label">Is Custom Card?</label>
         </div>
         <div class="form-group mb-1">
-            <label>Name: </label><input type="text" class="form-control" />
+            <label>Name: </label><input type="text" asp-for="AddCard.Name" class="form-control" />
         </div>
         <div class="form-group mb-1">
             <label>Landscape: </label>
-            <select class="form-control">
+            <select class="form-control" asp-for="AddCard.LandscapeId">
                 <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
                 <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
                 <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
@@ -28,7 +28,7 @@
         </div>
         <div class="form-group mb-1">
             <label>Card Type: </label>
-            <select class="form-control" id="cardType">
+            <select class="form-control" asp-for="AddCard.TypeId" id="cardType">
                 <option value="@((int)CardTypeEnum.Creature)">Creature</option>
                 <option value="@((int)CardTypeEnum.Spell)">Spell</option>
                 <option value="@((int)CardTypeEnum.Building)">Building</option>
@@ -42,12 +42,11 @@
         <div id="optionalFields">
             <div class="form-group mb-1" id="abilityField">
                 <label>Ability: </label>
-                <input type="text" class="form-control" />
+                <input type="text" class="form-control" asp-for="AddCard.Ability" />
             </div>
             <div class="form-group mb-1" id="setField">
                 <label>Set: </label>
-                <select class="form-control">
-                    <option value="">- None -</option>
+                <select class="form-control" asp-for="AddCard.SetId">
                     <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
                     <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
                     <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
@@ -70,25 +69,25 @@
             </div>
             <div class="form-group mb-1" id="costField">
                 <label>Cost: </label>
-                <input type="number" class="form-control" />
+                <input type="number" class="form-control" asp-for="AddCard.Cost" />
             </div>
             <div class="form-group mb-1" id="attackField">
                 <label>Attack: </label>
-                <input type="number" class="form-control" />
+                <input type="number" class="form-control" asp-for="AddCard.Attack" />
             </div>
             <div class="form-group mb-1" id="defenseField">
                 <label>Defense: </label>
-                <input type="number" class="form-control" />
+                <input type="number" class="form-control" asp-for="AddCard.Defense" />
             </div>
         </div>
 
         <div class="form-group mb-2">
             <label>Image: </label>
-            <input class="form-control" type="file" />
+            <input class="form-control" type="file" asp-for="AddCard.Image" />
         </div>
         
         <div class="form-group mb-1">
-            <button class="btn btn-primary disabled" disabled type="submit">Submit</button>
+            <button class="btn btn-primary" type="submit">Submit</button>
         </div>
     </form>
 </div>

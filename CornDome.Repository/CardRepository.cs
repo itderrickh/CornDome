@@ -1,5 +1,6 @@
 ﻿using CornDome.Models.Cards;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mime;
 
 namespace CornDome.Repository
 {
@@ -8,6 +9,7 @@ namespace CornDome.Repository
         IEnumerable<Card> GetAll();
         Card? GetCard(int id);
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
+        bool AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
     }
 
     public class CardRepository(CardDatabaseContext context) : ICardRepository
@@ -44,6 +46,35 @@ namespace CornDome.Repository
                 .Where(card => query.Contains(card.LatestRevision.Name));
 
             return filtered;
+        }
+
+        public bool AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
+        {
+            var addSuccess = false;
+            using var transcation = context.Database.BeginTransaction();
+
+            try
+            {
+                context.Add(card);
+                context.SaveChanges();
+
+                cardRevision.CardId = card.Id;
+                context.Add(cardRevision);
+                var revisionId = context.SaveChanges();
+
+                cardImage.RevisionId = cardRevision.Id;
+                context.Add(cardImage);
+                context.SaveChanges();
+
+                transcation.Commit();
+                addSuccess = true;
+            }
+            catch (Exception e)
+            {
+                transcation.Rollback();
+            }
+
+            return addSuccess;
         }
     }
 }

@@ -119,6 +119,12 @@ namespace CornDome
                 RequestPath = "/CardImages"
             });
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Uploads"]),
+                RequestPath = "/Upload"
+            });
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
