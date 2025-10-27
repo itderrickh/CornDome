@@ -91,7 +91,7 @@ namespace CornDome
                 options.AddPolicy("tournamentOrganizer", policy => 
                     policy.RequireRole("Admin", "TournamentManager"));
                 options.AddPolicy("cardManager", policy =>
-                    policy.RequireRole("cardManager", "Admin"));
+                    policy.RequireRole("CardManager", "Admin"));
             });
 
             var app = builder.Build();
