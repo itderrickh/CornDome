@@ -24,12 +24,18 @@ namespace CornDome.Pages.CardManage
 
         public IActionResult OnPost()
         {
-            var card = cardRepository.GetCard(CardId);
+            var isSuccess = false;
+            var card = cardRepository.GetCard(EditCard.Id);
 
-            if (card != null)
+            if (card != null && card.Id == EditCard.Id)
             {
-                // Do the card update 
+                isSuccess = cardRepository.UpdateCardAndRevisions(EditCard);
             }
+
+            if (isSuccess)
+                TempData["SuccessMessage"] = "Card saved successfully.";
+            else
+                TempData["ErrorMessage"] = "There was an issue saving the card.";
 
             EditCard = cardRepository.GetCard(CardId);
             return Page();

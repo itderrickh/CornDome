@@ -5,8 +5,18 @@
 }
 
 <div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
     <form method="post">
-        <input type="hidden" asp-for="CardId"  />
+        <input type="hidden" asp-for="EditCard.Id"  />
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
             {
@@ -98,7 +108,7 @@
             }
         </div>
         <div class="mt-2">
-            <button type="submit" class="btn btn-primary disabled" disabled>
+            <button type="submit" class="btn btn-primary">
                 Submit
             </button>
         </div>

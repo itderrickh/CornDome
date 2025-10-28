@@ -12,6 +12,7 @@ namespace CornDome
     {
         public string ImagePath { get; set; }
         public string UploadPath { get; set; }
+        public string CardModifiedLogs { get; set; }
     }
 
     public class ContentStore
@@ -29,7 +30,7 @@ namespace CornDome
 
         public Config(IConfiguration configuration)
         {
-            AppData = new AppData() { UploadPath = configuration["Cards:Uploads"], ImagePath = configuration["Cards:Images"] };
+            AppData = new AppData() { UploadPath = configuration["Cards:Uploads"], ImagePath = configuration["Cards:Images"], CardModifiedLogs = configuration["Cards:CardModifiedLogs"] };
             Branding = new Branding() { Title = configuration["Branding:Title"] };
             ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };
             

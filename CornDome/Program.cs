@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Tournaments;
@@ -73,6 +74,8 @@ namespace CornDome
                 options.ClientSecret = clientSecret;
             });
 
+            builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
+
             builder.Services.AddIdentity<User, Role>(options =>
             {
                 // Identity options here (e.g., password settings)
@@ -117,6 +120,12 @@ namespace CornDome
             {
                 FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
                 RequestPath = "/CardImages"
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Uploads"]),
+                RequestPath = "/Upload"
             });
 
             app.UseRouting();
