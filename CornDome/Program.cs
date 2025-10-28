@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Tournaments;
@@ -72,6 +73,8 @@ namespace CornDome
                 options.ClientId = clientId;
                 options.ClientSecret = clientSecret;
             });
+
+            builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
 
             builder.Services.AddIdentity<User, Role>(options =>
             {
