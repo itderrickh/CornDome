@@ -33,7 +33,8 @@ namespace CornDome.Pages.CardManage
                 TypeId = AddCard.TypeId,
                 LandscapeId = AddCard.LandscapeId,
                 Cost = AddCard.Cost,
-                Name = AddCard.Name
+                Name = AddCard.Name,
+                RevisionNumber = 1
             };
             var cardImage = new CardImage()
             {
