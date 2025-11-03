@@ -38,19 +38,7 @@
                     <div class="form-group mb-1">
                         <label>Name: </label><input type="text" class="form-control" asp-for="EditCard.Revisions[i].Name" />
                     </div>
-                    <div class="form-group mb-1">
-                        <label>Landscape: </label>
-                        <select class="form-control" asp-for="EditCard.Revisions[i].LandscapeId">
-                            <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
-                            <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
-                            <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
-                            <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
-                            <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
-                            <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
-                            <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
-                            <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
-                        </select>
-                    </div>
+                    
                     <div class="form-group mb-1">
                         <label>Card Type: </label>
                         <select class="form-control cardType" asp-for="EditCard.Revisions[i].TypeId">
@@ -64,6 +52,20 @@
                     </div>
 
                     <div id="optionalFields">
+                        <div class="form-group mb-1 landscapeField">
+                            <label>Landscape: </label>
+                            <select class="form-control" asp-for="EditCard.Revisions[i].LandscapeId">
+                                <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
+                                <option value="@((int)LandscapeEnum.CornFields)">@LandscapeConverter.ToString(LandscapeEnum.CornFields)</option>
+                                <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
+                                <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
+                                <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
+                                <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
+                                <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
+                                <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
+                            </select>
+                        </div>
+
                         <div class="form-group mb-1 abilityField">
                             <label>Ability: </label>
                             <input type="text" class="form-control" asp-for="EditCard.Revisions[i].Ability" />
@@ -118,13 +120,13 @@
 @section Scripts {
     <script>
         var availableFields = {
-            all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField'],
-            creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField'],
-            spell: ['abilityField', 'setField', 'costField'],
-            building: ['abilityField', 'setField', 'costField'],
+            all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+            creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+            spell: ['abilityField', 'setField', 'costField', 'landscapeField'],
+            building: ['abilityField', 'setField', 'costField', 'landscapeField'],
             hero: ['abilityField', 'setField'],
-            landscape: [],
-            teamwork: ['abilityField', 'setField', 'costField'],
+            landscape: ['landscapeField'],
+            teamwork: ['abilityField', 'setField', 'costField', 'landscapeField'],
             none: []
         };
 
