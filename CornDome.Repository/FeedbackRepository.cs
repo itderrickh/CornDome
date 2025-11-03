@@ -18,7 +18,6 @@ namespace CornDome.Repository
         public int AddFeedback(FeedbackRequest feedbackRequest)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var inserted = con.Execute(FEEDBACK_INSERT, new { feedbackRequest.Feedback, feedbackRequest.CardId, feedbackRequest.RevisionId });
 
@@ -28,7 +27,6 @@ namespace CornDome.Repository
         public List<FeedbackRequest> GetAllFeedback()
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var feedback = con.Query<FeedbackRequest>("SELECT Feedback, CardId, RevisionId, Id FROM CardFeedback;");
 
@@ -38,7 +36,6 @@ namespace CornDome.Repository
         public int DeleteFeedback(int id)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var deleted = con.Execute("DELETE FROM CardFeedback WHERE Id = @Id", new { Id = id });
             return deleted;

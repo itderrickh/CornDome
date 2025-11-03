@@ -18,7 +18,6 @@ namespace CornDome.Repository
         public async Task<User?> GetUserByEmail(string email)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, UserName FROM User WHERE Email = @Email", new { Email = email });
 
@@ -28,7 +27,6 @@ namespace CornDome.Repository
         public async Task<User?> GetUserById(int id)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, Username FROM User WHERE Id = @Id", new { Id = id });
 
@@ -38,7 +36,6 @@ namespace CornDome.Repository
         public async Task<User?> GetUserByUsername(string username)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, Username FROM User WHERE Username = @Username", new { Username = username });
 
@@ -48,7 +45,6 @@ namespace CornDome.Repository
         public async Task<bool> UpdateUser(User user)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var value = await con.ExecuteAsync("UPDATE User SET Username = @Username WHERE Email = @Email", new { Email = user.Email, Username = user.Username });
             return value > 0;
@@ -57,7 +53,6 @@ namespace CornDome.Repository
         public async Task<bool> CreateUser(User user)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var value = await con.ExecuteAsync("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.Username });
 
@@ -67,7 +62,6 @@ namespace CornDome.Repository
         public async Task<IEnumerable<User>> GetAll()
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             var users = await con.QueryAsync<User>("SELECT Id, Email, Username FROM User");
 

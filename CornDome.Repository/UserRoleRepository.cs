@@ -18,7 +18,6 @@ namespace CornDome.Repository
         public async Task<bool> AddToRole(User user, Role role)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = "INSERT INTO UserRole (UserId, RoleId) VALUES (@UserId, @RoleId)";
             var result = await con.ExecuteAsync(sql, new { UserId = user.Id, RoleId = role.Id });
@@ -28,7 +27,6 @@ namespace CornDome.Repository
         public async Task<IEnumerable<Role>> GetRolesForUser(User user)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = @"
                 SELECT Id, Name FROM Role r
@@ -41,7 +39,6 @@ namespace CornDome.Repository
         public async Task<IEnumerable<User>> GetUsersInRole(Role role)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = @"
                 SELECT Id, Email, Username FROM User u
@@ -54,7 +51,6 @@ namespace CornDome.Repository
         public async Task<bool> IsInRole(User user, Role role)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = "SELECT UserId, RoleId FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
             var result = await con.QueryAsync<UserRole>(sql, new { UserId = user.Id, RoleId = role.Id });
@@ -64,7 +60,6 @@ namespace CornDome.Repository
         public async Task<bool> RemoveFromRole(User user, Role role)
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = "DELETE FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
             var result = await con.ExecuteAsync(sql, new { UserId = user.Id, RoleId = role.Id });
@@ -74,7 +69,6 @@ namespace CornDome.Repository
         public async Task<IEnumerable<UserRole>> GetAll()
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
-            con.Open();
 
             string sql = "SELECT UserId, RoleId FROM UserRole";
             var result = await con.QueryAsync<UserRole>(sql);

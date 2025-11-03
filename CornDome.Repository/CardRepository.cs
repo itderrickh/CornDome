@@ -75,7 +75,6 @@ namespace CornDome.Repository
                         beforeChanges = JsonSerializer.Serialize(dbRev);
 
                         dbRev.Name = revision.Name;
-                        dbRev.LandscapeId = revision.LandscapeId;
                         dbRev.TypeId = revision.TypeId;
 
                         if (revision.TypeId == (int)CardTypeEnum.Creature)
@@ -85,12 +84,14 @@ namespace CornDome.Repository
                             dbRev.Cost = revision.Cost;
                             dbRev.Attack = revision.Attack;
                             dbRev.Defense = revision.Defense;
+                            dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Spell)
                         {
                             dbRev.Ability = revision.Ability;
                             dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
+                            dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Hero)
                         {
@@ -102,12 +103,14 @@ namespace CornDome.Repository
                             dbRev.Ability = revision.Ability;
                             dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
+                            dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Teamwork)
                         {
                             dbRev.Ability = revision.Ability;
                             dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
+                            dbRev.LandscapeId = revision.LandscapeId;
                         }
                     }
                     context.SaveChanges();
@@ -160,7 +163,12 @@ namespace CornDome.Repository
 
         private static CardRevision RemoveInvalidProperties(CardRevision cardRevision)
         {
-            var dbRev = new CardRevision();
+            var dbRev = new CardRevision
+            {
+                Name = cardRevision.Name,
+                RevisionNumber = cardRevision.RevisionNumber,
+                TypeId = cardRevision.TypeId
+            };
 
             if (cardRevision.TypeId == (int)CardTypeEnum.Creature)
             {
@@ -169,12 +177,14 @@ namespace CornDome.Repository
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.Attack = cardRevision.Attack;
                 dbRev.Defense = cardRevision.Defense;
+                dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Spell)
             {
                 dbRev.Ability = cardRevision.Ability;
                 dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
+                dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Hero)
             {
@@ -186,12 +196,14 @@ namespace CornDome.Repository
                 dbRev.Ability = cardRevision.Ability;
                 dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
+                dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Teamwork)
             {
                 dbRev.Ability = cardRevision.Ability;
                 dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
+                dbRev.LandscapeId = cardRevision.LandscapeId;
             }
 
             return dbRev;
