@@ -10,7 +10,7 @@ namespace CornDome.Pages.CardManage
     public class AddModel(ICardRepository cardRepository, Config config) : PageModel
     {
         [BindProperty]
-        public AddCard AddCard { get; set; }
+        public AddCard AddCard { get; set; } = new();
 
         public void OnGet()
         {
