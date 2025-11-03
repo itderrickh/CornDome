@@ -54,7 +54,7 @@ namespace CornDome.Pages.CardManage
     public class AddCard
     {
         public bool IsCustomCard { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         public int TypeId { get; set; }
         public string Ability { get; set; }
         public int? SetId { get; set; }
