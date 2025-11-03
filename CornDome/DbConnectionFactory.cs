@@ -8,19 +8,9 @@ namespace CornDome
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public IDbConnection CreateCardDbConnection()
-        {
-            return CreateConnection("CardsDb");
-        }
-
         public IDbConnection CreateMasterDbConnection()
         {
             return CreateConnection("MasterDb");
-        }
-
-        public IDbConnection CreateTournamentDbConnection()
-        {
-            return CreateConnection("TournamentDb");
         }
 
         private IDbConnection CreateConnection(string connectionName)
