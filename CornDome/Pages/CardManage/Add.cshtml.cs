@@ -38,7 +38,7 @@ namespace CornDome.Pages.CardManage
             var cardImage = new CardImage()
             {
                 CardImageTypeId = 2,
-                ImageUrl = $"Upload/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"
+                ImageUrl = $"upload/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"
             };
 
             using (var stream = System.IO.File.Create($"{config.AppData.UploadPath}/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"))
