@@ -7,6 +7,14 @@
 <div class="mb-2">
     <a asp-page="/CardManage/Add">Add a Card</a>
 </div>
+<fieldset id="filterBox" class="mb-3">
+    <legend>Filters</legend>
+    <div class="filter-group">
+        <label for="nameFilter" class="filter-label">Name: </label>
+        <input type="text" class="form-control" id="nameFilter" />
+    </div>
+</fieldset>
+
 <table class="table table-light">
     <thead>
         <tr>
@@ -18,7 +26,7 @@
     <tbody>
         @foreach (var card in Model.Cards)
         {
-            <tr>
+            <tr data-name="@card.LatestRevision.Name" class="card-row">
                 <td>@card.Id</td>
                 <td>@card.LatestRevision.Name</td>
                 <td><a asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
@@ -26,3 +34,42 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        var filterFunctions = {
+            name: ''
+        };
+
+        document.getElementById("nameFilter").oninput = function () {
+            filterFunctions.name = this.value;
+            filterDataset();
+        };
+
+        function filterDataset() {
+            var elements = document.querySelectorAll('.card-row');
+            for (var ele of elements) {
+                var actions = [];
+                if (filterFunctions.name !== '') {
+                    var name = ele.dataset.name.toLowerCase();
+                    var filterName = filterFunctions.name.toLowerCase()
+                    actions.push(name.indexOf(filterName) > -1);
+                }
+
+                if (actions.every(v => v)) {
+                    ele.classList.remove("hide-row");
+                } else {
+                    ele.classList.add("hide-row");
+                }
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .hide-row {
+            display: none;
+        }
+    </style>
+}
