@@ -9,15 +9,12 @@ using System.Security.Claims;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class IndexModel(IUserRepository userRepository, IFeedbackRepository feedbackRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository) : PageModel
+    public class IndexModel(IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository) : PageModel
     {
         public User LoggedInUser { get; set; }
-        public List<FeedbackRequest> FeedbackRequests { get; set; }
         public List<User> Users { get; set; }
         public List<UserRole> UserRoles { get; set; }
         public List<Role> Roles { get; set; }
-        [BindProperty]
-        public int DeleteFeedbackId { get; set; }
         [BindProperty]
         public int AddRoleId { get; set; }
         [BindProperty]
@@ -36,25 +33,12 @@ namespace CornDome.Pages.Admin
 
         private async Task PopulateTables()
         {
-            FeedbackRequests = feedbackRepository.GetAllFeedback();
             var users = await userRepository.GetAll();
             Users = users.ToList();
             var userRoles = await userRoleRepository.GetAll();
             UserRoles = userRoles.ToList();
             var roles = await roleRepository.GetAll();
             Roles = roles.ToList();
-        }
-
-        public IActionResult OnPostDeleteFeedback()
-        {
-            var result = feedbackRepository.DeleteFeedback(DeleteFeedbackId);
-
-            if (result == 1)
-                TempData["SuccessMessage"] = "Delete feedback succeeded";
-            else
-                TempData["ErrorMessage"] = "Delete feedback failed";
-
-            return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostAddRole()

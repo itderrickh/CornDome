@@ -4,36 +4,93 @@
     ViewData["Title"] = "Card Manager";
 }
 
-<div class="mb-2">
-    <a asp-page="/CardManage/Add">Add a Card</a>
-</div>
-<fieldset id="filterBox" class="mb-3">
-    <legend>Filters</legend>
-    <div class="filter-group">
-        <label for="nameFilter" class="filter-label">Name: </label>
-        <input type="text" class="form-control" id="nameFilter" />
-    </div>
-</fieldset>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
 
-<table class="table table-light">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var card in Model.Cards)
-        {
-            <tr data-name="@card.LatestRevision.Name" class="card-row">
-                <td>@card.Id</td>
-                <td>@card.LatestRevision.Name</td>
-                <td><a asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="container my-3">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="edit-cards-tab" data-bs-toggle="tab" data-bs-target="#edit-cards" type="button" role="tab" aria-controls="edit-cards" aria-selected="false">Edit Cards</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+            <h2 class="mb-3">Feedback</h2>
+            <table class="table table-light table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>CardId</th>
+                        <th>RevisionId</th>
+                        <th>Feedback</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var feedbackRequest in Model.FeedbackRequests.OrderBy(x => x.CardId))
+                    {
+                        <tr>
+                            <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId" asp-route-revision="@feedbackRequest.RevisionId">Link</a></td>
+                            <td>@feedbackRequest.CardId</td>
+                            <td>@feedbackRequest.RevisionId</td>
+                            <td>@feedbackRequest.Feedback</td>
+                            <td>
+                                <form method="post" asp-page-handler="DeleteFeedback">
+                                    <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" style="display: none;" />
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade show active" id="edit-cards" role="tabpanel" aria-labelledby="edit-cards-tab">
+            <div class="mb-2">
+                <a asp-page="/CardManage/Add" class="btn btn-primary">Add a Card</a>
+            </div>
+            <fieldset id="filterBox" class="mb-3">
+                <legend>Filters</legend>
+                <div class="filter-group">
+                    <label for="nameFilter" class="filter-label">Name: </label>
+                    <input type="text" class="form-control" id="nameFilter" />
+                </div>
+            </fieldset>
+
+            <table class="table table-light">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in Model.Cards)
+                    {
+                        <tr data-name="@card.LatestRevision.Name" class="card-row">
+                            <td>@card.Id</td>
+                            <td>@card.LatestRevision.Name</td>
+                            <td><a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>

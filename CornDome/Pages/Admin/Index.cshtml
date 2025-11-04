@@ -20,102 +20,57 @@
 }
 
 <div class="container my-3">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="user-access-tab" data-bs-toggle="tab" data-bs-target="#user-access" type="button" role="tab" aria-controls="user-access" aria-selected="false">User Access</button>
-        </li>
-    </ul>
-
-    <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-            <h2 class="mb-3">Feedback</h2>
-            <table class="table table-light table-striped" style="width: 100%;">
-                <thead>
+        <h2 class="mb-3">User Management</h2>
+        <table class="table table-light table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Roles</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users.OrderBy(x => x.Id))
+                {
                     <tr>
-                        <th>Link</th>
-                        <th>CardId</th>
-                        <th>RevisionId</th>
-                        <th>Feedback</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var feedbackRequest in Model.FeedbackRequests.OrderBy(x => x.CardId))
-                    {
-                        <tr>
-                            <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId" asp-route-revision="@feedbackRequest.RevisionId">Link</a></td>
-                            <td>@feedbackRequest.CardId</td>
-                            <td>@feedbackRequest.RevisionId</td>
-                            <td>@feedbackRequest.Feedback</td>
-                            <td>
-                                <form method="post" asp-page-handler="DeleteFeedback">
-                                    <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" style="display: none;" />
-                                    <button type="submit" class="btn btn-primary">Delete</button>
+                        <td>@user.Id</td>
+                        <td>@user.Email</td>
+                        <td>@user.UserName</td>
+                        <td>
+                            <ul>
+                                <form method="post" asp-page-handler="AddRole">
+                                    <input type="text" name="AddRoleUserId" value="@user.Id" style="display: none;" />
+                                    <select asp-for="AddRoleId">
+                                        <option value="">- Select a Role -</option>
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            <option value="@role.Id">@role.Name</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Add Role</button>
                                 </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="tab-pane fade show active" id="user-access" role="tabpanel" aria-labelledby="user-access-tab">
-            <h2 class="mb-3">User Management</h2>
-            <table class="table table-light table-striped" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Email</th>
-                        <th>Username</th>
-                        <th>Roles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.Users.OrderBy(x => x.Id))
-                    {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Email</td>
-                            <td>@user.UserName</td>
-                            <td>
-                                <ul>
-                                    <form method="post" asp-page-handler="AddRole">
-                                        <input type="text" name="AddRoleUserId" value="@user.Id" style="display: none;" />
-                                        <select asp-for="AddRoleId">
-                                            <option value="">- Select a Role -</option>
-                                            @foreach (var role in Model.Roles)
-                                            {
-                                                <option value="@role.Id">@role.Name</option>
-                                            }
-                                        </select>
-                                        <button type="submit" class="btn btn-primary">Add Role</button>
-                                    </form>
-                                    @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
-                                    {
-                                        <hr />
-                                    }
+                                @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
+                                {
+                                    <hr />
+                                }
                                     
-                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
-                                    {
-                                        <li>
-                                            @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
-                                            <form method="post" asp-page-handler="RemoveRole" style="display: inline;">
-                                                <input type="text" name="AddRoleUserId" value="@userRole.UserId" style="display: none;" />
-                                                <input type="text" name="AddRoleId" value="@userRole.RoleId" style="display: none;" />
-                                                <button type="submit" class="btn btn-primary">Delete</button>
-                                            </form>
-                                        </li>
-                                    }
-                                </ul>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                                @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
+                                {
+                                    <li>
+                                        @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
+                                        <form method="post" asp-page-handler="RemoveRole" style="display: inline;">
+                                            <input type="text" name="AddRoleUserId" value="@userRole.UserId" style="display: none;" />
+                                            <input type="text" name="AddRoleId" value="@userRole.RoleId" style="display: none;" />
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 </div>
 
