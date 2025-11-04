@@ -82,7 +82,7 @@
                     {
                         <tr data-name="@card.LatestRevision.Name" class="card-row">
                             <td>@card.Id</td>
-                            <td>@card.LatestRevision.Name</td>
+                            <td><a asp-page="/Card" asp-route-id="@card.Id">@card.LatestRevision.Name</a></td>
                             <td><a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
                         </tr>
                     }
