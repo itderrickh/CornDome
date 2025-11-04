@@ -52,7 +52,7 @@ namespace CornDome.Repository
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
 
-            string sql = "SELECT UserId, RoleId FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
+            string sql = "SELECT UserId, RoleId FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId";
             var result = await con.QueryAsync<UserRole>(sql, new { UserId = user.Id, RoleId = role.Id });
             return result != null && result.Any();
         }
@@ -61,7 +61,7 @@ namespace CornDome.Repository
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
 
-            string sql = "DELETE FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId)";
+            string sql = "DELETE FROM UserRole WHERE UserId = @UserId AND RoleId = @RoleId";
             var result = await con.ExecuteAsync(sql, new { UserId = user.Id, RoleId = role.Id });
             return result > 0;
         }
