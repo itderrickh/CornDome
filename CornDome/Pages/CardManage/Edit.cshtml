@@ -16,6 +16,7 @@
     }
 
     <form method="post">
+        <input type="hidden" asp-for="CardId" />
         <input type="hidden" asp-for="EditCard.Id"  />
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)

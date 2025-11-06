@@ -25,9 +25,9 @@ namespace CornDome.Pages.CardManage
         public IActionResult OnPost()
         {
             var isSuccess = false;
-            var card = cardRepository.GetCard(EditCard.Id);
+            var card = cardRepository.GetCard(CardId);
 
-            if (card != null && card.Id == EditCard.Id)
+            if (card != null && card.Id == CardId)
             {
                 isSuccess = cardRepository.UpdateCardAndRevisions(EditCard);
             }
@@ -38,7 +38,7 @@ namespace CornDome.Pages.CardManage
                 TempData["ErrorMessage"] = "There was an issue saving the card.";
 
             EditCard = cardRepository.GetCard(CardId);
-            return Page();
+            return RedirectToPage(new { id = CardId });
         }
     }
 }
