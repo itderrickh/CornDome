@@ -106,6 +106,21 @@
                             <input type="number" class="form-control" asp-for="EditCard.Revisions[i].Defense" />
                         </div>
                     </div>
+
+                    <div class="form-group mb-1 imageField">
+                        <div class="row">
+                            <h3>Image Editing (disabled): </h3>
+                            @foreach (var image in Model.EditCard.Revisions[i].CardImages)
+                            {
+                                <div class="col-4">
+                                    <label>Image Type (@CardImageType.GetFromEnum((CardImageTypeEnum)image.CardImageTypeId))</label>
+                                    <input type="text" class="form-control disabled" disabled value="@image.ImageUrl" />
+                                    <img style="width: 100%" alt="@Model.EditCard.Revisions[i].Name" src="@("/CardImages/" + image.ImageUrl)" />
+                                </div>
+                            }
+                        </div>
+                                              
+                    </div>
                 </div>
             }
         </div>

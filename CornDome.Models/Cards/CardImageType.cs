@@ -15,5 +15,22 @@ namespace CornDome.Models.Cards
     {
         public int Id { get; set; }
         public string Descriptor { get; set; } = string.Empty;
+
+        public static string GetFromEnum(CardImageTypeEnum value)
+        {
+            switch (value)
+            {
+                case CardImageTypeEnum.XSmall:
+                    return "Extra Small";
+                case CardImageTypeEnum.Small:
+                    return "Small";
+                case CardImageTypeEnum.Regular:
+                    return "Regular";
+                case CardImageTypeEnum.Large:
+                    return "Large";
+                default:
+                    return "";
+            }
+        }
     }
 }

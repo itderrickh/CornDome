@@ -17,6 +17,7 @@
      class="card-container"
      data-id="@Model.Card.Id"
      data-custom="@Model.Card.IsCustomCard"
+     data-revision="@Model.Card.LatestRevision.RevisionNumber"
      data-card-image="@("/CardImages/" + cardImage)"
      data-card-type="@Model.Card.LatestRevision.TypeId"
      data-landscape="@(Model.Card.LatestRevision.LandscapeId)"
