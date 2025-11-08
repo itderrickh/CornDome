@@ -111,14 +111,30 @@
                     <div class="form-group mb-1 imageField">
                         <div class="row">
                             <h3>Image Editing (disabled): </h3>
-                            @foreach (var image in Model.EditCard.Revisions[i].CardImages)
+                            @* @foreach (var image in Model.EditCard.Revisions[i].CardImages)
                             {
                                 <div class="col-4">
                                     <label>Image Type (@CardImageType.GetFromEnum((CardImageTypeEnum)image.CardImageTypeId))</label>
                                     <input type="text" class="form-control disabled" disabled value="@image.ImageUrl" />
                                     <img style="width: 100%" alt="@Model.EditCard.Revisions[i].Name" src="@("/CardImages/" + image.ImageUrl)" />
                                 </div>
+                            } *@
+                            @foreach (var image in Model.EditCard.Revisions[i].CardImages)
+                            {
+                                <div class="col-6 preview-box">
+                                    <h4>Old Image</h4>
+                                    <img class="oldPreview" src="@("/CardImages/" + image.ImageUrl)" alt="Old Card">
+                                </div>
+
+                                <div class="col-6 preview-box">
+                                    <h4>New Image</h4>
+                                    <img class="newPreview" src="" alt="Preview">
+                                    <div class="upload-section">
+                                        <input type="file" class="fileInput" accept="image/*">
+                                    </div>
+                                </div>
                             }
+                            
                         </div>
                                               
                     </div>
@@ -132,6 +148,36 @@
         </div>
     </form>
 </div>
+
+@section Styles {
+    <style>
+        .oldPreview {
+            width: 200px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .newPreview {
+            width: 200px;
+            height: 287px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+            text-align: center;
+        }
+
+        .upload-section {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+    </style>
+}
 
 @section Scripts {
     <script>
@@ -203,6 +249,24 @@
         var fieldsToShow = getFieldsToShow(selectedValue);
 
         showOnlyRelevantFields(fieldsToShow);
+
+        document.querySelectorAll('.fileInput').forEach((input) => {
+            input.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+
+                // find the nearest newPreview in the same parent container
+                const preview = event.target.closest('.preview-box').querySelector('img, #newPreview')
+                              || event.target.closest('.col-6').querySelector('.newPreview');
+
+                reader.onload = (e) => {
+                    if (preview) preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
 
     </script>
 }
