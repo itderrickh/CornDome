@@ -5,26 +5,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to the Card Wars Fan Site - Card Dweeb</h1>
+    <h2 class="display-4">Welcome to the Card Wars Fan Site - Card Dweeb</h2>
 
     <section class="article-area">
         <div class="left-area">
-            <div style="display: flex; flex-direction: column;">
-            @foreach (var article in Model.Articles.OrderByDescending(x => x.UpdatedDate))
-            {
-                <article>
-                    <div>
-                        <img style="width: 100%;" src="@article.ImagePath" alt="Article image">
-                    </div>
-                    
-                    <div class="article-text">
-                        <h5>@article.Title</h5>
-                        <p>@article.CreatedDate</p>
-                        <a href="@Model.GetFinalDirectory(article)" class="btn btn-primary">Read more</a>
-                    </div>
-                </article>
-            }
-            </div>
+            <img src="~/img/card-dweeb.jpg" style="width: 100%;" />
         </div>
         <aside class="right-area">
             <div style="padding: 5px; border-bottom: 1px solid lightgray">
