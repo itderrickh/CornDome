@@ -119,11 +119,6 @@ namespace CornDome
             //app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
 
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(builder.Configuration["ContentStore:Images"]),
-                RequestPath = "/EmbeddedImages"
-            });
 
             app.UseStaticFiles(new StaticFileOptions
             {
