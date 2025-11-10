@@ -7,7 +7,10 @@ var filterFunctions = {
     name: '',
     ability: '',
     set: null,
-    customCards: false
+    customCards: false,
+    burnToken: false,
+    freezeToken: false,
+    attackToken: false
 };
 
 function filterDataset() {
@@ -33,7 +36,7 @@ function filterDataset() {
         }
         if (filterFunctions.ability !== '') {
             var ability = ele.dataset.ability.toLowerCase();
-            var filterAbility = filterFunctions.ability.toLowerCase()
+            var filterAbility = filterFunctions.ability.toLowerCase();
             actions.push(ability.indexOf(filterAbility) > -1);
         }
         if (filterFunctions.set !== null && filterFunctions.set !== '') {
@@ -41,6 +44,21 @@ function filterDataset() {
             var filterSet = filterFunctions.set.toLowerCase()
             actions.push(set === filterSet);
         }
+
+        if (filterFunctions.burnToken) {
+            var ability = ele.dataset.ability.toLowerCase();
+            actions.push(ability.indexOf("burn") > -1 || ability.indexOf("burning") > -1);
+        }
+        if (filterFunctions.freezeToken) {
+            var ability = ele.dataset.ability.toLowerCase();
+            actions.push(ability.indexOf("freeze") > -1 || ability.indexOf("frozen") > -1);
+        }
+        if (filterFunctions.attackToken) {
+            var ability = ele.dataset.ability.toLowerCase();
+            actions.push(ability.indexOf("[attack]") > -1);
+        }
+
+
         if (!filterFunctions.customCards) {
             actions.push(ele.dataset.custom !== "True");
         }
@@ -117,5 +135,20 @@ document.getElementById("setFilter").oninput = function () {
 
 document.getElementById("customCardFilter").onchange = function () {
     filterFunctions.customCards = this.checked;
+    filterDataset();
+};
+
+document.getElementById("burnTokenFilter").onchange = function () {
+    filterFunctions.burnToken = this.checked;
+    filterDataset();
+};
+
+document.getElementById("freezeTokenFilter").onchange = function () {
+    filterFunctions.freezeToken = this.checked;
+    filterDataset();
+};
+
+document.getElementById("attackTokenFilter").onchange = function () {
+    filterFunctions.attackToken = this.checked;
     filterDataset();
 };

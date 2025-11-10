@@ -63,6 +63,16 @@
             <label for="defenseFilter" class="filter-label">Defense: </label>
             <input type="number" id="defenseFilter" />
         </div>
+        <div class="filter-group mb-2" style="text-align: center;">
+            <input type="checkbox" id="burnTokenFilter" class="custom-checkbox custom-checkbox-burn" />
+            <label for="burnTokenFilter" class="checkbox-label checkbox-label-burn"></label>
+
+            <input type="checkbox" id="freezeTokenFilter" class="custom-checkbox custom-checkbox-freeze" />
+            <label for="freezeTokenFilter" class="checkbox-label checkbox-label-freeze"></label>
+
+            <input type="checkbox" id="attackTokenFilter" class="custom-checkbox custom-checkbox-attack" />
+            <label for="attackTokenFilter" class="checkbox-label checkbox-label-attack"></label>
+        </div>
         <div style="text-align: center;" class="mb-2">
             <label for="customCardFilter" class="filter-label" style="width: inherit;">Show Community Made Cards: </label>
             <input type="checkbox" class="form-check-input" id="customCardFilter" />
@@ -112,4 +122,46 @@
 
 @section Styles {
     <link rel="stylesheet" href="./css/carddatabase.css" asp-append-version="true" />
+    <style>
+        .custom-checkbox {
+            display: none;
+        }
+
+        .checkbox-label {
+            display: inline-block;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border: 2px solid transparent;
+        }
+
+        .checkbox-label-burn {
+            background-image: url('/img/burn.webp');
+        }
+
+        .custom-checkbox-burn:checked + .checkbox-label-burn {
+            background-image: url('/img/burn.webp');
+            border: 2px solid red;
+        }
+
+        .checkbox-label-freeze {
+            background-image: url('/img/frozentop.webp');
+        }
+
+        .custom-checkbox-freeze:checked + .checkbox-label-freeze {
+            background-image: url('/img/frozentop.webp');
+            border: 2px solid red;
+        }
+
+        .checkbox-label-attack {
+            background-image: url('/img/attack.webp');
+        }
+
+        .custom-checkbox-attack:checked + .checkbox-label-attack {
+            background-image: url('/img/attack.webp');
+            border: 2px solid red;
+        }
+    </style>
 }
