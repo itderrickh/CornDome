@@ -14,6 +14,7 @@ namespace CornDome.Repository
         bool AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
         bool UpdateCardAndRevisions(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath);
+        bool AddRevisionImage(CardImage cardImage);
     }
 
     public class CardRepository(CardDatabaseContext context, ICardChangeLogger logger) : ICardRepository
@@ -238,6 +239,30 @@ namespace CornDome.Repository
             catch (Exception)
             {
                 logger.LogCardChange($"Error Updating CardImage: {revision.Id}, Url: {newImagePath}");
+                transcation.Rollback();
+            }
+
+            return updateSuccess;
+        }
+
+        public bool AddRevisionImage(CardImage cardImage)
+        {
+            var updateSuccess = false;
+            using var transcation = context.Database.BeginTransaction();
+
+            try
+            {
+                context.Add(cardImage);
+                context.SaveChanges();
+
+
+                transcation.Commit();
+                updateSuccess = true;
+                logger.LogCardChange($"Success Updating CardImage: {cardImage.RevisionId}, Url: {cardImage.ImageUrl}");
+            }
+            catch (Exception)
+            {
+                logger.LogCardChange($"Error Updating CardImage: {JsonSerializer.Serialize(cardImage)}");
                 transcation.Rollback();
             }
 
