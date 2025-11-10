@@ -129,6 +129,13 @@ else
                     <span id="feedback-error">An error happened while submitting feedback.</span>
                 </div>
             </div>
+
+            @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
+            {
+                <div class="card-text-section">
+                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@selectedRevision.CardId">Edit Card</a>
+                </div>
+            }
         </div>
     </div>
 }
