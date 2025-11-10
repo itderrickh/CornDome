@@ -15,7 +15,7 @@
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CardId" />
         <input type="hidden" asp-for="EditCard.Id"  />
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -110,16 +110,9 @@
 
                     <div class="form-group mb-1 imageField">
                         <div class="row">
-                            <h3>Image Editing (disabled): </h3>
-                            @* @foreach (var image in Model.EditCard.Revisions[i].CardImages)
-                            {
-                                <div class="col-4">
-                                    <label>Image Type (@CardImageType.GetFromEnum((CardImageTypeEnum)image.CardImageTypeId))</label>
-                                    <input type="text" class="form-control disabled" disabled value="@image.ImageUrl" />
-                                    <img style="width: 100%" alt="@Model.EditCard.Revisions[i].Name" src="@("/CardImages/" + image.ImageUrl)" />
-                                </div>
-                            } *@
-                            @foreach (var image in Model.EditCard.Revisions[i].CardImages)
+                            <h3>Image Editing:</h3>
+                            @* Only show the regular image for posting *@
+                            @foreach (var image in Model.EditCard.Revisions[i].CardImages.Where(x => x.CardImageTypeId == (int) CardImageTypeEnum.Regular))
                             {
                                 <div class="col-6 preview-box">
                                     <h4>Old Image</h4>
@@ -130,7 +123,8 @@
                                     <h4>New Image</h4>
                                     <img class="newPreview" src="" alt="Preview">
                                     <div class="upload-section">
-                                        <input type="file" class="fileInput" accept="image/*">
+                                        <input type="hidden" name="RevisionImageUploads[@i].RevisionId" value="@Model.EditCard.Revisions[i].Id">
+                                        <input type="file" name="RevisionImageUploads[@i].File" class="fileInput" accept="image/*">
                                     </div>
                                 </div>
                             }

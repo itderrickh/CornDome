@@ -30,7 +30,12 @@ namespace CornDome
 
         public Config(IConfiguration configuration)
         {
-            AppData = new AppData() { UploadPath = configuration["Cards:Uploads"], ImagePath = configuration["Cards:Images"], CardModifiedLogs = configuration["Cards:CardModifiedLogs"] };
+            AppData = new AppData()
+            {
+                UploadPath = configuration["Cards:Uploads"],
+                ImagePath = configuration["Cards:Images"],
+                CardModifiedLogs = configuration["Cards:CardModifiedLogs"]
+            };
             Branding = new Branding() { Title = configuration["Branding:Title"] };
             ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };
             
