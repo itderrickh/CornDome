@@ -3,13 +3,12 @@
 @{
     var cardImage = Model.Card.LatestRevision.GetRegularImage;
 
-    // TODO: Return different image sizes later
-    // if (Model.CardImageType == CardImageTypeEnum.XSmall)
-    //     cardImage = Model.Card.LatestRevision.GetExtraSmallImage;
-    // else if (Model.CardImageType == CardImageTypeEnum.Small)
-    //     cardImage = Model.Card.LatestRevision.GetSmallImage;
-    // else if (Model.CardImageType == CardImageTypeEnum.Large)
-    //     cardImage = Model.Card.LatestRevision.GetLargeImage;
+    if (Model.CardImageType == CardImageTypeEnum.XSmall)
+        cardImage = Model.Card.LatestRevision.GetExtraSmallImage;
+    else if (Model.CardImageType == CardImageTypeEnum.Small)
+        cardImage = Model.Card.LatestRevision.GetSmallImage;
+    else if (Model.CardImageType == CardImageTypeEnum.Large)
+        cardImage = Model.Card.LatestRevision.GetLargeImage;
 
     var customCardStyle = Model.Card.IsCustomCard ? "display: none;" : "";
 }
