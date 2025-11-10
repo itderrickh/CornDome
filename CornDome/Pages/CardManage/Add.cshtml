@@ -84,7 +84,9 @@
 
         <div class="form-group mb-2">
             <label>Image: </label>
-            <input class="form-control" type="file" asp-for="AddCard.Image" />
+            <input class="form-control mb-2" id="fileInput" type="file" asp-for="AddCard.Image" />
+
+            <img class="newPreview" src="" alt="Image Preview">
         </div>
         
         <div class="form-group mb-1">
@@ -92,6 +94,20 @@
         </div>
     </form>
 </div>
+
+@section Styles {
+    <style>
+        .newPreview {
+            width: 200px;
+            height: 287px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+            text-align: center;
+        }
+    </style>
+}
 
 @section Scripts {
     <script>
@@ -138,5 +154,20 @@
                 document.getElementById(value).style.display = 'inherit';
             });
         };
+
+        document.getElementById('fileInput').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            // find the nearest newPreview in the same parent container
+            const preview = event.target.parentElement.querySelector(".newPreview");
+
+            reader.onload = (e) => {
+                if (preview) preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
     </script>
 }
