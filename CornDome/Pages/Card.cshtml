@@ -98,8 +98,8 @@ else
                         {
                             <div style="width: 50%">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
-                                
-                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetLargestImage)" />
+
+                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallestImage)" />
                             </div>
                         }
                     </div>
