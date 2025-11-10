@@ -1,6 +1,7 @@
 ﻿using CornDome.Models.Cards;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ namespace CornDome.Repository
         IEnumerable<Card> GetAll();
         Card? GetCard(int id);
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
-        bool AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
+        Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
         bool UpdateCardAndRevisions(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath);
         bool AddRevisionImage(CardImage cardImage);
@@ -131,9 +132,9 @@ namespace CornDome.Repository
             return false;
         }
 
-        public bool AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
+        public Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
         {
-            var addSuccess = false;
+            var addedCardId = -1;
             using var transcation = context.Database.BeginTransaction();
 
             try
@@ -143,6 +144,7 @@ namespace CornDome.Repository
 
                 var revisionToInsert = RemoveInvalidProperties(cardRevision);
                 revisionToInsert.CardId = card.Id;
+                addedCardId = card.Id;
                 context.Add(revisionToInsert);
                 var revisionId = context.SaveChanges();
 
@@ -151,7 +153,6 @@ namespace CornDome.Repository
                 context.SaveChanges();
 
                 transcation.Commit();
-                addSuccess = true;
                 logger.LogCardChange($"Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}, Card Image: {JsonSerializer.Serialize(cardImage)}");
             }
             catch (Exception)
@@ -160,7 +161,7 @@ namespace CornDome.Repository
                 transcation.Rollback();
             }
 
-            return addSuccess;
+            return addedCardId > -1 ? GetCard(addedCardId) : null;
         }
 
         private static CardRevision RemoveInvalidProperties(CardRevision cardRevision)
