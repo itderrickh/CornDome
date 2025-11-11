@@ -15,6 +15,10 @@ namespace CornDome.Pages.Admin
         {
             var files = new[] { config.DatabasePaths.CardsDb, config.DatabasePaths.MasterDb, config.DatabasePaths.TournamentDb };
 
+            Backup(config.DatabasePaths.CardsDb, config.DatabasePaths.BackupLocation);
+            Backup(config.DatabasePaths.MasterDb, config.DatabasePaths.BackupLocation);
+            Backup(config.DatabasePaths.TournamentDb, config.DatabasePaths.BackupLocation);
+
             using var memoryStream = new MemoryStream();
 
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -32,6 +36,20 @@ namespace CornDome.Pages.Admin
 
             memoryStream.Position = 0;
             return File(memoryStream.ToArray(), "application/zip", "db-backup.zip");
+        }
+
+        private static void Backup(string origin, string destintation)
+        {
+            var filename = Path.GetFileName(origin);
+            var backedUpFileName = Path.Combine(destintation, filename.Replace(".db", $"-{DateTime.Now:MMddyyyy-HHmm}.bak"));
+
+            if (!Directory.Exists(destintation))
+                Directory.CreateDirectory(destintation);
+
+            if (System.IO.File.Exists(origin))
+            {
+                System.IO.File.Copy(origin, backedUpFileName, overwrite: true);
+            }
         }
     }
 }

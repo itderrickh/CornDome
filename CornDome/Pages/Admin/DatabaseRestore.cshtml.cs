@@ -67,7 +67,7 @@ namespace CornDome.Pages.Admin
         private static void Backup(string origin, string destintation)
         {
             var filename = Path.GetFileName(origin);
-            var backedUpFileName = Path.Combine(destintation, filename.Replace(".db", $"-{DateTime.Now:MMddyyyy-HH-mm}.bak"));
+            var backedUpFileName = Path.Combine(destintation, filename.Replace(".db", $"-{DateTime.Now:MMddyyyy-HHmm}.bak"));
 
             if (!Directory.Exists(destintation))
                 Directory.CreateDirectory(destintation);
