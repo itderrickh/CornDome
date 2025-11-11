@@ -13,6 +13,7 @@ namespace CornDome
         public string CardsDb { get;set; }
         public string MasterDb { get; set; }
         public string TournamentDb { get; set; }
+        public string BackupLocation { get; set; }
     }
 
     public class AppData
@@ -48,7 +49,8 @@ namespace CornDome
             {
                 CardsDb = configuration["DatabasePaths:CardsDb"],
                 MasterDb = configuration["DatabasePaths:MasterDb"],
-                TournamentDb = configuration["DatabasePaths:TournamentDb"]
+                TournamentDb = configuration["DatabasePaths:TournamentDb"],
+                BackupLocation = configuration["DatabasePaths:BackupLocation"],
             };
             Branding = new Branding() { Title = configuration["Branding:Title"] };
             ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };

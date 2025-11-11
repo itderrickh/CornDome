@@ -1,0 +1,28 @@
+﻿@page
+@model CornDome.Pages.Admin.DatabaseRestoreModel
+@{
+    ViewData["Title"] = "Upload Databases";
+}
+
+<h2>Upload 3 Database Files</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>CardsDb:</label>
+        <input class="form-control" type="file" name="CardsDb" />
+    </div>
+    <div class="form-group">
+        <label>TournamentsDb:</label>
+        <input class="form-control" type="file" name="TournamentsDb" />
+    </div>
+    <div class="form-group mb-2">
+        <label>MasterDb:</label>
+        <input class="form-control" type="file" name="MasterDb" />
+    </div>
+    <button class="btn btn-primary" type="submit">Backup, Upload, and Replace</button>
+</form>
+
+@if (Model.Message != null)
+{
+    <p>@Model.Message</p>
+}
