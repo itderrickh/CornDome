@@ -5,89 +5,119 @@
 }
 
 <div>
-    <fieldset id="filterBox">
-        <legend>Filters</legend>
-        <div class="filter-group">
-            <label for="cardTypeFilter" class="filter-label">Card Type: </label>
-            <select id="cardTypeFilter">
-                <option value="">- None -</option>
-                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
-                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
-                <option value="@((int)CardTypeEnum.Building)">Building</option>
-                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
-                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
-                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
-            </select>
+    <fieldset id="filterBox" style="display: grid;">
+        <div class="row">
+            <div class="col-12">
+                <h3>Filters and Sort</h3>
+            </div>
         </div>
-        <div class="filter-group">
-            <label for="setFilter" class="filter-label">Set: </label>
-            <select id="setFilter">
-                <option value="">- None -</option>
-                <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
-                <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
-                <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
-                <option value="@((int)Set.IceKingVSMarceline)">@SetConverter.ToString(Set.IceKingVSMarceline)</option>
-                <option value="@((int)Set.LemonGrabVSGunter)">@SetConverter.ToString(Set.LemonGrabVSGunter)</option>
-                <option value="@((int)Set.FionnaVSCake)">@SetConverter.ToString(Set.FionnaVSCake)</option>
-                <option value="@((int)Set.DoublesTournament)">@SetConverter.ToString(Set.DoublesTournament)</option>
-                <option value="@((int)Set.HeroPack)">@SetConverter.ToString(Set.HeroPack)</option>
-                <option value="@((int)Set.ForTheGlory)">@SetConverter.ToString(Set.ForTheGlory)</option>
-                <option value="@((int)Set.Promo)">@SetConverter.ToString(Set.Promo)</option>
-                <option value="@((int)Set.Kickstarter1)">@SetConverter.ToString(Set.Kickstarter1)</option>
-                <option value="@((int)Set.FlamePrincessVSFern)">@SetConverter.ToString(Set.FlamePrincessVSFern)</option>
-                <option value="@((int)Set.PrismoVSTheLich)">@SetConverter.ToString(Set.PrismoVSTheLich)</option>
-                <option value="@((int)Set.PeppermintButlerVSMagicMan)">@SetConverter.ToString(Set.PeppermintButlerVSMagicMan)</option>
-                <option value="@((int)Set.Kickstarter2)">@SetConverter.ToString(Set.Kickstarter2)</option>
-                <option value="@((int)Set.DarklandsExpansion)">@SetConverter.ToString(Set.DarklandsExpansion)</option>
-                <option value="@((int)Set.CustomCards)">@SetConverter.ToString(Set.CustomCards)</option>
-                <option value="@((int)Set.LandOfLegends)">@SetConverter.ToString(Set.LandOfLegends)</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="nameFilter" class="filter-label">Name: </label>
-            <input type="text" id="nameFilter" />
-        </div>
-        <div class="filter-group">
-            <label for="abilityFilter" class="filter-label">Ability: </label>
-            <input type="text" id="abilityFilter" />
-        </div>
-        <div class="filter-group">
-            <label for="costFilter" class="filter-label">Cost: </label>
-            <input type="number" id="costFilter" />
-        </div>
-        <div class="filter-group">
-            <label for="attackFilter" class="filter-label">Attack: </label>
-            <input type="number" id="attackFilter" />
-        </div>
-        <div class="filter-group">
-            <label for="defenseFilter" class="filter-label">Defense: </label>
-            <input type="number" id="defenseFilter" />
-        </div>
-        <div class="filter-group mb-2" style="text-align: center;">
-            <input type="checkbox" id="burnTokenFilter" class="custom-checkbox custom-checkbox-burn" />
-            <label for="burnTokenFilter" class="checkbox-label checkbox-label-burn"></label>
+        
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="filter-group">
+                    <label for="cardTypeFilter" class="filter-label">Card Type: </label>
+                    <select id="cardTypeFilter">
+                        <option value="">- None -</option>
+                        <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                        <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                        <option value="@((int)CardTypeEnum.Building)">Building</option>
+                        <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                        <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                        <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="setFilter" class="filter-label">Set: </label>
+                    <select id="setFilter">
+                        <option value="">- None -</option>
+                        <option value="@((int)Set.FinnVSJake)">@SetConverter.ToString(Set.FinnVSJake)</option>
+                        <option value="@((int)Set.BMOVSLadyRainicorn)">@SetConverter.ToString(Set.BMOVSLadyRainicorn)</option>
+                        <option value="@((int)Set.PrincessBubblegumVSLumpySpacePrincess)">@SetConverter.ToString(Set.PrincessBubblegumVSLumpySpacePrincess)</option>
+                        <option value="@((int)Set.IceKingVSMarceline)">@SetConverter.ToString(Set.IceKingVSMarceline)</option>
+                        <option value="@((int)Set.LemonGrabVSGunter)">@SetConverter.ToString(Set.LemonGrabVSGunter)</option>
+                        <option value="@((int)Set.FionnaVSCake)">@SetConverter.ToString(Set.FionnaVSCake)</option>
+                        <option value="@((int)Set.DoublesTournament)">@SetConverter.ToString(Set.DoublesTournament)</option>
+                        <option value="@((int)Set.HeroPack)">@SetConverter.ToString(Set.HeroPack)</option>
+                        <option value="@((int)Set.ForTheGlory)">@SetConverter.ToString(Set.ForTheGlory)</option>
+                        <option value="@((int)Set.Promo)">@SetConverter.ToString(Set.Promo)</option>
+                        <option value="@((int)Set.Kickstarter1)">@SetConverter.ToString(Set.Kickstarter1)</option>
+                        <option value="@((int)Set.FlamePrincessVSFern)">@SetConverter.ToString(Set.FlamePrincessVSFern)</option>
+                        <option value="@((int)Set.PrismoVSTheLich)">@SetConverter.ToString(Set.PrismoVSTheLich)</option>
+                        <option value="@((int)Set.PeppermintButlerVSMagicMan)">@SetConverter.ToString(Set.PeppermintButlerVSMagicMan)</option>
+                        <option value="@((int)Set.Kickstarter2)">@SetConverter.ToString(Set.Kickstarter2)</option>
+                        <option value="@((int)Set.DarklandsExpansion)">@SetConverter.ToString(Set.DarklandsExpansion)</option>
+                        <option value="@((int)Set.CustomCards)">@SetConverter.ToString(Set.CustomCards)</option>
+                        <option value="@((int)Set.LandOfLegends)">@SetConverter.ToString(Set.LandOfLegends)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="nameFilter" class="filter-label">Name: </label>
+                    <input type="text" id="nameFilter" />
+                </div>
+                <div class="filter-group">
+                    <label for="abilityFilter" class="filter-label">Ability: </label>
+                    <input type="text" id="abilityFilter" />
+                </div>
+                <div class="filter-group">
+                    <label for="costFilter" class="filter-label">Cost: </label>
+                    <input type="number" id="costFilter" />
+                </div>
+                <div class="filter-group">
+                    <label for="attackFilter" class="filter-label">Attack: </label>
+                    <input type="number" id="attackFilter" />
+                </div>
+                <div class="filter-group">
+                    <label for="defenseFilter" class="filter-label">Defense: </label>
+                    <input type="number" id="defenseFilter" />
+                </div>
+                <div class="filter-group mb-2" style="text-align: center;">
+                    <input type="checkbox" id="burnTokenFilter" class="custom-checkbox custom-checkbox-burn" />
+                    <label for="burnTokenFilter" class="checkbox-label checkbox-label-burn"></label>
 
-            <input type="checkbox" id="freezeTokenFilter" class="custom-checkbox custom-checkbox-freeze" />
-            <label for="freezeTokenFilter" class="checkbox-label checkbox-label-freeze"></label>
+                    <input type="checkbox" id="freezeTokenFilter" class="custom-checkbox custom-checkbox-freeze" />
+                    <label for="freezeTokenFilter" class="checkbox-label checkbox-label-freeze"></label>
 
-            <input type="checkbox" id="attackTokenFilter" class="custom-checkbox custom-checkbox-attack" />
-            <label for="attackTokenFilter" class="checkbox-label checkbox-label-attack"></label>
-        </div>
-        <div style="text-align: center;" class="mb-2">
-            <label for="customCardFilter" class="filter-label" style="width: inherit;">Show Community Made Cards: </label>
-            <input type="checkbox" class="form-check-input" id="customCardFilter" />
-        </div>
-        <div class="filter-group" id="checkbox-filter-group">
-            <label for="cardTypeFilter" class="filter-label">Landscape: </label>
-            <div id="checkboxes">
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.BluePlains)" /> @LandscapeConverter.ToString(LandscapeEnum.BluePlains)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.CornFields)" /> @LandscapeConverter.ToString(LandscapeEnum.CornFields)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.UselessSwamp)" /> @LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.SandyLands)" /> @LandscapeConverter.ToString(LandscapeEnum.SandyLands)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.NiceLands)" /> @LandscapeConverter.ToString(LandscapeEnum.NiceLands)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.IcyLands)" /> @LandscapeConverter.ToString(LandscapeEnum.IcyLands)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.Rainbow)" /> @LandscapeConverter.ToString(LandscapeEnum.Rainbow)</label>
-                <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.LavaFlats)" /> @LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</label>
+                    <input type="checkbox" id="attackTokenFilter" class="custom-checkbox custom-checkbox-attack" />
+                    <label for="attackTokenFilter" class="checkbox-label checkbox-label-attack"></label>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="filter-group mb-3" id="checkbox-filter-group">
+                    <label for="cardTypeFilter" class="filter-label">Landscape: </label>
+                    <div id="checkboxes">
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.BluePlains)" /> @LandscapeConverter.ToString(LandscapeEnum.BluePlains)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.CornFields)" /> @LandscapeConverter.ToString(LandscapeEnum.CornFields)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.UselessSwamp)" /> @LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.SandyLands)" /> @LandscapeConverter.ToString(LandscapeEnum.SandyLands)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.NiceLands)" /> @LandscapeConverter.ToString(LandscapeEnum.NiceLands)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.IcyLands)" /> @LandscapeConverter.ToString(LandscapeEnum.IcyLands)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.Rainbow)" /> @LandscapeConverter.ToString(LandscapeEnum.Rainbow)</label>
+                        <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.LavaFlats)" /> @LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</label>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="sortOption" class="filter-label">Sort By: </label>
+                    <select id="sortOption" autocomplete="off">
+                        <option value="name">Name</option>
+                        <option value="cost">Cost</option>
+                        <option value="set">Set</option>
+                        <option value="cardType">Card Type</option>
+                        <option value="attack">Attack</option>
+                        <option value="defense">Defense</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortAscDesc" class="filter-label">Sort Direction: </label>
+                    <select id="sortAscDesc" autocomplete="off">
+                        <option value="a">Ascending</option>
+                        <option value="b">Descending</option>
+                    </select>
+                </div>
+                <div style="text-align: center;" class="mb-2">
+                    <label for="customCardFilter" class="filter-label" style="width: inherit;">Show Community Made Cards: </label>
+                    <input type="checkbox" class="form-check-input" id="customCardFilter" />
+                </div>
             </div>
         </div>
     </fieldset>
@@ -98,11 +128,11 @@
 </div>
 
 <div>
-    <div style="display: flex; flex-wrap: wrap;">
+    <div style="display: flex; flex-wrap: wrap;" id="card-list">
         @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
         {
             CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true, CardImageType = CardImageTypeEnum.XSmall };
-            <a asp-page="/Card" asp-route-id="@card.Id">
+            <a asp-page="/Card" asp-route-id="@card.Id" class="card-element">
                 <partial name="_Card" model="cvm" />
             </a>
         }
@@ -111,6 +141,7 @@
 
 @section Scripts {
     <script src="./js/filter.js" asp-append-version="true"></script>
+    <script src="./js/sort.js" asp-append-version="true"></script>
     <script>
         document.addEventListener("filter-complete", function (e) {
             console.log(e);
