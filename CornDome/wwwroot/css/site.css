@@ -92,6 +92,14 @@ body {
     .mobile-only {
         display: inherit;
     }
+
+    .navbar-nav .nav-item {
+        padding: .5rem 1rem;
+    }
+
+    .dropdown-menu .dropdown-item {
+        padding: 1rem;
+    }
 }
 
 @media (prefers-color-scheme: light) {
