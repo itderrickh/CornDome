@@ -107,7 +107,7 @@
                         else
                         {
                             <li>
-                                <a asp-page="/Account/Login" class="btn btn-primary">Login with Google</a>
+                                <a asp-page="/Account/Login" asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")" class="btn btn-primary">Login with Google</a>
                             </li>
                         }
                     </ul>

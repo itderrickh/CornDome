@@ -9,10 +9,12 @@ namespace CornDome.Pages.Account
     public class LoginModel(SignInManager<User> signInManager) : PageModel
     {
         private readonly SignInManager<User> _signInManager = signInManager;
+        [BindProperty(SupportsGet = true)]
+        public string ReturnUrl { get; set; }
 
         public IActionResult OnGet()
         {
-            var redirectUrl = Url.Page("/Account/ExternalLoginCallback", pageHandler: null, values: null, protocol: Request.Scheme);
+            var redirectUrl = Url.Page("/Account/ExternalLoginCallback", pageHandler: null, values: new { returnUrl = ReturnUrl }, protocol: Request.Scheme);
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
