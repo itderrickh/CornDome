@@ -1,0 +1,40 @@
+﻿.custom-checkbox {
+    display: none;
+}
+
+.checkbox-label {
+    display: inline-block;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 2px solid transparent;
+}
+
+.checkbox-label-burn {
+    background-image: url('/img/burn.webp');
+}
+
+.custom-checkbox-burn:checked + .checkbox-label-burn {
+    background-image: url('/img/burn.webp');
+    border: 2px solid red;
+}
+
+.checkbox-label-freeze {
+    background-image: url('/img/frozentop.webp');
+}
+
+.custom-checkbox-freeze:checked + .checkbox-label-freeze {
+    background-image: url('/img/frozentop.webp');
+    border: 2px solid red;
+}
+
+.checkbox-label-attack {
+    background-image: url('/img/attack.webp');
+}
+
+.custom-checkbox-attack:checked + .checkbox-label-attack {
+    background-image: url('/img/attack.webp');
+    border: 2px solid red;
+}

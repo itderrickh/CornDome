@@ -149,12 +149,43 @@
                     <label><input type="checkbox" class="landscape-checkbox form-check-input" value="@((int)LandscapeEnum.LavaFlats)" /> @LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</label>
                 </div>
             </div>
+            <div class="filter-group mb-2" style="text-align: center;">
+                <input type="checkbox" id="burnTokenFilter" class="custom-checkbox custom-checkbox-burn" />
+                <label for="burnTokenFilter" class="checkbox-label checkbox-label-burn"></label>
+
+                <input type="checkbox" id="freezeTokenFilter" class="custom-checkbox custom-checkbox-freeze" />
+                <label for="freezeTokenFilter" class="checkbox-label checkbox-label-freeze"></label>
+
+                <input type="checkbox" id="attackTokenFilter" class="custom-checkbox custom-checkbox-attack" />
+                <label for="attackTokenFilter" class="checkbox-label checkbox-label-attack"></label>
+            </div>
+            <div class="filter-group">
+                <label for="sortOption" class="filter-label">Sort By: </label>
+                <select id="sortOption" autocomplete="off">
+                    <option value="name">Name</option>
+                    <option value="cost">Cost</option>
+                    <option value="set">Set</option>
+                    <option value="cardType">Card Type</option>
+                    <option value="attack">Attack</option>
+                    <option value="defense">Defense</option>
+                    <option value="landscape">Landscape</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sortAscDesc" class="filter-label">Sort Direction: </label>
+                <select id="sortAscDesc" autocomplete="off">
+                    <option value="a">Ascending</option>
+                    <option value="b">Descending</option>
+                </select>
+            </div>
         </fieldset>
-        <div style="display: flex; flex-wrap: wrap;">
+        <div style="display: flex; flex-wrap: wrap;" id="card-list">
             @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
             {
                 CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true };
-                <partial name="_Card" model="cvm" />
+                <div class="card-element">
+                    <partial name="_Card" model="cvm" />
+                </div>
             }
         </div>
     </div>
@@ -167,6 +198,7 @@
     <script src="./js/deckbuilder.rendering.js" asp-append-version="true"></script>
     <script src="./js/deckbuilder.handlers.js" asp-append-version="true"></script>
     <script src="./js/filter.js" asp-append-version="true"></script>
+    <script src="./js/sort.js" asp-append-version="true"></script>
 
     <script>
         var deck = {
@@ -181,4 +213,5 @@
 
 @section Styles {
     <link rel="stylesheet" href="./css/deckbuilder.css" asp-append-version="true" />
+    <link rel="stylesheet" href="./css/custom-checkbox.css" asp-append-version="true" />
 }
