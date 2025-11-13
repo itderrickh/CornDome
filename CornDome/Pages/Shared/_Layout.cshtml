@@ -38,13 +38,15 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="top-nav-item" asp-area="" asp-page="/CardDatabase">Card Database</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Tools
+                                Decks
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/CardDatabase">Card Database</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckManager">Deck Manager</a></li>
                             </ul>
                         </li>
@@ -59,9 +61,12 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/SampleDecks">Sample Decks</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="top-nav-item" asp-area="" asp-page="/Tournaments/Index">Tournaments</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="top-nav-item" asp-area="" asp-page="/Tournaments/Index">Tournaments</a>
+                            </li>
+                        }
                         <li class="nav-item mobile-only">
                             <a class="top-nav-item" asp-area="" asp-page="/LifeCounter">Life Counter</a>
                         </li>
