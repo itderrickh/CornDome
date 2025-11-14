@@ -1,9 +1,6 @@
 ﻿using CornDome.Models.Cards;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace CornDome.Repository
 {
