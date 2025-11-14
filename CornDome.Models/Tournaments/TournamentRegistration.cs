@@ -10,6 +10,8 @@ namespace CornDome.Models.Tournaments
         public int UserId { get; set; }
         public string Deck { get; set; }
         public int TournamentId { get; set; }
+        public bool IsDropped { get; set; }
+        public bool IsDQed { get; set; }
 
         public virtual User User { get; set; }
         public virtual Tournament Tournament { get; set; }

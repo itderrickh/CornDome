@@ -16,6 +16,8 @@ namespace CornDome.Models.Tournaments
     {
         public int Id { get; set; }
         public DateTime TournamentDate { get; set; }
+        public DateTime ActualStart { get; set; }
+        public TimeSpan RoundDuration { get; set; }
         public string TournamentName { get; set; }
         public string TournamentDescription { get; set; }
         public TournamentStatus Status { get; set; }
