@@ -7,7 +7,7 @@
 <div class="container">
     <h1>Saved decks</h1>
     <p><strong>Please note: Decks saved here will be deleted if you delete the browser data for this site.</strong></p>
-    <table class="table table-light table-striped mb-3" style="width: 100%;" id="deckTable">
+    <table class="table table-light table-striped mb-3 w-100" id="deckTable">
         <thead>
             <tr>
                 <th>Name</th>
@@ -25,14 +25,14 @@
     <div style="display: none;" id="backupArea">
         <div class="form-group">
             <label>Save this to a text file on your device:</label>
-            <textarea id="backupField" style="width: 100%;" rows="10"></textarea>
+            <textarea id="backupField" class="w-100" rows="10"></textarea>
         </div>
     </div>
 
     <div style="display: none;" id="restoreArea">
         <div class="form-group">
             <label>Input the file contents saved earlier:</label>
-            <textarea id="restoreField" style="width: 100%;" rows="10"></textarea>
+            <textarea id="restoreField" class="w-100" rows="10"></textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="restoreDecks()">Restore contents</button>
     </div>

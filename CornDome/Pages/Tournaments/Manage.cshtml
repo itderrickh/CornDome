@@ -168,19 +168,19 @@
                         </form>
                     </td>
                     @* <td>
-                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
                             <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
                             <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
                             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
                             <button class="btn btn-primary" type="submit">Tie</button>
                         </form>
-                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
                             <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
                             <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
                             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
                             <button class="btn btn-primary" type="submit">Player 1 Wins</button>
                         </form>
-                        <form method="post" asp-page-handler="MatchResult" style="display: inline-block;">
+                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
                             <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
                             <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
                             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />

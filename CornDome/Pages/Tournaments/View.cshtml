@@ -29,19 +29,19 @@
                         <td>
                             @if (match.Result == MatchResult.Player1Wins)
                             {
-                                <p style="color: green;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                                <p class="winner-color">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
                             }
                             else if (match.Result == MatchResult.Tie)
                             {
-                                <p style="color: goldenrod;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                                <p class="tie-color">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
                             }
                             else if (match.Result == MatchResult.Player2Wins)
                             {
-                                <p style="color: red;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                                <p class="loser-color">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
                             }
                             else if (match.Result == MatchResult.Bye)
                             {
-                                <p style="color: green;">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
+                                <p class="winner-color">@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p>
                             }
                             else
                             {
@@ -57,15 +57,15 @@
                             {
                                 @if (match.Result == MatchResult.Player2Wins)
                                 {
-                                    <p style="color: green;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                    <p class="winner-color">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
                                 }
                                 else if (match.Result == MatchResult.Tie)
                                 {
-                                    <p style="color: goldenrod;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                    <p class="tie-color">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
                                 }
                                 else if (match.Result == MatchResult.Player1Wins)
                                 {
-                                    <p style="color: red;">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                                    <p class="loser-color">@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
                                 }
                                 else
                                 {
@@ -142,3 +142,19 @@
         </table>
     }
 </div>
+
+@section Styles {
+    <style>
+        .winner-color {
+            color: green;
+        }
+
+        .loser-color {
+            color: red;
+        }
+
+        .tie-color {
+            color: goldenrod;
+        }
+    </style>
+}

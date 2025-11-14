@@ -27,7 +27,7 @@
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
             <h2 class="mb-3">Feedback</h2>
-            <table class="table table-light table-striped" style="width: 100%;">
+            <table class="table table-light table-striped w-100">
                 <thead>
                     <tr>
                         <th>Link</th>
@@ -47,7 +47,7 @@
                             <td>@feedbackRequest.Feedback</td>
                             <td>
                                 <form method="post" asp-page-handler="DeleteFeedback">
-                                    <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" style="display: none;" />
+                                    <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" class="d-none" />
                                     <button type="submit" class="btn btn-primary">Delete</button>
                                 </form>
                             </td>

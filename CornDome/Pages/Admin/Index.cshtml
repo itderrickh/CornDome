@@ -25,7 +25,7 @@
         <a class="btn btn-danger" asp-page="/Admin/DatabaseRestore">Database Restore</a>
     </div>
     <h2 class="mb-3">User Management</h2>
-    <table class="table table-light table-striped" style="width: 100%;">
+    <table class="table table-light table-striped w-100">
         <thead>
             <tr>
                 <th>Id</th>
@@ -44,7 +44,7 @@
                     <td>
                         <ul>
                             <form method="post" asp-page-handler="AddRole">
-                                <input type="text" name="AddRoleUserId" value="@user.Id" style="display: none;" />
+                                <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
                                 <select asp-for="AddRoleId">
                                     <option value="">- Select a Role -</option>
                                     @foreach (var role in Model.Roles)
@@ -63,9 +63,9 @@
                             {
                                 <li>
                                     @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
-                                    <form method="post" asp-page-handler="RemoveRole" style="display: inline;">
-                                        <input type="text" name="AddRoleUserId" value="@userRole.UserId" style="display: none;" />
-                                        <input type="text" name="AddRoleId" value="@userRole.RoleId" style="display: none;" />
+                                    <form method="post" asp-page-handler="RemoveRole" class="d-inline">
+                                        <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
+                                        <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
                                         <button type="submit" class="btn btn-primary">Delete</button>
                                     </form>
                                 </li>

@@ -28,7 +28,7 @@
      data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
      data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
     <div class="card">
-        <img src="@("/CardImages/" + cardImage)" alt="@Model.Card.LatestRevision.Name" style="width: 100%;" />
+        <img src="@("/CardImages/" + cardImage)" alt="@Model.Card.LatestRevision.Name" class="w-100" />
         @if (Model.IsAddable)
         {
             <div class="card-overlay add"></div>

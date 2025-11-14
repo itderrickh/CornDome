@@ -14,7 +14,7 @@
 }
 else if (Model.QueryDeck.Cards.Count < 40)
 {
-    <div class="container" style="margin: 50px; text-align: center;">
+    <div class="container text-center m-5">
         <span>Deck does not have enough cards</span>
     </div>
 }
@@ -30,15 +30,15 @@ else
             </div>
         </div>
 
-        <div style="display: flex; position: relative; flex-wrap: wrap; width: 55%;">
-            <div style="display: flex; width: 100%; height: 65%">
+        <div class="d-flex flex-wrap position-relative" style="width: 55%;">
+            <div class="d-flex w-100" style="height: 65%">
                 <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
                 <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
                 <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].LatestRevision.GetRegularImage)"></cd-landscape>
                 <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].LatestRevision.GetRegularImage)"></cd-landscape>
             </div>
 
-            <div style="display: flex; width: 100%; height: 35%">
+            <div class="d-flex w-100" style="height: 35%">
                 <cd-building id="building1" data-building="building1" style="width: 25%;"></cd-building>
                 <cd-building id="building2" data-building="building2" style="width: 25%;"></cd-building>
                 <cd-building id="building3" data-building="building3" style="width: 25%;"></cd-building>
@@ -544,7 +544,7 @@ else
                                     class="hand-card"
                                     data-id="${card.Id}"
                                     data-card="${data}">
-                                            <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "width: 100%;" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
+                                            <img class="deck-card-image w-100" alt="${card.LatestRevision.Name}" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
                                  </div>
                             `;
         }

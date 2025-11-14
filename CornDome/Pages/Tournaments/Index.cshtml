@@ -27,7 +27,7 @@
             <h1>Upcoming Events</h1>
             @if (Model.AllTournaments.Where(x => x.Status == TournamentStatus.NotActive || x.Status == TournamentStatus.OpenForSignups).Any())
             {
-                <table class="table table-light table-striped" style="width: 100%;">
+                <table class="table table-light table-striped w-100">
                     <thead class="thead-dark">
                         <tr>
                             <th>Tournament</th>
@@ -63,7 +63,7 @@
             <h1>Completed</h1>
             @if (Model.AllTournaments.Where(x => x.Status == TournamentStatus.Completed).Any())
             {
-                <table class="table table-light table-striped" style="width: 100%;">
+                <table class="table table-light table-striped w-100">
                     <thead class="thead-dark">
                         <tr>
                             <th>Tournament</th>
@@ -92,7 +92,7 @@
             <h1>Ongoing</h1>
             @if (Model.AllTournaments.Where(x => x.Status == TournamentStatus.ClosedForSignups || x.Status == TournamentStatus.Ongoing).Any())
             {
-                <table class="table table-light table-striped" style="width: 100%;">
+                <table class="table table-light table-striped w-100">
                     <thead class="thead-dark">
                         <tr>
                             <th>Tournament</th>
