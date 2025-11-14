@@ -115,3 +115,13 @@ body {
         color: white;
     }
 }
+
+/* Bootstrap utility classes */
+.cursor-pointer { cursor: pointer };
+.w-10 { width: 10%; }
+.w-20 { width: 20%; }
+.w-30 { width: 30%; }
+.w-35 { width: 35%; }
+.w-55 { width: 55%; }
+.w-65 { width: 65%; }
+.w-70 { width: 70%; }

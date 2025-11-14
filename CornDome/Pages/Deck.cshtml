@@ -9,7 +9,7 @@
     <div class="d-flex">
         @if (Model.QueryDeck.Hero != null)
         {
-            <div style="width: 20%;">
+            <div class="w-20">
                 <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id">
                     <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
                 </a>
@@ -18,7 +18,7 @@
         
         @foreach (var landscape in Model.QueryDeck.Landscapes)
         {
-            <div style="width: 20%;">
+            <div class="w-20">
                 <a asp-page="/Card" asp-route-id="@landscape.Id">
                     <img class="w-100" alt="@landscape.LatestRevision.Name" src="@("/CardImages/" + landscape.LatestRevision.GetLargestImage)" />
                 </a>
@@ -29,7 +29,7 @@
     <div class="d-flex flex-wrap">
         @foreach (var card in Model.QueryDeck.Cards)
         {
-            <div style="width: 10%;">
+            <div class="w-10">
                 <a asp-page="/Card" asp-route-id="@card.Id">
                     <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@("/CardImages/" + card.LatestRevision.GetLargestImage)" />
                 </a>

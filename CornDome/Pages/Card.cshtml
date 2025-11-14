@@ -18,8 +18,8 @@ else
         <h1>@selectedRevision.Name</h1>
     </div>
     <div class="card-detail">
-        <div style="width: 50%">
-            <img style="width: 100%; max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
+        <div class="w-50">
+            <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
 
             @if (selectedRevision.SetId == (int)Set.DarklandsExpansion
             || selectedRevision.SetId == (int)Set.FlamePrincessVSFern
@@ -30,7 +30,7 @@ else
                 <p class="mt-3">* Card images from Kickstarter #2 may be blurry until we get better scans.</p>
             }
         </div>
-        <div style="width: 50%; padding: 20px;">
+        <div class="w-50 p-4">
             @if (Model.QueryCard.IsCustomCard)
             {
                 <div class="card-text-section">
@@ -77,7 +77,7 @@ else
             @if (selectedRevision.Attack.HasValue || selectedRevision.Defense.HasValue)
             {
                 <div class="card-text-section d-flex">
-                    <div style="width: 50%">
+                    <div class="w-50">
                         <span class="bold-label">Attack: </span><span>@selectedRevision.Attack</span>
                     </div>
                     <div>
@@ -96,7 +96,7 @@ else
                     <div class="d-flex">
                         @foreach (var rev in Model.QueryCard.Revisions.OrderBy(x => x.RevisionNumber))
                         {
-                            <div style="width: 50%">
+                            <div class="w-50">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
 
                                 <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallestImage)" />
@@ -111,14 +111,14 @@ else
                     <div>
                         <a class="bold-label cursor-pointer" onclick="showFeedbackForm()">Something wrong? </a>
                     </div>
-                    <div id="feedback-form" style="margin-top: 10px; display: none;">
+                    <div id="feedback-form" class="mt-2" style="display: none;">
                         <div class="form-group">
                             <label for="feedback">Feedback: </label>
                             <input name="feedback" id="feedback-input" type="text" class="form-control" required placeholder="What is incorrect on this page?" />
                             <input name="card" id="feedback-card" type="hidden" class="form-control" value="@selectedRevision.CardId" />
                             <input name="revision" id="feedback-revision" type="hidden" class="form-control" value="@selectedRevision.Id" />
                         </div>
-                        <div class="form-group" style="margin-top: 10px;">
+                        <div class="form-group mt-2">
                             <button type="button" id="feedback-submit" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
                         </div>
                     </div>

@@ -8,7 +8,7 @@
 
 @if (Model.QueryDeck.Landscapes.Count < 4)
 {
-    <div class="container" style="margin: 50px; text-align: center;">
+    <div class="container text-center m-5">
         <span> Deck does not have required amount of landscapes</span>
     </div>
 }
@@ -30,7 +30,7 @@ else
             </div>
         </div>
 
-        <div class="d-flex flex-wrap position-relative" style="width: 55%;">
+        <div class="d-flex flex-wrap position-relative w-55" style="width: 55%;">
             <div class="d-flex w-100" style="height: 65%">
                 <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
                 <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
@@ -39,10 +39,10 @@ else
             </div>
 
             <div class="d-flex w-100" style="height: 35%">
-                <cd-building id="building1" data-building="building1" style="width: 25%;"></cd-building>
-                <cd-building id="building2" data-building="building2" style="width: 25%;"></cd-building>
-                <cd-building id="building3" data-building="building3" style="width: 25%;"></cd-building>
-                <cd-building id="building4" data-building="building4" style="width: 25%;"></cd-building>
+                <cd-building id="building1" data-building="building1" class="w-25"></cd-building>
+                <cd-building id="building2" data-building="building2" class="w-25"></cd-building>
+                <cd-building id="building3" data-building="building3" class="w-25"></cd-building>
+                <cd-building id="building4" data-building="building4" class="w-25"></cd-building>
             </div>
         </div>
 

@@ -93,7 +93,7 @@
 
                     var cell1 = row.insertCell(0);
                     var deckNameInput = `
-                        <input class="name" type="text" value="${allDecks[i].name}" style="width: 50%;" />
+                        <input class="name w-50" type="text" value="${allDecks[i].name}" />
                         <button type="button" class="btn btn-primary" data-id="${allDecks[i].id}" onclick="saveDeck(event)">Save</button>`;
                     cell1.innerHTML = deckNameInput;
 

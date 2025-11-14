@@ -179,7 +179,7 @@
                 </select>
             </div>
         </fieldset>
-        <div style="display: flex; flex-wrap: wrap;" id="card-list">
+        <div class="d-flex flex-wrap" id="card-list">
             @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
             {
                 CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true };
