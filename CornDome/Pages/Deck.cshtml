@@ -22,6 +22,7 @@
             <div><span class="info-stamp" title="You can have as many buildings as you like."></span> Buildings: <span id="building-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Building).Count()</span></div>
             <hr />
             <div>Average Cost: <span id="average-cost">@averageCost.ToString("F2")</span></div>
+            <div>Total Cost: <span id="total-cost">@totalCost</span></div>
             <hr />
             <h3>Landscape Ratios</h3>
             <div>Blue Plains: <span id="bp-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.BluePlains).Count()</span></div>
