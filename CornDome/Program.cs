@@ -17,7 +17,7 @@ namespace CornDome
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Configuration.AddEnvironmentVariables();
-
+            
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
@@ -31,12 +31,12 @@ namespace CornDome
             builder.Services.AddDbContext<CardDatabaseContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("CardsDb");
-                options.UseSqlite(connectionString);
+                options.UseSqlite(connectionString + ";Pooling=False");
             });
             builder.Services.AddDbContext<TournamentContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("TournamentDb");
-                options.UseSqlite(connectionString);
+                options.UseSqlite(connectionString + ";Pooling=False");
             });
 
             // Repositories
