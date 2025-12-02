@@ -27,7 +27,7 @@
     </div>
 
     <div class="d-flex flex-wrap">
-        @foreach (var card in Model.QueryDeck.Cards)
+        @foreach (var card in Model.QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
         {
             <div class="w-10">
                 <a asp-page="/Card" asp-route-id="@card.Id">
