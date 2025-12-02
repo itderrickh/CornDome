@@ -2,49 +2,125 @@
 @model CornDome.Pages.DeckModel
 @{
     ViewData["Title"] = "Deck";
+    ViewData["RenderMode"] = "wide";
+
+    var totalCost = Model.QueryDeck.Cards.Select(x => x.LatestRevision.Cost).Sum();
+    decimal averageCost = (decimal)totalCost / (decimal)Model.QueryDeck.Cards.Count;
 }
 
-@if (Model.QueryDeck != null)
-{
-    <div class="d-flex">
-        @if (Model.QueryDeck.Hero != null)
+<div class="row">
+    <div class="col-2">
+        <fieldset class="stats">
+            <h3>Deck Breakdown</h3>
+            <div><span class="info-stamp" title="The minimum deck limit is 40 cards."></span> Total Cards: <span id="total-stat">@Model.QueryDeck.Cards.Count</span></div>
+            <br />
+            <div><span class="info-stamp" title="Only 1 Hero is allowed per deck."></span> Heroes: <span id="heroes-stat">@(Model.QueryDeck.Hero != null ? "1" : "0")</span></div>
+            <div><span class="info-stamp" title="Only 4 Landscapes are allowed per deck."></span> Landscapes: <span id="landscapes-stat">@Model.QueryDeck.Landscapes.Count()</span></div>
+            <div><span class="info-stamp" title="You can have as many creatures as you like."></span> Creatures: <span id="creature-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Creature).Count()</span></div>
+            <div><span class="info-stamp" title="You can have as many spells as you like."></span> Spells: <span id="spell-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Spell).Count()</span></div>
+            <div><span class="info-stamp" title="You can have as many buildings as you like."></span> Buildings: <span id="building-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Building).Count()</span></div>
+            <hr />
+            <div>Average Cost: <span id="average-cost">@averageCost.ToString("F2")</span></div>
+            <hr />
+            <h3>Landscape Ratios</h3>
+            <div>Blue Plains: <span id="bp-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.BluePlains).Count()</span></div>
+            <div>Cornfields: <span id="cf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.CornFields).Count()</span></div>
+            <div>Useless Swamp: <span id="us-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.UselessSwamp).Count()</span></div>
+            <div>SandyLands: <span id="sl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.SandyLands).Count()</span></div>
+            <div>NiceLands: <span id="nl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.NiceLands).Count()</span></div>
+            <div>IcyLands: <span id="il-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.IcyLands).Count()</span></div>
+            <div>Rainbow: <span id="rb-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.Rainbow).Count()</span></div>
+            <div>LavaFlats: <span id="lf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.LavaFlats).Count()</span></div>
+        </fieldset>
+
+        <fieldset id="actions">
+            <legend>Actions</legend>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])">Go To Deck Builder</a>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@(Request.Query["deck"])">Download Image</a>
+            <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
+        </fieldset>
+    </div>
+    <div class="col-8">
+        @if (Model.QueryDeck != null)
         {
-            <div class="w-20">
-                <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id">
-                    <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
-                </a>
+            <div class="d-flex">
+                @if (Model.QueryDeck.Hero != null)
+                {
+                    <div class="w-20">
+                        <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id">
+                            <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
+                        </a>
+                    </div>
+                }
+
+                @foreach (var landscape in Model.QueryDeck.Landscapes)
+                {
+                    <div class="w-20">
+                        <a asp-page="/Card" asp-route-id="@landscape.Id">
+                            <img class="w-100" alt="@landscape.LatestRevision.Name" src="@("/CardImages/" + landscape.LatestRevision.GetLargestImage)" />
+                        </a>
+                    </div>
+                }
             </div>
-        }
-        
-        @foreach (var landscape in Model.QueryDeck.Landscapes)
-        {
-            <div class="w-20">
-                <a asp-page="/Card" asp-route-id="@landscape.Id">
-                    <img class="w-100" alt="@landscape.LatestRevision.Name" src="@("/CardImages/" + landscape.LatestRevision.GetLargestImage)" />
-                </a>
+
+            <div class="d-flex flex-wrap">
+                @foreach (var card in Model.QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
+                {
+                    <div class="w-10">
+                        <a asp-page="/Card" asp-route-id="@card.Id">
+                            <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@("/CardImages/" + card.LatestRevision.GetLargestImage)" />
+                        </a>
+                    </div>
+                }
             </div>
+
+            <style>
+                .deck-card-image:hover {
+                    transform: scale(2);
+                    transition: transform .2s;
+                }
+            </style>
         }
     </div>
-
-    <div class="d-flex flex-wrap">
-        @foreach (var card in Model.QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
-        {
-            <div class="w-10">
-                <a asp-page="/Card" asp-route-id="@card.Id">
-                    <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@("/CardImages/" + card.LatestRevision.GetLargestImage)" />
-                </a>
-            </div>
-        }
+    <div class="col-2">
     </div>
+</div>
 
-    <div>
-        <a asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])">Go To deck builder</a>
-    </div>
-
+@section Styles {
     <style>
-        .deck-card-image:hover {
-            transform: scale(2);
-            transition: transform .2s;
+        fieldset {
+            padding: 10px;
+            border: 1px solid lightgray;
+            margin-bottom: 20px;
         }
+
+        .btn-block {
+            width: 100%;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-stamp {
+            background-image: url('/img/info.png');
+            background-position: center;
+            background-size: cover;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+        }
+
+        @@media (prefers-color-scheme: dark) {
+            .info-stamp {
+                background-image: url('/img/info-light.png');
+            }
+        }
+
     </style>
+}
+
+@section Scripts {
+    <script src="./js/enums.js" asp-append-version="true"></script>
+    <script src="./js/helpers.js" asp-append-version="true"></script>
+    <script src="./js/deckStorage.js" asp-append-version="true"></script>
+    <script src="./js/deck.js" asp-append-version="true"></script>
 }
