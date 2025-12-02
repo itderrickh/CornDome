@@ -9,8 +9,9 @@
 }
 
 <div class="row">
-    <div class="col-2">
-        <fieldset class="stats">
+    <div class="col-md-2 col-sm-2">
+        <button class="btn btn-primary btn-block" id="showStats" onclick="showStats()">Show Stats And Actions</button>
+        <fieldset id="statsSection" class="stats">
             <h3>Deck Breakdown</h3>
             <div><span class="info-stamp" title="The minimum deck limit is 40 cards."></span> Total Cards: <span id="total-stat">@Model.QueryDeck.Cards.Count</span></div>
             <br />
@@ -33,14 +34,14 @@
             <div>LavaFlats: <span id="lf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.LavaFlats).Count()</span></div>
         </fieldset>
 
-        <fieldset id="actions">
+        <fieldset id="actionsSection">
             <legend>Actions</legend>
             <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])">Go To Deck Builder</a>
             <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@(Request.Query["deck"])">Download Image</a>
             <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
         </fieldset>
     </div>
-    <div class="col-8">
+    <div class="col-md-10 col-sm-10">
         @if (Model.QueryDeck != null)
         {
             <div class="d-flex">
@@ -82,8 +83,6 @@
             </style>
         }
     </div>
-    <div class="col-2">
-    </div>
 </div>
 
 @section Styles {
@@ -109,9 +108,23 @@
             display: inline-block;
         }
 
+        #showStats {
+            display: none;
+        }
+
         @@media (prefers-color-scheme: dark) {
             .info-stamp {
                 background-image: url('/img/info-light.png');
+            }
+        }
+
+        @@media (max-width: 1024px) {
+            #showStats {
+                display: block;
+            }
+
+            #statsSection, #actionsSection {
+                display: none;
             }
         }
 
@@ -123,4 +136,11 @@
     <script src="./js/helpers.js" asp-append-version="true"></script>
     <script src="./js/deckStorage.js" asp-append-version="true"></script>
     <script src="./js/deck.js" asp-append-version="true"></script>
+    <script>
+        function showStats() {
+            document.getElementById("showStats").style.display = "none";
+            document.getElementById("statsSection").style.display = "block";
+            document.getElementById("actionsSection").style.display = "block";
+        }
+    </script>
 }
