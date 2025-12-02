@@ -30,7 +30,7 @@ namespace CornDome.Pages
         public ConcurrentDictionary<string, Image<Rgb24>> imageCache = new();
         public byte[] CreateCoordinates()
         {
-            Parallel.ForEach(QueryDeck.Cards, card =>
+            Parallel.ForEach(QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name), card =>
             {
                 var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
                 if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
@@ -81,7 +81,7 @@ namespace CornDome.Pages
             }
 
             // Load Card Images
-            foreach (var card in QueryDeck.Cards)
+            foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
             {
                 var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
                 if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
@@ -111,7 +111,7 @@ namespace CornDome.Pages
                 coordCounter++;
             }
 
-            foreach (var card in QueryDeck.Cards)
+            foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
             {
                 var cardLoc = coordinates[coordCounter];
                 var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
