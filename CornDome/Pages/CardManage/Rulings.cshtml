@@ -62,7 +62,7 @@
                             <input type="text" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Ability)" />
                         </div>
                         <div class="form-group mb-1 setField">
-                            <label>Set: </label><input type="text" disabled class="form-control" value="@(Model.EditCard.Revisions[i].CardSet)" />
+                            <label>Set: </label><input type="text" disabled class="form-control" value="@(SetConverter.ToString((Set)Model.EditCard.Revisions[i].SetId))" />
                         </div>
                         <div class="form-group mb-1 costField">
                             <label>Cost: </label>
