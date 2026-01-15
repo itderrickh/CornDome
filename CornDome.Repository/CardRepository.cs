@@ -11,6 +11,7 @@ namespace CornDome.Repository
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
         Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
         bool UpdateCardAndRevisions(Card card);
+        bool UpdateRevisionRulings(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath);
         bool AddRevisionImage(CardImage cardImage);
     }
@@ -49,6 +50,47 @@ namespace CornDome.Repository
                 .Where(card => query.Contains(card.LatestRevision.Name));
 
             return filtered;
+        }
+
+        public bool UpdateRevisionRulings(Card card)
+        {
+            using var transaction = context.Database.BeginTransaction();
+
+            try
+            {
+                var dbCard = context.Cards.FirstOrDefault(x => x.Id == card.Id);
+                if (dbCard == null)
+                {
+                    return false;
+                }
+
+                dbCard.IsCustomCard = card.IsCustomCard;
+                context.SaveChanges();
+
+                foreach (var revision in card.Revisions)
+                {
+                    var dbRev = context.CardRevisions.FirstOrDefault(x => x.Id == revision.Id);
+                    var beforeChanges = "";
+                    if (dbRev != null)
+                    {
+                        beforeChanges = JsonSerializer.Serialize(dbRev);
+
+                        dbRev.Rulings = revision.Rulings;
+                    }
+                    context.SaveChanges();
+                    logger.LogCardChange($"Updating card revision: {revision.Name}, Updated: {JsonSerializer.Serialize(revision)}");
+                }
+
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                logger.LogCardChange($"Error Updating Card: {JsonSerializer.Serialize(card)}");
+            }
+
+            return false;
         }
 
         public bool UpdateCardAndRevisions(Card card)

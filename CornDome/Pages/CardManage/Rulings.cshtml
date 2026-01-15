@@ -1,0 +1,230 @@
+﻿@page
+@model CornDome.Pages.CardManage.RulingsModel
+@{
+    ViewData["Title"] = "Edit Ruling";
+}
+
+<div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="CardId" />
+        <input type="hidden" asp-for="EditCard.Id" />
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
+            {
+                var revision = Model.EditCard.Revisions[i];
+                var isActive = Model.EditCard.Revisions.Count == (i + 1) ? "active" : "";
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @isActive" id="tab@(i)" data-bs-toggle="tab" data-bs-target="#tab-content@(i)" type="button" role="tab" aria-controls="tab-content@(i)" aria-selected="false">Revision #@(i)</button>
+                </li>
+            }
+        </ul>
+
+        <div class="tab-content mt-3" id="myTabContent">
+            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
+            {
+                var isActive = Model.EditCard.Revisions.Count == (i + 1) ? "show active" : "";
+                <input type="hidden" asp-for="EditCard.Revisions[i].Id" />
+                <input type="hidden" asp-for="EditCard.Revisions[i].CardId" />
+                <div class="tab-pane fade @isActive" id="tab-content@(i)" role="tabpanel" aria-labelledby="tab@(i)">
+                    <div class="form-group mb-1">
+                        <label>Name: </label><input type="text" disabled class="form-control" value="@(Model.EditCard.Revisions[i].Name)" />
+                    </div>
+
+                    <div class="form-group mb-1">
+                        <select style="display: none;" class="form-control cardType hide" asp-for="EditCard.Revisions[i].TypeId">
+                            <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                            <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                            <option value="@((int)CardTypeEnum.Building)">Building</option>
+                            <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                            <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                            <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+                        </select>
+                        <label>Card Type: </label><input type="text" disabled class="form-control" value="@(CardTypeConverter.ToString((CardTypeEnum)Model.EditCard.Revisions[i].TypeId))" />
+                    </div>
+
+                    <div id="optionalFields">
+                        <div class="form-group mb-1 landscapeField">
+                            <label>Landscape: </label><input type="text" disabled class="form-control" value="@(LandscapeConverter.ToString((LandscapeEnum)Model.EditCard.Revisions[i].LandscapeId))" />
+                        </div>
+
+                        <div class="form-group mb-1 abilityField">
+                            <label>Ability: </label>
+                            <input type="text" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Ability)" />
+                        </div>
+                        <div class="form-group mb-1 setField">
+                            <label>Set: </label><input type="text" disabled class="form-control" value="@(Model.EditCard.Revisions[i].CardSet)" />
+                        </div>
+                        <div class="form-group mb-1 costField">
+                            <label>Cost: </label>
+                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Cost)" />
+                        </div>
+                        <div class="form-group mb-1 attackField">
+                            <label>Attack: </label>
+                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Attack)" />
+                        </div>
+                        <div class="form-group mb-1 defenseField">
+                            <label>Defense: </label>
+                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Defense)" />
+                        </div>
+
+                        <div class="form-group mb-1 rulingField">
+                            <label>Rulings: </label>
+                            <textarea class="form-control" asp-for="EditCard.Revisions[i].Rulings"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-1 imageField">
+                        <div class="row">
+                            @* Only show the regular image for posting *@
+                            @foreach (var image in Model.EditCard.Revisions[i].CardImages.Where(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular))
+                            {
+                                <div class="col-6 preview-box">
+                                    <h4>Image</h4>
+                                    <img class="oldPreview" src="@("/CardImages/" + image.ImageUrl)" alt="Old Card">
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">
+                Update Rulings
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Styles {
+    <style>
+        .oldPreview {
+            width: 200px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .newPreview {
+            width: 200px;
+            height: 287px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+            text-align: center;
+        }
+
+        .upload-section {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        var availableFields = {
+            all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+            creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+            spell: ['abilityField', 'setField', 'costField', 'landscapeField'],
+            building: ['abilityField', 'setField', 'costField', 'landscapeField'],
+            hero: ['abilityField', 'setField'],
+            landscape: ['landscapeField'],
+            teamwork: ['abilityField', 'setField', 'costField', 'landscapeField'],
+            none: []
+        };
+
+        function getFieldsToShow(value) {
+            var fieldsToShow = 'all';
+            switch (value) {
+                case 0:
+                    fieldsToShow = 'creature';
+                    break;
+                case 1:
+                    fieldsToShow = 'spell';
+                    break;
+                case 2:
+                    fieldsToShow = 'building';
+                    break;
+                case 3:
+                    fieldsToShow = 'landscape';
+                    break;
+                case 4:
+                    fieldsToShow = 'hero';
+                    break;
+                case 5:
+                    fieldsToShow = 'teamwork';
+                    break;
+            }
+
+            return fieldsToShow;
+        }
+
+        function showOnlyRelevantFields(fieldsToShow) {
+            availableFields.all.forEach((value) => {
+                var fields = document.getElementsByClassName(value);
+                Array.from(fields).forEach(field => {
+                    field.style.display = 'none';
+                });
+            });
+
+            availableFields[fieldsToShow].forEach((value) => {
+                var fields = document.getElementsByClassName(value);
+                Array.from(fields).forEach(field => {
+                    field.style.display = 'inherit';
+                });
+            });
+        }
+
+        var cardTypeField = document.getElementsByClassName("cardType");
+        Array.from(cardTypeField).forEach(field => {
+            field.onchange = function (e) {
+                var selectedValue = parseInt(e.currentTarget.value, 10);
+                var fieldsToShow = getFieldsToShow(selectedValue);
+
+                showOnlyRelevantFields(fieldsToShow);
+            };
+        });
+
+
+        var selectedValue = parseInt(cardTypeField[0].value, 10);
+        var fieldsToShow = getFieldsToShow(selectedValue);
+
+        showOnlyRelevantFields(fieldsToShow);
+
+        document.querySelectorAll('.fileInput').forEach((input) => {
+            input.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+
+                // find the nearest newPreview in the same parent container
+                const preview = event.target.closest('.preview-box').querySelector('img, #newPreview')
+                              || event.target.closest('.col-6').querySelector('.newPreview');
+
+                reader.onload = (e) => {
+                    if (preview) preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+    </script>
+}
