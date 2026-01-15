@@ -53,28 +53,12 @@
                     </div>
 
                     <div id="optionalFields">
-                        <div class="form-group mb-1 landscapeField">
-                            <label>Landscape: </label><input type="text" disabled class="form-control" value="@(LandscapeConverter.ToString((LandscapeEnum)Model.EditCard.Revisions[i].LandscapeId))" />
-                        </div>
-
                         <div class="form-group mb-1 abilityField">
                             <label>Ability: </label>
                             <input type="text" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Ability)" />
                         </div>
                         <div class="form-group mb-1 setField">
                             <label>Set: </label><input type="text" disabled class="form-control" value="@(SetConverter.ToString((Set)Model.EditCard.Revisions[i].SetId))" />
-                        </div>
-                        <div class="form-group mb-1 costField">
-                            <label>Cost: </label>
-                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Cost)" />
-                        </div>
-                        <div class="form-group mb-1 attackField">
-                            <label>Attack: </label>
-                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Attack)" />
-                        </div>
-                        <div class="form-group mb-1 defenseField">
-                            <label>Defense: </label>
-                            <input type="number" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Defense)" />
                         </div>
 
                         <div class="form-group mb-1 rulingField">

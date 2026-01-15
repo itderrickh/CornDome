@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "rulingManager")]
-    public class RulingsModel(ICardRepository cardRepository, Config config) : PageModel
+    public class RulingsModel(ICardRepository cardRepository) : PageModel
     {
         [BindProperty]
         public int CardId { get; set; }

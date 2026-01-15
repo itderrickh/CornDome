@@ -24,7 +24,7 @@ namespace CornDome.Models.Cards
         public CardSet CardSet { get; set; }
         public CardType CardType { get; set; }
         public Landscape Landscape { get; set; }
-        public string Rulings { get; set; }
+        public string Rulings { get; set; } = string.Empty;
 
         public string GetExtraSmallImage
         {
