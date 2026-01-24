@@ -120,7 +120,11 @@ namespace CornDome
 
             //app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "application/octet-stream"
+            });
 
             app.UseStaticFiles(new StaticFileOptions
             {

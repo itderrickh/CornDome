@@ -1,0 +1,57 @@
+﻿@page
+@model CornDome.Pages.DevelopersModel
+@{
+    ViewData["Title"] = "Developer Support";
+}
+
+<h1>Developer Support</h1>
+<p>
+    Thank you for your interest in carddweeb. Being a fully open-source project, I offer some limited support as I have availabiliy, but all my code and card data is available for free.
+    <br />
+    Any inquiries that take multiple hours, require immediate attention, or have large impacts on carddweeb may require a full-support contract (subject to charges determined via contract agreement.)
+</p>
+<br />
+<br />
+
+<h2>What do I provide now?</h2>
+<ul>
+    <li>ER Diagrams for the Card database</li>
+    <li>Downloads of all the card images I own available on github</li>
+    <li>The actual card database (currently email/discord requests only)</li>
+</ul>
+
+<h2>What will I eventually provide? (backlogged)</h2>
+<ul>
+    <li>Developer REST JSON API</li>
+    <li>C# database library</li>
+    <li>Python database library</li>
+</ul>
+
+<h2>What do I ask developers in exchange for the free limited support?</h2>
+<ul>
+    <li><b>Please do NOT scrape carddweeb.com.</b> The web server is not the most performant as this is a hobby project and I cannot invest in larger infrastructure.</li>
+    <li>Understanding that this is a hobby project and might take me time to respond. I love helping people with CardWars, but I have a life outside this hobby.</li>
+</ul>
+
+<br />
+<hr />
+
+<h1>Resources:</h1><br />
+<h2>Card Images</h2>
+<p>Available at <a href="https://github.com/itderrickh/CardWarsData/tree/master/images">github</a>. Please read the following details on what images are stored where.</p>
+<ul>
+    <li><b>/custom</b> contains all the custom cards provided to me via the Cardwars discord. They are not real cards</li>
+    <li><b>/old </b>contains all the legacy images from the original release of CardWars. These cards may have been updated in the Kickstarter release.</li>
+    <li><b>/regular</b> contains all the full size card scans used on carddweeb. This is what most people are looking for.</li>
+    <li><b>/upload</b> contains all the recently uploaded cards from carddweeb. They will eventually be merged into /regular but will have the most recent releases</li>
+    <li><b>/generated/small</b> contains all the auto-generated thumbnails used on the main card database page. They are compressed to save bandwidth.</li>
+</ul>
+
+<h2>Full Card Database</h2>
+<p>Please email me at <a href="mailto:itderrickh@gmail.com">itderrickh@gmail.com</a> or message me on the CardWars discord server (#itderrickh or "The Card Dweeb"). I am unable to provide direct downloads due to security.</p>
+
+<h2>ER Diagram for the Card Database</h2>
+<div>
+    <img src="~/img/card-db-erd.png" style="width: 100%; background-color: lightgray;" />
+    <a href="~/assets/card-db-erd.mmd">Download the mermaid formatted ERD</a>
+</div>

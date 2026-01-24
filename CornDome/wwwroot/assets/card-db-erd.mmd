@@ -1,0 +1,59 @@
+erDiagram
+    CARD {
+        int Id PK
+        bool IsCustomCard
+    }
+
+    CARD_REVISION {
+        int Id PK
+        int RevisionNumber
+        int CardId FK
+        string Name
+        int TypeId FK
+        int SetId FK
+        int LandscapeId FK
+        int Cost
+        int Attack
+        int Defense
+        string Ability
+        string Rulings
+    }
+
+    CARD_IMAGE {
+        int Id PK
+        int RevisionId FK
+        int CardImageTypeId FK
+        string ImageUrl
+    }
+
+    CARD_IMAGE_TYPE {
+        int Id PK
+        string Descriptor
+    }
+
+    CARD_SET {
+        int Id PK
+        string Value
+        string Description
+        string Code
+    }
+
+    CARD_TYPE {
+        int Id PK
+        string Value
+    }
+
+    LANDSCAPE {
+        int Id PK
+        string Value
+        string Description
+    }
+
+    %% Relationships
+    CARD ||--o{ CARD_REVISION : has
+    CARD_REVISION ||--o{ CARD_IMAGE : has
+    CARD_IMAGE }o--|| CARD_IMAGE_TYPE : "is of type"
+
+    CARD_REVISION }o--|| CARD_SET : belongs_to
+    CARD_REVISION }o--|| CARD_TYPE : has
+    CARD_REVISION }o--|| LANDSCAPE : uses
