@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CornDome.Repository.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20260129215113_InitialCreate")]
+    [Migration("20260129222527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -119,9 +119,6 @@ namespace CornDome.Repository.Migrations.Main
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Id")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("UserId", "RoleId");
