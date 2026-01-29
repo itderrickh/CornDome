@@ -11,21 +11,21 @@ namespace CornDome.Pages.CardManage
     public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         public IEnumerable<Card> Cards { get; set; }
-        public List<FeedbackRequest> FeedbackRequests { get; set; }
+        public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; }
         [BindProperty]
         public int DeleteFeedbackId { get; set; }
 
-        public void OnGet()
+        public async void OnGet()
         {
-            FeedbackRequests = feedbackRepository.GetAllFeedback();
+            FeedbackRequests = await feedbackRepository.GetAllFeedback();
             Cards = cardRepository.GetAll();
         }
 
-        public IActionResult OnPostDeleteFeedback()
+        public async Task<IActionResult> OnPostDeleteFeedback()
         {
-            var result = feedbackRepository.DeleteFeedback(DeleteFeedbackId);
+            var result = await feedbackRepository.DeleteFeedback(DeleteFeedbackId);
 
-            if (result == 1)
+            if (result)
                 TempData["SuccessMessage"] = "Delete feedback succeeded";
             else
                 TempData["ErrorMessage"] = "Delete feedback failed";

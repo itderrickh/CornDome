@@ -1,44 +1,53 @@
 ﻿using CornDome.Models;
-using Dapper;
 
 namespace CornDome.Repository
 {
     public interface IFeedbackRepository
     {
-        int AddFeedback(FeedbackRequest feedbackRequest);
-        List<FeedbackRequest> GetAllFeedback();
-        int DeleteFeedback(int id);
+        Task<bool> AddFeedbackAsync(FeedbackRequest feedbackRequest);
+        Task<IEnumerable<FeedbackRequest>> GetAllFeedback();
+        Task<bool> DeleteFeedback(int id);
     }
-    public class FeedbackRepository(IDbConnectionFactory dbConnectionFactory) : IFeedbackRepository
+    public class FeedbackRepository(MainContext context) : IFeedbackRepository
     {
-        private readonly IDbConnectionFactory dbConnectionFactory = dbConnectionFactory;
-        private const string FEEDBACK_INSERT = @"
-            INSERT INTO CardFeedback (Feedback, CardId, RevisionId) VALUES (@Feedback, @CardId, @RevisionId);
-        ";
-        public int AddFeedback(FeedbackRequest feedbackRequest)
+        public async Task<bool> AddFeedbackAsync(FeedbackRequest feedbackRequest)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                context.Add(feedbackRequest);
 
-            var inserted = con.Execute(FEEDBACK_INSERT, new { feedbackRequest.Feedback, feedbackRequest.CardId, feedbackRequest.RevisionId });
-
-            return inserted;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public List<FeedbackRequest> GetAllFeedback()
+        public async Task<IEnumerable<FeedbackRequest>> GetAllFeedback()
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            var feedback = con.Query<FeedbackRequest>("SELECT Feedback, CardId, RevisionId, Id FROM CardFeedback;");
-
-            return feedback.ToList();
+            return context.CardFeedbacks;
         }
 
-        public int DeleteFeedback(int id)
+        public async Task<bool> DeleteFeedback(int id)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                var feedbackRequest = context.CardFeedbacks.FirstOrDefault(x => x.Id == id);
+                if (feedbackRequest != null)
+                {
+                    context.Remove(feedbackRequest);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-            var deleted = con.Execute("DELETE FROM CardFeedback WHERE Id = @Id", new { Id = id });
-            return deleted;
+            return false;
         }
     }
 }

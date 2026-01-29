@@ -23,8 +23,6 @@ namespace CornDome
             builder.Services.AddSingleton<Config>();
 
             // Configurations
-            builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 

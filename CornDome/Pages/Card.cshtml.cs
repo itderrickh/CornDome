@@ -33,8 +33,8 @@ namespace CornDome.Pages
                 return new JsonResult(new { success = false });
             }
 
-            var result = feedbackRepository.AddFeedback(feedbackRequest);
-            return new JsonResult(new { success = result > 0 });
+            var result = feedbackRepository.AddFeedbackAsync(feedbackRequest);
+            return new JsonResult(new { success = result });
         }
     }
 }
