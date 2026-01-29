@@ -13,59 +13,60 @@ namespace CornDome.Repository
         Task<IEnumerable<User>> GetAll();
     }
 
-    public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRepository
+    public class UserRepository(MainContext context) : IUserRepository
     {
         public async Task<User?> GetUserByEmail(string email)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, UserName FROM User WHERE Email = @Email", new { Email = email });
-
-            return user;
+            return context.Users
+                .FirstOrDefault(x => x.Email == email);
         }
 
         public async Task<User?> GetUserById(int id)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, Username FROM User WHERE Id = @Id", new { Id = id });
-
-            return user;
+            return context.Users
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<User?> GetUserByUsername(string username)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            var user = await con.QueryFirstOrDefaultAsync<User>("SELECT Id, Email, Username FROM User WHERE Username = @Username", new { Username = username });
-
-            return user;
+            return context.Users
+                .FirstOrDefault(x => x.UserName == username);
         }
 
         public async Task<bool> UpdateUser(User user)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                var dbUser = context.Users.FirstOrDefault(x => x.Id == user.Id);
+                dbUser?.Email = user.Email;
 
-            var value = await con.ExecuteAsync("UPDATE User SET Username = @Username WHERE Email = @Email", new { Email = user.Email, Username = user.Username });
-            return value > 0;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> CreateUser(User user)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                context.Add(user);
 
-            var value = await con.ExecuteAsync("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.Username });
-
-            return value > 0;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            var users = await con.QueryAsync<User>("SELECT Id, Email, Username FROM User");
-
-            return users;
+            return context.Users;
         }
     }
 }
