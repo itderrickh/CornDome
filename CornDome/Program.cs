@@ -26,8 +26,6 @@ namespace CornDome
             builder.Services.AddScoped<ITokenProtector, TokenProtector>();
 
             // Configurations
-            builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
