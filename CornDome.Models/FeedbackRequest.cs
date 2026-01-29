@@ -1,5 +1,8 @@
-﻿namespace CornDome.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CornDome.Models
 {
+    [Table("CardFeedback")]
     public class FeedbackRequest
     {
         public string Feedback { get; set; }

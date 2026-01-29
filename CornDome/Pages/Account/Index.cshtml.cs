@@ -36,7 +36,7 @@ namespace CornDome.Pages.Account
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
-            loggedInUser.Username = LocalUser.Username;
+            loggedInUser.UserName = LocalUser.Username;
             var updated = await userRepository.UpdateUser(loggedInUser);
 
             if (updated)

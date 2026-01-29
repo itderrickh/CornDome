@@ -12,57 +12,66 @@ namespace CornDome.Repository
         Task<Role?> FindByName(string roleName);
         Task<IEnumerable<Role>> GetAll();
     }
-    public class RoleRepository(IDbConnectionFactory dbConnectionFactory) : IRoleRepository
+    public class RoleRepository(MainContext context) : IRoleRepository
     {        
         public async Task<bool> CreateRole(Role role)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            string sql = "INSERT INTO Role (Id, Name) VALUES (@Id, @Name)";
-            var result = await con.ExecuteAsync(sql, role);
-            return result > 0;
+            try
+            {
+                context.Add(role);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<bool> UpdateRole(Role role)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                var dbRole = context.Roles.FirstOrDefault(x => x.Id == role.Id);
+                dbRole?.Name = role.Name;
 
-            string sql = "UPDATE Role SET Name = @Name WHERE Id = @Id";
-            var result = await con.ExecuteAsync(sql, role);
-            return result > 0;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> DeleteRole(Role role)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
+            try
+            {
+                context.Remove(role);
 
-            string sql = "DELETE FROM Role WHERE Id = @Id";
-            var result = await con.ExecuteAsync(sql, role);
-            return result > 0;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<Role?> FindById(int roleId)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            string sql = "SELECT * FROM Role WHERE Id = @RoleId";
-            return await con.QueryFirstOrDefaultAsync<Role>(sql, new { RoleId = roleId });
+            return context.Roles.FirstOrDefault(r => r.Id == roleId);
         }
 
         public async Task<Role?> FindByName(string roleName)
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            string sql = "SELECT * FROM Role WHERE Name = @RoleName";
-            return await con.QueryFirstOrDefaultAsync<Role>(sql, new { RoleName = roleName });
+            return context.Roles.FirstOrDefault(r => r.Name == roleName);
         }
 
         public async Task<IEnumerable<Role>> GetAll()
         {
-            using var con = dbConnectionFactory.CreateMasterDbConnection();
-
-            string sql = "SELECT * FROM Role";
-            return await con.QueryAsync<Role>(sql);
+            return context.Roles;
         }
     }
 }
