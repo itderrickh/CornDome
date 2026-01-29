@@ -11,6 +11,10 @@ namespace CornDome.Repository
         Task<User?> GetUserById(int id);
         Task<User?> GetUserByUsername(string username);
         Task<IEnumerable<User>> GetAll();
+        Task<DiscordConnection> GetDiscordConnection(int userId);
+        Task<bool> InsertDiscordConnection(DiscordConnection discordConnection);
+        Task<bool> UpdateDiscordTokens(DiscordConnection discordConnection);
+        Task<bool> RemoveDiscordConnection(int userId);
     }
 
     public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRepository
@@ -66,6 +70,26 @@ namespace CornDome.Repository
             var users = await con.QueryAsync<User>("SELECT Id, Email, Username FROM User");
 
             return users;
+        }
+
+        public Task<DiscordConnection> GetDiscordConnection(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> InsertDiscordConnection(DiscordConnection discordConnection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateDiscordTokens(DiscordConnection discordConnection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RemoveDiscordConnection(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

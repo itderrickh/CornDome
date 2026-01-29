@@ -22,6 +22,9 @@ namespace CornDome
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
 
+            builder.Services.AddDataProtection();
+            builder.Services.AddScoped<ITokenProtector, TokenProtector>();
+
             // Configurations
             builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 

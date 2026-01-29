@@ -29,12 +29,18 @@ namespace CornDome
         public string Images { get; set; }
     }
 
+    public class DiscordClient
+    {
+        public string ClientId { get; set; }
+    }
+
     public class Config
     {
         public Branding Branding { get; set; }
         public AppData AppData { get; set; }
         public ContentStore ContentStore { get; set; }
         public DatabasePaths DatabasePaths { get; set; }
+        public DiscordClient DiscordClient { get; set; }
         public string Version { get; set; }
 
         public Config(IConfiguration configuration)
@@ -54,6 +60,10 @@ namespace CornDome
             };
             Branding = new Branding() { Title = configuration["Branding:Title"] };
             ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };
+            DiscordClient = new DiscordClient()
+            {
+                ClientId = configuration["Authentication:Discord:ClientId"]
+            };
             
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
