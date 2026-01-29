@@ -28,13 +28,13 @@ namespace CornDome.Stores
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await _userRepository.CreateUser(new User() { Email = user.Email, Username = user.UserName });
+            var result = await _userRepository.CreateUser(new User() { Email = user.Email, UserName = user.UserName });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "User creation failed." });
         }
 
         public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await _userRepository.UpdateUser(new User() { Username = user.UserName, Email = user.Email });
+            var result = await _userRepository.UpdateUser(new User() { UserName = user.UserName, Email = user.Email });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "User update failed." });
         }
 

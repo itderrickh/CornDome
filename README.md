@@ -31,6 +31,7 @@ For the google login:
 For the migrations:
 
 `dotnet ef migrations add [Name] --context TournamentContext --project CornDome.Repository --startup-project CornDome`
-`dotnet ef database update --context TournamentContext --project CornDome.Repository --startup-project CornDome`
 
+`dotnet ef database update --context TournamentContext --project CornDome.Repository --startup-project CornDome`
+`dotnet ef database update --context MainContext --project CornDome.Repository --startup-project CornDome`
 `dotnet ef database update --context CardDatabaseContext --project CornDome.Repository --startup-project CornDome`

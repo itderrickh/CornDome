@@ -28,6 +28,12 @@ namespace CornDome
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
+            builder.Services.AddDbContext<MainContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("MasterDb");
+                options.UseSqlite(connectionString + ";Pooling=False");
+            });
+
             builder.Services.AddDbContext<CardDatabaseContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("CardsDb");

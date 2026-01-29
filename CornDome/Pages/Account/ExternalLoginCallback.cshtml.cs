@@ -31,7 +31,7 @@ namespace CornDome.Pages.Account
                 // Create a new ApplicationUser with external login details
                 var createdUser = new User
                 {
-                    Username = trimmedName,
+                    UserName = trimmedName,
                     Email = email
                 };
 

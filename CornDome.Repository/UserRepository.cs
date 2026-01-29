@@ -46,7 +46,7 @@ namespace CornDome.Repository
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
 
-            var value = await con.ExecuteAsync("UPDATE User SET Username = @Username WHERE Email = @Email", new { Email = user.Email, Username = user.Username });
+            var value = await con.ExecuteAsync("UPDATE User SET Username = @Username WHERE Email = @Email", new { Email = user.Email, Username = user.UserName });
             return value > 0;
         }
 
@@ -54,7 +54,7 @@ namespace CornDome.Repository
         {
             using var con = dbConnectionFactory.CreateMasterDbConnection();
 
-            var value = await con.ExecuteAsync("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.Username });
+            var value = await con.ExecuteAsync("INSERT INTO User (Email, Username) VALUES (@Email, @Username);", new { user.Email, user.UserName });
 
             return value > 0;
         }

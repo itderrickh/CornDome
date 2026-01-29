@@ -6,7 +6,7 @@
 
 @if (Model.LoggedInUser != null)
 {
-    <h3>Good morning, @(Model.LoggedInUser.Username)!</h3>
+    <h3>Good morning, @(Model.LoggedInUser.UserName)!</h3>
 }
 
 @if (TempData["SuccessMessage"] != null)
