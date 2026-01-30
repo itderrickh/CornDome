@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using CornDome.Repository.Discord;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace CornDome
@@ -35,6 +36,7 @@ namespace CornDome
         public AppData AppData { get; set; }
         public ContentStore ContentStore { get; set; }
         public DatabasePaths DatabasePaths { get; set; }
+        public DiscordConfiguration DiscordClient { get; set; }
         public string Version { get; set; }
 
         public Config(IConfiguration configuration)
@@ -54,6 +56,12 @@ namespace CornDome
             };
             Branding = new Branding() { Title = configuration["Branding:Title"] };
             ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };
+            DiscordClient = new DiscordConfiguration()
+            {
+                ClientId = configuration["Authentication:Discord:ClientId"],
+                ClientSecret = configuration["Authentication:Discord:ClientSecret"],
+                GuildId = configuration["Authentication:Discord:GuildId"],
+            };
             
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);

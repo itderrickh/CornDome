@@ -1,6 +1,7 @@
 using CornDome.Helpers;
 using CornDome.Models.Users;
 using CornDome.Repository;
+using CornDome.Repository.Discord;
 using CornDome.Repository.Tournaments;
 using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,6 +22,14 @@ namespace CornDome
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
+
+            builder.Services.AddDataProtection();
+            builder.Services.AddTransient<ITokenProtector, TokenProtector>();
+            builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://discord.com/api/oauth2/token");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
 
             // Configurations
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
@@ -49,6 +58,7 @@ namespace CornDome
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+            builder.Services.AddTransient<IDiscordRepository, DiscordRepository>();
 
             string clientId = "";
             string clientSecret = "";

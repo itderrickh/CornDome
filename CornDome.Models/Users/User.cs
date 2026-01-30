@@ -7,5 +7,7 @@ namespace CornDome.Models.Users
     public class User : IdentityUser<int>
     {
         public ICollection<UserRole> UserRoles { get; set; } = [];
+        public ICollection<DiscordConnection> DiscordConnections { get; set; } = [];
+        public ICollection<PlayAvailability> PlayAvailabilities { get; set; } = [];
     }
 }

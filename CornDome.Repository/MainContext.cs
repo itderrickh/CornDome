@@ -10,6 +10,9 @@ namespace CornDome.Repository
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<FeedbackRequest> CardFeedbacks { get; set; }
+        public DbSet<DiscordConnection> DiscordConnections { get; set; }
+        public DbSet<PlayAvailability> PlayAvailabilities { get; set; }
+        public DbSet<PlayPreferences> PlayPreferences { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,6 +30,18 @@ namespace CornDome.Repository
             modelBuilder.Entity<User>();
             modelBuilder.Entity<Role>();
             modelBuilder.Entity<FeedbackRequest>();
+
+            modelBuilder.Entity<PlayAvailability>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.PlayAvailabilities)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DiscordConnection>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.DiscordConnections)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });

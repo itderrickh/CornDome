@@ -3,6 +3,7 @@ using System;
 using CornDome.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CornDome.Repository.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20260130003114_DiscordUpdate")]
+    partial class DiscordUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -35,68 +38,6 @@ namespace CornDome.Repository.Migrations.Main
                     b.HasKey("Id");
 
                     b.ToTable("CardFeedback");
-                });
-
-            modelBuilder.Entity("CornDome.Models.PlayAvailability", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Day")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<TimeOnly?>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<TimeOnly?>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlayAvailabilities");
-                });
-
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AddressMeAs")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("GameFormat")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Platform")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Pronouns")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TimeZone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("WantsToPlay")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlayPreferences");
                 });
 
             modelBuilder.Entity("CornDome.Models.Users.DiscordConnection", b =>
@@ -227,28 +168,6 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("CornDome.Models.PlayAvailability", b =>
-                {
-                    b.HasOne("CornDome.Models.Users.User", "User")
-                        .WithMany("PlayAvailabilities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
-                {
-                    b.HasOne("CornDome.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("CornDome.Models.Users.DiscordConnection", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
@@ -287,8 +206,6 @@ namespace CornDome.Repository.Migrations.Main
             modelBuilder.Entity("CornDome.Models.Users.User", b =>
                 {
                     b.Navigation("DiscordConnections");
-
-                    b.Navigation("PlayAvailabilities");
 
                     b.Navigation("UserRoles");
                 });
