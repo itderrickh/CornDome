@@ -77,7 +77,7 @@ function renderData() {
     var lavaflatsStatField = document.getElementById('lf-stat');
 
     bluePlainsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.BluePlains).length;
-    cornfieldStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.CornFields).length;
+    cornfieldStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.Cornfield).length;
     uselessSwampStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.UselessSwamp).length;
     nicelandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.NiceLands).length;
     sandylandsStatField.innerHTML = deck.cards.filter((x) => x.landscape === Landscape.SandyLands).length;

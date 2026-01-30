@@ -13,7 +13,7 @@ namespace CornDome.Models.Cards
     public enum LandscapeEnum
     {
         BluePlains,
-        CornFields,
+        CornField,
         UselessSwamp,
         SandyLands,
         NiceLands,
@@ -29,7 +29,7 @@ namespace CornDome.Models.Cards
             return cardType switch
             {
                 LandscapeEnum.BluePlains => "Blue Plains",
-                LandscapeEnum.CornFields => "Cornfield",
+                LandscapeEnum.CornField => "Cornfield",
                 LandscapeEnum.UselessSwamp => "Useless Swamp",
                 LandscapeEnum.SandyLands => "SandyLands",
                 LandscapeEnum.NiceLands => "NiceLands",

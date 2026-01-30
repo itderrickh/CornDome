@@ -26,7 +26,7 @@
             <hr />
             <h3>Landscape Ratios</h3>
             <div>Blue Plains: <span id="bp-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.BluePlains).Count()</span></div>
-            <div>Cornfields: <span id="cf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.CornFields).Count()</span></div>
+            <div>Cornfield: <span id="cf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.CornField).Count()</span></div>
             <div>Useless Swamp: <span id="us-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.UselessSwamp).Count()</span></div>
             <div>SandyLands: <span id="sl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.SandyLands).Count()</span></div>
             <div>NiceLands: <span id="nl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.NiceLands).Count()</span></div>
