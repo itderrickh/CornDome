@@ -20,61 +20,112 @@
 }
 
 <div class="container my-3">
-    <div class="mb-3">
-        <a class="btn btn-primary" asp-page="/Admin/DatabaseBackup">Database Backup</a>
-        <a class="btn btn-danger" asp-page="/Admin/DatabaseRestore">Database Restore</a>
-    </div>
-    <h2 class="mb-3">User Management</h2>
-    <table class="table table-light table-striped w-100">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Username</th>
-                <th>Roles</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model.Users.OrderBy(x => x.Id))
-            {
-                <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Email</td>
-                    <td>@user.UserName</td>
-                    <td>
-                        <ul>
-                            <form method="post" asp-page-handler="AddRole">
-                                <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
-                                <select asp-for="AddRoleId">
-                                    <option value="">- Select a Role -</option>
-                                    @foreach (var role in Model.Roles)
-                                    {
-                                        <option value="@role.Id">@role.Name</option>
-                                    }
-                                </select>
-                                <button type="submit" class="btn btn-primary">Add Role</button>
-                            </form>
-                            @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
-                            {
-                                <hr />
-                            }
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab" aria-controls="tools" aria-selected="true">Tools</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="user-manage-tab" data-bs-toggle="tab" data-bs-target="#user-manage" type="button" role="tab" aria-controls="user-manage" aria-selected="false">User Management</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="bugs-tab" data-bs-toggle="tab" data-bs-target="#bugs" type="button" role="tab" aria-controls="bugs" aria-selected="false">Bugs</button>
+        </li>
+    </ul>
 
-                            @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
-                            {
-                                <li>
-                                    @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
-                                    <form method="post" asp-page-handler="RemoveRole" class="d-inline">
-                                        <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
-                                        <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
-                                        <button type="submit" class="btn btn-primary">Delete</button>
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="tools" role="tabpanel" aria-labelledby="tools-tab">
+            <h2 class="mb-3">Tools</h2>
+            <div class="mb-3">
+                <a class="btn btn-primary" asp-page="/Admin/DatabaseBackup">Database Backup</a>
+                <a class="btn btn-danger" asp-page="/Admin/DatabaseRestore">Database Restore</a>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="user-manage" role="tabpanel" aria-labelledby="user-manage-tab">
+            <h2 class="mb-3">User Management</h2>
+            <table class="table table-light table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users.OrderBy(x => x.Id))
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Email</td>
+                            <td>@user.UserName</td>
+                            <td>
+                                <ul>
+                                    <form method="post" asp-page-handler="AddRole">
+                                        <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
+                                        <select asp-for="AddRoleId">
+                                            <option value="">- Select a Role -</option>
+                                            @foreach (var role in Model.Roles)
+                                            {
+                                                <option value="@role.Id">@role.Name</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">Add Role</button>
                                     </form>
-                                </li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                                    @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
+                                    {
+                                        <hr />
+                                    }
 
+                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
+                                    {
+                                        <li>
+                                            @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
+                                            <form method="post" asp-page-handler="RemoveRole" class="d-inline">
+                                                <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
+                                                <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
+                                                <button type="submit" class="btn btn-primary">Delete</button>
+                                            </form>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="bugs" role="tabpanel" aria-labelledby="bugs-tab">
+            <h2 class="mb-3">Bugs</h2>
+            <table class="table table-light table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>User</th>
+                        <th>Description</th>
+                        <th>Steps</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bug in Model.Bugs.OrderBy(x => x.CreatedAt))
+                    {
+                        <tr>
+                            <td>@bug.Title</td>
+                            <td>@bug?.User?.UserName</td>
+                            <td>@bug.Description</td>
+                            <td>@bug.Steps</td>
+                            <td>
+                                <form method="post" asp-page-handler="RemoveBug" class="d-inline">
+                                    <input type="text" name="RemoveBugId" value="@bug.Id" class="d-none" />
+                                    <button type="submit" class="btn btn-danger">Squash Bug</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

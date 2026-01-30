@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -8,23 +9,32 @@ using System.Security.Claims;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class IndexModel(IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository) : PageModel
+    public class IndexModel(
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
+        IUserRoleRepository userRoleRepository,
+        IBugReportRepository bugReportRepository
+        ) : PageModel
     {
         public User LoggedInUser { get; set; }
         public List<User> Users { get; set; }
         public List<UserRole> UserRoles { get; set; }
         public List<Role> Roles { get; set; }
+        public List<BugReport> Bugs { get; set; }
         [BindProperty]
         public int AddRoleId { get; set; }
         [BindProperty]
         public int AddRoleUserId { get; set; }
 
+        [BindProperty]
+        public int RemoveBugId { get; set; }
+
         public async void OnGet()
         {
             if (User.Identity.IsAuthenticated)
             {
-                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                LoggedInUser = await userRepository.GetUserByEmail(userEmail);
+                var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                LoggedInUser = await userRepository.GetUserById(int.Parse(id));
             }
 
             await PopulateTables();
@@ -38,6 +48,8 @@ namespace CornDome.Pages.Admin
             UserRoles = userRoles.ToList();
             var roles = await roleRepository.GetAll();
             Roles = roles.ToList();
+            var bugs = await bugReportRepository.GetBugReports();
+            Bugs = bugs.ToList();
         }
 
         public async Task<IActionResult> OnPostAddRole()
@@ -86,7 +98,29 @@ namespace CornDome.Pages.Admin
                 }
             }
 
+            await PopulateTables();
             TempData["ErrorMessage"] = "Remove role failed";
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostRemoveBug()
+        {
+            await PopulateTables();
+
+            if (RemoveBugId > -1)
+            {
+                var isSuccess = await bugReportRepository.RemoveBugReport(RemoveBugId);
+
+                if (isSuccess)
+                {
+                    TempData["SuccessMessage"] = "Bug squash succeeded";
+                    await PopulateTables();
+                    return Page();
+                }
+            }
+
+            await PopulateTables();
+            TempData["ErrorMessage"] = "The Bug Grew Bigger :O";
             return Page();
         }
     }

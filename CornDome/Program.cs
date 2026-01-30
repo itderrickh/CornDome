@@ -59,6 +59,7 @@ namespace CornDome
             builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             builder.Services.AddTransient<IDiscordRepository, DiscordRepository>();
+            builder.Services.AddTransient<IBugReportRepository, BugReportRepository>();
 
             string clientId = "";
             string clientSecret = "";

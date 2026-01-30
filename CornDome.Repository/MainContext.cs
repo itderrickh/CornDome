@@ -13,6 +13,7 @@ namespace CornDome.Repository
         public DbSet<DiscordConnection> DiscordConnections { get; set; }
         public DbSet<PlayAvailability> PlayAvailabilities { get; set; }
         public DbSet<PlayPreferences> PlayPreferences { get; set; }
+        public DbSet<BugReport> BugReports { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,6 +31,7 @@ namespace CornDome.Repository
             modelBuilder.Entity<User>();
             modelBuilder.Entity<Role>();
             modelBuilder.Entity<FeedbackRequest>();
+            modelBuilder.Entity<BugReport>();
 
             modelBuilder.Entity<PlayAvailability>()
                 .HasOne(c => c.User)
