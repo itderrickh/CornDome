@@ -90,7 +90,10 @@
                                     
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Account/Index">Profile</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Play/Settings">Play Settings</a></li>
-                                    @* <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li> *@
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li>
+                                    }
                                     <li><hr class="dropdown-divider"></li>
                                     @if (User.IsInRole("Admin"))
                                     {

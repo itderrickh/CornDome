@@ -164,6 +164,13 @@ namespace CornDome.TournamentSystem
             if (!AllMatchesCompleted())
                 return false;
 
+            if (CurrentRound == NumberOfRounds())
+            {
+                var edit = context.Tournaments.FirstOrDefault(x => x.Id == Tournament.Id);
+                edit.Status = TournamentStatus.Completed;
+                context.SaveChanges();
+            }
+
             var isSuccess = false;
             CurrentRound += 1;
 
@@ -293,6 +300,10 @@ namespace CornDome.TournamentSystem
         {
             int playerCount = Players.Count;
             var roundCount = (int)Math.Ceiling(Math.Log2(playerCount));
+
+            if (roundCount == 2)
+                roundCount = 3; // Set the minimum to be 3 rounds
+
             return roundCount == 0 ? 1 : roundCount;
         }
     }

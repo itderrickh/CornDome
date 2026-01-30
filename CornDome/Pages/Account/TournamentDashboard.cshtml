@@ -40,7 +40,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <h5>Tournament: <a asp-page="/Tournaments/View" asp-route-id="@tournament.Id">@tournament.TournamentName</a></h5>
-                                <h5>Round: @(currentRound.RoundNumber + 1)</h5>
+                                <h5>Round: @(currentRound.RoundNumber)</h5>
                                 <h5>
                                     My Deck List:
                                     @if (isPlayer1)
@@ -109,7 +109,7 @@
                                         <input type="hidden" asp-for="PostMatchId" value="@currentMatch.Id" />
                                         <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
                                         <input type="hidden" asp-for="PostTournamentId" value="@tournament.Id" />
-                                        <button class="btn btn-primary" type="submit">Tie</button>
+                                        <button class="btn btn-primary" type="submit">Report Tie</button>
                                     </form>
                                 }
                                 else

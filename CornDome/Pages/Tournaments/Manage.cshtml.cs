@@ -31,12 +31,15 @@ namespace CornDome.Pages.Tournaments
         [BindProperty]
         public int PostMatchId { get; set; }
 
-        public void OnGet()
+        [BindProperty]
+        public TournamentStatus TournamentStatusChange { get; set; }
+
+        public async void OnGet()
         {
-            Load();
+            await Load();
         }
 
-        private async void Load()
+        private async Task Load()
         {
             if (TournamentId <= 0)
             {
@@ -61,28 +64,20 @@ namespace CornDome.Pages.Tournaments
             TournamentManager = new TournamentManager(TournamentId, tournamentContext, userRepository);
         }
 
-        public IActionResult OnPostMatchResult()
+        public async Task<IActionResult> OnPostMatchResult()
         {
-            Load();
+            await Load();
 
             TournamentManager.ReportResult(PostMatchId, PostResult);
 
-            Load();
+            await Load();
 
             return Page();
         }
 
-        public IActionResult OnPostEndTournament()
+        public async Task<IActionResult> OnPostAddRound()
         {
-            Load();
-            Tournament.Status = TournamentStatus.Completed;
-            tournamentContext.SaveChanges();
-            return Page();
-        }
-
-        public IActionResult OnPostAddRound()
-        {
-            Load();
+            await Load();
 
             TournamentManager.PairNextRound();
 
@@ -105,7 +100,26 @@ namespace CornDome.Pages.Tournaments
                 tournamentContext.SaveChanges();
             }
 
-            Load();
+            await Load();
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostChangeStatus()
+        {
+            await Load();
+
+            Tournament.Status = TournamentStatusChange;
+            tournamentContext.SaveChanges();
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostStartTournament()
+        {
+            await Load();
+
+            TournamentManager.PairNextRound();
+
             return Page();
         }
     }

@@ -2,13 +2,17 @@
 @model CornDome.Pages.Tournaments.ManageModel
 @{
     ViewData["Title"] = "Manage Tournament";
+    var registrationStatuses = new List<TournamentStatus> { TournamentStatus.OpenForSignups, TournamentStatus.ClosedForSignups };
 }
 
+<div style="border: 1px solid lightgray;" class="mb-3">
+    <h1 style="background-color: lightgray; color: black; padding-left: 20px;">@Model.Tournament.TournamentName</h1>
+    <div style="padding: 5px 20px;">
+        <p>Date: @Model.Tournament.TournamentDate</p>
+        <p>Description: @Model.Tournament.TournamentDescription</p>
+    </div>
+</div>
 <div class="container">
-    <h1>@Model.Tournament.TournamentName</h1>
-    <p>@Model.Tournament.TournamentDate.ToShortDateString()</p>
-    <p>@Model.Tournament.TournamentDescription</p>
-
     @if (Model.Tournament.Status == TournamentStatus.OpenForSignups || Model.Tournament.Status == TournamentStatus.ClosedForSignups)
     {
         <h2>Manual Add:</h2>
@@ -26,7 +30,7 @@
     }
     
 
-    @if (Model.Registrations.Any())
+    @if (Model.Registrations.Any() && registrationStatuses.Contains(Model.Tournament.Status))
     {
         <table class="table table-light">
             <thead>
@@ -53,52 +57,97 @@
             </tbody>
         </table>
     }
+    else if (!Model.Registrations.Any())
+    {
+        <h2>There are no registrations on this event</h2>
+    }
 
-    <div>
-        <h1>Tournament State:</h1>
-        <p>Current round: @Model.TournamentManager.CurrentRound</p>
-        <table class="table table-light">
-            <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Score</th>
-                    <th>OMW</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model.TournamentManager.GetStandings().OrderByDescending(x => x.Stats.Points))
-                {
-                    <tr>
-                        <td>@user.User.UserName</td>
-                        <td>@($"{user.Stats.Wins}-{user.Stats.Losses}-{user.Stats.Ties}") (@user.Stats.Points)</td>
-                        <td>@user.Stats.OMW</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    
     @if (Model.Tournament.Status == TournamentStatus.Completed)
     {
-        <h2>The tournament is completed</h2>    
+        <h2>The tournament is completed</h2> 
+        <div>
+            <h1>Final Standings:</h1>
+            <table class="table table-light">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>OMW</th>
+                        <th>Deck List</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.TournamentManager.GetStandings().OrderByDescending(x => x.Stats.Points))
+                    {
+                        <tr>
+                            <td>@user.User.UserName</td>
+                            <td>@($"{user.Stats.Wins}-{user.Stats.Losses}-{user.Stats.Ties}") (@user.Stats.Points)</td>
+                            <td>@user.Stats.OMW</td>
+                            <td><a asp-page="/Deck" asp-route-deck="@Model.Registrations.FirstOrDefault(x => x.UserId == user.User.Id).Deck" target="_blank">Link</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-    else if (Model.TournamentManager.IsTournamentComplete() && Model.Tournament.Status != TournamentStatus.Completed)
+    else if (Model.Tournament.Status == TournamentStatus.NotActive)
     {
-        <h1>The tournament is now complete</h1>
-        <form method="post" asp-page-handler="EndTournament">
+        <form method="post" asp-page-handler="ChangeStatus" asp-route-id="@Model.TournamentId">
             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-            <button class="btn btn-primary">End Tournament</button>
+            <input type="hidden" asp-for="TournamentStatusChange" value="@TournamentStatus.OpenForSignups" />
+            <button class="btn btn-primary">Open For Signups</button>
         </form>
     }
-    else if (Model.TournamentManager.GetRound() == null)
+    else if (Model.Tournament.Status == TournamentStatus.OpenForSignups)
     {
-        <form method="post" asp-page-handler="AddRound">
+        <form method="post" asp-page-handler="ChangeStatus" asp-route-id="@Model.TournamentId">
             <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-            <button class="btn btn-primary">Pair Next Round</button>
+            <input type="hidden" asp-for="TournamentStatusChange" value="@TournamentStatus.ClosedForSignups" />
+            <button class="btn btn-primary">Close Signups</button>
         </form>
     }
-    else
+    else if (Model.Tournament.Status == TournamentStatus.ClosedForSignups)
     {
-        <span>Please note: If you click any match results it will override what the users selected result.</span>
+        if (Model.Tournament.Registrations != null && Model.Tournament.Registrations.Count > 3)
+        {
+            <form method="post" asp-page-handler="StartTournament" asp-route-id="@Model.TournamentId">
+                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                <button class="btn btn-primary">Begin Tournament and Pair Round 1</button>
+            </form>
+        }
+        else
+        {
+            <p>There is a tournament minimum of 4 players. Please close the tournament if the minimum has not been reached.</p>
+        }
+    }
+    else if (Model.Tournament.Status == TournamentStatus.Ongoing)
+    {
+        <div>
+            <h1>Standings:</h1>
+            <p>Current round: @Model.TournamentManager.CurrentRound</p>
+            <table class="table table-light">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>OMW</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.TournamentManager.GetStandings().OrderByDescending(x => x.Stats.Points))
+                    {
+                        <tr>
+                            <td>@user.User.UserName</td>
+                            <td>@($"{user.Stats.Wins}-{user.Stats.Losses}-{user.Stats.Ties}") (@user.Stats.Points)</td>
+                            <td>@user.Stats.OMW</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <span>Please note: If you click any match results it will override the users selected result.</span>
         <table class="table table-light">
             <thead>
                 <tr>
@@ -109,12 +158,12 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach (var match in Model.TournamentManager.GetRound().Matches)
-            {
-                var user1 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player1Id);
-                var user2 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player2Id);
-                <tr>
-                    <td>
+                @foreach (var match in Model.TournamentManager.GetRound().Matches)
+                {
+                    var user1 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player1Id);
+                    var user2 = Model.TournamentManager.GetStandings().SingleOrDefault(x => x.User.Id == match.Player2Id);
+                    <tr>
+                        <td>
                             @if (match.Result == MatchResult.Incomplete)
                             {
                                 <span>Incomplete</span>
@@ -136,67 +185,56 @@
                                 <span>Bye</span>
                             }
                         </td>
-                    
-                    <td><p>@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p></td>
-                    
-                    <td>
-                        @if (user2 == null)
-                        {
-                            <strong>Bye</strong>    
-                        }
-                        else
-                        {
-                            <p>@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
-                        }
-                    </td>
-                    <td>
-                        <form method="post" asp-page-handler="MatchResult">
-                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                            <label>Result:</label>
 
-                            <select asp-for="PostResult">
-                                <option value="@MatchResult.Player1Wins">Player 1 Wins</option>
-                                <option value="@MatchResult.Player2Wins">Player 2 Wins</option>
-                                <option value="@MatchResult.Tie">Tie</option>
-                                <option value="@MatchResult.Incomplete">Incomplete</option>
-                                <option value="@MatchResult.Bye">Bye (ONLY USE FOR DATA FIXING)</option>
-                                    
-                            </select>
+                        <td><p>@($"{user1.User.UserName} {user1.Stats.Wins}-{user1.Stats.Losses}-{user1.Stats.Ties}") (@user1.Stats.Points)</p></td>
 
-                            <button class="btn btn-primary" type="submit">Submit</button>
-                        </form>
-                    </td>
-                    @* <td>
-                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
-                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Tie" />
-                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                            <button class="btn btn-primary" type="submit">Tie</button>
-                        </form>
-                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
-                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Player1Wins" />
-                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                            <button class="btn btn-primary" type="submit">Player 1 Wins</button>
-                        </form>
-                        <form method="post" asp-page-handler="MatchResult" class="d-inline-block">
-                            <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
-                            <input type="hidden" asp-for="PostResult" value="@MatchResult.Player2Wins" />
-                            <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
-                            <button class="btn btn-primary" type="submit">Player 2 Wins</button>
-                        </form>
-                    </td> *@
-                </tr>
-            }
+                        <td>
+                            @if (user2 == null)
+                            {
+                                <strong>Bye</strong>
+                            }
+                            else
+                            {
+                                <p>@($"{user2.User.UserName} {user2.Stats.Wins}-{user2.Stats.Losses}-{user2.Stats.Ties}") (@user2.Stats.Points)</p>
+                            }
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="MatchResult">
+                                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                                <input type="hidden" asp-for="PostMatchId" value="@match.Id" />
+                                <label>Result:</label>
+
+                                <select asp-for="PostResult">
+                                    <option value="@MatchResult.Player1Wins">Player 1 Wins</option>
+                                    <option value="@MatchResult.Player2Wins">Player 2 Wins</option>
+                                    <option value="@MatchResult.Tie">Tie</option>
+                                    <option value="@MatchResult.Incomplete">Incomplete</option>
+                                    <option value="@MatchResult.Bye">Bye (ONLY USE FOR DATA FIXING)</option>
+
+                                </select>
+
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
-        if (Model.TournamentManager.AllMatchesCompleted())
+        if (Model.TournamentManager.AllMatchesCompleted() && !Model.TournamentManager.IsTournamentComplete())
         {
             <form method="post" asp-page-handler="AddRound">
                 <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
                 <button class="btn btn-primary">Pair Next Round</button>
+            </form>
+        }
+        else if (Model.TournamentManager.IsTournamentComplete())
+        {
+            <h1>The tournament is now complete</h1>
+            <form method="post" asp-page-handler="ChangeStatus" asp-route-id="@Model.TournamentId">
+                <input type="hidden" asp-for="TournamentId" value="@Model.TournamentId" />
+                <input type="hidden" asp-for="TournamentStatusChange" value="@TournamentStatus.Completed" />
+                <button class="btn btn-primary">End Tournament</button>
             </form>
         }
     }
