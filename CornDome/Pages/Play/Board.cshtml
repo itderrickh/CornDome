@@ -1,6 +1,68 @@
 ﻿@page
 @model CornDome.Pages.Play.BoardModel
 @{
+    ViewData["Title"] = "Play Board";
 }
 
-<h1>Board</h1>
+<h1>Public Play Board</h1>
+<div class="mb-3">Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" /></div>
+
+@if (Model.IsUserInServer)
+{
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>Discord User</th>
+                <th>Address Them As</th>
+                <th>Pronouns</th>
+                <th>Game Format</th>
+                <th>Time Zone</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Board.PlayPreferences)
+            {
+                <tr>
+                    <td>@Model.Board.UserTable[item.UserId].Username</td>
+                    <td>@item.AddressMeAs</td>
+                    <td>@item.Pronouns</td>
+                    <td>@item.GameFormat</td>
+                    <td>@item.TimeZone</td>
+                    <td>
+                        @foreach (var avail in Model.Board.Availability[item.UserId])
+                        {
+                            <div>
+                                @(avail.Day.ToString()) @(avail.StartTime)-@(avail.EndTime)
+                            </div>   
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Please join the CardWars discord server to continue: </p><a href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 36px; height: 36px;" src="~/img/discord.png" /></a>
+}
+
+@section Styles {
+    <style>
+        .avatar {
+            border-radius: 50%;
+            cursor: pointer;
+            flex: 0 0 auto;
+            height: var(--chat-avatar-size);
+            inset-inline-start: var(--custom-message-margin-horizontal);
+            margin-top: calc(4px - var(--custom-message-spacing-vertical-container-cozy));
+            overflow: hidden;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            width: var(--chat-avatar-size);
+            z-index: 1;
+        }
+    </style>
+}

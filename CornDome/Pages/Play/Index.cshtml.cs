@@ -1,30 +1,41 @@
+using CornDome.Repository;
+using CornDome.Repository.Discord;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace CornDome.Pages.Play
 {
-    public class IndexModel : PageModel
+    [Authorize]
+    public class IndexModel(Config config, IUserRepository userRepository, IDiscordRepository discordRepository) : PageModel
     {
-        private readonly Config _config;
-
-        public IndexModel(Config config)
+        public async Task<IActionResult> OnGet()
         {
-            _config = config;
-        }
+            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
-        public IActionResult OnGet()
-        {
-            var clientId = _config.DiscordClient.ClientId;
-            var redirectUri = "/Play/Board";
+            var discordConnection = await discordRepository.GetDiscordConnection(loggedInUser.Id);
 
-            var url =
-                $"https://discord.com/api/oauth2/authorize" +
-                $"?client_id={clientId}" +
-                $"&redirect_uri={redirectUri}" +
-                $"&response_type=code" +
-                $"&scope=identify email";
+            if (discordConnection == null)
+            {
+                var clientId = config.DiscordClient.ClientId;
 
-            return Redirect(url);
+                var redirectUrl = Url.Page("/Play/Callback", pageHandler: null, values: null, protocol: Request.Scheme);
+
+                var url =
+                    $"https://discord.com/api/oauth2/authorize" +
+                    $"?client_id={clientId}" +
+                    $"&redirect_uri={redirectUrl}" +
+                    $"&response_type=code" +
+                    $"&scope=guilds+email+identify";
+
+                return Redirect(url);
+            }
+            else
+            {
+                return RedirectToPage("/Play/Board");
+            }
         }
     }
 }

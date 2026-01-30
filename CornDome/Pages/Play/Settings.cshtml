@@ -1,0 +1,158 @@
+﻿@page
+@model CornDome.Pages.Play.SettingsModel
+@{
+    ViewData["Title"] = "Play Settings";
+}
+
+<h1>Settings</h1>
+<div>Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" /></div>
+
+@if (Model.IsUserInServer)
+{
+    <h2>Preferences:</h2>
+    <form method="post">
+        <div class="mb-3">
+            <input asp-for="Form.WantsToPlay" type="checkbox" class="form-check-input" /> <label>Put me on the public board</label>
+        </div>
+
+        <div class="mb-3">
+            <label>Time Zone</label>
+            <select asp-for="Form.TimeZone" class="form-select">
+                @foreach (var tz in Model.TimeZones)
+                {
+                    <option>@(tz.DisplayName)</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Address Me As</label>
+            <input asp-for="Form.AddressMeAs" type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Pronouns</label>
+            <input asp-for="Form.Pronouns" type="text" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Game Format</label>
+            <select asp-for="Form.GameFormat" class="form-select">
+                <option>Starter Decks</option>
+                <option>No Ban List</option>
+                <option>Discord Ban List</option>
+                <option>Rule Zero (Ask me what I want to play)</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Platform</label>
+            <select asp-for="Form.Platform" class="form-select">
+                <option>Untap.gg</option>
+                <option>Webcam</option>
+                <option>Tabletop Sim</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <h2>Availability</h2>
+        @for (int i = 0; i < Model.Form.Days.Count; i++)
+        {
+            <div class="row align-items-center mb-2">
+                <div class="col-3">
+                    <input type="checkbox" class="day"
+                           asp-for="Form.Days[i].IsAvailable"
+                           onclick="toggleDisplays()"
+                           data-day="@i" />
+                    <strong>@Model.Form.Days[i].Day</strong>
+                </div>
+
+                <div class="col">
+                    <input type="time"
+                           asp-for="Form.Days[i].Start"
+                           class="form-control startTime"
+                           data-day="@i" />
+                </div>
+
+                <div class="col">
+                    <input type="time"
+                           asp-for="Form.Days[i].End"
+                           class="form-control endTime"
+                           data-day="@i" />
+                </div>
+
+                <input type="hidden" asp-for="Form.Days[i].Day" />
+            </div>
+        }
+
+        <button class="btn btn-primary mt-3">
+            Save Settings
+        </button>
+    </form>
+}
+else
+{
+    <p>Please join the CardWars discord server to continue: </p>
+
+    <a href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 36px; height: 36px;" src="~/img/discord.png" /></a>
+}
+
+@section Scripts {
+    <script>
+        var days = document.querySelectorAll(".day");
+        var starts = document.querySelectorAll(".startTime");
+        var ends = document.querySelectorAll(".endTime");
+
+        function toggleDisplays() {
+            days.forEach((day) => {
+                var dayValue = day.dataset.day;
+
+                if (day.checked) {
+                    starts.forEach((start) => {
+                        if (start.dataset.day === dayValue) {
+                            start.style.display = "inline";
+                        }
+                    });
+
+                    ends.forEach((end) => {
+                        if (end.dataset.day === dayValue) {
+                            end.style.display = "inline";
+                        }
+                    });
+                } else {
+                    starts.forEach((start) => {
+                        if (start.dataset.day === dayValue) {
+                            start.style.display = "none";
+                        }
+                    });
+
+                    ends.forEach((end) => {
+                        if (end.dataset.day === dayValue) {
+                            end.style.display = "none";
+                        }
+                    });
+                }
+            });
+        }
+
+        toggleDisplays();
+    </script>
+}
+
+@section Styles {
+    <style>
+        .avatar {
+            border-radius: 50%;
+            cursor: pointer;
+            flex: 0 0 auto;
+            height: var(--chat-avatar-size);
+            inset-inline-start: var(--custom-message-margin-horizontal);
+            margin-top: calc(4px - var(--custom-message-spacing-vertical-container-cozy));
+            overflow: hidden;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            width: var(--chat-avatar-size);
+            z-index: 1;
+        }
+    </style>
+}

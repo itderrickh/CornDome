@@ -3,6 +3,7 @@ using System;
 using CornDome.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CornDome.Repository.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20260130011021_Availabilities")]
+    partial class Availabilities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -55,6 +58,9 @@ namespace CornDome.Repository.Migrations.Main
                     b.Property<TimeOnly?>("StartTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TimeZone")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
@@ -63,40 +69,6 @@ namespace CornDome.Repository.Migrations.Main
                     b.HasIndex("UserId");
 
                     b.ToTable("PlayAvailabilities");
-                });
-
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AddressMeAs")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("GameFormat")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Platform")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Pronouns")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TimeZone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("WantsToPlay")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PlayPreferences");
                 });
 
             modelBuilder.Entity("CornDome.Models.Users.DiscordConnection", b =>
@@ -231,17 +203,6 @@ namespace CornDome.Repository.Migrations.Main
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
                         .WithMany("PlayAvailabilities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
-                {
-                    b.HasOne("CornDome.Models.Users.User", "User")
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

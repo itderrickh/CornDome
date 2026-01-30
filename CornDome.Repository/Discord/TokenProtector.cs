@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 
-namespace CornDome.Helpers
+namespace CornDome.Repository.Discord
 {
     public interface ITokenProtector
     {

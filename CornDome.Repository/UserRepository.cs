@@ -1,5 +1,4 @@
 ﻿using CornDome.Models.Users;
-using Dapper;
 
 namespace CornDome.Repository
 {
@@ -11,10 +10,6 @@ namespace CornDome.Repository
         Task<User?> GetUserById(int id);
         Task<User?> GetUserByUsername(string username);
         Task<IEnumerable<User>> GetAll();
-        Task<DiscordConnection> GetDiscordConnection(int userId);
-        Task<bool> InsertDiscordConnection(DiscordConnection discordConnection);
-        Task<bool> UpdateDiscordTokens(DiscordConnection discordConnection);
-        Task<bool> RemoveDiscordConnection(int userId);
     }
 
     public class UserRepository(MainContext context) : IUserRepository
@@ -71,26 +66,6 @@ namespace CornDome.Repository
         public async Task<IEnumerable<User>> GetAll()
         {
             return context.Users;
-        }
-
-        public Task<DiscordConnection> GetDiscordConnection(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> InsertDiscordConnection(DiscordConnection discordConnection)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateDiscordTokens(DiscordConnection discordConnection)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> RemoveDiscordConnection(int userId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
