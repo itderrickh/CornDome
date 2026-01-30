@@ -7,6 +7,11 @@
 <h1>Public Play Board</h1>
 <div class="mb-3">Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" /></div>
 
+@if (!Model.AmIOnTheBoard)
+{
+    <p>Want to play? <a asp-page="/Play/Settings">Setup your preferences here</a></p>
+}
+
 @if (Model.IsUserInServer)
 {
     <table class="table table-light">
@@ -21,24 +26,39 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Board.PlayPreferences)
+            @if (Model.Board.PlayPreferences.Count == 0)
             {
                 <tr>
-                    <td>@Model.Board.UserTable[item.UserId].Username</td>
-                    <td>@item.AddressMeAs</td>
-                    <td>@item.Pronouns</td>
-                    <td>@item.GameFormat</td>
-                    <td>@item.TimeZone</td>
-                    <td>
-                        @foreach (var avail in Model.Board.Availability[item.UserId])
-                        {
-                            <div>
-                                @(avail.Day.ToString()) @(avail.StartTime)-@(avail.EndTime)
-                            </div>   
-                        }
-                    </td>
+                    <td>Nobody has signed up yet.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             }
+            else
+            {
+                @foreach (var item in Model.Board.PlayPreferences)
+                {
+                    <tr>
+                        <td>@Model.Board.UserTable[item.UserId].Username</td>
+                        <td>@item.AddressMeAs</td>
+                        <td>@item.Pronouns</td>
+                        <td>@item.GameFormat</td>
+                        <td>@item.TimeZone</td>
+                        <td>
+                            @foreach (var avail in Model.Board.Availability[item.UserId])
+                            {
+                                <div>
+                                    @(avail.Day.ToString()) @(avail.StartTime)-@(avail.EndTime)
+                                </div>   
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            
         </tbody>
     </table>
 }

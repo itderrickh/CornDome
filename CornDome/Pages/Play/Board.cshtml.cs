@@ -21,6 +21,7 @@ namespace CornDome.Pages.Play
         public bool IsUserInServer { get; set; }
         public List<TimeZoneInfo> TimeZones { get; set; } = [..TimeZoneInfo.GetSystemTimeZones()];
         public BoardItem Board { get; set; } = new BoardItem();
+        public bool AmIOnTheBoard { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -41,6 +42,8 @@ namespace CornDome.Pages.Play
                 var dc = await discordRepository.GetDiscordConnection(app.UserId);
                 Board.UserTable[app.UserId] = dc;
             }
+
+            AmIOnTheBoard = activePlayPreferences.FirstOrDefault(x => x.UserId == loggedInUser.Id) != null;
 
             return Page();
         }
