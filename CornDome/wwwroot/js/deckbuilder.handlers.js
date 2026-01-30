@@ -95,7 +95,7 @@ document.getElementById("validateButton").onclick = function () {
     alert(validationSummary);
 };
 
-document.getElementById("decklistExport").onclick = function () {
+function getDeckText() {
     var landscapes = {};
     for (var landscape of deck.landscapes) {
         if (!landscapes.hasOwnProperty(landscape.name))
@@ -143,6 +143,21 @@ document.getElementById("decklistExport").onclick = function () {
     Object.keys(spells).forEach(x => template += `${spells[x]} - ${x}\n`);
     template += "\nBuildings\n";
     Object.keys(buildings).forEach(x => template += `${buildings[x]} - ${x}\n`);
+
+    return template;
+}
+
+document.getElementById("textExport").onclick = function () {
+    this.textContent = "Text Export (Click again to reload)"
+    var deckList = getDeckText();
+    var field = document.getElementById("textExportField");
+
+    field.style.display = "block";
+    field.value = deckList;
+}
+
+document.getElementById("decklistExport").onclick = function () {
+    var deckList = getDeckText();
     
     navigator.clipboard.writeText(template);
     alert('Copied to clipboard!');
