@@ -18,7 +18,7 @@ public class CallbackModel(
     public async Task<IActionResult> OnGetAsync(string code)
     {
         if (string.IsNullOrEmpty(code))
-            return RedirectToPage("/Error");
+            return RedirectToPage("/Errors/ErrorDiscord");
 
         var client = httpClientFactory.CreateClient();
         var discordConfig = config.DiscordClient;
