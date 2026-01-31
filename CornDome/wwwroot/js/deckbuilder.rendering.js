@@ -54,6 +54,7 @@ function renderData() {
     var creatureStatField = document.getElementById('creature-stat');
     var spellStatField = document.getElementById('spell-stat');
     var buildingStatField = document.getElementById('building-stat');
+    var teamworkStatField = document.getElementById('teamwork-stat');
 
     heroesStatField.innerHTML = deck.hero !== null ? 1 : 0;
     landscapesStatField.innerHTML = deck.landscapes.length;
@@ -64,6 +65,8 @@ function renderData() {
     spellStatField.innerHTML = spellCount;
     var buildingCount = deck.cards.filter((x) => x.cardType === CardType.Building).length;
     buildingStatField.innerHTML = buildingCount;
+    var teamworkCount = deck.cards.filter((x) => x.cardType === CardType.Teamwork).length;
+    teamworkStatField.innerHTML = teamworkCount;
 
     totalStatField.innerHTML = creatureCount + spellCount + buildingCount;
 

@@ -128,6 +128,14 @@ function getDeckText() {
             buildings[building.name]++;
     }
 
+    var teamworks = {};
+    for (var teamwork of deck.cards.filter((x) => x.cardType === CardType.Teamwork)) {
+        if (!teamworks.hasOwnProperty(teamwork.name))
+            teamworks[teamwork.name] = 1;
+        else
+            teamworks[teamwork.name]++;
+    }
+
     var template = "Hero\n";
     if (deck.hero !== null) {
         template += deck.hero.name + '\n\n';
@@ -137,12 +145,27 @@ function getDeckText() {
     template += `Landscapes\n`
 
     Object.keys(landscapes).forEach(x => template += `${landscapes[x]} - ${x}\n`);
-    template += "\nCreatures\n";
-    Object.keys(creatures).forEach(x => template += `${creatures[x]} - ${x}\n`);
-    template += "\nSpells\n";
-    Object.keys(spells).forEach(x => template += `${spells[x]} - ${x}\n`);
-    template += "\nBuildings\n";
-    Object.keys(buildings).forEach(x => template += `${buildings[x]} - ${x}\n`);
+
+    if (Object.keys(creatures).length > 0) {
+        template += "\nCreatures\n";
+        Object.keys(creatures).forEach(x => template += `${creatures[x]} - ${x}\n`);
+    }
+
+    if (Object.keys(spells).length > 0) {
+        template += "\nSpells\n";
+        Object.keys(spells).forEach(x => template += `${spells[x]} - ${x}\n`);
+    }
+
+    if (Object.keys(buildings).length > 0) {
+        template += "\nBuildings\n";
+        Object.keys(buildings).forEach(x => template += `${buildings[x]} - ${x}\n`);
+    }
+
+    if (Object.keys(teamworks).length > 0) {
+        template += "\nTeamworks\n";
+        Object.keys(teamworks).forEach(x => template += `${teamworks[x]} - ${x}\n`);
+    }
+    
 
     return template;
 }

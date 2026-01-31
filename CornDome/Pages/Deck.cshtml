@@ -20,6 +20,7 @@
             <div><span class="info-stamp" title="You can have as many creatures as you like."></span> Creatures: <span id="creature-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Creature).Count()</span></div>
             <div><span class="info-stamp" title="You can have as many spells as you like."></span> Spells: <span id="spell-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Spell).Count()</span></div>
             <div><span class="info-stamp" title="You can have as many buildings as you like."></span> Buildings: <span id="building-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Building).Count()</span></div>
+            <div><span class="info-stamp" title="You can have as many teamworks as you like."></span> Teamworks: <span id="teamwork-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Teamwork).Count()</span></div>
             <hr />
             <div>Average Cost: <span id="average-cost">@averageCost.ToString("F2")</span></div>
             <div>Total Cost: <span id="total-cost">@totalCost</span></div>

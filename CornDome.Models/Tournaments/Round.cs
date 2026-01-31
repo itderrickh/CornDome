@@ -8,6 +8,8 @@ namespace CornDome.Models.Tournaments
         public int Id { get; set; }
         public int TournamentId { get; set; }
         public int RoundNumber { get; set; }
+        public DateTime RoundStart { get; set; }
+        public DateTime RoundEnd { get; set; }
 
         public virtual Tournament Tournament { get; set; }
         public virtual List<Match> Matches { get; set; }
