@@ -4,16 +4,19 @@ using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
+    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository, IUserRepository userRepository) : PageModel
     {
         public IEnumerable<Card> Cards { get; set; }
         public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; }
         [BindProperty]
         public int DeleteFeedbackId { get; set; }
+        [BindProperty]
+        public int DeleteCardId { get; set; }
 
         public async void OnGet()
         {
@@ -29,6 +32,23 @@ namespace CornDome.Pages.CardManage
                 TempData["SuccessMessage"] = "Delete feedback succeeded";
             else
                 TempData["ErrorMessage"] = "Delete feedback failed";
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteCard()
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            var result = cardRepository.DeleteCard(DeleteCardId);
+
+            if (result)
+                TempData["SuccessMessage"] = "Delete card succeeded";
+            else
+                TempData["ErrorMessage"] = "Delete card failed";
 
             return RedirectToPage();
         }

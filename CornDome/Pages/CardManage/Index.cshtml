@@ -83,7 +83,16 @@
                         <tr data-name="@card.LatestRevision.Name" class="card-row">
                             <td>@card.Id</td>
                             <td><a asp-page="/Card" asp-route-id="@card.Id">@card.LatestRevision.Name</a></td>
-                            <td><a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a></td>
+                            <td>
+                                <a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <form asp-page-handler="DeleteCard" class="mt-2">
+                                        <input type="text" name="DeleteCardId" value="@card.Id" class="d-none" />
+                                        <button type="submit" class="btn btn-danger">Delete Card</button>
+                                    </form>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

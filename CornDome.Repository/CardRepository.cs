@@ -14,6 +14,7 @@ namespace CornDome.Repository
         bool UpdateRevisionRulings(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath);
         bool AddRevisionImage(CardImage cardImage);
+        bool DeleteCard(int cardId);
     }
 
     public class CardRepository(CardDatabaseContext context, ICardChangeLogger logger) : ICardRepository
@@ -307,6 +308,34 @@ namespace CornDome.Repository
             }
 
             return updateSuccess;
+        }
+
+        public bool DeleteCard(int cardId)
+        {
+            var deleteSuccess = false;
+            using var transcation = context.Database.BeginTransaction();
+
+            try
+            {
+                var cardToDelete = context.Cards.FirstOrDefault(x => x.Id == cardId);
+
+                if (cardToDelete != null)
+                {
+                    context.Remove(cardToDelete);
+                    context.SaveChanges();
+
+                    transcation.Commit();
+                    deleteSuccess = true;
+                    logger.LogCardChange($"Success Deleting Card: {cardId}");
+                }
+            }
+            catch (Exception)
+            {
+                logger.LogCardChange($"Error Deleting Card: {cardId}");
+                transcation.Rollback();
+            }
+
+            return deleteSuccess;
         }
     }
 }
