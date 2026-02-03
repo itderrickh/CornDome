@@ -318,9 +318,14 @@ namespace CornDome.Repository
             try
             {
                 var cardToDelete = context.Cards.FirstOrDefault(x => x.Id == cardId);
+                var revisionsToDelete = context.CardRevisions.Where(x => x.CardId == cardId);
+                var revisionIds = revisionsToDelete.Select(x => x.Id);
+                var imagesToDelete = context.CardImages.Where(x => revisionIds.Contains(x.RevisionId));
 
                 if (cardToDelete != null)
                 {
+                    context.RemoveRange(imagesToDelete);
+                    context.RemoveRange(revisionsToDelete);
                     context.Remove(cardToDelete);
                     context.SaveChanges();
 
@@ -329,7 +334,7 @@ namespace CornDome.Repository
                     logger.LogCardChange($"Success Deleting Card: {cardId}");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 logger.LogCardChange($"Error Deleting Card: {cardId}");
                 transcation.Rollback();
