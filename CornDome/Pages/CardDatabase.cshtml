@@ -147,7 +147,9 @@
             console.log(e);
             document.getElementById("cards-found").innerHTML = `Showing ${e.detail.filteredCount} of ${e.detail.totalElements} cards`;
         });
-        filterDataset();
+
+        var cards = document.querySelectorAll('.card-container');
+        filterDataset(cards);
     </script>
 }
 

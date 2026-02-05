@@ -13,8 +13,7 @@ var filterFunctions = {
     attackToken: false
 };
 
-function filterDataset() {
-    var elements = document.querySelectorAll('.card-container');
+function filterDataset(elements) {
     let totalResults = 0;
     let filteredResults = 0;
     for (var ele of elements) {
@@ -86,7 +85,8 @@ function filterDataset() {
 
 document.getElementById("cardTypeFilter").onchange = function () {
     filterFunctions.cardType = this.value;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 var landscapeCheckboxes = document.querySelectorAll(".landscape-checkbox");
@@ -99,56 +99,67 @@ landscapeCheckboxes.forEach(x => {
             filterFunctions.landscape.splice(indexToRemove, 1);
         }
 
-        filterDataset();
+        var cards = document.querySelectorAll('.card-container');
+        filterDataset(cards);
     }
 });
 
 document.getElementById("costFilter").oninput = function () {
     filterFunctions.cost = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("attackFilter").oninput = function () {
     filterFunctions.attack = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("defenseFilter").oninput = function () {
     filterFunctions.defense = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("abilityFilter").oninput = function () {
     filterFunctions.ability = this.value;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("nameFilter").oninput = function () {
     filterFunctions.name = this.value;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("setFilter").oninput = function () {
     filterFunctions.set = this.value;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 }
 
 document.getElementById("customCardFilter").onchange = function () {
     filterFunctions.customCards = this.checked;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("burnTokenFilter").onchange = function () {
     filterFunctions.burnToken = this.checked;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("freezeTokenFilter").onchange = function () {
     filterFunctions.freezeToken = this.checked;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };
 
 document.getElementById("attackTokenFilter").onchange = function () {
     filterFunctions.attackToken = this.checked;
-    filterDataset();
+    var cards = document.querySelectorAll('.card-container');
+    filterDataset(cards);
 };

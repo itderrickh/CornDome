@@ -1,6 +1,12 @@
+function callFilter() {
+    var cards = document.querySelectorAll('#card-list .card-container');
+    filterDataset(cards);
+}
+
+
 document.getElementById("cardTypeFilter").onchange = function () {
     filterFunctions.cardType = this.value;
-    filterDataset();
+    callFilter()
 };
 
 var landscapeCheckboxes = document.querySelectorAll(".landscape-checkbox");
@@ -13,33 +19,33 @@ landscapeCheckboxes.forEach(x => {
             filterFunctions.landscape.splice(indexToRemove, 1);
         }
 
-        filterDataset();
+        callFilter()
     }
 });
 
 document.getElementById("costFilter").oninput = function () {
     filterFunctions.cost = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    callFilter()
 };
 
 document.getElementById("attackFilter").oninput = function () {
     filterFunctions.attack = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    callFilter()
 };
 
 document.getElementById("defenseFilter").oninput = function () {
     filterFunctions.defense = this.value !== "" ? parseInt(this.value) : null;
-    filterDataset();
+    callFilter()
 };
 
 document.getElementById("abilityFilter").oninput = function () {
     filterFunctions.ability = this.value;
-    filterDataset();
+    callFilter()
 };
 
 document.getElementById("nameFilter").oninput = function () {
     filterFunctions.name = this.value;
-    filterDataset();
+    callFilter()
 };
 
 document.getElementById("validateButton").onclick = function () {
@@ -182,7 +188,7 @@ document.getElementById("textExport").onclick = function () {
 document.getElementById("decklistExport").onclick = function () {
     var deckList = getDeckText();
     
-    navigator.clipboard.writeText(template);
+    navigator.clipboard.writeText(deckList);
     alert('Copied to clipboard!');
 };
 
