@@ -50,7 +50,7 @@ namespace CornDome.Pages.CardManage
                     string updatedString = await UploadImage(cardRevision, imageToUpload);
                     if (!string.IsNullOrEmpty(updatedString))
                     {
-                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, updatedString);
+                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, updatedString, 2);
                     }
 
                     // Add a small image if we updated successfully
@@ -65,7 +65,7 @@ namespace CornDome.Pages.CardManage
                                 ImageUrl = smallImagePath,
                                 RevisionId = imageToUpload.RevisionId
                             };
-                            isEverythingGoingWell = cardRepository.AddRevisionImage(smallImage);
+                            isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
                         }
                     }
                 }

@@ -12,7 +12,7 @@ namespace CornDome.Repository
         Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
         bool UpdateCardAndRevisions(Card card);
         bool UpdateRevisionRulings(Card card);
-        bool UpdateRevisionImage(CardRevision revision, string newImagePath);
+        bool UpdateRevisionImage(CardRevision revision, string newImagePath, int cardImageTypeId);
         bool AddRevisionImage(CardImage cardImage);
         bool DeleteCard(int cardId);
     }
@@ -252,14 +252,14 @@ namespace CornDome.Repository
             return dbRev;
         }
 
-        public bool UpdateRevisionImage(CardRevision revision, string newImagePath)
+        public bool UpdateRevisionImage(CardRevision revision, string newImagePath, int cardImageTypeId)
         {
             var updateSuccess = false;
             using var transcation = context.Database.BeginTransaction();
 
             try
             {
-                var cardImage = context.CardImages.FirstOrDefault(x => x.RevisionId == revision.Id && x.CardImageTypeId == 2);
+                var cardImage = context.CardImages.FirstOrDefault(x => x.RevisionId == revision.Id && x.CardImageTypeId == cardImageTypeId);
 
                 if (cardImage == null)
                 {
