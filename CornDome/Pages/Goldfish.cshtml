@@ -32,10 +32,10 @@ else
 
         <div class="d-flex flex-wrap position-relative w-55" style="width: 55%;">
             <div class="d-flex w-100" style="height: 65%">
-                <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
-                <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
-                <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[2].LatestRevision.GetRegularImage)"></cd-landscape>
-                <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].LatestRevision.Name" landscape-image="@("/CardImages/" + @Model.QueryDeck.Landscapes[3].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[2].LatestRevision.GetRegularImage)"></cd-landscape>
+                <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[3].LatestRevision.GetRegularImage)"></cd-landscape>
             </div>
 
             <div class="d-flex w-100" style="height: 35%">
@@ -214,6 +214,9 @@ else
     }
 
     @section Scripts {
+    <script>
+        var baseUrl = '@(Model.BaseUrl)';
+    <script>
     <script src="~/js/goldfish/contextMenu.js" asp-append-version="true"></script>
     <script src="~/js/goldfish/landscape.js" asp-append-version="true"></script>
     <script src="~/js/goldfish/building.js" asp-append-version="true"></script>
@@ -242,6 +245,7 @@ else
 
     <script>
         var deck = JSON.parse('@(Html.Raw(JsonSerializer.Serialize(Model.QueryDeck.Cards)))');
+        var baseUrl = '@(Model.BaseUrl)';
         var zones = {
             hand: document.getElementById('hand'),
             discard: document.getElementById('discard'),
@@ -544,7 +548,7 @@ else
                                     class="hand-card"
                                     data-id="${card.Id}"
                                     data-card="${data}">
-                                            <img class="deck-card-image w-100" alt="${card.LatestRevision.Name}" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
+                                            <img class="deck-card-image w-100" alt="${card.LatestRevision.Name}" src="${baseUrl}${card.LatestRevision.GetRegularImage}" />
                                  </div>
                             `;
         }

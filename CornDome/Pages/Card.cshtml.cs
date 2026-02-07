@@ -9,11 +9,12 @@ namespace CornDome.Pages
 {
     [IgnoreAntiforgeryToken]
     [AllowAnonymous]
-    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
+    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository, Config config) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public Card QueryCard { get; set; } = null;
         public int? RevisionId { get; set; } = null;
+        public string BaseUrl { get; set; } = config.CloudflareConfig.WorkerUrl;
 
         public void OnGet()
         {

@@ -81,7 +81,7 @@
                     class="card"
                     data-id="${card.Id}"
                     data-card="${data}">
-                            <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "height: 100%;" src="/CardImages/${card.LatestRevision.GetRegularImage}" />
+                            <img class="deck-card-image" alt="${card.LatestRevision.Name}" style = "height: 100%;" src="${baseUrl}${card.LatestRevision.GetRegularImage}" />
                  </div>
             `;
     }

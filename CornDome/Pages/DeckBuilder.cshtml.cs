@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages
 {
-    public class DeckBuilderModel(ICardRepository cardRepository) : PageModel
+    public class DeckBuilderModel(ICardRepository cardRepository, Config config) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
         public Deck QueryDeck { get; set; } = null;
+        public string BaseUrl { get; set; } = config.CloudflareConfig.WorkerUrl;
 
         public void OnGet()
         {

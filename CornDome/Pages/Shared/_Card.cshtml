@@ -18,7 +18,7 @@
      data-id="@Model.Card.Id"
      data-custom="@Model.Card.IsCustomCard"
      data-revision="@Model.Card.LatestRevision.RevisionNumber"
-     data-card-image="@("/CardImages/" + cardImage)"
+     data-card-image="@(Model.BaseUrl + cardImage)"
      data-card-type="@Model.Card.LatestRevision.TypeId"
      data-landscape="@(Model.Card.LatestRevision.LandscapeId)"
      data-name="@Model.Card.LatestRevision.Name"
@@ -28,7 +28,7 @@
      data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
      data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
     <div class="card">
-        <img src="@("/CardImages/" + cardImage)" alt="@Model.Card.LatestRevision.Name" class="w-100" />
+        <img src="@(Model.BaseUrl + cardImage)" alt="@Model.Card.LatestRevision.Name" class="w-100" />
         @if (Model.IsAddable)
         {
             <div class="card-overlay add"></div>

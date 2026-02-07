@@ -30,6 +30,16 @@ namespace CornDome
         public string Images { get; set; }
     }
 
+    public class CloudflareConfig
+    {
+        public string BucketName { get; set; }
+        public string AccountId { get; set; }
+        public string AccessKey { get; set; }
+        public string SecretKey { get; set; }
+        public string ServiceUrl { get; set; }
+        public string WorkerUrl { get; set; }
+    }
+
     public class Config
     {
         public Branding Branding { get; set; }
@@ -37,6 +47,7 @@ namespace CornDome
         public ContentStore ContentStore { get; set; }
         public DatabasePaths DatabasePaths { get; set; }
         public DiscordConfiguration DiscordClient { get; set; }
+        public CloudflareConfig CloudflareConfig { get; set; }
         public string Version { get; set; }
 
         public Config(IConfiguration configuration)
@@ -61,6 +72,15 @@ namespace CornDome
                 ClientId = configuration["Authentication:Discord:ClientId"],
                 ClientSecret = configuration["Authentication:Discord:ClientSecret"],
                 GuildId = configuration["Authentication:Discord:GuildId"],
+            };
+            CloudflareConfig = new CloudflareConfig()
+            {
+                AccessKey = configuration["Cloudflare:AccessKey"],
+                BucketName = configuration["Cloudflare:BucketName"],
+                SecretKey = configuration["Cloudflare:SecretKey"],
+                AccountId = configuration["Cloudflare:AccountId"],
+                ServiceUrl = configuration["Cloudflare:ServiceUrl"],
+                WorkerUrl = configuration["Cloudflare:WorkerUrl"]
             };
             
             Assembly assembly = Assembly.GetExecutingAssembly();

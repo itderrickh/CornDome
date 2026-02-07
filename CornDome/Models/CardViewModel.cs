@@ -8,5 +8,6 @@ namespace CornDome.Models
         public bool IsAddable { get; set; }
         public bool IsDeleteable { get; set; }
         public CardImageTypeEnum CardImageType { get; set; }
+        public string BaseUrl { get; set; }
     }
 }

@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "rulingManager")]
-    public class RulingsModel(ICardRepository cardRepository) : PageModel
+    public class RulingsModel(ICardRepository cardRepository, Config config) : PageModel
     {
         [BindProperty]
         public int CardId { get; set; }
         [BindProperty]
         public Card EditCard { get; set; }
+        public string BaseUrl { get; set; } = config.CloudflareConfig.WorkerUrl;
 
         public void OnGet()
         {

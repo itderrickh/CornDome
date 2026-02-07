@@ -51,7 +51,7 @@
                 {
                     <div class="w-20">
                         <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id">
-                            <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@("/CardImages/" + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
+                            <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
                         </a>
                     </div>
                 }
@@ -60,7 +60,7 @@
                 {
                     <div class="w-20">
                         <a asp-page="/Card" asp-route-id="@landscape.Id">
-                            <img class="w-100" alt="@landscape.LatestRevision.Name" src="@("/CardImages/" + landscape.LatestRevision.GetLargestImage)" />
+                            <img class="w-100" alt="@landscape.LatestRevision.Name" src="@(Model.BaseUrl + landscape.LatestRevision.GetLargestImage)" />
                         </a>
                     </div>
                 }
@@ -71,7 +71,7 @@
                 {
                     <div class="w-10">
                         <a asp-page="/Card" asp-route-id="@card.Id">
-                            <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@("/CardImages/" + card.LatestRevision.GetLargestImage)" />
+                            <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@(Model.BaseUrl + card.LatestRevision.GetLargestImage)" />
                         </a>
                     </div>
                 }

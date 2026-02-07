@@ -19,7 +19,7 @@ else
     </div>
     <div class="card-detail">
         <div class="w-50">
-            <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@("/CardImages/" + selectedRevision.GetLargestImage)" />
+            <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
 
             @if (selectedRevision.SetId == (int)Set.DarklandsExpansion
             || selectedRevision.SetId == (int)Set.FlamePrincessVSFern
@@ -99,7 +99,7 @@ else
                             <div class="w-50">
                                 <a asp-page="/Card" asp-route-id="@selectedRevision.CardId" asp-route-revision="@rev.Id">Revision @rev.RevisionNumber</a>
 
-                                <img style="width: 100px;" alt="@rev.Name" src="@("/CardImages/" + rev.GetSmallestImage)" />
+                                <img style="width: 100px;" alt="@rev.Name" src="@(Model.BaseUrl + rev.GetSmallestImage)" />
                             </div>
                         }
                     </div>
