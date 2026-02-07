@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using System.Text.Json;
 
 namespace CornDome.Pages.CardManage
 {
@@ -87,6 +88,8 @@ namespace CornDome.Pages.CardManage
 
         private async Task CloudflareUpload(IFormFile file, string path)
         {
+
+            Console.WriteLine(JsonSerializer.Serialize(config));
             var credentials = new BasicAWSCredentials(config.CloudflareConfig.AccessKey, config.CloudflareConfig.SecretKey);
 
             var cfconfig = new AmazonS3Config
