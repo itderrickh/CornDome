@@ -22,7 +22,7 @@ namespace CornDome.Pages.CardManage
         public Card EditCard { get; set; }
         [BindProperty]
         public List<ImageUpload> RevisionImageUploads { get; set; } = [];
-        public string BaseUrl { get; set; } = config.CloudflareConfig.WorkerUrl;
+        public string BaseUrl { get; set; } = config.BaseUrl;
 
         public void OnGet()
         {
@@ -86,31 +86,6 @@ namespace CornDome.Pages.CardManage
             return RedirectToPage(new { id = CardId });
         }
 
-        private async Task CloudflareUpload(IFormFile file, string path)
-        {
-
-            Console.WriteLine(JsonSerializer.Serialize(config));
-            var credentials = new BasicAWSCredentials(config.CloudflareConfig.AccessKey, config.CloudflareConfig.SecretKey);
-
-            var cfconfig = new AmazonS3Config
-            {
-                ServiceURL = config.CloudflareConfig.ServiceUrl,
-                ForcePathStyle = true
-            };
-
-            var s3 = new AmazonS3Client(credentials, cfconfig);
-
-            using var stream = file.OpenReadStream();
-            await s3.PutObjectAsync(new PutObjectRequest
-            {
-                BucketName = config.CloudflareConfig.BucketName,
-                Key = path,
-                InputStream = stream,
-                ContentType = file.ContentType,
-                UseChunkEncoding = false
-            });
-        }
-
         private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight)
         {
             var uploadsFolder = config.AppData.ImagePath;
@@ -145,16 +120,14 @@ namespace CornDome.Pages.CardManage
             // Save with a unique filename
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var uniqueFileName = $"{cardRevision.Name.Replace(" ", "_")}{ext}";
-            // Removing the old upload and handling with cloudflare
-            //var filePath = Path.Combine(uploadsFolder, "generated", "small", uniqueFileName);
-            //using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
-            //{
-            //    await file.CopyToAsync(stream);
-            //}
+
+            var filePath = Path.Combine(uploadsFolder, "generated", "small", uniqueFileName);
+            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                await file.CopyToAsync(stream);
+            }
 
             var outputFileName = $"generated/small/{uniqueFileName}";
-
-            await CloudflareUpload(file, outputFileName);
 
             return outputFileName;
         }
@@ -172,16 +145,13 @@ namespace CornDome.Pages.CardManage
 
             // Save with a unique filename
             var uniqueFileName = $"{cardRevision.Name.Replace(" ", "_")}{ext}";
-            // Removing the old upload and handling with cloudflare
-            //var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
-            //{
-            //    await upload.File.CopyToAsync(stream);
-            //}
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                await upload.File.CopyToAsync(stream);
+            }
 
             var outputFileName = $"upload/{uniqueFileName}";
-
-            await CloudflareUpload(upload.File, outputFileName);
 
             return outputFileName;
         }

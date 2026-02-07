@@ -13,7 +13,7 @@ namespace CornDome.Pages.CardManage
         public int CardId { get; set; }
         [BindProperty]
         public Card EditCard { get; set; }
-        public string BaseUrl { get; set; } = config.CloudflareConfig.WorkerUrl;
+        public string BaseUrl { get; set; } = config.BaseUrl;
 
         public void OnGet()
         {

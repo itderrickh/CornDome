@@ -141,12 +141,11 @@ namespace CornDome
                 DefaultContentType = "application/octet-stream"
             });
 
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
-            //    RequestPath = "/CardImages"
-            //});
-
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
+                RequestPath = "/CardImages"
+            });
 
             app.UseRouting();
             app.UseAuthentication();
