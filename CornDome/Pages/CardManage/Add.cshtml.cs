@@ -79,33 +79,20 @@ namespace CornDome.Pages.CardManage
             await using var inputStream = file.OpenReadStream();
             using var image = await SixLabors.ImageSharp.Image.LoadAsync(inputStream);
 
-            // Calculate resize ratio while preserving aspect ratio
-            double ratioX = (double)maxWidth / image.Width;
-            double ratioY = (double)maxHeight / image.Height;
-            double ratio = Math.Min(ratioX, ratioY);
-
-            int newWidth = (int)(image.Width * ratio);
-            int newHeight = (int)(image.Height * ratio);
-
             // Resize with high quality
             image.Mutate(x => x.Resize(new ResizeOptions
             {
                 Mode = ResizeMode.Max, // Keeps aspect ratio
-                Size = new Size(newWidth, newHeight),
+                Size = new Size(maxWidth, maxHeight),
                 Sampler = KnownResamplers.Lanczos3 // Very good quality
             }));
-
-            await using var outputStream = new MemoryStream();
-            await image.SaveAsync(outputStream, new PngEncoder()); // or new JpegEncoder()
 
             // Save with a unique filename
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var uniqueFileName = $"{cardRevision.Name.Replace(" ", "_")}{ext}";
             var filePath = Path.Combine(uploadsFolder, "generated", "small", uniqueFileName);
-            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
-            {
-                await file.CopyToAsync(stream);
-            }
+            await using var outputStream = new FileStream(filePath, FileMode.OpenOrCreate);
+            await image.SaveAsync(outputStream, new PngEncoder()); // or new JpegEncoder()
 
             return $"generated/small/{uniqueFileName}";
         }
