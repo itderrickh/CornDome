@@ -86,6 +86,8 @@ else
                 </div>
             }
 
+            @*
+            Disabling Revisions. Remove by 5/1/2026 if no complaints
             @if (Model.QueryCard.Revisions.Count > 0)
             {
                 <div class="card-text-section">
@@ -104,7 +106,7 @@ else
                         }
                     </div>
                 </div>
-            }
+            }*@
 
             @if (!string.IsNullOrEmpty(selectedRevision.Rulings))
             {
