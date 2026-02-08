@@ -22,15 +22,6 @@ else
     <div class="card-detail">
         <div class="w-50">
             <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
-
-            @if (selectedRevision.SetId == (int)Set.DarklandsExpansion
-            || selectedRevision.SetId == (int)Set.FlamePrincessVSFern
-            || selectedRevision.SetId == (int)Set.PeppermintButlerVSMagicMan
-            || selectedRevision.SetId == (int)Set.PrismoVSTheLich
-            || selectedRevision.SetId == (int)Set.Kickstarter2)
-            {
-                <p class="mt-3">* Card images from Kickstarter #2 may be blurry until we get better scans.</p>
-            }
         </div>
         <div class="w-50 p-4">
             @if (Model.QueryCard.IsCustomCard)

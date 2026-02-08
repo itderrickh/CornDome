@@ -1,0 +1,85 @@
+﻿@page
+@model CornDome.Pages.RandomModel
+@{
+    ViewData["Title"] = Model.QueryCard.LatestRevision.Name;
+
+    var selectedRevision = Model.QueryCard.LatestRevision;
+    selectedRevision = Model.QueryCard.Revisions.OrderBy(x => x.RevisionNumber).FirstOrDefault();
+}
+
+<div>
+    <h1>@selectedRevision.Name</h1>
+</div>
+<div class="card-detail">
+    <div class="w-50">
+        <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
+    </div>
+    <div class="w-50 p-4">
+        @if (Model.QueryCard.IsCustomCard)
+        {
+            <div class="card-text-section">
+                <span class="bold-label">This is a custom card made from the CardWars discord and is NOT official</span>
+            </div>
+        }
+
+        <div class="card-text-section">
+            <span class="bold-label">Card Type: </span><br /><span>@selectedRevision.CardType.Value</span>
+        </div>
+        @if (selectedRevision.Landscape != null)
+        {
+            <div class="card-text-section">
+                <span class="bold-label">Landscape: </span><br /><span>@LandscapeConverter.ToString((LandscapeEnum)selectedRevision.LandscapeId)</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(selectedRevision.Ability))
+        {
+            <div class="card-text-section">
+                <span class="bold-label">Ability: </span><br />
+                <span>
+                    @{
+                        var abilityWithPlaceholders = selectedRevision.Ability.Replace("[ATTACK]", @"<img src=""/img/attack.webp"" style=""width: 20px; height: 20px;"" />");
+                    }
+                    @Html.Raw(abilityWithPlaceholders)
+                </span>
+            </div>
+        }
+
+        @if (selectedRevision.CardSet != null)
+        {
+            <div class="card-text-section">
+                <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString((Set)selectedRevision.SetId)</span>
+            </div>
+        }
+
+        @if (selectedRevision.Cost.HasValue)
+        {
+            <div class="card-text-section">
+                <span class="bold-label">Cost: </span><span>@selectedRevision.Cost</span>
+            </div>
+        }
+
+        @if (selectedRevision.Attack.HasValue || selectedRevision.Defense.HasValue)
+        {
+            <div class="card-text-section d-flex">
+                <div class="w-50">
+                    <span class="bold-label">Attack: </span><span>@selectedRevision.Attack</span>
+                </div>
+                <div>
+                    <span class="bold-label">Defense: </span><span>@selectedRevision.Defense</span>
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(selectedRevision.Rulings))
+        {
+            <div class="card-text-section">
+                <span class="bold-label">Rulings: </span><span>@selectedRevision.Rulings</span>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/card-page.css" asp-append-version="true" />
+}

@@ -87,7 +87,7 @@
                                 <a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a>
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <form asp-page-handler="DeleteCard" class="mt-2">
+                                    <form asp-page-handler="DeleteCard" class="mt-2" onsubmit="return confirm('Are you sure you want to delete this card?');">
                                         <input type="text" name="DeleteCardId" value="@card.Id" class="d-none" />
                                         <button type="submit" class="btn btn-danger">Delete Card</button>
                                     </form>
