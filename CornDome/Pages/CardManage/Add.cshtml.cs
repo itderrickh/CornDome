@@ -52,7 +52,7 @@ namespace CornDome.Pages.CardManage
 
             var addedCard = cardRepository.AddCard(card, revision, cardImage);
 
-            var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 27, 320);
+            var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 227, 320);
             if (smallImagePath != null && addedCard != null)
             {
                 var cardImageSmall = new CardImage()

@@ -18,6 +18,7 @@ public class RandomModel(ICardRepository cardRepository, Config config) : PageMo
     public void OnGet()
     {
         var cards = _cardRepository.GetAll()
+            .Where(x => x.IsCustomCard == false)
             .Where(x => TypesToGenerate.Contains(x.LatestRevision.TypeId)).ToList();
         var randomCard = cards[Random.Shared.Next(cards.Count)];
 
