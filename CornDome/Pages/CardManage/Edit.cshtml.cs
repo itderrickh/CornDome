@@ -1,6 +1,3 @@
-using Amazon.Runtime;
-using Amazon.S3;
-using Amazon.S3.Model;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
-using System.Text.Json;
 
 namespace CornDome.Pages.CardManage
 {

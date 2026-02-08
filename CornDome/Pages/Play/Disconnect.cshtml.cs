@@ -1,4 +1,3 @@
-using CornDome.Repository;
 using CornDome.Repository.Discord;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
