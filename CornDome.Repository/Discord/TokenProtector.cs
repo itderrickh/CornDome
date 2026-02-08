@@ -8,14 +8,9 @@ namespace CornDome.Repository.Discord
         string Unprotect(string value);
     }
 
-    public class TokenProtector : ITokenProtector
+    public class TokenProtector(IDataProtectionProvider provider) : ITokenProtector
     {
-        private readonly IDataProtector _protector;
-
-        public TokenProtector(IDataProtectionProvider provider)
-        {
-            _protector = provider.CreateProtector("DiscordTokenProtector");
-        }
+        private readonly IDataProtector _protector = provider.CreateProtector("DiscordTokenProtector");
 
         public string Protect(string value) =>
             value == null ? null : _protector.Protect(value);

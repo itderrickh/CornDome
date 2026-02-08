@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository, IUserRepository userRepository) : PageModel
+    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : PageModel
     {
         public IEnumerable<Card> Cards { get; set; }
         public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; }

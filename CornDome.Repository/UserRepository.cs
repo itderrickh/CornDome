@@ -4,29 +4,29 @@ namespace CornDome.Repository
 {
     public interface IUserRepository
     {
-        Task<User?> GetUserByEmail(string email);
+        Task<User> GetUserByEmail(string email);
         Task<bool> UpdateUser(User user);
         Task<bool> CreateUser(User user);
-        Task<User?> GetUserById(int id);
-        Task<User?> GetUserByUsername(string username);
+        Task<User> GetUserById(int id);
+        Task<User> GetUserByUsername(string username);
         Task<IEnumerable<User>> GetAll();
     }
 
     public class UserRepository(MainContext context) : IUserRepository
     {
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
             return context.Users
                 .FirstOrDefault(x => x.Email == email);
         }
 
-        public async Task<User?> GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
             return context.Users
                 .FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<User?> GetUserByUsername(string username)
+        public async Task<User> GetUserByUsername(string username)
         {
             return context.Users
                 .FirstOrDefault(x => x.UserName == username);

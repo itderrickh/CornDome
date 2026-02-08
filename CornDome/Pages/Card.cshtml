@@ -5,7 +5,9 @@
 
     var selectedRevision = Model.QueryCard.LatestRevision;
     if (Model.RevisionId != null)
+    {
         selectedRevision = Model.QueryCard.Revisions.FirstOrDefault(x => x.Id == Model.RevisionId);
+    }
 }
 
 @if (Model.QueryCard == null)

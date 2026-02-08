@@ -7,8 +7,8 @@ namespace CornDome.Repository
         Task<bool> CreateRole(Role role);
         Task<bool> UpdateRole(Role role);
         Task<bool> DeleteRole(Role role);
-        Task<Role?> FindById(int id);
-        Task<Role?> FindByName(string roleName);
+        Task<Role> FindById(int id);
+        Task<Role> FindByName(string roleName);
         Task<IEnumerable<Role>> GetAll();
     }
     public class RoleRepository(MainContext context) : IRoleRepository
@@ -58,12 +58,12 @@ namespace CornDome.Repository
             }
         }
 
-        public async Task<Role?> FindById(int roleId)
+        public async Task<Role> FindById(int roleId)
         {
             return context.Roles.FirstOrDefault(r => r.Id == roleId);
         }
 
-        public async Task<Role?> FindByName(string roleName)
+        public async Task<Role> FindByName(string roleName)
         {
             return context.Roles.FirstOrDefault(r => r.Name == roleName);
         }

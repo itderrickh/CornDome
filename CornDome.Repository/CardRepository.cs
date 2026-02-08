@@ -7,9 +7,9 @@ namespace CornDome.Repository
     public interface ICardRepository
     {
         IEnumerable<Card> GetAll();
-        Card? GetCard(int id);
+        Card GetCard(int id);
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
-        Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
+        Card AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
         bool UpdateCardAndRevisions(Card card);
         bool UpdateRevisionRulings(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath, int cardImageTypeId);
@@ -27,7 +27,7 @@ namespace CornDome.Repository
                 .ToList();
         }
 
-        public Card? GetCard(int id)
+        public Card GetCard(int id)
         {
             return context.Cards
                 .Include(card => card.Revisions)
@@ -172,7 +172,7 @@ namespace CornDome.Repository
             return false;
         }
 
-        public Card? AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
+        public Card AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
         {
             var addedCardId = -1;
             using var transcation = context.Database.BeginTransaction();
@@ -334,7 +334,7 @@ namespace CornDome.Repository
                     logger.LogCardChange($"Success Deleting Card: {cardId}");
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 logger.LogCardChange($"Error Deleting Card: {cardId}");
                 transcation.Rollback();

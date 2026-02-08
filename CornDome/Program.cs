@@ -5,6 +5,7 @@ using CornDome.Repository.Discord;
 using CornDome.Repository.Tournaments;
 using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -23,7 +24,13 @@ namespace CornDome
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
 
-            builder.Services.AddDataProtection();
+            var keyFolder = builder.Environment.IsDevelopment()
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CardDweeb", "DataProtectionKeys")
+                : "/var/myapp/keys";  // Linux production path
+
+            builder.Services.AddDataProtection()
+               .PersistKeysToFileSystem(new DirectoryInfo(keyFolder))
+               .SetApplicationName("CardDweeb");  // must be consistent
             builder.Services.AddTransient<ITokenProtector, TokenProtector>();
             builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
