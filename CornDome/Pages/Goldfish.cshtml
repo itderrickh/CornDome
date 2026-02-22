@@ -216,7 +216,10 @@ else
     @section Scripts {
     <script>
         var baseUrl = '@(Model.BaseUrl)';
-    <script>
+    </script>
+    <script id="deck-data" type="application/json">
+        @Html.Raw(JsonSerializer.Serialize(Model.QueryDeck.Cards))
+    </script>
     <script src="~/js/goldfish/contextMenu.js" asp-append-version="true"></script>
     <script src="~/js/goldfish/landscape.js" asp-append-version="true"></script>
     <script src="~/js/goldfish/building.js" asp-append-version="true"></script>
@@ -244,8 +247,7 @@ else
     </script>
 
     <script>
-        var deck = JSON.parse('@(Html.Raw(JsonSerializer.Serialize(Model.QueryDeck.Cards)))');
-        var baseUrl = '@(Model.BaseUrl)';
+        var deck = JSON.parse(document.getElementById('deck-data').textContent);
         var zones = {
             hand: document.getElementById('hand'),
             discard: document.getElementById('discard'),
