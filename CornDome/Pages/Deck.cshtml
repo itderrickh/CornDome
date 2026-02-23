@@ -38,8 +38,8 @@
 
         <fieldset id="actionsSection">
             <legend>Actions</legend>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])">Go To Deck Builder</a>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@(Request.Query["deck"])">Download Image</a>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Go To Deck Builder</a>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Download Image</a>
             <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
         </fieldset>
     </div>

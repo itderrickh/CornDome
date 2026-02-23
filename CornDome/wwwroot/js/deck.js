@@ -1,6 +1,6 @@
 ﻿document.getElementById("saveButton").onclick = async function () {
     var query = new URLSearchParams(document.location.search);
-    var deck = query.get("deck");
+    var deck = query.get("gzdeck");
     var db = new DecksDatabase();
 
     try {

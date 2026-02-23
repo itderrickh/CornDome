@@ -141,11 +141,26 @@ namespace CornDome.Pages
             Cards = _cardRepository.GetAll();
 
             if (Request.QueryString.HasValue)
-                QueryDeck = Deck.GetFromQuery(Request.Query["deck"], Cards);
+                BuildDeckFromQuery();
 
             var image = CreateCoordinates();
 
             return File(image, "image/png", "download.png");
+        }
+
+        private void BuildDeckFromQuery()
+        {
+            var nonGZDeck = Request.Query["deck"];
+            var gzDeck = Request.Query["gzdeck"];
+
+            if (string.IsNullOrEmpty(nonGZDeck))
+            {
+                QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
+            }
+            else
+            {
+                QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+            }
         }
     }
 }

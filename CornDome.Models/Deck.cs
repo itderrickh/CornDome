@@ -1,4 +1,6 @@
 ﻿using CornDome.Models.Cards;
+using System.IO.Compression;
+using System.Text;
 
 namespace CornDome.Models
 {
@@ -7,6 +9,21 @@ namespace CornDome.Models
         public Card Hero { get; set; }
         public List<Card> Landscapes { get; set; } = [];
         public List<Card> Cards { get; set; } = [];
+
+        public static Deck GetDeckFromGzip(string query, IEnumerable<Card> cards)
+        {
+            byte[] compressedBytes = Convert.FromBase64String(query);
+
+            using var inputStream = new MemoryStream(compressedBytes);
+            using var gzip = new GZipStream(inputStream, CompressionMode.Decompress);
+            using var outputStream = new MemoryStream();
+
+            gzip.CopyTo(outputStream);
+
+            // Return original data again as Base64
+            var finalString = Convert.ToBase64String(outputStream.ToArray());
+            return GetFromQuery(finalString, cards);
+        }
 
         public static Deck GetFromQuery(string query, IEnumerable<Card> cards)
         {

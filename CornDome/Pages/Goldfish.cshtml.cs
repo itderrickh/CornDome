@@ -22,7 +22,17 @@ namespace CornDome.Pages
 
         private void BuildDeckFromQuery()
         {
-            QueryDeck = Deck.GetFromQuery(Request.Query["deck"], Cards);
+            var nonGZDeck = Request.Query["deck"];
+            var gzDeck = Request.Query["gzdeck"];
+
+            if (string.IsNullOrEmpty(nonGZDeck))
+            {
+                QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
+            }
+            else
+            {
+                QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+            }
         }
     }
 }

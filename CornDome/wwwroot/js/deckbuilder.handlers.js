@@ -1,8 +1,7 @@
 function callFilter() {
     var cards = document.querySelectorAll('#card-list .card-container');
     filterDataset(cards);
-}
-
+};
 
 document.getElementById("cardTypeFilter").onchange = function () {
     filterFunctions.cardType = this.value;

@@ -77,6 +77,21 @@
             }
         }
 
+        function isGzipBase64(base64) {
+            if (!base64 || typeof base64 !== "string") return false;
+
+            try {
+                const binary = atob(base64);
+                const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+
+                return bytes.length >= 2 &&
+                       bytes[0] === 0x1F &&
+                       bytes[1] === 0x8B;
+            } catch {
+                return false; // Not valid base64
+            }
+        }
+
         async function displayDecks() {
             var db = new DecksDatabase();
 
@@ -98,8 +113,15 @@
                     cell1.innerHTML = deckNameInput;
 
                     var cell2 = row.insertCell(1);
-                    var linkContent = `<a href="/Deck?deck=${allDecks[i].content}" target="_blank">Link</a>`;
-                    cell2.innerHTML = linkContent;
+
+                    if (isGzipBase64(allDecks[i].content)) {
+                        var linkContent = `<a href="/Deck?gzdeck=${encodeURIComponent(allDecks[i].content)}" target="_blank">Link</a>`;
+                        cell2.innerHTML = linkContent;
+                    }
+                    else {
+                        var linkContent = `<a href="/Deck?deck=${allDecks[i].content}" target="_blank">Link</a>`;
+                        cell2.innerHTML = linkContent;
+                    }
 
                     var cell3 = row.insertCell(2);
                     var deleteButton = `<button type="button" class="btn btn-danger" data-id="${allDecks[i].id}" onclick="deleteDeck(event)">Delete</button>`;
