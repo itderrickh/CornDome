@@ -176,9 +176,88 @@ function getDeckText() {
     return template;
 }
 
+function getDeckTextUntapGG() {
+    var landscapes = {};
+    for (var landscape of deck.landscapes) {
+        if (!landscapes.hasOwnProperty(landscape.name))
+            landscapes[landscape.name] = 1;
+        else
+            landscapes[landscape.name]++;
+    }
+
+    var creatures = {};
+    for (var creature of deck.cards.filter((x) => x.cardType === CardType.Creature)) {
+        if (!creatures.hasOwnProperty(creature.name))
+            creatures[creature.name] = 1;
+        else
+            creatures[creature.name]++;
+    }
+
+    var spells = {};
+    for (var spell of deck.cards.filter((x) => x.cardType === CardType.Spell)) {
+        if (!spells.hasOwnProperty(spell.name))
+            spells[spell.name] = 1;
+        else
+            spells[spell.name]++;
+    }
+
+    var buildings = {};
+    for (var building of deck.cards.filter((x) => x.cardType === CardType.Building)) {
+        if (!buildings.hasOwnProperty(building.name))
+            buildings[building.name] = 1;
+        else
+            buildings[building.name]++;
+    }
+
+    var teamworks = {};
+    for (var teamwork of deck.cards.filter((x) => x.cardType === CardType.Teamwork)) {
+        if (!teamworks.hasOwnProperty(teamwork.name))
+            teamworks[teamwork.name] = 1;
+        else
+            teamworks[teamwork.name]++;
+    }
+
+    var template = "";
+    if (deck.hero !== null) {
+        template += '1 ' + deck.hero.name + ' (CWDB)\n';
+    } else {
+        template += "\n";
+    }
+
+    Object.keys(landscapes).forEach(x => template += `${landscapes[x]} ${x} (CWDB)\n`);
+
+    if (Object.keys(creatures).length > 0) {
+        Object.keys(creatures).forEach(x => template += `${creatures[x]} ${x} (CWDB)\n`);
+    }
+
+    if (Object.keys(spells).length > 0) {
+        Object.keys(spells).forEach(x => template += `${spells[x]} ${x} (CWDB)\n`);
+    }
+
+    if (Object.keys(buildings).length > 0) {
+        Object.keys(buildings).forEach(x => template += `${buildings[x]} ${x} (CWDB)\n`);
+    }
+
+    if (Object.keys(teamworks).length > 0) {
+        Object.keys(teamworks).forEach(x => template += `${teamworks[x]} ${x} (CWDB)\n`);
+    }
+
+
+    return template;
+}
+
 document.getElementById("textExport").onclick = function () {
     this.textContent = "Text Export (Click again to reload)"
     var deckList = getDeckText();
+    var field = document.getElementById("textExportField");
+
+    field.style.display = "block";
+    field.value = deckList;
+};
+
+document.getElementById("textExportUntap").onclick = function () {
+    this.textContent = "Untap.gg Export (Click again to reload)"
+    var deckList = getDeckTextUntapGG();
     var field = document.getElementById("textExportField");
 
     field.style.display = "block";
