@@ -5,7 +5,7 @@
     var db = new DecksDatabase();
 
     var deckToSave = "";
-    if (deck !== '') {
+    if (!deck) {
         deckToSave = deck;
     }
     else {

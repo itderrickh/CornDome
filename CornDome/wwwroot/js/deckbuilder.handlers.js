@@ -288,7 +288,7 @@ document.getElementById("saveButton").onclick = async function () {
     var db = new DecksDatabase();
 
     var deckToSave = "";
-    if (deck !== '') {
+    if (!deck) {
         deckToSave = deck;
     }
     else {
