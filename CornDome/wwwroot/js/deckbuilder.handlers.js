@@ -256,7 +256,7 @@ document.getElementById("textExport").onclick = function () {
 };
 
 document.getElementById("textExportUntap").onclick = function () {
-    this.textContent = "Untap.gg Export (Click again to reload)"
+    this.textContent = "Untap.in Export (Click again to reload)"
     var deckList = getDeckTextUntapGG();
     var field = document.getElementById("textExportField");
 
