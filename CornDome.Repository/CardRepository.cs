@@ -24,6 +24,8 @@ namespace CornDome.Repository
             return context.Cards
                 .Include(card => card.Revisions)
                 .ThenInclude(cardRev => cardRev.CardImages)
+                .Include(card => card.Revisions)
+                .ThenInclude(cardRev => cardRev.CardSets)
                 .ToList();
         }
 
@@ -45,6 +47,7 @@ namespace CornDome.Repository
         {
             var cardsWithLatestRevisions = context.Cards
                 .Include(card => card.Revisions)
+                .ThenInclude(cardRev => cardRev.CardSets)
                 .ToList();
 
             var filtered = cardsWithLatestRevisions
