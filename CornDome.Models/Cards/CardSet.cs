@@ -9,6 +9,8 @@ namespace CornDome.Models.Cards
         public string Value { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
+
+        public virtual ICollection<CardRevision> Revisions { get; set; } = [];
     }
 
     public enum Set

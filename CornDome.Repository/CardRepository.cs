@@ -33,7 +33,7 @@ namespace CornDome.Repository
                 .Include(card => card.Revisions)
                 .ThenInclude(cardRev => cardRev.CardImages)
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardSet)
+                .ThenInclude(cardRev => cardRev.CardSets)
                 .Include(card => card.Revisions)
                 .ThenInclude(cardRev => cardRev.Landscape)
                 .Include(card => card.Revisions)
@@ -123,7 +123,7 @@ namespace CornDome.Repository
                         if (revision.TypeId == (int)CardTypeEnum.Creature)
                         {
                             dbRev.Ability = revision.Ability;
-                            dbRev.SetId = revision.SetId;
+                            //dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
                             dbRev.Attack = revision.Attack;
                             dbRev.Defense = revision.Defense;
@@ -132,26 +132,26 @@ namespace CornDome.Repository
                         else if (revision.TypeId == (int)CardTypeEnum.Spell)
                         {
                             dbRev.Ability = revision.Ability;
-                            dbRev.SetId = revision.SetId;
+                            //dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Hero)
                         {
                             dbRev.Ability = revision.Ability;
-                            dbRev.SetId = revision.SetId;
+                            //dbRev.SetId = revision.SetId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Building)
                         {
                             dbRev.Ability = revision.Ability;
-                            dbRev.SetId = revision.SetId;
+                            //dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Teamwork)
                         {
                             dbRev.Ability = revision.Ability;
-                            dbRev.SetId = revision.SetId;
+                            //dbRev.SetId = revision.SetId;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
@@ -216,7 +216,7 @@ namespace CornDome.Repository
             if (cardRevision.TypeId == (int)CardTypeEnum.Creature)
             {
                 dbRev.Ability = cardRevision.Ability;
-                dbRev.SetId = cardRevision.SetId;
+                //dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.Attack = cardRevision.Attack;
                 dbRev.Defense = cardRevision.Defense;
@@ -225,26 +225,26 @@ namespace CornDome.Repository
             else if (cardRevision.TypeId == (int)CardTypeEnum.Spell)
             {
                 dbRev.Ability = cardRevision.Ability;
-                dbRev.SetId = cardRevision.SetId;
+                //dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Hero)
             {
                 dbRev.Ability = cardRevision.Ability;
-                dbRev.SetId = cardRevision.SetId;
+                //dbRev.SetId = cardRevision.SetId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Building)
             {
                 dbRev.Ability = cardRevision.Ability;
-                dbRev.SetId = cardRevision.SetId;
+                //dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Teamwork)
             {
                 dbRev.Ability = cardRevision.Ability;
-                dbRev.SetId = cardRevision.SetId;
+                //dbRev.SetId = cardRevision.SetId;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }

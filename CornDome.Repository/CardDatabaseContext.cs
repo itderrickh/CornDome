@@ -41,10 +41,9 @@ namespace CornDome.Repository
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CardRevision>()
-                .HasOne(cr => cr.CardSet)
-                .WithMany()
-                .HasForeignKey(cr => cr.SetId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasMany(cr => cr.CardSets)
+                .WithMany(s => s.Revisions)
+                .UsingEntity(j => j.ToTable("revisionSet"));
 
             modelBuilder.Entity<CardRevision>()
                 .HasOne(cr => cr.Landscape)

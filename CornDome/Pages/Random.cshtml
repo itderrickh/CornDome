@@ -44,10 +44,11 @@
             </div>
         }
 
-        @if (selectedRevision.CardSet != null)
+        @if (selectedRevision.CardSets != null)
         {
             <div class="card-text-section">
-                <span class="bold-label">Set: </span><br /><span>@SetConverter.ToString((Set)selectedRevision.SetId)</span>
+                <span class="bold-label">Set: </span><br />
+                <span class="mr-1">@(string.Join(", ", selectedRevision.CardSets.Select(x => @SetConverter.ToString((Set)x.Id))))</span>
             </div>
         }
 
