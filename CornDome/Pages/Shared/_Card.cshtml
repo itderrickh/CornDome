@@ -11,6 +11,12 @@
         cardImage = Model.Card.LatestRevision.GetLargeImage;
 
     var customCardStyle = Model.Card.IsCustomCard ? "display: none;" : "";
+    var cardSets = Model.Card.LatestRevision.CardSets;
+    var cardSetText = "";
+    if (cardSets != null)
+    {
+        cardSetText = string.Join(",", Model.Card.LatestRevision.CardSets.Select(x => $"#{x.Id}#"));
+    }
 }
 
 <div style="width: 120px; @customCardStyle"
@@ -24,7 +30,7 @@
      data-name="@Model.Card.LatestRevision.Name"
      data-ability="@Model.Card.LatestRevision.Ability"
      data-cost="@(Model.Card.LatestRevision.Cost.HasValue ? Model.Card.LatestRevision.Cost.ToString() : "")"
-     data-set="@(Model.Card.LatestRevision.SetId)"
+     data-set="@(cardSetText)"
      data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
      data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
     <div class="card">
