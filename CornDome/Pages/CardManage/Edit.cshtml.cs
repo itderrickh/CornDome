@@ -15,17 +15,35 @@ namespace CornDome.Pages.CardManage
         [BindProperty]
         public int CardId { get; set; }
         [BindProperty]
-        public Card EditCard { get; set; }
+        public EditCard EditCard { get; set; }
         [BindProperty]
-        public List<ImageUpload> RevisionImageUploads { get; set; } = [];
+        public ImageUpload RevisionImageUpload { get; set; }
         public string BaseUrl { get; set; } = config.BaseUrl;
+        public List<CardSet> AllSets { get; set; }
+        [BindProperty]
+        public string SetIds { get; set; }
 
         public void OnGet()
         {
+            AllSets = cardRepository.GetAllSets();
             var queryId = Request.Query["id"];
             CardId = int.Parse(queryId);
 
-            EditCard = cardRepository.GetCard(CardId);
+            var cardFound = cardRepository.GetCard(CardId);
+            EditCard = new EditCard()
+            {
+                IsCustomCard = cardFound.IsCustomCard,
+                Name = cardFound.LatestRevision.Name,
+                TypeId = cardFound.LatestRevision.TypeId,
+                Ability = cardFound.LatestRevision.Ability,
+                LandscapeId = cardFound.LatestRevision.LandscapeId,
+                Cost = cardFound.LatestRevision.Cost,
+                Attack = cardFound.LatestRevision.Attack,
+                Defense = cardFound.LatestRevision.Defense,
+                RevisionId = cardFound.LatestRevision.Id,
+                CardSets = [.. cardFound.LatestRevision.CardSets],
+                ImageUrl = cardFound.LatestRevision.GetRegularImage
+            };
         }
 
         public async Task<IActionResult> OnPost()
@@ -33,43 +51,71 @@ namespace CornDome.Pages.CardManage
             var isSuccess = false;
             var card = cardRepository.GetCard(CardId);
 
-            foreach (var imageToUpload in RevisionImageUploads)
+            var imageToUpload = RevisionImageUpload;
+            if (imageToUpload.File != null)
             {
-                if (imageToUpload.File != null)
+                var isEverythingGoingWell = false;
+                var cardRevision = card.Revisions.FirstOrDefault(x => x.Id == EditCard.RevisionId);
+
+                if (cardRevision == null)
                 {
-                    var isEverythingGoingWell = false;
-                    var cardRevision = card.Revisions.FirstOrDefault(x => x.Id == imageToUpload.RevisionId);
-
-                    if (cardRevision == null)
-                        continue;
-
-                    string updatedString = await UploadImage(cardRevision, imageToUpload);
-                    if (!string.IsNullOrEmpty(updatedString))
+                    TempData["ErrorMessage"] = "There was an issue saving the card.";
+                    EditCard = new EditCard()
                     {
-                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, updatedString, 2);
-                    }
+                        IsCustomCard = card.IsCustomCard,
+                        Name = card.LatestRevision.Name,
+                        TypeId = card.LatestRevision.TypeId,
+                        Ability = card.LatestRevision.Ability,
+                        LandscapeId = card.LatestRevision.LandscapeId,
+                        Cost = card.LatestRevision.Cost,
+                        Attack = card.LatestRevision.Attack,
+                        Defense = card.LatestRevision.Defense,
+                        RevisionId = card.LatestRevision.Id,
+                        ImageUrl = card.LatestRevision.GetRegularImage,
+                        CardSets = [.. card.LatestRevision.CardSets]
+                    };
+                    return RedirectToPage(new { id = CardId });
+                }
 
-                    // Add a small image if we updated successfully
-                    if (isEverythingGoingWell)
+                string updatedString = await UploadImage(cardRevision, imageToUpload);
+                if (!string.IsNullOrEmpty(updatedString))
+                {
+                    isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, updatedString, 2);
+                }
+
+                // Add a small image if we updated successfully
+                if (isEverythingGoingWell)
+                {
+                    var smallImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 227, 320);
+                    if (!string.IsNullOrEmpty(smallImagePath))
                     {
-                        var smallImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 227, 320);
-                        if (!string.IsNullOrEmpty(smallImagePath))
+                        CardImage smallImage = new()
                         {
-                            CardImage smallImage = new()
-                            {
-                                CardImageTypeId = (int)CardImageTypeEnum.Small,
-                                ImageUrl = smallImagePath,
-                                RevisionId = imageToUpload.RevisionId
-                            };
-                            isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
-                        }
+                            CardImageTypeId = (int)CardImageTypeEnum.Small,
+                            ImageUrl = smallImagePath,
+                            RevisionId = imageToUpload.RevisionId
+                        };
+                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
                     }
                 }
             }
 
             if (card != null && card.Id == CardId)
             {
-                isSuccess = cardRepository.UpdateCardAndRevisions(EditCard);
+                var setIds = SetIds.Split(',').Select(int.Parse).ToArray();
+                var setsToUpdate = cardRepository.GetSetsByIds(setIds);
+
+                card.LatestRevision.Ability = EditCard.Ability;
+                card.LatestRevision.Attack = EditCard.Attack;
+                card.IsCustomCard = EditCard.IsCustomCard;
+                card.LatestRevision.TypeId = EditCard.TypeId;
+                card.LatestRevision.Name = EditCard.Name;
+                card.LatestRevision.Cost = EditCard.Cost;
+                card.LatestRevision.Defense = EditCard.Defense;
+                card.LatestRevision.LandscapeId = EditCard.LandscapeId;
+                card.LatestRevision.CardSets = setsToUpdate;
+
+                isSuccess = cardRepository.UpdateCardAndRevisions(card);
                 isSuccess = true;
             }
 
@@ -78,7 +124,20 @@ namespace CornDome.Pages.CardManage
             else
                 TempData["ErrorMessage"] = "There was an issue saving the card.";
 
-            EditCard = cardRepository.GetCard(CardId);
+            EditCard = new EditCard()
+            {
+                IsCustomCard = card.IsCustomCard,
+                Name = card.LatestRevision.Name,
+                TypeId = card.LatestRevision.TypeId,
+                Ability = card.LatestRevision.Ability,
+                LandscapeId = card.LatestRevision.LandscapeId,
+                Cost = card.LatestRevision.Cost,
+                Attack = card.LatestRevision.Attack,
+                Defense = card.LatestRevision.Defense,
+                RevisionId = card.LatestRevision.Id,
+                ImageUrl = card.LatestRevision.GetRegularImage,
+                CardSets = [.. card.LatestRevision.CardSets]
+            };
             return RedirectToPage(new { id = CardId });
         }
 
@@ -140,6 +199,22 @@ namespace CornDome.Pages.CardManage
     public class ImageUpload
     {
         public IFormFile File { get; set; }
+        public int RevisionId { get; set; }
+    }
+
+    public class EditCard
+    {
+        public bool IsCustomCard { get; set; }
+        public string Name { get; set; }
+        public int TypeId { get; set; }
+        public string Ability { get; set; }
+        public List<CardSet> CardSets { get; set; }
+        public int? LandscapeId { get; set; }
+        public int? Cost { get; set; }
+        public int? Attack { get; set; }
+        public int? Defense { get; set; }
+        public IFormFile Image { get; set; }
+        public string ImageUrl { get; set; }
         public int RevisionId { get; set; }
     }
 }

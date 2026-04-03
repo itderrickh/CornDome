@@ -41,7 +41,7 @@
                     @foreach (var feedbackRequest in Model.FeedbackRequests.OrderBy(x => x.CardId))
                     {
                         <tr>
-                            <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId" asp-route-revision="@feedbackRequest.RevisionId">Link</a></td>
+                            <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId">Link</a></td>
                             <td>@feedbackRequest.CardId</td>
                             <td>@feedbackRequest.RevisionId</td>
                             <td>@feedbackRequest.Feedback</td>

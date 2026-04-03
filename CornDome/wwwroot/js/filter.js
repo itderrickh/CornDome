@@ -41,7 +41,7 @@ function filterDataset(elements) {
         if (filterFunctions.set !== null && filterFunctions.set !== '') {
             var set = ele.dataset.set.toLowerCase();
             var filterSet = filterFunctions.set.toLowerCase()
-            actions.push(set === filterSet);
+            actions.push(set.indexOf(`#${filterSet}#`) > -1);
         }
 
         if (filterFunctions.burnToken) {

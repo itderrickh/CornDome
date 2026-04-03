@@ -15,8 +15,11 @@ namespace CornDome.Pages.CardManage
         [BindProperty]
         public AddCard AddCard { get; set; } = new();
 
+        public List<CardSet> AllSets { get; set; }
+
         public void OnGet()
         {
+            AllSets = cardRepository.GetAllSets();
         }
 
         public async Task<IActionResult> OnPost()
@@ -26,13 +29,15 @@ namespace CornDome.Pages.CardManage
                 return Page();
             }
 
+            var setIds = AddCard.SetIds.Split(',').Select(int.Parse).ToArray();
+            var sets = cardRepository.GetSetsByIds(setIds);
             var card = new Card() { IsCustomCard = AddCard.IsCustomCard };
             var revision = new CardRevision()
             {
                 Ability = AddCard.Ability,
                 Attack = AddCard.Attack,
                 Defense = AddCard.Defense,
-                SetId = AddCard.SetId,
+                CardSets = sets,
                 TypeId = AddCard.TypeId,
                 LandscapeId = AddCard.LandscapeId,
                 Cost = AddCard.Cost,
@@ -104,7 +109,7 @@ namespace CornDome.Pages.CardManage
         public string Name { get; set; }
         public int TypeId { get; set; }
         public string Ability { get; set; }
-        public int? SetId { get; set; }
+        public string SetIds { get; set; }
         public int? LandscapeId { get; set; }
         public int? Cost { get; set; }
         public int? Attack { get; set; }

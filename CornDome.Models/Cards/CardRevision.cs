@@ -12,7 +12,6 @@ namespace CornDome.Models.Cards
         public string Name { get; set; } = string.Empty;
         public int TypeId { get; set; }
         public string? Ability { get; set; }
-        public int? SetId { get; set; }
         public int? LandscapeId { get; set; }
         public int? Cost { get; set; }
         public int? Attack { get; set; }
@@ -21,7 +20,7 @@ namespace CornDome.Models.Cards
         public ICollection<CardImage> CardImages { get; set; } = [];
         [JsonIgnore]
         public Card Card { get; set; }
-        public CardSet CardSet { get; set; }
+        public ICollection<CardSet> CardSets { get; set; }
         public CardType CardType { get; set; }
         public Landscape Landscape { get; set; }
         public string Rulings { get; set; } = string.Empty;
