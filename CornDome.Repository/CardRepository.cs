@@ -15,6 +15,8 @@ namespace CornDome.Repository
         bool UpdateRevisionImage(CardRevision revision, string newImagePath, int cardImageTypeId);
         bool AddRevisionImage(CardImage cardImage);
         bool DeleteCard(int cardId);
+        List<CardSet> GetAllSets();
+        List<CardSet> GetSetsByIds(int[] ids);
     }
 
     public class CardRepository(CardDatabaseContext context, ICardChangeLogger logger) : ICardRepository
@@ -54,6 +56,16 @@ namespace CornDome.Repository
                 .Where(card => query.Contains(card.LatestRevision.Name));
 
             return filtered;
+        }
+
+        public List<CardSet> GetAllSets()
+        {
+            return [.. context.CardSets];
+        }
+
+        public List<CardSet> GetSetsByIds(int[] ids)
+        {
+            return [.. context.CardSets.Where(x => ids.Contains(x.Id))];
         }
 
         public bool UpdateRevisionRulings(Card card)

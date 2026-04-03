@@ -1,0 +1,50 @@
+﻿.tag-container {
+    border: 1px solid #ccc;
+    padding: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-radius: 6px;
+}
+
+.tag {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .tag button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+.tag-dropdown {
+    border: 1px solid #ccc;
+    margin-top: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    border-radius: 6px;
+}
+
+    .tag-dropdown div {
+        padding: 6px;
+        cursor: pointer;
+    }
+
+        .tag-dropdown div:hover {
+            background: #007bff;
+        }
+
+#tag-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    min-width: 120px;
+}
