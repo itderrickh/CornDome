@@ -15,8 +15,8 @@ function sortDataset() {
         const key = sort.by;
 
         if (intFields.includes(key)) {
-            let aVal = parseInt(aField.dataset[key], 10);
-            let bVal = parseInt(bField.dataset[key], 10);
+            let aVal = parseInt(aField.dataset[key].replace("#", ''), 10);
+            let bVal = parseInt(bField.dataset[key].replace("#", ''), 10);
 
             // Treat NaN as -1
             if (isNaN(aVal)) aVal = -1;
