@@ -38,6 +38,7 @@
             <div class="form-group mb-1 landscapeField">
                 <label>Landscape: </label>
                 <select class="form-control" asp-for="EditCard.LandscapeId">
+                    <option value="@null">-- Select a Landscape --</option>
                     <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
                     <option value="@((int)LandscapeEnum.CornField)">@LandscapeConverter.ToString(LandscapeEnum.CornField)</option>
                     <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
@@ -133,18 +134,38 @@
 }
 
 @section Scripts {
-    <script>
-        var availableFields = {
-            all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
-            creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
-            spell: ['abilityField', 'setField', 'costField', 'landscapeField'],
-            building: ['abilityField', 'setField', 'costField', 'landscapeField'],
-            hero: ['abilityField', 'setField'],
-            landscape: ['landscapeField'],
-            teamwork: ['abilityField', 'setField', 'costField', 'landscapeField'],
-            none: []
-        };
+    @if (User.IsInRole("Admin"))
+    {
+        <script>
+            var availableFields = {
+                all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                spell: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                building: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                hero: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                landscape: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                teamwork: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                none: []
+            };
+        </script>
+    }
+    else
+    {
+        <script>
+            var availableFields = {
+                all: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                creature: ['abilityField', 'setField', 'costField', 'attackField', 'defenseField', 'landscapeField'],
+                spell: ['abilityField', 'setField', 'costField', 'landscapeField'],
+                building: ['abilityField', 'setField', 'costField', 'landscapeField'],
+                hero: ['abilityField', 'setField'],
+                landscape: ['landscapeField'],
+                teamwork: ['abilityField', 'setField', 'costField', 'landscapeField'],
+                none: []
+            };
+        </script>
+    }
 
+    <script>
         function getFieldsToShow(value) {
             var fieldsToShow = 'all';
             switch (value) {
