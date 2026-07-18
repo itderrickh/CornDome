@@ -98,6 +98,7 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Index">Admin Panel</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-page="/Admin/ErrorLogs">Error Logs</a></li>
                                     }
                                     @if (User.IsInRole("Admin") || User.IsInRole("TournamentManager"))
                                     {

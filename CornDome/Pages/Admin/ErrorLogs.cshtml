@@ -1,0 +1,75 @@
+﻿@page
+@model CornDome.Pages.Admin.ErrorLogsModel
+
+<h1>Request Logs</h1>
+
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Status</th>
+            <th>Duration</th>
+            <th>User</th>
+            <th>IP</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var log in Model.Logs)
+        {
+            <tr>
+                <td>
+                    @log.Timestamp.ToLocalTime()
+                </td>
+                <td>
+                    @log.Method
+                </td>
+                <td>
+                    @log.Path
+                    @log.QueryString
+                </td>
+                <td>
+                    @if (log.StatusCode >= 500)
+                    {
+                        <span class="badge bg-danger">
+                            @log.StatusCode
+                        </span>
+                    }
+                    else if (log.StatusCode >= 400)
+                    {
+                        <span class="badge bg-warning">
+                            @log.StatusCode
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">
+                            @log.StatusCode
+                        </span>
+                    }
+                </td>
+                <td>
+                    @log.DurationMs ms
+                </td>
+                <td>
+                    @log.UserName
+                </td>
+                <td>
+                    @log.RemoteIp
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(log.Exception))
+                    {
+                        <button class="btn btn-sm btn-danger"
+                                onclick="alert('@log.Exception.Replace("'", "\\'")')">
+                            Error
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

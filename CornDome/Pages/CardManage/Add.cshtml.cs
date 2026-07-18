@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -6,11 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using System.Security.Claims;
 
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class AddModel(ICardRepository cardRepository, Config config) : PageModel
+    public class AddModel(ICardRepository cardRepository, ILogEntryRepository logEntryRepository, IUserRepository userRepository, Config config) : PageModel
     {
         [BindProperty]
         public AddCard AddCard { get; set; } = new();
@@ -28,6 +30,9 @@ namespace CornDome.Pages.CardManage
             {
                 return Page();
             }
+
+            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
             var setIds = AddCard.SetIds.Split(',').Select(int.Parse).ToArray();
             var sets = cardRepository.GetSetsByIds(setIds);
@@ -67,6 +72,16 @@ namespace CornDome.Pages.CardManage
                     RevisionId = addedCard.LatestRevision.Id
                 };
                 cardRepository.AddRevisionImage(cardImageSmall);
+            }
+            else
+            {
+                await logEntryRepository.InsertAsync(new LogEntry()
+                {
+                    Timestamp = DateTime.Now,
+                    Exception = $"Error inserting card {AddCard?.Name}",
+                    Method = "OnPost",
+                    UserName = loggedInUser?.UserName
+                });
             }
 
             return RedirectToPage("/CardManage/Index");

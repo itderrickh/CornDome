@@ -67,6 +67,7 @@ namespace CornDome
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             builder.Services.AddTransient<IDiscordRepository, DiscordRepository>();
             builder.Services.AddTransient<IBugReportRepository, BugReportRepository>();
+            builder.Services.AddTransient<ILogEntryRepository, LogEntryRepository>();
 
             string clientId = "";
             string clientSecret = "";
@@ -157,6 +158,7 @@ namespace CornDome
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ErrorLoggerMiddleware>();
             app.MapRazorPages();
 
             app.Run();

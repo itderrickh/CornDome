@@ -14,6 +14,7 @@ namespace CornDome.Repository
         public DbSet<PlayAvailability> PlayAvailabilities { get; set; }
         public DbSet<PlayPreferences> PlayPreferences { get; set; }
         public DbSet<BugReport> BugReports { get; set; }
+        public DbSet<LogEntry> LogEntries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +33,7 @@ namespace CornDome.Repository
             modelBuilder.Entity<Role>();
             modelBuilder.Entity<FeedbackRequest>();
             modelBuilder.Entity<BugReport>();
+            modelBuilder.Entity<LogEntry>();
 
             modelBuilder.Entity<PlayAvailability>()
                 .HasOne(c => c.User)
