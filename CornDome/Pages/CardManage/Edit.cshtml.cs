@@ -93,7 +93,7 @@ namespace CornDome.Pages.CardManage
                         {
                             CardImageTypeId = (int)CardImageTypeEnum.Small,
                             ImageUrl = smallImagePath,
-                            RevisionId = imageToUpload.RevisionId
+                            RevisionId = cardRevision.Id
                         };
                         isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
                     }
@@ -116,7 +116,6 @@ namespace CornDome.Pages.CardManage
                 card.LatestRevision.CardSets = setsToUpdate;
 
                 isSuccess = cardRepository.UpdateCardAndRevisions(card);
-                isSuccess = true;
             }
 
             if (isSuccess)
@@ -198,8 +197,7 @@ namespace CornDome.Pages.CardManage
 
     public class ImageUpload
     {
-        public IFormFile File { get; set; }
-        public int RevisionId { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class EditCard
