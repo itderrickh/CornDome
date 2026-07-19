@@ -28,8 +28,7 @@
                     @log.Method
                 </td>
                 <td>
-                    @log.Path
-                    @log.QueryString
+                    @(log.Path + log.QueryString)
                 </td>
                 <td>
                     @if (log.StatusCode >= 500)
