@@ -6,9 +6,11 @@ using CornDome.Repository.Tournaments;
 using CornDome.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System.Net;
 
 namespace CornDome
 {
@@ -106,6 +108,16 @@ namespace CornDome
                 options.ClientSecret = clientSecret;
             });
 
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+
+                // Only if you trust the proxy and need to clear defaults:
+                options.KnownProxies.Add(IPAddress.Parse("127.0.0.1"));
+            });
+
             builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
 
             builder.Services.AddIdentity<User, Role>(options =>
@@ -155,6 +167,7 @@ namespace CornDome
                 RequestPath = "/CardImages"
             });
 
+            app.UseForwardedHeaders();
             app.UseMiddleware<ErrorLoggerMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
