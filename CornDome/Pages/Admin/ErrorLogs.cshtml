@@ -63,8 +63,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(log.Exception))
                     {
-                        <button class="btn btn-sm btn-danger"
-                                onclick="alert('@log.Exception.Replace("'", "\\'")')">
+                        <button class="btn btn-sm btn-danger" title="@log.Exception">
                             Error
                         </button>
                     }
