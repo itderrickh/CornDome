@@ -136,12 +136,12 @@ namespace CornDome
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                //app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Errors/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            //app.UseStatusCodePagesWithRedirects("/Errors/Error{0}");
+            app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -155,10 +155,10 @@ namespace CornDome
                 RequestPath = "/CardImages"
             });
 
+            app.UseMiddleware<ErrorLoggerMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<ErrorLoggerMiddleware>();
             app.MapRazorPages();
 
             app.Run();

@@ -1,0 +1,20 @@
+﻿@page
+@model CornDome.Pages.Errors.ErrorModel
+
+<h1>Something went wrong</h1>
+
+<p>
+    An unexpected error occurred.
+</p>
+
+<p>Exception: @Model.Exception.Message</p>
+<div>
+    Stack Trace: @Model.Exception.InnerException
+</div>
+
+@if (Model.RequestId != null)
+{
+    <p>
+        Request ID: @Model.RequestId
+    </p>
+}

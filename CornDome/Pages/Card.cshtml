@@ -1,13 +1,16 @@
 ﻿@page
 @model CornDome.Pages.CardModel
 @{
-    ViewData["Title"] = Model.QueryCard.LatestRevision.Name;
-
-    var selectedRevision = Model.QueryCard.LatestRevision;
-    if (Model.RevisionId != null)
+    if (Model.QueryCard == null)
     {
-        selectedRevision = Model.QueryCard.Revisions.FirstOrDefault(x => x.Id == Model.RevisionId);
+        ViewData["Title"] = "Invalid card ID";
     }
+    else
+    {
+        ViewData["Title"] = Model.QueryCard?.LatestRevision.Name;
+    }
+
+    
 }
 
 @if (Model.QueryCard == null)
@@ -16,6 +19,7 @@
 }
 else
 {
+    var selectedRevision = Model.QueryCard.LatestRevision;
     <div>
         <h1>@selectedRevision.Name</h1>
     </div>

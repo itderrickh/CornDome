@@ -27,13 +27,15 @@ namespace CornDome.Helpers
                     Method = context.Request.Method,
                     Path = context.Request.Path,
                     QueryString = context.Request.QueryString.Value,
-                    StatusCode = context.Response.StatusCode,
+                    StatusCode = StatusCodes.Status500InternalServerError,
                     DurationMs = stopwatch.ElapsedMilliseconds,
                     UserName = context.User.Identity?.Name,
                     RemoteIp = context.Connection.RemoteIpAddress?.ToString(),
                     UserAgent = context.Request.Headers.UserAgent.ToString(),
                     Exception = ex?.ToString()
                 });
+
+                throw;
             }
         }
     }
