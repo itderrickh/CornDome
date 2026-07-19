@@ -106,6 +106,7 @@
                         <th>Description</th>
                         <th>Steps</th>
                         <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,6 +117,7 @@
                             <td>@bug?.User?.UserName</td>
                             <td>@bug.Description</td>
                             <td>@bug.Steps</td>
+                            <td>@bug.CreatedAt</td>
                             <td>
                                 <form method="post" asp-page-handler="RemoveBug" class="d-inline">
                                     <input type="text" name="RemoveBugId" value="@bug.Id" class="d-none" />
