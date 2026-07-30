@@ -34,6 +34,7 @@ namespace CornDome.Models.Cards
         DarklandsExpansion = 15,
         CustomCards = 16,
         LandOfLegends = 17,
+        Kickstarter3 = 18,
     }
 
     public static class SetConverter
@@ -60,6 +61,7 @@ namespace CornDome.Models.Cards
                 Set.DarklandsExpansion => "DarkLands Expansion",
                 Set.CustomCards => "Custom Community Cards",
                 Set.LandOfLegends => "Land of Legends",
+                Set.Kickstarter3 => "Kickstarter #3",
                 _ => "",
             };
         }
@@ -86,6 +88,7 @@ namespace CornDome.Models.Cards
                 Set.DarklandsExpansion => "dl1",
                 Set.CustomCards => "custom",
                 Set.LandOfLegends => "lol",
+                Set.Kickstarter3 => "ks3",
                 _ => "",
             };
         }
