@@ -218,28 +218,27 @@ function getDeckTextUntapGG() {
 
     var template = "";
     if (deck.hero !== null) {
-        //template += '1 ' + deck.hero.name + ' (CWDB)\n';
         template += '1 ' + deck.hero.name + '\n';
     } else {
         template += "\n";
     }
 
-    Object.keys(landscapes).forEach(x => template += `${landscapes[x]} ${x} (CWDB)\n`);
+    Object.keys(landscapes).forEach(x => template += `${landscapes[x]} ${x}\n`);
 
     if (Object.keys(creatures).length > 0) {
-        Object.keys(creatures).forEach(x => template += `${creatures[x]} ${x} (CWDB)\n`);
+        Object.keys(creatures).forEach(x => template += `${creatures[x]} ${x}\n`);
     }
 
     if (Object.keys(spells).length > 0) {
-        Object.keys(spells).forEach(x => template += `${spells[x]} ${x} (CWDB)\n`);
+        Object.keys(spells).forEach(x => template += `${spells[x]} ${x}\n`);
     }
 
     if (Object.keys(buildings).length > 0) {
-        Object.keys(buildings).forEach(x => template += `${buildings[x]} ${x} (CWDB)\n`);
+        Object.keys(buildings).forEach(x => template += `${buildings[x]} ${x}\n`);
     }
 
     if (Object.keys(teamworks).length > 0) {
-        Object.keys(teamworks).forEach(x => template += `${teamworks[x]} ${x} (CWDB)\n`);
+        Object.keys(teamworks).forEach(x => template += `${teamworks[x]} ${x}\n`);
     }
 
 
