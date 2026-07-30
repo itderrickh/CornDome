@@ -21,8 +21,8 @@
         @foreach (var log in Model.Logs)
         {
             <tr>
-                <td>
-                    @log.Timestamp.ToLocalTime()
+                <td title="@log.Timestamp.ToLocalTime()">
+                    @log.Timestamp.ToShortDateString()
                 </td>
                 <td>
                     @log.Method
@@ -71,3 +71,17 @@
         }
     </tbody>
 </table>
+
+@section Styles {
+    <style>
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            overflow-wrap: break-word;
+        }
+    </style>
+}
