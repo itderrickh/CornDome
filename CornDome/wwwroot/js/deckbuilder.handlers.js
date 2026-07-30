@@ -218,7 +218,8 @@ function getDeckTextUntapGG() {
 
     var template = "";
     if (deck.hero !== null) {
-        template += '1 ' + deck.hero.name + ' (CWDB)\n';
+        //template += '1 ' + deck.hero.name + ' (CWDB)\n';
+        template += '1 ' + deck.hero.name + '\n';
     } else {
         template += "\n";
     }
