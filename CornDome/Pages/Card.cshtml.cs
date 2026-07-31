@@ -19,12 +19,15 @@ namespace CornDome.Pages
         public void OnGet()
         {
             var queryId = Request.Query["id"];
-            QueryCard = _cardRepository.GetCard(int.Parse(queryId));
 
-            var revisionNumber = Request.Query["revision"];
-            var gotRevision = int.TryParse(revisionNumber, out int rev);
-            if (gotRevision)
-                RevisionId = rev;
+            if (int.TryParse(queryId, out int cardId))
+            {
+                QueryCard = _cardRepository.GetCard(cardId);
+                var revisionNumber = Request.Query["revision"];
+                var gotRevision = int.TryParse(revisionNumber, out int rev);
+                if (gotRevision)
+                    RevisionId = rev;
+            }
         }
 
         public IActionResult OnPostFeedback([FromBody] FeedbackRequest feedbackRequest)
