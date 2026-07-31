@@ -115,12 +115,30 @@
                     var cell2 = row.insertCell(1);
 
                     if (isGzipBase64(allDecks[i].content)) {
-                        var linkContent = `<a href="/Deck?gzdeck=${encodeURIComponent(allDecks[i].content)}" target="_blank">Link</a>`;
-                        cell2.innerHTML = linkContent;
+                        // Trying to fix a bug that pops up for a select user
+                        //var content = encodeURIComponent(allDecks[i].content);
+                        //var linkContent = `<a href="/Deck?gzdeck=${content}" target="_blank">Link</a>`;
+                        //cell2.innerHTML = linkContent;
+
+                        const a = document.createElement("a");
+                        a.href = "/Deck?gzdeck=" + encodeURIComponent(allDecks[i].content);
+                        a.target = "_blank";
+                        a.textContent = "Link";
+
+                        cell2.replaceChildren(a);
                     }
                     else {
-                        var linkContent = `<a href="/Deck?deck=${allDecks[i].content}" target="_blank">Link</a>`;
-                        cell2.innerHTML = linkContent;
+                        // Trying to fix a bug that pops up for a select user
+                        //var content = allDecks[i].content;
+                        //var linkContent = `<a href="/Deck?deck=${content}" target="_blank">Link</a>`;
+                        //cell2.innerHTML = linkContent;
+
+                        const a = document.createElement("a");
+                        a.href = "/Deck?deck=" + allDecks[i].content;
+                        a.target = "_blank";
+                        a.textContent = "Link";
+
+                        cell2.replaceChildren(a);
                     }
 
                     var cell3 = row.insertCell(2);
