@@ -10,12 +10,10 @@ namespace CornDome.Repository
 
     public class LogEntryRepository(MainContext context) : ILogEntryRepository
     {
-        private readonly MainContext _context = context;
-
         public async Task InsertAsync(LogEntry log)
         {
-            _context.LogEntries.Add(log);
-            await _context.SaveChangesAsync();
+            context.LogEntries.Add(log);
+            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<LogEntry>> GetLogs()

@@ -1,6 +1,5 @@
 ﻿using CornDome.Models;
 using CornDome.Models.Users;
-using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.Text.Json;
 

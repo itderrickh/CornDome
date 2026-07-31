@@ -11,7 +11,7 @@ namespace CornDome.Models.Cards
         public int CardId { get; set; }
         public string Name { get; set; } = string.Empty;
         public int TypeId { get; set; }
-        public string? Ability { get; set; }
+        public string Ability { get; set; } = string.Empty;
         public int? LandscapeId { get; set; }
         public int? Cost { get; set; }
         public int? Attack { get; set; }

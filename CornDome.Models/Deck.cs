@@ -1,6 +1,5 @@
 ﻿using CornDome.Models.Cards;
 using System.IO.Compression;
-using System.Text;
 
 namespace CornDome.Models
 {

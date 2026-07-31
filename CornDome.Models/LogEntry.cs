@@ -6,12 +6,12 @@
         public DateTime Timestamp { get; set; }
         public string Method { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
-        public string? QueryString { get; set; }
+        public string QueryString { get; set; } = string.Empty;
         public int StatusCode { get; set; }
         public long DurationMs { get; set; }
-        public string? UserName { get; set; }
-        public string? RemoteIp { get; set; }
-        public string? UserAgent { get; set; }
-        public string? Exception { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string RemoteIp { get; set; } = string.Empty;
+        public string UserAgent { get; set; } = string.Empty;
+        public string Exception { get; set; } = string.Empty;
     }
 }

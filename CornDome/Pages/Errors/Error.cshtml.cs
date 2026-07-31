@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
 
@@ -7,7 +6,7 @@ namespace CornDome.Pages.Errors
 {
     public class ErrorModel : PageModel
     {
-        public string? RequestId { get; set; }
+        public string RequestId { get; set; } = string.Empty;
         public Exception Exception { get; set; }
 
         public void OnGet()
