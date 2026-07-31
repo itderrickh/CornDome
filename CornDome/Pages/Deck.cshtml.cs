@@ -17,7 +17,9 @@ namespace CornDome.Pages
             Cards = _cardRepository.GetAll();
 
             if (Request.QueryString.HasValue)
+            {
                 BuildDeckFromQuery();
+            }
         }
 
         private void BuildDeckFromQuery()
