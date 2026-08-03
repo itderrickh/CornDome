@@ -59,8 +59,8 @@ namespace CornDome.Repository.Discord
                 }
                 catch
                 {
-                    // Access token cannot be decrypted.
-                    // Fall through and attempt to refresh it.
+                    throw new ReconnectException(
+                    "The Discord token could not be decrypted. The user must reconnect their Discord account.");
                 }
             }
 
