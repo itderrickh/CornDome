@@ -27,7 +27,7 @@ namespace CornDome.Pages.Play
         public List<AvailabilityDayVm> Days { get; set; } = new();
     }
 
-    public class SettingsModel(IDiscordRepository discordRepository, IUserRepository userRepository) : PageModel
+    public class SettingsModel(Config config, IDiscordRepository discordRepository, IUserRepository userRepository) : PageModel
     {
         public DiscordConnection DiscordConnection { get; set; }
         public bool IsUserInServer { get; set; }
@@ -41,36 +41,60 @@ namespace CornDome.Pages.Play
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
-            DiscordConnection = await discordRepository.GetDiscordConnection(loggedInUser.Id);
-            IsUserInServer = await discordRepository.IsUserInGuildAsync(DiscordConnection);
+            DiscordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 
-            var preferences = await discordRepository.GetPlayPreferences(loggedInUser.Id);
-            var availabilities = await discordRepository.GetPlayAvailabilities(loggedInUser.Id);
-
-            Form = new PlayPreferencesForm
+            try
             {
-                TimeZone = preferences?.TimeZone ?? "",
-                AddressMeAs = preferences?.AddressMeAs ?? "",
-                GameFormat = preferences?.GameFormat ?? "",
-                Platform = preferences?.Platform ?? "",
-                Pronouns = preferences?.Pronouns ?? "",
-                WantsToPlay = preferences?.WantsToPlay ?? false
-            };
+                IsUserInServer = await discordRepository.IsUserInGuildAsync(DiscordConnection);
 
-            foreach (DayOfWeek day in Enum.GetValues<DayOfWeek>())
-            {
-                var match = availabilities.FirstOrDefault(x => x.Day == day);
+                var preferences = await discordRepository.GetPlayPreferences(loggedInUser.Id);
+                var availabilities = await discordRepository.GetPlayAvailabilities(loggedInUser.Id);
 
-                Form.Days.Add(new AvailabilityDayVm
+                Form = new PlayPreferencesForm
                 {
-                    Day = day,
-                    IsAvailable = match?.IsAvailable ?? false,
-                    Start = match?.StartTime ?? TimeOnly.Parse("5:00 PM"),
-                    End = match?.EndTime ?? TimeOnly.Parse("8:00 PM")
-                });
-            }
+                    TimeZone = preferences?.TimeZone ?? "",
+                    AddressMeAs = preferences?.AddressMeAs ?? "",
+                    GameFormat = preferences?.GameFormat ?? "",
+                    Platform = preferences?.Platform ?? "",
+                    Pronouns = preferences?.Pronouns ?? "",
+                    WantsToPlay = preferences?.WantsToPlay ?? false
+                };
 
-            return Page();
+                foreach (DayOfWeek day in Enum.GetValues<DayOfWeek>())
+                {
+                    var match = availabilities.FirstOrDefault(x => x.Day == day);
+
+                    Form.Days.Add(new AvailabilityDayVm
+                    {
+                        Day = day,
+                        IsAvailable = match?.IsAvailable ?? false,
+                        Start = match?.StartTime ?? TimeOnly.Parse("5:00 PM"),
+                        End = match?.EndTime ?? TimeOnly.Parse("8:00 PM")
+                    });
+                }
+
+                return Page();
+            }
+            catch (ReconnectException ex)
+            {
+                return RedirectToReconnect();
+            }
+        }
+
+        public IActionResult RedirectToReconnect()
+        {
+            var clientId = config.DiscordClient.ClientId;
+
+            var redirectUrl = Url.Page("/Play/Callback", pageHandler: null, values: null, protocol: Request.Scheme);
+
+            var url =
+                $"https://discord.com/api/oauth2/authorize" +
+                $"?client_id={clientId}" +
+                $"&redirect_uri={redirectUrl}" +
+                $"&response_type=code" +
+                $"&scope=guilds+email+identify";
+
+            return Redirect(url);
         }
 
         public async Task<IActionResult> OnPostAsync()

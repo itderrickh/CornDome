@@ -5,12 +5,20 @@ using System.Text.Json;
 
 namespace CornDome.Repository.Discord
 {
+    public class ReconnectException : Exception
+    {
+        public ReconnectException(string message)
+            : base(message)
+        {
+        }
+    }
+
     public interface IDiscordRepository
     {
         Task<bool> IsUserInGuildAsync(DiscordConnection connection);
         Task<bool> AddDiscordConnection(DiscordConnection connection);
         Task<string> GetValidAccessTokenAsync(DiscordConnection connection);
-        Task<DiscordConnection> GetDiscordConnection(int userId);
+        DiscordConnection? GetDiscordConnection(int userId);
         Task<bool> RemoveDiscordConnection(DiscordConnection connection);
 
         Task<IEnumerable<PlayAvailability>> GetPlayAvailabilities(int userId);
@@ -40,50 +48,78 @@ namespace CornDome.Repository.Discord
 
         public async Task<string> GetValidAccessTokenAsync(DiscordConnection conn)
         {
+            ArgumentNullException.ThrowIfNull(conn);
+
+            // Try to use the current access token if it hasn't expired.
             if (conn.TokenExpiresAt > DateTime.UtcNow.AddMinutes(1))
-                return tokenProtector.Unprotect(conn.EncryptedAccessToken);
+            {
+                try
+                {
+                    return tokenProtector.Unprotect(conn.EncryptedAccessToken);
+                }
+                catch
+                {
+                    // Access token cannot be decrypted.
+                    // Fall through and attempt to refresh it.
+                }
+            }
+
+            string refreshToken;
+            try
+            {
+                refreshToken = tokenProtector.Unprotect(conn.EncryptedRefreshToken);
+            }
+            catch (Exception ex)
+            {
+                throw new ReconnectException(
+                    "The Discord refresh token could not be decrypted. The user must reconnect their Discord account.");
+            }
 
             var client = await apiClient.GetHttpClient();
             var discordConfig = apiClient.GetDiscordConfiguration();
 
-            var res = await client.PostAsync(
+            var response = await client.PostAsync(
                 "https://discord.com/api/oauth2/token",
                 new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     ["client_id"] = discordConfig.ClientId,
                     ["client_secret"] = discordConfig.ClientSecret,
                     ["grant_type"] = "refresh_token",
-                    ["refresh_token"] = tokenProtector.Unprotect(conn.EncryptedRefreshToken)
-                })
-            );
+                    ["refresh_token"] = refreshToken
+                }));
 
-            var json = JsonDocument.Parse(await res.Content.ReadAsStringAsync()).RootElement;
+            var body = await response.Content.ReadAsStringAsync();
 
-            conn.EncryptedAccessToken =
-                tokenProtector.Protect(json.GetProperty("access_token").GetString());
-            conn.EncryptedRefreshToken =
-                tokenProtector.Protect(json.GetProperty("refresh_token").GetString());
-            conn.TokenExpiresAt =
-                DateTime.UtcNow.AddSeconds(json.GetProperty("expires_in").GetInt32());
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ReconnectException(
+                    $"Discord token refresh failed ({(int)response.StatusCode}): {body}");
+            }
+
+            using var document = JsonDocument.Parse(body);
+            var json = document.RootElement;
+
+            var accessToken = json.GetProperty("access_token").GetString()
+                ?? throw new ReconnectException("Discord did not return an access token.");
+
+            conn.EncryptedAccessToken = tokenProtector.Protect(accessToken);
+
+            if (json.TryGetProperty("refresh_token", out var refreshProperty))
+            {
+                var newRefreshToken = refreshProperty.GetString();
+                if (!string.IsNullOrWhiteSpace(newRefreshToken))
+                {
+                    conn.EncryptedRefreshToken = tokenProtector.Protect(newRefreshToken);
+                }
+            }
+
+            conn.TokenExpiresAt = DateTime.UtcNow.AddSeconds(
+                json.GetProperty("expires_in").GetInt32());
 
             await context.SaveChangesAsync();
 
-            return tokenProtector.Unprotect(conn.EncryptedAccessToken);
+            return accessToken;
         }
-
-        public async Task<bool> RefreshAccessToken(DiscordConnection discordConnection)
-        {
-            try
-            {
-                await GetValidAccessTokenAsync(discordConnection);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
 
         public async Task<bool> IsUserInGuildAsync(DiscordConnection connection)
         {
@@ -112,7 +148,7 @@ namespace CornDome.Repository.Discord
             return false;
         }
 
-        public async Task<DiscordConnection> GetDiscordConnection(int userId)
+        public DiscordConnection? GetDiscordConnection(int userId)
         {
             return context.DiscordConnections.FirstOrDefault(x => x.UserId == userId);
         }

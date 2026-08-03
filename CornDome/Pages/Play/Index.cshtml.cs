@@ -15,7 +15,7 @@ namespace CornDome.Pages.Play
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
-            var discordConnection = await discordRepository.GetDiscordConnection(loggedInUser.Id);
+            var discordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 
             if (discordConnection == null)
             {

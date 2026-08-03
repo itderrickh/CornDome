@@ -55,7 +55,7 @@ public class CallbackModel(
         var discordUserId = userJson.GetProperty("id").GetString();
         var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var existing = await discordRepository.GetDiscordConnection(int.Parse(appUserId));
+        var existing = discordRepository.GetDiscordConnection(int.Parse(appUserId));
 
         if (existing != null && existing.UserId != int.Parse(appUserId))
             return Forbid(); // Discord already linked to another account
@@ -75,6 +75,14 @@ public class CallbackModel(
 
         if (existing == null)
         {
+            var result = await discordRepository.AddDiscordConnection(entity);
+            if (!result)
+                return RedirectToPage("/Error");
+        }
+        else
+        {
+            // Re-add a new connection because old one is bad for whatever reason
+            await discordRepository.RemoveDiscordConnection(existing);
             var result = await discordRepository.AddDiscordConnection(entity);
             if (!result)
                 return RedirectToPage("/Error");

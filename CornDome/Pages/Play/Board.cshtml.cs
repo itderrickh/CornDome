@@ -30,43 +30,55 @@ namespace CornDome.Pages.Play
             var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
 
-            DiscordConnection = await discordRepository.GetDiscordConnection(loggedInUser.Id);
+            DiscordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 
             if (DiscordConnection == null)
             {
-                var clientId = config.DiscordClient.ClientId;
-
-                var redirectUrl = Url.Page("/Play/Callback", pageHandler: null, values: null, protocol: Request.Scheme);
-
-                var url =
-                    $"https://discord.com/api/oauth2/authorize" +
-                    $"?client_id={clientId}" +
-                    $"&redirect_uri={redirectUrl}" +
-                    $"&response_type=code" +
-                    $"&scope=guilds+email+identify";
-
-                return Redirect(url);
+                return RedirectToReconnect();
             }
             else
             {
-                IsUserInServer = await discordRepository.IsUserInGuildAsync(DiscordConnection);
-
-                var activePlayPreferences = await discordRepository.GetAllActivePlayPreferences();
-
-                Board.PlayPreferences = [.. activePlayPreferences];
-                foreach (var app in activePlayPreferences)
+                try
                 {
-                    var avails = await discordRepository.GetPlayAvailabilities(app.UserId);
-                    Board.Availability[app.UserId] = [.. avails];
+                    IsUserInServer = await discordRepository.IsUserInGuildAsync(DiscordConnection);
 
-                    var dc = await discordRepository.GetDiscordConnection(app.UserId);
-                    Board.UserTable[app.UserId] = dc;
+                    var activePlayPreferences = await discordRepository.GetAllActivePlayPreferences();
+
+                    Board.PlayPreferences = [.. activePlayPreferences];
+                    foreach (var app in activePlayPreferences)
+                    {
+                        var avails = await discordRepository.GetPlayAvailabilities(app.UserId);
+                        Board.Availability[app.UserId] = [.. avails];
+
+                        var dc = discordRepository.GetDiscordConnection(app.UserId);
+                        Board.UserTable[app.UserId] = dc;
+                    }
+
+                    AmIOnTheBoard = activePlayPreferences.FirstOrDefault(x => x.UserId == loggedInUser.Id) != null;
+
+                    return Page();
                 }
-
-                AmIOnTheBoard = activePlayPreferences.FirstOrDefault(x => x.UserId == loggedInUser.Id) != null;
-
-                return Page();
+                catch (ReconnectException ex)
+                {
+                    return RedirectToReconnect();
+                }
             }
+        }
+
+        public IActionResult RedirectToReconnect()
+        {
+            var clientId = config.DiscordClient.ClientId;
+
+            var redirectUrl = Url.Page("/Play/Callback", pageHandler: null, values: null, protocol: Request.Scheme);
+
+            var url =
+                $"https://discord.com/api/oauth2/authorize" +
+                $"?client_id={clientId}" +
+                $"&redirect_uri={redirectUrl}" +
+                $"&response_type=code" +
+                $"&scope=guilds+email+identify";
+
+            return Redirect(url);
         }
     }
 }

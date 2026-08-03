@@ -11,7 +11,7 @@ namespace CornDome.Pages.Play
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var conn = await discordRepository.GetDiscordConnection(int.Parse(userId));
+            var conn = discordRepository.GetDiscordConnection(int.Parse(userId));
 
             if (conn == null)
                 return RedirectToPage("/Account/Connections");
