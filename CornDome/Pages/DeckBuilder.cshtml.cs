@@ -11,13 +11,23 @@ namespace CornDome.Pages
         public IEnumerable<Card> Cards { get; set; }
         public Deck QueryDeck { get; set; } = null;
         public string BaseUrl { get; set; } = config.BaseUrl;
+        public bool QueryBuildFailed { get; set; } = false;
 
         public void OnGet()
         {
             Cards = _cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
-                BuildDeckFromQuery();
+            try
+            {
+                if (Request.QueryString.HasValue)
+                {
+                    BuildDeckFromQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                QueryBuildFailed = true;
+            }
         }
 
         private void BuildDeckFromQuery()

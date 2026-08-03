@@ -4,6 +4,14 @@
     ViewData["RenderMode"] = "wide";
     ViewData["Title"] = "Deck Builder";
 }
+
+@if (Model.QueryBuildFailed)
+{
+    <div class="mb-1">
+        <h2>Deck could not be built from the URL provided. Please submit a <a asp-page="/ReportABug">bug report</a> with details about how you received this link so we can investigate.</h2>
+    </div>
+}
+
 <div class="builder-area">
     <div class="tool-area">
         <fieldset class="stats">
