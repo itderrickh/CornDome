@@ -145,6 +145,8 @@ namespace CornDome
 
             var app = builder.Build();
 
+            app.UseForwardedHeaders();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -167,7 +169,6 @@ namespace CornDome
                 RequestPath = "/CardImages"
             });
 
-            app.UseForwardedHeaders();
             app.UseMiddleware<ErrorLoggerMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
