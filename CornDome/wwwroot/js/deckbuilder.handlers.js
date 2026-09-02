@@ -276,11 +276,6 @@ document.getElementById("permalinkExport").onclick = function () {
     alert('Copied to clipboard!');
 };
 
-document.getElementById("tryoutButton").onclick = function () {
-    var newURL = window.location.protocol + "//" + window.location.host + "/Goldfish" + window.location.search;
-    window.location.href = newURL;
-}
-
 document.getElementById("saveButton").onclick = async function () {
     var query = new URLSearchParams(document.location.search);
     var deck = query.get("deck");
