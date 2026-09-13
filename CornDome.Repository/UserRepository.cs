@@ -10,6 +10,7 @@ namespace CornDome.Repository
         Task<User> GetUserById(int id);
         Task<User> GetUserByUsername(string username);
         Task<IEnumerable<User>> GetAll();
+        Task<bool> LoginSuccess(User user);
     }
 
     public class UserRepository(MainContext context) : IUserRepository
@@ -66,6 +67,22 @@ namespace CornDome.Repository
         public async Task<IEnumerable<User>> GetAll()
         {
             return context.Users;
+        }
+
+        public async Task<bool> LoginSuccess(User user)
+        {
+            try
+            {
+                var dbUser = context.Users.FirstOrDefault(x => x.Id == user.Id);
+                dbUser?.LastLogin = DateTime.UtcNow;
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

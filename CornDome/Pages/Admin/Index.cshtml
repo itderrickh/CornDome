@@ -49,6 +49,7 @@
                         <th>Id</th>
                         <th>Email</th>
                         <th>Username</th>
+                        <th>Last Login</th>
                         <th>Roles</th>
                     </tr>
                 </thead>
@@ -59,6 +60,7 @@
                             <td>@user.Id</td>
                             <td>@user.Email</td>
                             <td>@user.UserName</td>
+                            <td>@user.LastLogin</td>
                             <td>
                                 <ul>
                                     <form method="post" asp-page-handler="AddRole">

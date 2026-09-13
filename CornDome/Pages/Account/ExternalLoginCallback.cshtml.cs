@@ -57,6 +57,7 @@ namespace CornDome.Pages.Account
 
             // If the user is found, sign them in
             await signInManager.SignInAsync(user, isPersistent: false);
+            await userRepository.LoginSuccess(user);
 
             // Redirect the user to their return URL or default page
             return RedirectToLocal(returnUrl);
