@@ -75,7 +75,7 @@ namespace CornDome.Pages.Play
 
                 return Page();
             }
-            catch (ReconnectException ex)
+            catch (ReconnectException)
             {
                 return RedirectToReconnect();
             }

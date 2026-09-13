@@ -18,7 +18,7 @@ namespace CornDome.Repository.Discord
         Task<bool> IsUserInGuildAsync(DiscordConnection connection);
         Task<bool> AddDiscordConnection(DiscordConnection connection);
         Task<string> GetValidAccessTokenAsync(DiscordConnection connection);
-        DiscordConnection? GetDiscordConnection(int userId);
+        DiscordConnection GetDiscordConnection(int userId);
         Task<bool> RemoveDiscordConnection(DiscordConnection connection);
 
         Task<IEnumerable<PlayAvailability>> GetPlayAvailabilities(int userId);
@@ -69,7 +69,7 @@ namespace CornDome.Repository.Discord
             {
                 refreshToken = tokenProtector.Unprotect(conn.EncryptedRefreshToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ReconnectException(
                     "The Discord refresh token could not be decrypted. The user must reconnect their Discord account.");
@@ -148,7 +148,7 @@ namespace CornDome.Repository.Discord
             return false;
         }
 
-        public DiscordConnection? GetDiscordConnection(int userId)
+        public DiscordConnection GetDiscordConnection(int userId)
         {
             return context.DiscordConnections.FirstOrDefault(x => x.UserId == userId);
         }

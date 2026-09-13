@@ -24,7 +24,7 @@ namespace CornDome.Pages
                     BuildDeckFromQuery();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 QueryBuildFailed = true;
             }
