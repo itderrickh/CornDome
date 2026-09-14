@@ -1,14 +1,17 @@
+using CornDome.Models.Cards;
+using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages
 {
-    public class IndexModel(IConfiguration config, ILogger<IndexModel> logger) : PageModel
+    public class IndexModel(Config config, ICardRepository cardRepository) : PageModel
     {
-        private readonly ILogger<IndexModel> _logger = logger;
-        private readonly IConfiguration _config = config;
+        public Card CardOfTheDay { get; set; }
+        public string BaseUrl { get; set; } = config.BaseUrl;
 
         public void OnGet()
         {
+            CardOfTheDay = cardRepository.GetCardOfTheDay(DateTime.Now);
         }
     }
 }

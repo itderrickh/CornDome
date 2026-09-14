@@ -17,6 +17,7 @@ namespace CornDome.Repository
         bool DeleteCard(int cardId);
         List<CardSet> GetAllSets();
         List<CardSet> GetSetsByIds(int[] ids);
+        Card GetCardOfTheDay(DateTime day);
     }
 
     public class CardRepository(CardDatabaseContext context, ICardChangeLogger logger) : ICardRepository
@@ -356,6 +357,20 @@ namespace CornDome.Repository
             }
 
             return deleteSuccess;
+        }
+
+        public Card GetCardOfTheDay(DateTime day)
+        {
+            var cards = GetAll().ToList();
+
+            if (cards.Count == 0)
+                return null;
+
+            int seed = day.Year * 10000 + day.Month * 100 + day.Day;
+
+            var random = new Random(seed);
+
+            return cards[random.Next(cards.Count)];
         }
     }
 }
