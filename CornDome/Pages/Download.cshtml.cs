@@ -159,11 +159,11 @@ namespace CornDome.Pages
             var nonGZDeck = Request.Query["deck"];
             var gzDeck = Request.Query["gzdeck"];
 
-            if (string.IsNullOrWhiteSpace(nonGZDeck))
+            if (!string.IsNullOrWhiteSpace(gzDeck))
             {
                 QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
             }
-            else if (string.IsNullOrWhiteSpace(gzDeck))
+            else if (!string.IsNullOrWhiteSpace(nonGZDeck))
             {
                 QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
             }
