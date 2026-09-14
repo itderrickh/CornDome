@@ -45,6 +45,11 @@ namespace CornDome.Pages.Play
 
             try
             {
+                if (DiscordConnection == null)
+                {
+                    return RedirectToReconnect();
+                }
+
                 IsUserInServer = await discordRepository.IsUserInGuildAsync(DiscordConnection);
 
                 var preferences = await discordRepository.GetPlayPreferences(loggedInUser.Id);
