@@ -145,9 +145,12 @@ namespace CornDome.Pages
             {
                 BuildDeckFromQuery();
 
-                var image = CreateCoordinates();
+                if (!IsInvalid)
+                {
+                    var image = CreateCoordinates();
 
-                return File(image, "image/png", "download.png");
+                    return File(image, "image/png", "download.png");
+                }
             }
 
             IsInvalid = true;
