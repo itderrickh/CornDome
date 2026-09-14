@@ -1,5 +1,13 @@
 ﻿@page
 @model CornDome.Pages.DownloadModel
-<td>
-    <img alt="Deck Image" src="@Model.ImageString" />
-</td>
+
+@if (!Model.IsInvalid)
+{
+    <td>
+        <img alt="Deck Image" src="@Model.ImageString" />
+    </td>
+}
+else
+{
+    <h1>No Deck Selected</h1>
+}

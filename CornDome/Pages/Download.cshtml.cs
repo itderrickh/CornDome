@@ -28,6 +28,7 @@ namespace CornDome.Pages
 
         public string ImageString { get; set; }
         public ConcurrentDictionary<string, Image<Rgb24>> imageCache = new();
+        public bool IsInvalid = false;
         public byte[] CreateCoordinates()
         {
             Parallel.ForEach(QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name), card =>
@@ -141,11 +142,16 @@ namespace CornDome.Pages
             Cards = _cardRepository.GetAll();
 
             if (Request.QueryString.HasValue)
+            {
                 BuildDeckFromQuery();
 
-            var image = CreateCoordinates();
+                var image = CreateCoordinates();
 
-            return File(image, "image/png", "download.png");
+                return File(image, "image/png", "download.png");
+            }
+
+            IsInvalid = true;
+            return Page();
         }
 
         private void BuildDeckFromQuery()
@@ -153,13 +159,17 @@ namespace CornDome.Pages
             var nonGZDeck = Request.Query["deck"];
             var gzDeck = Request.Query["gzdeck"];
 
-            if (string.IsNullOrEmpty(nonGZDeck))
+            if (string.IsNullOrWhiteSpace(nonGZDeck))
             {
                 QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
             }
-            else
+            else if (string.IsNullOrWhiteSpace(gzDeck))
             {
                 QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+            }
+            else
+            {
+                IsInvalid = true;
             }
         }
     }
