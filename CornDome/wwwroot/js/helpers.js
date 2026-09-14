@@ -39,17 +39,25 @@ async function gzipAndBase64(data) {
 }
 
 async function deckToQuery() {
-    var heroString = deck.hero != null ? parseInt(deck.hero.id) : -1;
+    var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
     var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
     var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
-    var data = [heroString, landscapeString, cardString].join(';');
+    debugger;
+    if (heroString || landscapeString || cardString) {
+        var data = [heroString, landscapeString, cardString].join(';');
 
-    if (history.pushState) {
-        //var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?deck=' + btoa(data) + "&gzdeck=" + await gzipAndBase64(data);
-        var output = await gzipAndBase64(data);
-        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?gzdeck=' + encodeURIComponent(output);
+        if (history.pushState) {
+            //var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?deck=' + btoa(data) + "&gzdeck=" + await gzipAndBase64(data);
+            var output = await gzipAndBase64(data);
+            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?gzdeck=' + encodeURIComponent(output);
+            window.history.pushState({ path: newurl }, '', newurl);
+        }
+    }
+    else {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         window.history.pushState({ path: newurl }, '', newurl);
     }
+    
 }
 
 function getFormattedDateTime() {
