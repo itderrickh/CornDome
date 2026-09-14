@@ -1,12 +1,19 @@
 ﻿using CornDome.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository
 {
     public interface ILogEntryRepository
     {
         Task InsertAsync(LogEntry log);
-        Task<IEnumerable<LogEntry>> GetLogs();
+        Task<PagedResult<LogEntry>> GetLogs(int page, int pageSize);
     }
+
+    public record PagedResult<T>(
+        IEnumerable<T> Items,
+        int TotalCount,
+        int Page,
+        int PageSize);
 
     public class LogEntryRepository(MainContext context) : ILogEntryRepository
     {
@@ -16,11 +23,24 @@ namespace CornDome.Repository
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<LogEntry>> GetLogs()
+        public async Task<PagedResult<LogEntry>> GetLogs(int page, int pageSize)
         {
-            return context.LogEntries
-                .OrderByDescending(x => x.Timestamp)
-                .Take(500);
+            var query = context.LogEntries
+                .AsNoTracking()
+                .OrderByDescending(x => x.Timestamp);
+
+            var totalCount = await query.CountAsync();
+
+            var logs = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<LogEntry>(
+                logs,
+                totalCount,
+                page,
+                pageSize);
         }
     }
 }

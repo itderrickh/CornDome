@@ -3,6 +3,8 @@
 @{
     ViewData["RenderMode"] = "wide";
     ViewData["Title"] = "Error Logs";
+
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
 }
 
 <h1>Request Logs</h1>
@@ -26,7 +28,7 @@
         {
             <tr>
                 <td title="@log.Timestamp.ToLocalTime()">
-                    @log.Timestamp.ToShortDateString()
+                    @log.Timestamp.ToLocalTime().ToShortDateString()
                 </td>
                 <td>
                     @log.Method
@@ -79,15 +81,152 @@
     </tbody>
 </table>
 
-<div class="modal fade" id="exceptionModal" tabindex="-1" aria-labelledby="exceptionModalLabel" aria-hidden="true">
+@if (totalPages > 1)
+{
+    <div class="d-flex justify-content-between align-items-center mt-3">
+
+        <div>
+            <span class="text-muted">
+                Page @Model.PageNumber of @totalPages
+                (@Model.TotalCount total logs)
+            </span>
+        </div>
+
+        <nav aria-label="Error log pagination">
+            <ul class="pagination mb-0">
+
+                @* Previous *@
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize" asp-page="/Admin/ErrorLogs">
+                            Previous
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                }
+
+                @{
+                    var startPage = Math.Max(1, Model.PageNumber - 2);
+                    var endPage = Math.Min(totalPages, Model.PageNumber + 2);
+                }
+
+                @if (startPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-route-pageNumber="1"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-page="/Admin/ErrorLogs">
+                            1
+                        </a>
+                    </li>
+
+                    @if (startPage > 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+                }
+
+                @for (var i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                           asp-route-pageNumber="@i"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-page="/Admin/ErrorLogs">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                @if (endPage < totalPages)
+                {
+                    @if (endPage < totalPages - 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-route-pageNumber="@totalPages"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-page="/Admin/ErrorLogs">
+                            @totalPages
+                        </a>
+                    </li>
+                }
+
+                @* Next *@
+                @if (Model.PageNumber < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-page="/Admin/ErrorLogs">
+                            Next
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+
+        @* Page size *@
+        <div>
+            <select class="form-select form-select-sm"
+                    style="width: auto;"
+                    onchange="changePageSize(this.value)">
+                <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                <option value="100" selected="@(Model.PageSize == 100)">100</option>
+                <option value="250" selected="@(Model.PageSize == 250)">250</option>
+                <option value="500" selected="@(Model.PageSize == 500)">500</option>
+            </select>
+        </div>
+
+    </div>
+}
+
+<div class="modal fade" id="exceptionModal" tabindex="-1"
+     aria-labelledby="exceptionModalLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exceptionModalLabel" style="color: black;">Exception Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title"
+                    id="exceptionModalLabel"
+                    style="color: black;">
+                    Exception Details
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
             </div>
+
             <div class="modal-body">
-                <pre id="exceptionText" class="mb-0" style="white-space: pre-wrap; color: black;"></pre>
+                <pre id="exceptionText"
+                     class="mb-0"
+                     style="white-space: pre-wrap; color: black;"></pre>
             </div>
         </div>
     </div>
@@ -103,6 +242,15 @@
 
             document.getElementById('exceptionText').textContent = exception;
         });
+
+        function changePageSize(size) {
+            const url = new URL(window.location.href);
+
+            url.searchParams.set('pageNumber', '1');
+            url.searchParams.set('pageSize', size);
+
+            window.location.href = url.toString();
+        }
     </script>
 }
 
