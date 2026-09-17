@@ -9,8 +9,8 @@
 
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (rng == null) throw new ArgumentNullException(nameof(rng));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(rng);
 
             return source.ShuffleIterator(rng);
         }

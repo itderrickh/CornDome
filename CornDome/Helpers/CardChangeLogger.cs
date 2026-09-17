@@ -4,7 +4,7 @@ namespace CornDome.Helpers
 {
     public class CardChangeLogger(Config config) : ILogger, ICardChangeLogger
     {
-        private static readonly object _lock = new();
+        private static readonly Lock _lock = new();
 
         public IDisposable BeginScope<TState>(TState state) => null;
         public bool IsEnabled(LogLevel logLevel) => true;

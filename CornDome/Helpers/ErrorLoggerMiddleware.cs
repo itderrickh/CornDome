@@ -27,7 +27,7 @@ namespace CornDome.Helpers
                     Method = context.Request.Method,
                     Path = context.Request.Path,
                     QueryString = context.Request.QueryString.Value,
-                    StatusCode = StatusCodes.Status500InternalServerError,
+                    StatusCode = context.Response.StatusCode,
                     DurationMs = stopwatch.ElapsedMilliseconds,
                     UserName = context.User.Identity?.Name,
                     RemoteIp = context.Connection.RemoteIpAddress?.ToString(),
