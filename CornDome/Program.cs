@@ -16,6 +16,53 @@ namespace CornDome
 {
     public class Program
     {
+        public static void AddRepositories(IServiceCollection services)
+        {
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+            services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+            services.AddTransient<IDiscordRepository, DiscordRepository>();
+            services.AddTransient<IBugReportRepository, BugReportRepository>();
+            services.AddTransient<ILogEntryRepository, LogEntryRepository>();
+        }
+
+        public static void AddDbContext(WebApplicationBuilder builder, IServiceCollection services)
+        {
+            services.AddDbContext<MainContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("MasterDb");
+                options.UseSqlite(connectionString + ";Pooling=False");
+            });
+
+            services.AddDbContext<CardDatabaseContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("CardsDb");
+                options.UseSqlite(connectionString + ";Pooling=False");
+            });
+            services.AddDbContext<TournamentContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("TournamentDb");
+                options.UseSqlite(connectionString + ";Pooling=False");
+            });
+        }
+
+        public static void AddStaticRoutes(WebApplicationBuilder builder, WebApplication app)
+        {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "application/octet-stream"
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
+                RequestPath = "/CardImages"
+            });
+        }
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -44,69 +91,26 @@ namespace CornDome
             builder.Services.AddScoped<IUserStore<User>, UserStore>();
             builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
-            builder.Services.AddDbContext<MainContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("MasterDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
-            });
-
-            builder.Services.AddDbContext<CardDatabaseContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("CardsDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
-            });
-            builder.Services.AddDbContext<TournamentContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("TournamentDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
-            });
+            // Add Db Contexts
+            AddDbContext(builder, builder.Services);
 
             // Repositories
-            builder.Services.AddTransient<IRoleRepository, RoleRepository>();
-            builder.Services.AddTransient<ICardRepository, CardRepository>();
-            builder.Services.AddTransient<IUserRepository, UserRepository>();
-            builder.Services.AddTransient<IFeedbackRepository, FeedbackRepository>();
-            builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
-            builder.Services.AddTransient<IDiscordRepository, DiscordRepository>();
-            builder.Services.AddTransient<IBugReportRepository, BugReportRepository>();
-            builder.Services.AddTransient<ILogEntryRepository, LogEntryRepository>();
+            AddRepositories(builder.Services);
 
-            string clientId = "";
-            string clientSecret = "";
+            string clientId = !string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientId"])
+                ? builder.Configuration["Authentication:Google:ClientId"]
+                : Environment.GetEnvironmentVariable("Authentication__Google__ClientId");
 
-            if (!string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientId"]))
-            {
-                clientId = builder.Configuration["Authentication:Google:ClientId"];
-            }
-            else
-            {
-                clientId = Environment.GetEnvironmentVariable("Authentication__Google__ClientId");
-            }
+            string clientSecret = !string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientSecret"])
+                ? builder.Configuration["Authentication:Google:ClientSecret"]
+                : Environment.GetEnvironmentVariable("Authentication__Google__ClientSecret");
 
-            if (!string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientSecret"]))
-            {
-                clientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-            }
-            else
-            {
-                clientSecret = Environment.GetEnvironmentVariable("Authentication__Google__ClientSecret");
-            }
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
-            })
-            .AddGoogle(options =>
-            {
-                options.ClientId = clientId;
-                options.ClientSecret = clientSecret;
-            });
+            builder.Services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = clientId;
+                    options.ClientSecret = clientSecret;
+                });
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -125,7 +129,6 @@ namespace CornDome
                 // Identity options here (e.g., password settings)
             })
                 .AddDefaultTokenProviders()
-                //.AddUserStore<UserStore>()
                 .AddRoleStore<RoleStore>()
                 .AddUserStore<UserRoleStore>()
                 .AddSignInManager<SignInManager<User>>();
@@ -157,17 +160,7 @@ namespace CornDome
 
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ServeUnknownFileTypes = true,
-                DefaultContentType = "application/octet-stream"
-            });
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
-                RequestPath = "/CardImages"
-            });
+            AddStaticRoutes(builder, app);
 
             app.UseMiddleware<ErrorLoggerMiddleware>();
             app.UseRouting();
