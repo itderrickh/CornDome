@@ -65,7 +65,7 @@
         <div id="deck-landscapes">
             @if (Model.QueryDeck != null)
             {
-                @foreach (var landscape in Model.QueryDeck.Landscapes)
+                @foreach (var landscape in Model.QueryDeck.Landscapes.Where(x => x != null))
                 {
                     CardViewModel cvm = new CardViewModel() { Card = landscape, IsDeleteable = true, BaseUrl = Model.BaseUrl };
                     <partial name="_Card" model="cvm" />
@@ -77,7 +77,7 @@
         <div id="deck-cards">
             @if (Model.QueryDeck != null)
             {
-                @foreach (var card in Model.QueryDeck.Cards)
+                @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null))
                 {
                     CardViewModel cvm = new CardViewModel() { Card = card, IsDeleteable = true, BaseUrl = Model.BaseUrl };
                     <partial name="_Card" model="cvm" />

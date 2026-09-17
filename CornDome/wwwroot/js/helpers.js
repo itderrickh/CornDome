@@ -42,7 +42,6 @@ async function deckToQuery() {
     var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
     var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
     var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
-    debugger;
     if (heroString || landscapeString || cardString) {
         var data = [heroString, landscapeString, cardString].join(';');
 

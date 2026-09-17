@@ -61,7 +61,7 @@ else
                         </div>
                     }
 
-                    @foreach (var landscape in Model.QueryDeck.Landscapes)
+                    @foreach (var landscape in Model.QueryDeck.Landscapes.Where(x => x != null))
                     {
                         <div class="w-20">
                             <a asp-page="/Card" asp-route-id="@landscape.Id">
@@ -72,7 +72,7 @@ else
                 </div>
 
                 <div class="d-flex flex-wrap">
-                    @foreach (var card in Model.QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
+                    @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null).OrderBy(x => x.LatestRevision.Name))
                     {
                         <div class="w-10">
                             <a asp-page="/Card" asp-route-id="@card.Id">
