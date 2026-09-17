@@ -4,7 +4,6 @@ using CornDome.Repository;
 using CornDome.Repository.Discord;
 using CornDome.Repository.Tournaments;
 using CornDome.Stores;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +15,7 @@ namespace CornDome
 {
     public class Program
     {
+        public const string POOLING = ";Pooling=False";
         public static void AddRepositories(IServiceCollection services)
         {
             services.AddTransient<IRoleRepository, RoleRepository>();
@@ -32,19 +32,19 @@ namespace CornDome
         {
             services.AddDbContext<MainContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("MasterDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
+                var connectionString = builder.Configuration.GetConnectionString(AppConstants.MASTER_DB);
+                options.UseSqlite(connectionString + POOLING);
             });
 
             services.AddDbContext<CardDatabaseContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("CardsDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
+                var connectionString = builder.Configuration.GetConnectionString(AppConstants.CARDS_DB);
+                options.UseSqlite(connectionString + POOLING);
             });
             services.AddDbContext<TournamentContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("TournamentDb");
-                options.UseSqlite(connectionString + ";Pooling=False");
+                var connectionString = builder.Configuration.GetConnectionString(AppConstants.TOURNAMENT_DB);
+                options.UseSqlite(connectionString + POOLING);
             });
         }
 
@@ -59,44 +59,12 @@ namespace CornDome
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
-                RequestPath = "/CardImages"
+                RequestPath = AppConstants.CARD_STATIC_IMAGE_ROUTE
             });
         }
 
-        public static void Main(string[] args)
+        public static void AddAuthentication(WebApplicationBuilder builder)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            builder.Configuration.AddEnvironmentVariables();
-            
-            // Add services to the container.
-            builder.Services.AddRazorPages();
-            builder.Services.AddSingleton<Config>();
-
-            var keyFolder = builder.Environment.IsDevelopment()
-                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CardDweeb", "DataProtectionKeys")
-                : "/var/myapp/keys";  // Linux production path
-
-            builder.Services.AddDataProtection()
-               .PersistKeysToFileSystem(new DirectoryInfo(keyFolder))
-               .SetApplicationName("CardDweeb");  // must be consistent
-            builder.Services.AddTransient<ITokenProtector, TokenProtector>();
-            builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
-            {
-                client.BaseAddress = new Uri("https://discord.com/api/oauth2/token");
-                client.Timeout = TimeSpan.FromSeconds(30);
-            });
-
-            // Configurations
-            builder.Services.AddScoped<IUserStore<User>, UserStore>();
-            builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
-
-            // Add Db Contexts
-            AddDbContext(builder, builder.Services);
-
-            // Repositories
-            AddRepositories(builder.Services);
-
             string clientId = !string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientId"])
                 ? builder.Configuration["Authentication:Google:ClientId"]
                 : Environment.GetEnvironmentVariable("Authentication__Google__ClientId");
@@ -111,18 +79,12 @@ namespace CornDome
                     options.ClientId = clientId;
                     options.ClientSecret = clientSecret;
                 });
+        }
 
-            builder.Services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor |
-                    ForwardedHeaders.XForwardedProto;
-
-                // Only if you trust the proxy and need to clear defaults:
-                options.KnownProxies.Add(IPAddress.Parse("127.0.0.1"));
-            });
-
-            builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
+        public static void AddAuthorization(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IUserStore<User>, UserStore>();
+            builder.Services.AddScoped<IUserRoleStore<User>, UserRoleStore>();
 
             builder.Services.AddIdentity<User, Role>(options =>
             {
@@ -137,14 +99,58 @@ namespace CornDome
             {
                 // Define a policy that allows access only to users with the "Admin" role
                 options.AddPolicy("admin", policy =>
-                    policy.RequireRole("Admin"));  // "Admin" role is required
-                options.AddPolicy("tournamentOrganizer", policy => 
-                    policy.RequireRole("Admin", "TournamentManager"));
+                    policy.RequireRole(AppConstants.ROLE_ADMIN));
+                options.AddPolicy("tournamentOrganizer", policy =>
+                    policy.RequireRole(AppConstants.ROLE_TOURNAMENT_MANAGER, AppConstants.ROLE_ADMIN));
                 options.AddPolicy("cardManager", policy =>
-                    policy.RequireRole("CardManager", "Admin"));
+                    policy.RequireRole(AppConstants.ROLE_CARD_MANAGER, AppConstants.ROLE_ADMIN));
                 options.AddPolicy("rulingManager", policy =>
-                    policy.RequireRole("RulingManager", "Admin"));
+                    policy.RequireRole(AppConstants.ROLE_RULING_MANAGER, AppConstants.ROLE_ADMIN));
             });
+        }
+
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Configuration.AddEnvironmentVariables();
+            
+            // Add services to the container.
+            builder.Services.AddRazorPages();
+            builder.Services.AddSingleton<Config>();
+
+            var keyFolder = builder.Environment.IsDevelopment()
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppConstants.APP_NAME, "DataProtectionKeys")
+                : "/var/myapp/keys";  // Linux production path
+
+            builder.Services.AddDataProtection()
+               .PersistKeysToFileSystem(new DirectoryInfo(keyFolder))
+               .SetApplicationName(AppConstants.APP_NAME);  // must be consistent
+            builder.Services.AddTransient<ITokenProtector, TokenProtector>();
+            builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
+            {
+                client.BaseAddress = new Uri(AppConstants.DISCORD_TOKEN_ROUTE);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+
+            AddDbContext(builder, builder.Services);
+            AddRepositories(builder.Services);
+            AddAuthentication(builder);
+
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+
+                // Only if you trust the proxy and need to clear defaults:
+                options.KnownProxies.Add(IPAddress.Parse(AppConstants.LOCALHOST));
+            });
+
+            builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
+
+            AddAuthorization(builder);
 
             var app = builder.Build();
 
