@@ -361,7 +361,8 @@ namespace CornDome.Repository
 
         public Card GetCardOfTheDay(DateTime day)
         {
-            var cards = GetAll().ToList();
+            var cards = GetAll()
+                .Where(x => (CardTypeEnum)x.LatestRevision.TypeId != CardTypeEnum.Landscape).ToList();
 
             if (cards.Count == 0)
                 return null;
