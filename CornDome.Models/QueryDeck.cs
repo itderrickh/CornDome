@@ -1,5 +1,7 @@
 ﻿using CornDome.Models.Cards;
+using Microsoft.AspNetCore.WebUtilities;
 using System.IO.Compression;
+using System.Text;
 
 namespace CornDome.Models
 {
@@ -11,7 +13,19 @@ namespace CornDome.Models
 
         public static QueryDeck GetDeckFromGzip(string query, IEnumerable<Card> cards)
         {
-            byte[] compressedBytes = Convert.FromBase64String(query);
+            byte[] compressedBytes;
+            try
+            {
+                // New Base64URL format
+                compressedBytes = WebEncoders.Base64UrlDecode(query);
+            }
+            catch (FormatException ex)
+            {
+                // Older standard Base64 may have had '+' converted to spaces
+                query = Uri.UnescapeDataString(query);
+
+                compressedBytes = Convert.FromBase64String(query);
+            }
 
             using var inputStream = new MemoryStream(compressedBytes);
             using var gzip = new GZipStream(inputStream, CompressionMode.Decompress);
