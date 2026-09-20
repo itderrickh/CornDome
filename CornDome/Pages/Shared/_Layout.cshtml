@@ -48,8 +48,10 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Decks/Index">Public Decks</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/Decks/Mine">Deck Manager (Database)</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/DeckManager">Deck Manager (Local)</a></li>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Decks/Mine">Deck Manager</a></li>
+                                }
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
