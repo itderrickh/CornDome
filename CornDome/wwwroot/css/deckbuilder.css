@@ -57,7 +57,7 @@ fieldset {
     width: 50%;
 }
 
-.card:hover {
+.card-image:hover {
     transform: scale(2);
     transition: transform .2s;
     z-index: 1000;
@@ -98,7 +98,7 @@ fieldset {
     background-image: url('/img/remove.png');
 }
 
-.card:hover .card-overlay {
+.card-image:hover .card-overlay {
     display: block;
     z-index: 1001;
 }

@@ -17,7 +17,7 @@ namespace CornDome.Pages
         private readonly ICardRepository _cardRepository = cardRepository;
         private readonly Config config = configuration;
         public IEnumerable<Card> Cards { get; set; }
-        public Deck QueryDeck { get; set; } = null;
+        public QueryDeck QueryDeck { get; set; } = null;
 
         private const int cardWidth = 86;
         private const int cardHeight = 120;
@@ -164,11 +164,11 @@ namespace CornDome.Pages
 
             if (!string.IsNullOrWhiteSpace(gzDeck))
             {
-                QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(gzDeck, Cards);
             }
             else if (!string.IsNullOrWhiteSpace(nonGZDeck))
             {
-                QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetFromQuery(nonGZDeck, Cards);
             }
             else
             {

@@ -9,7 +9,7 @@ namespace CornDome.Pages
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
-        public Deck QueryDeck { get; set; } = null;
+        public QueryDeck QueryDeck { get; set; } = null;
         public string BaseUrl { get; set; } = config.BaseUrl;
 
         public void OnGet()
