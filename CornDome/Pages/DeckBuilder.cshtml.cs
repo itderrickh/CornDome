@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
@@ -78,10 +79,12 @@ namespace CornDome.Pages
                 });
             }
 
+            var ungzDeckString = DeckEncoder.UrlToDeck(request.DeckString);
+
             mainContext.Decks.Add(new Deck()
             {
                 Created = DateTime.Now,
-                DeckString = request.DeckString,
+                DeckString = ungzDeckString,
                 Description = request.Description,
                 IconCardId = request.IconId,
                 Modified = DateTime.Now,
