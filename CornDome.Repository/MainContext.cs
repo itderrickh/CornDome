@@ -15,6 +15,8 @@ namespace CornDome.Repository
         public DbSet<PlayPreferences> PlayPreferences { get; set; }
         public DbSet<BugReport> BugReports { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<Deck> Decks { get; set; }
+        public DbSet<DeckComment> DeckComments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -61,6 +63,36 @@ namespace CornDome.Repository
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(c => c.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Deck>(entity =>
+            {
+                entity.HasKey(d => d.Id);
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(d => d.DeckComments)
+                    .WithOne(c => c.Deck)
+                    .HasForeignKey(c => c.DeckId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<DeckComment>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.Property(c => c.CommentText)
+                    .HasMaxLength(400);
+                entity.HasOne(c => c.User)
+                    .WithMany()
+                    .HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(c => c.Deck)
+                    .WithMany(d => d.DeckComments)
+                    .HasForeignKey(c => c.DeckId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }
