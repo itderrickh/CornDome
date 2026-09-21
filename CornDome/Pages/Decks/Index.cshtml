@@ -4,12 +4,82 @@
     ViewData["Title"] = "User Submited Decks";
 }
 
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-3" style="color: black;">
+
+            <div class="col-12 col-md-4">
+                <label asp-for="Author" class="form-label">
+                    Author
+                </label>
+
+                <input asp-for="Author"
+                       class="form-control"
+                       placeholder="Username" />
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label for="cardSearch" class="form-label">
+                    Card in deck
+                </label>
+
+                <input type="text"
+                       id="cardSearch"
+                       class="form-control"
+                       list="cardList"
+                       placeholder="Search card..."
+                       autocomplete="off" />
+
+                <input type="hidden"
+                       asp-for="CardId"
+                       id="cardId" />
+
+                <datalist id="cardList">
+                    @foreach (var card in Model.DeckGrid.Cards)
+                    {
+                        <option value="@card.LatestRevision.Name"
+                                data-card-id="@card.Id">
+                        </option>
+                    }
+                </datalist>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Filter
+                </button>
+
+                <a asp-page="./Index"
+                   class="btn btn-outline-secondary">
+                    Clear
+                </a>
+            </div>
+
+        </div>
+    </div>
+</form>
+
 <div class="row g-4">
     <partial name="_DeckGrid" model="Model.DeckGrid" />
 </div>
 
 @section Scripts {
     <script src="/js/lazy-card.js" asp-append-version="true"></script>
+
+    <script>
+        const cardSearch = document.getElementById("cardSearch");
+        const cardId = document.getElementById("cardId");
+        const cardList = document.getElementById("cardList");
+
+        cardSearch.addEventListener("input", function () {
+            const value = this.value;
+
+            const option = Array.from(cardList.options)
+                .find(x => x.value === value);
+
+            cardId.value = option?.dataset.cardId ?? "";
+        });
+    </script>
 }
 
 @section Styles {

@@ -4,6 +4,7 @@ using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace CornDome.Pages.Decks
 {
@@ -20,6 +21,12 @@ namespace CornDome.Pages.Decks
 
         public int TotalPages { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string? Author { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int? CardId { get; set; }
+
         public DeckGridViewModel DeckGrid { get; set; } = new();
 
         public async Task OnGet()
@@ -29,21 +36,36 @@ namespace CornDome.Pages.Decks
                 PageNumber = 1;
             }
 
-            var totalDecks = await mainContext.Decks
-                .Where(v => v.Visibility == DeckVisibility.Visible)
-                .CountAsync();
+            var query = mainContext.Decks
+                .Include(deck => deck.User)
+                .Where(deck => deck.Visibility == DeckVisibility.Visible)
+                .AsQueryable();
 
-            TotalPages = (int)Math.Ceiling(totalDecks / (double)PageSize);
+            if (!string.IsNullOrWhiteSpace(Author))
+            {
+                query = query.Where(deck =>
+                    deck.User.UserName != null &&
+                    deck.User.UserName.Contains(Author));
+            }
+
+            if (CardId.HasValue)
+            {
+                query = query.Where(deck => deck.DeckString.Contains(CardId.Value.ToString() + ":") || deck.DeckString.StartsWith(CardId.Value.ToString() + ";"));
+            }
+
+            query = query.OrderByDescending(deck => deck.Modified);
+
+            var totalDecks = await query.CountAsync();
+
+            TotalPages = (int)Math.Ceiling(
+                totalDecks / (double)PageSize);
 
             if (TotalPages > 0 && PageNumber > TotalPages)
             {
                 PageNumber = TotalPages;
             }
 
-            Decks = await mainContext.Decks
-                .Include(deck => deck.User)
-                .Where(deck => deck.Visibility == DeckVisibility.Visible)
-                .OrderByDescending(deck => deck.Modified)
+            Decks = await query
                 .Skip((PageNumber - 1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
