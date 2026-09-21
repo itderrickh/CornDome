@@ -40,10 +40,16 @@ namespace CornDome.Models
 
         public static QueryDeck GetFromQuery(string query, IEnumerable<Card> cards)
         {
-            var deckToReturn = new QueryDeck();
+            
             var converted = Convert.FromBase64String(query);
-            var deckString = System.Text.Encoding.UTF8.GetString(converted);
+            var deckString = Encoding.UTF8.GetString(converted);
 
+            return GetFromString(deckString, cards);
+        }
+
+        public static QueryDeck GetFromString(string deckString, IEnumerable<Card> cards)
+        {
+            var deckToReturn = new QueryDeck();
             var split = deckString.Split(';');
             var heroString = split[0];
             var landscapeString = split[1];

@@ -15,29 +15,40 @@ namespace CornDome.Pages
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
         public string BaseUrl { get; set; } = config.BaseUrl;
+        [BindProperty(Name = "id", SupportsGet = true)]
+        public int? DeckId { get; set; }
+
+        [BindProperty(Name = "gzdeck", SupportsGet = true)]
+        public string GzDeck { get; set; }
+
+        [BindProperty(Name = "deck", SupportsGet = true)]
+        public string NonGZDeck { get; set; }
 
         public void OnGet()
         {
             Cards = _cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
-            {
-                BuildDeckFromQuery();
-            }
+            BuildDeckFromQuery();
         }
 
         private void BuildDeckFromQuery()
         {
-            var nonGZDeck = Request.Query["deck"];
-            var gzDeck = Request.Query["gzdeck"];
-
-            if (string.IsNullOrEmpty(nonGZDeck))
+            if (DeckId.HasValue)
             {
-                QueryDeck = QueryDeck.GetDeckFromGzip(gzDeck, Cards);
+                // TODO ADD PERMISSIONS
+                var deck = mainContext.Decks.Where(x => x.Id == DeckId.Value).FirstOrDefault();
+                if (deck != null)
+                {
+                    QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                }
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = QueryDeck.GetFromQuery(nonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
+            }
+            else if (!string.IsNullOrWhiteSpace(NonGZDeck))
+            {
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
             }
         }
 

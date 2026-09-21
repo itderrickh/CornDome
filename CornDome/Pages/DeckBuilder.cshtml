@@ -41,8 +41,7 @@
             <button id="validateButton" type="button" class="btn btn-lg btn-block btn-primary">Validate Deck</button>
             <button id="decklistExport" type="button" class="btn btn-lg btn-block btn-primary">Copy decklist to clipboard</button>
             <button id="permalinkExport" type="button" class="btn btn-lg btn-block btn-primary">Copy permalink to clipboard</button>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Try it out</a>
-            <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)">Try it out</a>
             <button id="saveDatabaseButton2" type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
                 Save (Database)
             </button>
@@ -303,8 +302,6 @@
         buildDeckIfExistsInQuery();
 
         document.getElementById("saveDatabaseButton").onclick = async function () {
-            var query = new URLSearchParams(document.location.search);
-            var gzdeck = query.get("gzdeck");
             const token = document.querySelector(
                 'input[name="__RequestVerificationToken"]'
             ).value;
@@ -320,7 +317,7 @@
                     'RequestVerificationToken': token
                 },
                 body: JSON.stringify({
-                    deckString: gzdeck,
+                    deckString: deckToString(),
                     visibility: visibility,
                     description: description,
                     iconId: iconId

@@ -44,9 +44,8 @@ else
 
             <fieldset id="actionsSection">
                 <legend>Actions</legend>
-                <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Go To Deck Builder</a>
-                <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Download Image</a>
-                <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
+                <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Go To Deck Builder</a>
+                <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Download Image</a>
                 <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save (Database)</button>
             </fieldset>
         </div>
@@ -57,7 +56,7 @@ else
                     @if (Model.QueryDeck.Hero != null)
                     {
                         <div class="w-20">
-                            <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id">
+                            <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id" class="deck-card" data-card-id="@Model.QueryDeck.Hero.LatestRevision.Id" data-type="hero">
                                 <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
                             </a>
                         </div>
@@ -66,7 +65,7 @@ else
                     @foreach (var landscape in Model.QueryDeck.Landscapes.Where(x => x != null))
                     {
                         <div class="w-20">
-                            <a asp-page="/Card" asp-route-id="@landscape.Id">
+                            <a asp-page="/Card" asp-route-id="@landscape.Id" class="deck-card" data-card-id="@landscape.Id" data-type="landscape">
                                 <img class="w-100" alt="@landscape.LatestRevision.Name" src="@(Model.BaseUrl + landscape.LatestRevision.GetLargestImage)" />
                             </a>
                         </div>
@@ -77,7 +76,7 @@ else
                     @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null).OrderBy(x => x.LatestRevision.Name))
                     {
                         <div class="w-10">
-                            <a asp-page="/Card" asp-route-id="@card.Id">
+                            <a asp-page="/Card" asp-route-id="@card.Id" class="deck-card" data-card-id="@card.Id" data-type="card">
                                 <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@(Model.BaseUrl + card.LatestRevision.GetLargestImage)" />
                             </a>
                         </div>
@@ -227,9 +226,36 @@ else
             document.getElementById("actionsSection").style.display = "block";
         }
 
+        function deckToQuery(deck) {
+            var heroString = deck.hero != null ? parseInt(deck.hero) : "";
+            var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
+            var cardString = packString(deck.cards.map((x) => parseInt(x)));
+            if (heroString || landscapeString || cardString) {
+                var data = [heroString, landscapeString, cardString].join(';');
+                return data;
+            }
+
+            return "";
+        }
+
         document.getElementById("saveDatabaseButton").onclick = async function () {
-            var query = new URLSearchParams(document.location.search);
-            var gzdeck = query.get("gzdeck");
+            var deck = {
+                'hero': null,
+                'landscapes': [],
+                'cards': []
+            }
+            document.querySelectorAll(".deck-card").forEach(function(card) {
+                if (card.dataset.type === 'hero') {
+                    deck.hero = card.dataset.cardId;
+                }
+                if (card.dataset.type === 'landscape') {
+                    deck.landscapes.push(card.dataset.cardId);
+                }
+                if (card.dataset.type === 'card') {
+                    deck.cards.push(card.dataset.cardId);
+                }
+            });
+
             const token = document.querySelector(
                 'input[name="__RequestVerificationToken"]'
             ).value;
@@ -245,7 +271,7 @@ else
                     'RequestVerificationToken': token
                 },
                 body: JSON.stringify({
-                    deckString: gzdeck,
+                    deckString: deckToQuery(deck),
                     visibility: visibility,
                     description: description,
                     iconId: iconId
