@@ -10,7 +10,7 @@ using SixLabors.ImageSharp.Processing;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class AddModel(ICardRepository cardRepository, ILogEntryRepository logEntryRepository, IUserRepository userRepository, Config config) : BasePageModel
+    public class AddModel(ICardRepository cardRepository, ILogEntryRepository logEntryRepository, Config config) : BasePageModel
     {
         [BindProperty]
         public AddCard AddCard { get; set; } = new();

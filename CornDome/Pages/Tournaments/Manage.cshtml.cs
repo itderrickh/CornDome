@@ -15,7 +15,7 @@ namespace CornDome.Pages.Tournaments
     {
         public Tournament Tournament { get; set; }
 
-        [BindProperty]
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
 
         public List<TournamentRegistration> Registrations { get; set; } = [];

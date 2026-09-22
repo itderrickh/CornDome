@@ -12,12 +12,10 @@ namespace CornDome.Pages.Tournaments
         [BindProperty]
         public Tournament Tournament { get; set; }
 
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
         public void OnGet()
         {
-            var queryId = Request.Query["id"];
-            TournamentId = int.Parse(queryId);
-
             Tournament = tournamentContext.Tournaments.SingleOrDefault(x => x.Id == TournamentId);
         }
 

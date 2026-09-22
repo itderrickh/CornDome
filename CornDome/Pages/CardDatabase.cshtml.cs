@@ -6,13 +6,12 @@ namespace CornDome.Pages
 {
     public class CardDatabaseModel(ICardRepository cardRepository) : BasePageModel
     {
-        private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
 
         public void OnGet()
         {
-            var cards = _cardRepository.GetAll();
+            var cards = cardRepository.GetAll();
             Cards = cards;
         }
     }

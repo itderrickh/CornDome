@@ -9,7 +9,6 @@ namespace CornDome.Pages
 {
     public class DeckModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
-        private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
         [BindProperty(Name = "id", SupportsGet = true)]
@@ -32,7 +31,7 @@ namespace CornDome.Pages
 
         public async Task OnGet()
         {
-            Cards = _cardRepository.GetAll();
+            Cards = cardRepository.GetAll();
 
             await BuildDeckFromQuery();
         }

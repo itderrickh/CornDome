@@ -15,7 +15,7 @@ namespace CornDome.Pages.Play
     }
 
     [Authorize]
-    public class BoardModel(Config config, IDiscordRepository discordRepository, IUserRepository userRepository) : BasePageModel
+    public class BoardModel(Config config, IDiscordRepository discordRepository) : BasePageModel
     {
         public DiscordConnection DiscordConnection { get; set; }
         public bool IsUserInServer { get; set; }

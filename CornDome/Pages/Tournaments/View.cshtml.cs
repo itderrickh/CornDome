@@ -4,6 +4,7 @@ using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Tournaments;
 using CornDome.TournamentSystem;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Tournaments
 {
@@ -13,13 +14,10 @@ namespace CornDome.Pages.Tournaments
         public List<TournamentRegistration> RegisteredUsers { get; set; } = [];
         private List<User> Users { get; set; } = [];
         public TournamentManager TournamentManager { get; set; }
-
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
         public async void OnGet()
         {
-            var queryId = Request.Query["id"];
-            TournamentId = int.Parse(queryId);
-
             var users = await userRepository.GetAll();
             Users = users.ToList();
             Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);

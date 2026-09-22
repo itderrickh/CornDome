@@ -9,16 +9,13 @@ namespace CornDome.Pages.CardManage
     [Authorize(Policy = "rulingManager")]
     public class RulingsModel(ICardRepository cardRepository) : BasePageModel
     {
-        [BindProperty]
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int CardId { get; set; }
         [BindProperty]
         public Card EditCard { get; set; }
 
         public void OnGet()
         {
-            var queryId = Request.Query["id"];
-            CardId = int.Parse(queryId);
-
             EditCard = cardRepository.GetCard(CardId);
         }
 

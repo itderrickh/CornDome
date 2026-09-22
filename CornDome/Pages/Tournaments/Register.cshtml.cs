@@ -10,7 +10,7 @@ namespace CornDome.Pages.Tournaments
     [Authorize]
     public class RegisterModel(TournamentContext tournamentContext) : BasePageModel
     {
-        [BindProperty]
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
         public Tournament Tournament { get; set; }
         public TournamentRegistration ActiveRegistration { get; set; }
@@ -20,8 +20,6 @@ namespace CornDome.Pages.Tournaments
 
         public async Task OnGet()
         {
-            var queryId = Request.Query["id"];
-            TournamentId = int.Parse(queryId);
             Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
             var user = await GetUser();
