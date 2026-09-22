@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CornDome.Pages.Decks
 {
     [Authorize]
-    public class MineModel(ICardRepository cardRepository, IUserRepository userRepository, IDeckRepository deckRepository) : BasePageModel
+    public class MineModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }

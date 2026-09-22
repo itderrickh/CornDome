@@ -21,6 +21,9 @@ namespace CornDome.Controllers
         [Required]
         public int IconId { get; set; }
         public int? DeckId { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string DeckName { get; set; }
     }
 
     [ApiController]
@@ -90,7 +93,7 @@ namespace CornDome.Controllers
                 // My deck
                 if (deck != null && deck.UserId == loggedInUser.Id)
                 {
-                    isSuccess = deckRepository.ChangeDeckSettings(deck.Id, request.Visibility, ProfanityHelper.RelieveTheProfane(request.Description), request.IconId);
+                    isSuccess = deckRepository.ChangeDeckSettings(deck.Id, request.Visibility, ProfanityHelper.RelieveTheProfane(request.Description), request.IconId, ProfanityHelper.RelieveTheProfane(request.DeckName));
                     isSuccess = deckRepository.ChangeDeckValue(deck.Id, request.DeckString);
                 }
                 // Someone elses deck
@@ -100,6 +103,7 @@ namespace CornDome.Controllers
                     {
                         Created = DateTime.Now,
                         DeckString = request.DeckString,
+                        DeckName = ProfanityHelper.RelieveTheProfane(request.DeckName),
                         Description = ProfanityHelper.RelieveTheProfane(request.Description),
                         IconCardId = request.IconId,
                         Modified = DateTime.Now,
@@ -114,6 +118,7 @@ namespace CornDome.Controllers
                 {
                     Created = DateTime.Now,
                     DeckString = request.DeckString,
+                    DeckName = ProfanityHelper.RelieveTheProfane(request.DeckName),
                     Description = ProfanityHelper.RelieveTheProfane(request.Description),
                     IconCardId = request.IconId,
                     Modified = DateTime.Now,

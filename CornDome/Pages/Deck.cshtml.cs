@@ -1,3 +1,4 @@
+using Amazon.Runtime.Internal;
 using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
@@ -23,11 +24,15 @@ namespace CornDome.Pages
         public bool IsDbDeck { get; set; } = false;
         public bool IsMyDeck { get; set; } = false;
         [BindProperty]
+        public string DeckName { get; set; }
+        [BindProperty]
         public string Description { get; set; }
         [BindProperty]
         public DeckVisibility Visibility { get; set; }
         [BindProperty]
         public int IconCard { get; set; }
+        public string Author { get; set; }
+        public int AuthorId { get; set; }
 
         public async Task OnGet()
         {
@@ -62,8 +67,11 @@ namespace CornDome.Pages
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
                             Description = ProfanityHelper.RelieveTheProfane(deck.Description);
+                            DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
                             IconCard = deck.IconCardId;
                             Visibility = deck.Visibility;
+                            Author = deck.User.UserName;
+                            AuthorId = deck.User.Id;
                             IsMyDeck = true;
                         }
                         IsDbDeck = true;

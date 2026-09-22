@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Decks
 {
-    public class IndexModel(IDeckRepository deckRepository, ICardRepository cardRepository, IUserRepository userRepository, Config config) : BasePageModel
+    public class IndexModel(IDeckRepository deckRepository, ICardRepository cardRepository) : BasePageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }
@@ -18,7 +18,7 @@ namespace CornDome.Pages.Decks
         public int TotalPages { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string? Author { get; set; }
+        public string Author { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int? CardId { get; set; }
@@ -38,17 +38,17 @@ namespace CornDome.Pages.Decks
                 PageNumber = 1;
             }
 
-            (int totalDecks, List<Deck> decks) results = deckRepository.GetAllVisibleDecks(Author, CardId, PageNumber, PageSize);
+            (int totalDecks, List<Deck> decks) = deckRepository.GetAllVisibleDecks(Author, CardId, PageNumber, PageSize);
 
             TotalPages = (int)Math.Ceiling(
-                results.totalDecks / (double)PageSize);
+                totalDecks / (double)PageSize);
 
             if (TotalPages > 0 && PageNumber > TotalPages)
             {
                 PageNumber = TotalPages;
             }
 
-            Decks = results.decks;
+            Decks = decks;
 
             DeckGrid = new DeckGridViewModel
             {

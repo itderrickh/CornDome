@@ -15,7 +15,7 @@ namespace CornDome.Repository
         (int count, List<Deck> decks) GetPublicUsersDecks(int userId, int pageNumber, int pageSize);
         (int count, List<Deck> decks) GetAllVisibleDecks(string authorFilter, int? cardIdFilter, int pageNumber, int pageSize);
         bool ChangeDeckValue(int deckId, string deckString);
-        bool ChangeDeckSettings(int deckId, DeckVisibility visibility, string description, int iconCardId);
+        bool ChangeDeckSettings(int deckId, DeckVisibility visibility, string description, int iconCardId, string deckName);
         bool DeleteDeck(int deckId);
     }
 
@@ -120,7 +120,7 @@ namespace CornDome.Repository
             return (totalDecks, decks);
         }
 
-        public bool ChangeDeckSettings(int deckId, DeckVisibility visibility, string description, int iconCardId)
+        public bool ChangeDeckSettings(int deckId, DeckVisibility visibility, string description, int iconCardId, string deckName)
         {
             var deck = mainContext.Decks.FirstOrDefault(d => d.Id == deckId);
 
@@ -131,6 +131,7 @@ namespace CornDome.Repository
 
             try
             {
+                deck.DeckName = deckName;
                 deck.Description = description;
                 deck.IconCardId = iconCardId;
                 deck.Visibility = visibility;

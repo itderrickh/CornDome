@@ -18,6 +18,7 @@ namespace CornDome.Models
         public string DeckString { get; set; }
         public int IconCardId { get; set; }
         public string Description { get; set; }
+        public string DeckName { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 

@@ -24,6 +24,8 @@ namespace CornDome.Pages
         public bool IsDbDeck { get; set; } = false;
         public bool IsMyDeck { get; set; } = false;
         [BindProperty]
+        public string DeckName { get; set; }
+        [BindProperty]
         public string Description { get; set; }
         [BindProperty]
         public DeckVisibility Visibility { get; set; }
@@ -73,6 +75,7 @@ namespace CornDome.Pages
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
                             Description = ProfanityHelper.RelieveTheProfane(deck.Description);
+                            DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
                             IconCard = deck.IconCardId;
                             Visibility = deck.Visibility;
                             IsMyDeck = true;

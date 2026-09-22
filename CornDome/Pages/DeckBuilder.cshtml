@@ -232,6 +232,17 @@
 
             <div class="modal-body">
                 <div class="mb-3">
+                    <label for="deckName" class="form-label">
+                        Deck Name
+                    </label>
+                    <input class="form-control"
+                                id="deckName"
+                                name="DeckName"
+                                maxlength="100"
+                                value="@Model.DeckName"
+                                placeholder="Enter a deck name..." />
+                </div>
+                <div class="mb-3">
                     <label for="deckDescription" class="form-label">
                         Description
                     </label>
@@ -323,6 +334,7 @@
 
             const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
             const description = document.getElementById("deckDescription").value;
+            const deckName = document.getElementById("deckName").value;
             const iconId = document.getElementById("deckIconCardId").value;
 
             const response = await fetch('/api/Deck', {

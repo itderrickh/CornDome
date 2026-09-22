@@ -61,6 +61,18 @@ else
             </fieldset>
         </div>
         <div class="col-md-10 col-sm-10">
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <div class="row p-1">
+                    <div class="col-8">
+                        <h5>@Model.Description</h5>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h4><u>Deck Name:</u> <i>@Model.DeckName</i></h4>
+                        <h4><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h4>
+                    </div>
+                </div>
+            }
             @if (Model.QueryDeck != null)
             {
                 <div class="d-flex">
@@ -118,6 +130,17 @@ else
                 </div>
 
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="deckName" class="form-label">
+                            Deck Name
+                        </label>
+                        <input class="form-control"
+                                  id="deckName"
+                                  name="DeckName"
+                                  maxlength="100"
+                                  value="@Model.DeckName"
+                                  placeholder="Enter a deck name..." />
+                    </div>
                     <div class="mb-3">
                         <label for="deckDescription" class="form-label">
                             Description
@@ -279,6 +302,7 @@ else
                     const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
                     const description = document.getElementById("deckDescription").value;
                     const iconId = document.getElementById("deckIconCardId").value;
+                    const deckName = document.getElementById("deckName").value
 
                     const response = await fetch('/api/Deck', {
                         method: 'POST',
@@ -291,7 +315,8 @@ else
                             visibility: visibility,
                             description: description,
                             iconId: iconId,
-                            deckId: deckId
+                            deckId: deckId,
+                            deckName: deckName
                         })
                     });
 

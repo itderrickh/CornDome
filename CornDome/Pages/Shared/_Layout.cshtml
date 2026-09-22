@@ -47,11 +47,13 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckBuilder">Deck Builder</a></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Decks/Index">Public Decks</a></li>
                                 @if (User.Identity.IsAuthenticated)
                                 {
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Decks/Mine">Deck Manager</a></li>
                                 }
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/DeckManager">Browser Deck Manager (Deprecated)</a></li>
                             </ul>
                         </li>
