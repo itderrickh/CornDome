@@ -2,8 +2,6 @@ using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {

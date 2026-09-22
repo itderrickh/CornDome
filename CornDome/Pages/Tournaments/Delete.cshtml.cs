@@ -2,7 +2,6 @@ using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {

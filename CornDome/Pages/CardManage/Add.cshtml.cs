@@ -3,11 +3,9 @@ using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
-using System.Security.Claims;
 
 namespace CornDome.Pages.CardManage
 {

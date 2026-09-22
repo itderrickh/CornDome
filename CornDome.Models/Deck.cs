@@ -1,5 +1,4 @@
-﻿using CornDome.Models.Cards;
-using CornDome.Models.Users;
+﻿using CornDome.Models.Users;
 
 namespace CornDome.Models
 {

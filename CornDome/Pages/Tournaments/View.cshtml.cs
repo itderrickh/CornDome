@@ -4,7 +4,6 @@ using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Tournaments;
 using CornDome.TournamentSystem;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
