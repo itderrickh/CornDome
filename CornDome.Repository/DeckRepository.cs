@@ -1,6 +1,4 @@
 ﻿using CornDome.Models;
-using CornDome.Models.Cards;
-using CornDome.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository
@@ -18,6 +16,7 @@ namespace CornDome.Repository
         (int count, List<Deck> decks) GetAllVisibleDecks(string authorFilter, int? cardIdFilter, int pageNumber, int pageSize);
         bool ChangeDeckValue(int deckId, string deckString);
         bool ChangeDeckSettings(int deckId, DeckVisibility visibility, string description, int iconCardId);
+        bool DeleteDeck(int deckId);
     }
 
     public class DeckRepository(MainContext mainContext) : IDeckRepository
@@ -158,6 +157,25 @@ namespace CornDome.Repository
             {
                 deck.DeckString = deckString;
                 deck.Modified = DateTime.Now;
+                var result = mainContext.SaveChanges();
+                return result > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteDeck(int deckId)
+        {
+            try
+            {
+                var deck = mainContext.Decks.FirstOrDefault(d => d.Id == deckId);
+
+                if (deck == null)
+                    return false;
+
+                mainContext.Remove(deck);
                 var result = mainContext.SaveChanges();
                 return result > 0;
             }

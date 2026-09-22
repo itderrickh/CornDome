@@ -1,9 +1,11 @@
 ﻿@model DeckGridViewModel
 
+@Html.AntiForgeryToken()
 <div class="row g-4">
     @foreach (var deck in Model.Decks)
     {
         var iconCard = Model.Cards.FirstOrDefault(x => x.Id == deck.IconCardId);
+
         <div class="col-12 col-md-6 col-xl-4">
             <div class="deck-card h-100 shadow-sm">
 
@@ -34,7 +36,14 @@
                         @if (deck.UserId == Model.UserId)
                         {
                             <div class="col-6 text-end">
-                                <button class="btn btn-danger">Delete</button>
+                                <button type="button"
+                                        class="btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteDeckModal"
+                                        data-deck-id="@deck.Id"
+                                        data-deck-description="@deck.Description">
+                                    Delete
+                                </button>
                             </div>
                         }
                         else
@@ -46,7 +55,6 @@
                                 </div>
                             </div>
                         }
-                        
                     </div>
                 </div>
 
@@ -88,6 +96,51 @@
     </nav>
 }
 
+<!-- Delete Modal -->
+<div class="modal fade"
+     id="deleteDeckModal"
+     tabindex="-1"
+     aria-labelledby="deleteDeckModalLabel"
+     aria-hidden="true" style="color: black;">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteDeckModalLabel">
+                    Delete Deck
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to delete
+                <strong id="deleteDeckDescription"></strong>?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        id="confirmDeleteDeck">
+                    Delete
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <style>
     .deck-card {
         position: relative;
@@ -117,11 +170,64 @@
         position: relative;
     }
 
-    .card-body-image::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, .25);
-        pointer-events: none;
-    }
+        .card-body-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .25);
+            pointer-events: none;
+        }
 </style>
+
+<script>
+    let deleteDeckId = null;
+
+    document.querySelectorAll('[data-bs-target="#deleteDeckModal"]')
+        .forEach(button => {
+            button.addEventListener('click', function () {
+                deleteDeckId = this.dataset.deckId;
+
+                document.getElementById('deleteDeckDescription').textContent =
+                    this.dataset.deckDescription;
+            });
+        });
+
+    document.getElementById('confirmDeleteDeck')
+        .addEventListener('click', async function () {
+
+            if (!deleteDeckId) {
+                return;
+            }
+
+            this.disabled = true;
+            this.textContent = 'Deleting...';
+
+            try {
+                const token = document.querySelector(
+                    'input[name="__RequestVerificationToken"]'
+                ).value;
+
+                const response = await fetch(`/api/Deck/${deleteDeckId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'RequestVerificationToken': token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Delete failed: ${response.status}`);
+                }
+
+                // Remove the modal backdrop and reload the page.
+                window.location.reload();
+            }
+            catch (error) {
+                console.error(error);
+
+                alert('Unable to delete the deck.');
+
+                this.disabled = false;
+                this.textContent = 'Delete';
+            }
+        });
+</script>

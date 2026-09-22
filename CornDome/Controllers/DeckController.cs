@@ -28,7 +28,37 @@ namespace CornDome.Controllers
     [Authorize]
     public class DeckController(UserManager<User> userManager, IDeckRepository deckRepository) : AuthorizedBaseController(userManager)
     {
+        [HttpDelete("{deckId}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveDeck(int deckId)
+        {
+            var loggedInUser = await GetUser();
+            if (loggedInUser == null)
+            {
+                return Unauthorized();
+            }
+
+            var deck = deckRepository.GetDeck(deckId);
+            if (deck != null && deck.UserId == loggedInUser.Id)
+            {
+                var success = deckRepository.DeleteDeck(deckId);
+                if (success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrUpdateDeck([FromBody] SaveDeckRequest request)
         {
             var loggedInUser = await GetUser();
