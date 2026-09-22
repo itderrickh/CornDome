@@ -9,7 +9,7 @@ namespace CornDome.Pages.Account
     public class LoginModel(SignInManager<User> signInManager) : PageModel
     {
         private readonly SignInManager<User> _signInManager = signInManager;
-        [BindProperty(SupportsGet = true)]
+        [BindProperty(Name="returnUrl", SupportsGet = true)]
         public string ReturnUrl { get; set; }
 
         public IActionResult OnGet()
