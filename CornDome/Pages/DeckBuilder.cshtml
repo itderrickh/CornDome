@@ -325,7 +325,7 @@
             const description = document.getElementById("deckDescription").value;
             const iconId = document.getElementById("deckIconCardId").value;
 
-            const response = await fetch('?handler=SaveDeckToDatabase', {
+            const response = await fetch('/api/Deck', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

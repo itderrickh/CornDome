@@ -4,7 +4,6 @@ using CornDome.Models.Cards;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace CornDome.Pages
 {
@@ -95,92 +94,6 @@ namespace CornDome.Pages
             {
                 QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
             }
-        }
-
-        public async Task<IActionResult> OnPostSaveDeckToDatabaseAsync([FromBody] SaveDeckRequest request)
-        {
-            if (!User.Identity?.IsAuthenticated ?? true)
-            {
-                return Unauthorized();
-            }
-
-            var loggedInUser = await GetUser();
-
-            if (loggedInUser == null)
-            {
-                return Unauthorized();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "Invalid deck data.",
-                    errors = ModelState
-                        .Where(x => x.Value?.Errors.Count > 0)
-                        .ToDictionary(
-                            x => x.Key,
-                            x => x.Value!.Errors.Select(e => e.ErrorMessage)
-                        )
-                });
-            }
-
-            var isSuccess = false;
-            // This deck exists already
-            if (request.DeckId.HasValue)
-            {
-                var deck = deckRepository.GetDeck(request.DeckId.Value);
-                if (deck != null && deck.UserId == loggedInUser.Id)
-                {
-                    isSuccess = deckRepository.ChangeDeckSettings(deck.Id, request.Visibility, ProfanityHelper.RelieveTheProfane(request.Description), request.IconId);
-                    isSuccess = deckRepository.ChangeDeckValue(deck.Id, request.DeckString);
-                }
-            }
-            else
-            {
-                deckRepository.AddDeck(new Deck()
-                {
-                    Created = DateTime.Now,
-                    DeckString = request.DeckString,
-                    Description = ProfanityHelper.RelieveTheProfane(request.Description),
-                    IconCardId = request.IconId,
-                    Modified = DateTime.Now,
-                    UserId = loggedInUser.Id,
-                    Visibility = request.Visibility
-                });
-            }
-
-            if (isSuccess)
-            {
-                return new JsonResult(new
-                {
-                    success = true,
-                    message = "Deck saved successfully."
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    success = false,
-                    message = "Deck did not save successfully."
-                });
-            }
-        }
-
-        public class SaveDeckRequest
-        {
-            [Required]
-            public string DeckString { get; set; }
-            [Required]
-            public DeckVisibility Visibility { get; set; }
-            [Required]
-            [StringLength(400)]
-            public string Description { get; set; }
-            [Required]
-            public int IconId { get; set; }
-            public int? DeckId { get; set; }
         }
     }
 }

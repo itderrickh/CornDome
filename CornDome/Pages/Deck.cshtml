@@ -67,7 +67,7 @@ else
                     @if (Model.QueryDeck.Hero != null)
                     {
                         <div class="w-20">
-                            <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id" class="deck-card" data-card-id="@Model.QueryDeck.Hero.LatestRevision.Id" data-type="hero">
+                            <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id" class="deck-card" data-card-id="@Model.QueryDeck.Hero.Id" data-type="hero">
                                 <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
                             </a>
                         </div>
@@ -238,6 +238,7 @@ else
         }
 
                 function deckToQuery(deck) {
+                    debugger;
                     var heroString = deck.hero != null ? parseInt(deck.hero) : "";
                     var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
                     var cardString = packString(deck.cards.map((x) => parseInt(x)));
@@ -256,6 +257,7 @@ else
                         'cards': []
                     }
                     document.querySelectorAll(".deck-card").forEach(function(card) {
+                        debugger;
                         if (card.dataset.type === 'hero') {
                             deck.hero = card.dataset.cardId;
                         }
@@ -278,7 +280,7 @@ else
                     const description = document.getElementById("deckDescription").value;
                     const iconId = document.getElementById("deckIconCardId").value;
 
-                    const response = await fetch('?handler=SaveDeckToDatabase', {
+                    const response = await fetch('/api/Deck', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -309,49 +311,5 @@ else
 
                     modal.hide();
                 }
-    </script>
-    <script>
-        document.getElementById("deckForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const form = e.target;
-            const button = document.getElementById("saveDeckButton");
-            const message = document.getElementById("saveMessage");
-
-            button.disabled = true;
-            button.textContent = "Saving...";
-            message.innerHTML = "";
-
-            try {
-                const response = await fetch(window.location.pathname + window.location.search, {
-                    method: "POST",
-                    body: new FormData(form),
-                    headers: {
-                        "RequestVerificationToken":
-                            form.querySelector('input[name="__RequestVerificationToken"]')?.value
-                    }
-                });
-
-                if (response.ok) {
-                    message.innerHTML =
-                        '<div class="alert alert-success">Deck saved successfully.</div>';
-                } else {
-                    const text = await response.text();
-
-                    message.innerHTML =
-                        '<div class="alert alert-danger">Unable to save the deck.</div>';
-
-                    console.error("Save failed:", response.status, text);
-                }
-            } catch (error) {
-                console.error(error);
-
-                message.innerHTML =
-                    '<div class="alert alert-danger">An error occurred while saving the deck.</div>';
-            } finally {
-                button.disabled = false;
-                button.textContent = "Save Deck";
-            }
-        });
     </script>
 }
