@@ -38,7 +38,7 @@ async function gzipAndBase64(data) {
     return btoa(binary);
 }
 
-async function deckToString() {
+function deckToString() {
     var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
     var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
     var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
@@ -52,6 +52,8 @@ async function deckToString() {
 }
 
 async function deckToQuery() {
+    var query = new URLSearchParams(document.location.search);
+    var deckId = query.get("id");
     var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
     var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
     var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
@@ -59,9 +61,11 @@ async function deckToQuery() {
         var data = [heroString, landscapeString, cardString].join(';');
 
         if (history.pushState) {
-            //var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?deck=' + btoa(data) + "&gzdeck=" + await gzipAndBase64(data);
             var output = await gzipAndBase64(data);
             var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?gzdeck=' + encodeURIComponent(output);
+            if (deckId) {
+                newurl += "&id=" + deckId;
+            }
             window.history.pushState({ path: newurl }, '', newurl);
         }
     }

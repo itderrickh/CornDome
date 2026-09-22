@@ -57,14 +57,25 @@ function optionTemplate(card) {
 function renderSaveIconDropdown() {
     var dropDown = document.getElementById("deckIconCardId");
     dropDown.innerHTML = "";
-    if (deck.hero !== null) {
-        dropDown.appendChild(optionTemplate(deck.hero));
+    var added = new Set();
+
+    function addOption(card) {
+        if (card === null || added.has(card.id)) {
+            return;
+        }
+
+        added.add(card.id);
+        dropDown.appendChild(optionTemplate(card));
     }
+
+    addOption(deck.hero);
+
     for (var ls of deck.landscapes) {
-        dropDown.appendChild(optionTemplate(ls));
+        addOption(ls);
     }
+
     for (var cd of deck.cards) {
-        dropDown.appendChild(optionTemplate(cd));
+        addOption(cd);
     }
 }
 
