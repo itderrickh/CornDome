@@ -40,7 +40,9 @@ namespace CornDome.Models
 
         public static QueryDeck GetFromQuery(string query, IEnumerable<Card> cards)
         {
-            
+            // Handle an old use case where legacy URL wasn't handled correctly
+            query = query.PadRight(query.Length + (4 - query.Length % 4) % 4, '=');
+
             var converted = Convert.FromBase64String(query);
             var deckString = Encoding.UTF8.GetString(converted);
 
