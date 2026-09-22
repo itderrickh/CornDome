@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Cards;
+using System.Buffers.Text;
 using System.IO.Compression;
 
 namespace CornDome.Models
@@ -27,6 +28,8 @@ namespace CornDome.Models
         public static Deck GetFromQuery(string query, IEnumerable<Card> cards)
         {
             var deckToReturn = new Deck();
+            // Handle an old use case where legacy URL wasn't handled correctly
+            query = query.PadRight(query.Length + (4 - query.Length % 4) % 4, '=');
             var converted = Convert.FromBase64String(query);
             var deckString = System.Text.Encoding.UTF8.GetString(converted);
 
