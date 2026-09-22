@@ -1,3 +1,4 @@
+using CornDome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ namespace CornDome.Pages.Errors
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
-    public class Error404Model : PageModel
+    public class Error404Model : BasePageModel
     {
         public string RequestId { get; set; }
 

@@ -3,18 +3,16 @@ using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages
 {
     [IgnoreAntiforgeryToken]
     [AllowAnonymous]
-    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository, Config config) : PageModel
+    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : BasePageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public Card QueryCard { get; set; } = null;
         public int? RevisionId { get; set; } = null;
-        public string BaseUrl { get; set; } = config.BaseUrl;
 
         public void OnGet()
         {

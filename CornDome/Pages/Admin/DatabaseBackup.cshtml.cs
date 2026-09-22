@@ -1,16 +1,13 @@
+using CornDome.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.IO.Compression;
 
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class DatabaseBackupModel(Config config) : PageModel
+    public class DatabaseBackupModel(Config config) : BasePageModel
     {
-        // Path to the file you want to serve
-        private readonly string _cardsDbPath = config.DatabasePaths.CardsDb;
-
         public IActionResult OnGet()
         {
             var files = new[] { config.DatabasePaths.CardsDb, config.DatabasePaths.MasterDb, config.DatabasePaths.TournamentDb };

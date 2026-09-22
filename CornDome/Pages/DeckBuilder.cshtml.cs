@@ -4,18 +4,15 @@ using CornDome.Models.Cards;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace CornDome.Pages
 {
-    public class DeckBuilderModel(ICardRepository cardRepository, Config config, IUserRepository userRepository, IDeckRepository deckRepository) : PageModel
+    public class DeckBuilderModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
-        public string BaseUrl { get; set; } = config.BaseUrl;
         public bool QueryBuildFailed { get; set; } = false;
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? DeckId { get; set; }
@@ -50,13 +47,6 @@ namespace CornDome.Pages
             {
                 QueryBuildFailed = true;
             }
-        }
-
-        private async Task<User> GetUser()
-        {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
-            return loggedInUser;
         }
 
         private async Task BuildDeckFromQuery()
@@ -114,10 +104,9 @@ namespace CornDome.Pages
                 return Unauthorized();
             }
 
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
-            if (identifier == null || loggedInUser == null)
+            if (loggedInUser == null)
             {
                 return Unauthorized();
             }

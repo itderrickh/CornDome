@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class AddModel(ICardRepository cardRepository, ILogEntryRepository logEntryRepository, IUserRepository userRepository, Config config) : PageModel
+    public class AddModel(ICardRepository cardRepository, ILogEntryRepository logEntryRepository, IUserRepository userRepository, Config config) : BasePageModel
     {
         [BindProperty]
         public AddCard AddCard { get; set; } = new();
@@ -31,8 +31,7 @@ namespace CornDome.Pages.CardManage
                 return Page();
             }
 
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             var setIds = AddCard.SetIds.Split(',').Select(int.Parse).ToArray();
             var sets = cardRepository.GetSetsByIds(setIds);

@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
 using CornDome.Repository;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
-    public class ViewModel(TournamentContext tournamentContext, IUserRepository userRepository) : PageModel
+    public class ViewModel(TournamentContext tournamentContext, IUserRepository userRepository) : BasePageModel
     {
         public Tournament Tournament { get; set; }
         public List<TournamentRegistration> RegisteredUsers { get; set; } = [];

@@ -1,10 +1,7 @@
 using CornDome.Models;
 using CornDome.Models.Users;
-using CornDome.Repository;
 using CornDome.Repository.Discord;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Play
 {
@@ -27,7 +24,7 @@ namespace CornDome.Pages.Play
         public List<AvailabilityDayVm> Days { get; set; } = new();
     }
 
-    public class SettingsModel(Config config, IDiscordRepository discordRepository, IUserRepository userRepository) : PageModel
+    public class SettingsModel(Config config, IDiscordRepository discordRepository) : BasePageModel
     {
         public DiscordConnection DiscordConnection { get; set; }
         public bool IsUserInServer { get; set; }
@@ -38,8 +35,7 @@ namespace CornDome.Pages.Play
 
         public async Task<IActionResult> OnGet()
         {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             DiscordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 
@@ -104,8 +100,7 @@ namespace CornDome.Pages.Play
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
             var userId = loggedInUser.Id;
 
             foreach (var day in Form.Days)

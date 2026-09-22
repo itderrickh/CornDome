@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 namespace CornDome.Pages.Tournaments
 {
     [Authorize]
-    public class RegisterModel(TournamentContext tournamentContext) : PageModel
+    public class RegisterModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]
         public int TournamentId { get; set; }
@@ -18,19 +19,19 @@ namespace CornDome.Pages.Tournaments
         [BindProperty]
         public string Deck { get; set; }
 
-        public void OnGet()
+        public async Task OnGet()
         {
             var queryId = Request.Query["id"];
             TournamentId = int.Parse(queryId);
             Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var userIdValid = int.TryParse(userId, out int integerUserId);
-            var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == integerUserId && x.TournamentId == TournamentId);
+            var user = await GetUser();
+            var userId = user.Id;
+            var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == userId && x.TournamentId == TournamentId);
             ActiveRegistration = registration;
         }
 
-        public IActionResult OnPostCreateRegistration()
+        public async Task<IActionResult> OnPostCreateRegistration()
         {
             if (!ModelState.IsValid)
             {
@@ -44,14 +45,15 @@ namespace CornDome.Pages.Tournaments
                 .Replace("http://www.carddweeb.com/Deck?deck=", "")
                 .Replace("https://www.carddweeb.com/Deck?deck=", "");
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userId != null && int.TryParse(userId, out int integerUserId))
+            var user = await GetUser();
+            var userId = user.Id;
+            if (user != null)
             {
                 var registration = new TournamentRegistration()
                 {
                     Deck = Deck,
                     TournamentId = TournamentId,
-                    UserId = integerUserId
+                    UserId = userId
                 };
 
                 tournamentContext.Registrations.Add(registration);
@@ -119,19 +121,19 @@ namespace CornDome.Pages.Tournaments
             return Page();
         }
 
-        public IActionResult OnPostCancelRegistration()
+        public async Task<IActionResult> OnPostCancelRegistration()
         {
             var tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = await GetUser();
+            var userId = user.Id;
 
             var updated = false;
-            var isUserValid = userId != null && int.TryParse(userId, out int integerUserId);
             var isTournamentEditable = tournament.Status == TournamentStatus.OpenForSignups || tournament.Status == TournamentStatus.ClosedForSignups;
-            var isValidToUpdate = isTournamentEditable && isUserValid;
+            var isValidToUpdate = isTournamentEditable;
             if (isValidToUpdate)
             {
-                var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == int.Parse(userId) && x.TournamentId == TournamentId);
+                var registration = tournamentContext.Registrations.FirstOrDefault(x => x.UserId == userId && x.TournamentId == TournamentId);
                 tournamentContext.Registrations.Remove(registration);
 
                 updated = tournamentContext.SaveChanges() > 0;

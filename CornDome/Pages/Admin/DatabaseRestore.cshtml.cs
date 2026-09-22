@@ -1,3 +1,4 @@
+using CornDome.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class DatabaseRestoreModel(Config config) : PageModel
+    public class DatabaseRestoreModel(Config config) : BasePageModel
     {
         [BindProperty]
         public IFormFile CardsDb { get; set; }

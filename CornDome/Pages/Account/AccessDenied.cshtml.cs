@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Account
 {
-    public class AccessDeniedModel : PageModel
+    public class AccessDeniedModel() : BasePageModel
     {
         public void OnGet()
         {

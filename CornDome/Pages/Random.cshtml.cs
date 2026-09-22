@@ -1,18 +1,17 @@
+using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages;
 
 [IgnoreAntiforgeryToken]
 [AllowAnonymous]
-public class RandomModel(ICardRepository cardRepository, Config config) : PageModel
+public class RandomModel(ICardRepository cardRepository) : BasePageModel
 {
     private readonly ICardRepository _cardRepository = cardRepository;
     public Card QueryCard { get; set; } = null;
-    public string BaseUrl { get; set; } = config.BaseUrl;
     public List<int> TypesToGenerate = [(int)CardTypeEnum.Creature, (int)CardTypeEnum.Spell, (int)CardTypeEnum.Building, (int)CardTypeEnum.Teamwork];
 
     public void OnGet()

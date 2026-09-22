@@ -3,17 +3,14 @@ using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {
     [Authorize]
-    public class MineModel(ICardRepository cardRepository, Config config, IUserRepository userRepository, IDeckRepository deckRepository) : PageModel
+    public class MineModel(ICardRepository cardRepository, IUserRepository userRepository, IDeckRepository deckRepository) : BasePageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }
-        public string BaseUrl { get; set; } = config.BaseUrl;
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
 
@@ -25,8 +22,7 @@ namespace CornDome.Pages.Decks
 
         public async Task OnGet()
         {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             if (PageNumber < 1)
             {

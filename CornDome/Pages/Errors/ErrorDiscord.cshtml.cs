@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Errors
 {
-    public class ErrorDiscordModel : PageModel
+    public class ErrorDiscordModel : BasePageModel
     {
         public void OnGet()
         {

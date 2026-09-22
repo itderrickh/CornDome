@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Resources
 {
-    public class SampleDecksModel : PageModel
+    public class SampleDecksModel : BasePageModel
     {
         public void OnGet()
         {

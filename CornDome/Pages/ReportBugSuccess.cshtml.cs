@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages
 {
-    public class ReportBugSuccessModel : PageModel
+    public class ReportBugSuccessModel : BasePageModel
     {
         public void OnGet()
         {

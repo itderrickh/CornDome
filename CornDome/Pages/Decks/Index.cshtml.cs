@@ -2,18 +2,13 @@ using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {
-    public class IndexModel(IDeckRepository deckRepository, ICardRepository cardRepository, IUserRepository userRepository, Config config) : PageModel
+    public class IndexModel(IDeckRepository deckRepository, ICardRepository cardRepository, IUserRepository userRepository, Config config) : BasePageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }
-        public string BaseUrl { get; set; } = config.BaseUrl;
 
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
@@ -35,8 +30,7 @@ namespace CornDome.Pages.Decks
             var userId = -1;
             if (User.Identity.IsAuthenticated)
             {
-                var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+                var loggedInUser = await GetUser();
                 userId = loggedInUser.Id;
             }
             if (PageNumber < 1)

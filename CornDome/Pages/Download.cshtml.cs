@@ -2,7 +2,6 @@ using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,7 +11,7 @@ using System.Web;
 
 namespace CornDome.Pages
 {
-    public class DownloadModel(Config configuration, ICardRepository cardRepository) : PageModel
+    public class DownloadModel(Config configuration, ICardRepository cardRepository) : BasePageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         private readonly Config config = configuration;

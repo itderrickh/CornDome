@@ -14,7 +14,7 @@ namespace CornDome.Pages.Admin
         IRoleRepository roleRepository,
         IUserRoleRepository userRoleRepository,
         IBugReportRepository bugReportRepository
-        ) : PageModel
+        ) : BasePageModel
     {
         public User LoggedInUser { get; set; }
         public List<User> Users { get; set; }
@@ -33,8 +33,7 @@ namespace CornDome.Pages.Admin
         {
             if (User.Identity.IsAuthenticated)
             {
-                var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                LoggedInUser = await userRepository.GetUserById(int.Parse(id));
+                LoggedInUser = await GetUser();
             }
 
             await PopulateTables();

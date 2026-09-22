@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Resources
 {
-    public class PreconDecklistsModel : PageModel
+    public class PreconDecklistsModel : BasePageModel
     {
         public void OnGet()
         {

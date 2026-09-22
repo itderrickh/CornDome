@@ -2,17 +2,14 @@ using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages
 {
-    public class GoldfishModel(ICardRepository cardRepository, Config config, IDeckRepository deckRepository, IUserRepository userRepository) : PageModel
+    public class GoldfishModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
-        public string BaseUrl { get; set; } = config.BaseUrl;
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? DeckId { get; set; }
 
@@ -33,8 +30,7 @@ namespace CornDome.Pages
         {
             if (DeckId.HasValue)
             {
-                var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+                var loggedInUser = await GetUser();
                 Deck deck = null;
 
                 if (deckRepository.DoesUserHaveAccess(DeckId.Value, loggedInUser.Id))

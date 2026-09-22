@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -6,10 +7,9 @@ using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {
-    public class UserModel(IDeckRepository deckRepository, ICardRepository cardRepository, Config config, IUserRepository userRepository) : PageModel
+    public class UserModel(IDeckRepository deckRepository, ICardRepository cardRepository, IUserRepository userRepository) : BasePageModel
     {
         public List<Card> Cards { get; set; }
-        public string BaseUrl { get; set; } = config.BaseUrl;
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
 
@@ -28,8 +28,7 @@ namespace CornDome.Pages.Decks
             var loggedInUserId = -1;
             if (User.Identity.IsAuthenticated)
             {
-                var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+                var loggedInUser = await GetUser();
                 loggedInUserId = loggedInUser.Id;
             }
 
