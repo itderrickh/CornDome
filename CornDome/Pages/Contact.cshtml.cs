@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages
 {
-    public class ContactModel : PageModel
+    public class ContactModel : BasePageModel
     {
         public void OnGet()
         {

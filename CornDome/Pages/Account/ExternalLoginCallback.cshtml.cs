@@ -1,13 +1,13 @@
+using CornDome.Models;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace CornDome.Pages.Account
 {
-    public class ExternalLoginCallbackModel(IUserRepository userRepository, SignInManager<User> signInManager) : PageModel
+    public class ExternalLoginCallbackModel(IUserRepository userRepository, SignInManager<User> signInManager) : BasePageModel
     {
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {

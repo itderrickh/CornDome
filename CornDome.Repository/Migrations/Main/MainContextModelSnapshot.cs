@@ -45,6 +45,74 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("BugReports");
                 });
 
+            modelBuilder.Entity("CornDome.Models.Deck", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeckName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeckString")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IconCardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Visibility")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Decks");
+                });
+
+            modelBuilder.Entity("CornDome.Models.DeckComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CommentText")
+                        .HasMaxLength(400)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DeckId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsUpvoted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeckId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DeckComments");
+                });
+
             modelBuilder.Entity("CornDome.Models.FeedbackRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -308,6 +376,36 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CornDome.Models.Deck", b =>
+                {
+                    b.HasOne("CornDome.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CornDome.Models.DeckComment", b =>
+                {
+                    b.HasOne("CornDome.Models.Deck", "Deck")
+                        .WithMany("DeckComments")
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CornDome.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Deck");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CornDome.Models.PlayAvailability", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
@@ -358,6 +456,11 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Deck", b =>
+                {
+                    b.Navigation("DeckComments");
                 });
 
             modelBuilder.Entity("CornDome.Models.Users.Role", b =>

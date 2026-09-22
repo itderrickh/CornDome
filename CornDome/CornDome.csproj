@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="4.0.22.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="DotnetBadWordDetector" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />

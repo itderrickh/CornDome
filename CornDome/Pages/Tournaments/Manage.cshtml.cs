@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
 using CornDome.Repository;
@@ -5,17 +6,16 @@ using CornDome.Repository.Tournaments;
 using CornDome.TournamentSystem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Pages.Tournaments
 {
     [Authorize(Policy = "tournamentOrganizer")]
-    public class ManageModel(TournamentContext tournamentContext, IUserRepository userRepository) : PageModel
+    public class ManageModel(TournamentContext tournamentContext, IUserRepository userRepository) : BasePageModel
     {
         public Tournament Tournament { get; set; }
 
-        [BindProperty]
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
 
         public List<TournamentRegistration> Registrations { get; set; } = [];
@@ -41,12 +41,6 @@ namespace CornDome.Pages.Tournaments
 
         private async Task Load()
         {
-            if (TournamentId <= 0)
-            {
-                var queryId = Request.Query["id"];
-                TournamentId = int.Parse(queryId);
-            }
-
             Tournament = tournamentContext.Tournaments
                 .Include(x => x.Rounds)
                 .ThenInclude(y => y.Matches)

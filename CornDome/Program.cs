@@ -26,6 +26,7 @@ namespace CornDome
             services.AddTransient<IDiscordRepository, DiscordRepository>();
             services.AddTransient<IBugReportRepository, BugReportRepository>();
             services.AddTransient<ILogEntryRepository, LogEntryRepository>();
+            services.AddTransient<IDeckRepository, DeckRepository>();
         }
 
         public static void AddDbContext(WebApplicationBuilder builder, IServiceCollection services)
@@ -118,6 +119,7 @@ namespace CornDome
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddSingleton<Config>();
+            builder.Services.AddControllers();
 
             var keyFolder = builder.Environment.IsDevelopment()
                 ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppConstants.APP_NAME, "DataProtectionKeys")
@@ -173,6 +175,7 @@ namespace CornDome
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapRazorPages();
+            app.MapControllers();
 
             app.Run();
         }

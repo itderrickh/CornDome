@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages
 {
-    public class LifeCounterModel : PageModel
+    public class LifeCounterModel : BasePageModel
     {
         public void OnGet()
         {

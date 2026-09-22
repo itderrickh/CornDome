@@ -1,6 +1,6 @@
 var template = function (card) {
     var element = document.createElement("div");
-    element.classList += "card deck-card";
+    element.classList += "card-image deck-card";
 
     element.dataset.ability = card.ability;
     element.dataset.cardImage = card.cardImage;
@@ -47,7 +47,42 @@ function renderCards() {
     deckToQuery();
 }
 
+function optionTemplate(card) {
+    var element = document.createElement("option");
+    element.value = card.id;
+    element.text = card.name;
+
+    return element;
+}
+function renderSaveIconDropdown() {
+    var dropDown = document.getElementById("deckIconCardId");
+    dropDown.innerHTML = "";
+    var added = new Set();
+
+    function addOption(card) {
+        if (card === null || added.has(card.id)) {
+            return;
+        }
+
+        added.add(card.id);
+        dropDown.appendChild(optionTemplate(card));
+    }
+
+    addOption(deck.hero);
+
+    for (var ls of deck.landscapes) {
+        addOption(ls);
+    }
+
+    for (var cd of deck.cards) {
+        addOption(cd);
+    }
+}
+
 function renderData() {
+
+    renderSaveIconDropdown();
+
     var totalStatField = document.getElementById('total-stat');
     var heroesStatField = document.getElementById('heroes-stat');
     var landscapesStatField = document.getElementById('landscapes-stat');
@@ -113,4 +148,5 @@ function buildDeckIfExistsInQuery() {
     renderLandscapes();
     renderCards();
     renderData();
+    renderSaveIconDropdown();
 }

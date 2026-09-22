@@ -1,23 +1,21 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
     [Authorize(Policy = "tournamentOrganizer")]
-    public class EditModel(TournamentContext tournamentContext) : PageModel
+    public class EditModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]
         public Tournament Tournament { get; set; }
 
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
         public void OnGet()
         {
-            var queryId = Request.Query["id"];
-            TournamentId = int.Parse(queryId);
-
             Tournament = tournamentContext.Tournaments.SingleOrDefault(x => x.Id == TournamentId);
         }
 

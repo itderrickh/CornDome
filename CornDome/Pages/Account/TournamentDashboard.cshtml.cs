@@ -1,17 +1,16 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Account
 {
     [Authorize]
-    public class TournamentDashboardModel(TournamentContext tournamentContext, IUserRepository userRepository) : PageModel
+    public class TournamentDashboardModel(TournamentContext tournamentContext, IUserRepository userRepository) : BasePageModel
     {
         public List<TournamentRegistration> Registrations { get; set; }
         public int UserId { get; set; }
@@ -23,7 +22,8 @@ namespace CornDome.Pages.Account
 
         private async Task Load()
         {
-            UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = await GetUser();
+            UserId = user.Id;
 
             Registrations = tournamentContext.Registrations
                 .Include(x => x.Tournament)

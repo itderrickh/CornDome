@@ -1,21 +1,21 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
-    public class DeleteModel(TournamentContext tournamentContext) : PageModel
+    public class DeleteModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]
         public Tournament Tournament { get; set; }
 
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int TournamentId { get; set; }
+        
+
         public void OnGet()
         {
-            var queryId = Request.Query["id"];
-            TournamentId = int.Parse(queryId);
-
             Tournament = tournamentContext.Tournaments.FirstOrDefault(x => x.Id == TournamentId);
         }
 

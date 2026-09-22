@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Resources
 {
-    public class BacklogModel : PageModel
+    public class BacklogModel : BasePageModel
     {
         public void OnGet()
         {

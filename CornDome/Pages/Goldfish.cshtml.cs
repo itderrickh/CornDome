@@ -1,37 +1,51 @@
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages
 {
-    public class GoldfishModel(ICardRepository cardRepository, Config config) : PageModel
+    public class GoldfishModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
-        private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
-        public Deck QueryDeck { get; set; } = null;
-        public string BaseUrl { get; set; } = config.BaseUrl;
+        public QueryDeck QueryDeck { get; set; } = null;
+        [BindProperty(Name = "id", SupportsGet = true)]
+        public int? DeckId { get; set; }
 
-        public void OnGet()
+        [BindProperty(Name = "gzdeck", SupportsGet = true)]
+        public string GzDeck { get; set; }
+
+        [BindProperty(Name = "deck", SupportsGet = true)]
+        public string NonGZDeck { get; set; }
+
+        public async Task OnGet()
         {
-            Cards = _cardRepository.GetAll();
+            Cards = cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
-                BuildDeckFromQuery();
+            await BuildDeckFromQuery();
         }
 
-        private void BuildDeckFromQuery()
+        private async Task BuildDeckFromQuery()
         {
-            var nonGZDeck = Request.Query["deck"];
-            var gzDeck = Request.Query["gzdeck"];
-
-            if (string.IsNullOrEmpty(nonGZDeck))
+            if (DeckId.HasValue)
             {
-                QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
+                var loggedInUser = await GetUser();
+                if (deckRepository.DoesUserHaveAccess(DeckId.Value, loggedInUser.Id))
+                {
+                    Deck deck = deckRepository.GetDeck(DeckId.Value);
+                    if (deck != null)
+                    {
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                    }
+                }
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
+            }
+            else if (!string.IsNullOrWhiteSpace(NonGZDeck))
+            {
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
             }
         }
     }

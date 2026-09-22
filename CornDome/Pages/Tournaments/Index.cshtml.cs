@@ -1,11 +1,11 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
-    public class IndexModel(TournamentContext tournamentContext) : PageModel
+    public class IndexModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]
         public Tournament TournamentToInsert { get; set; }

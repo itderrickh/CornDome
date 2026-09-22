@@ -1,13 +1,13 @@
+using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Tournaments
 {
     [Authorize(Policy = "tournamentOrganizer")]
-    public class AdminModel(TournamentContext tournamentContext) : PageModel
+    public class AdminModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]
         public Tournament TournamentToInsert { get; set; }

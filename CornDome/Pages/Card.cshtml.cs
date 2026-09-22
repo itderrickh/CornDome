@@ -3,30 +3,26 @@ using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages
 {
     [IgnoreAntiforgeryToken]
     [AllowAnonymous]
-    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository, Config config) : PageModel
+    public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : BasePageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public Card QueryCard { get; set; } = null;
-        public int? RevisionId { get; set; } = null;
-        public string BaseUrl { get; set; } = config.BaseUrl;
+
+        [BindProperty(Name = "id", SupportsGet = true)]
+        public int? CardId { get; set; }
+        [BindProperty(Name = "revision", SupportsGet = true)]
+        public int? RevisionId { get; set; }
 
         public void OnGet()
         {
-            var queryId = Request.Query["id"];
-
-            if (int.TryParse(queryId, out int cardId))
+            if (CardId.HasValue)
             {
-                QueryCard = _cardRepository.GetCard(cardId);
-                var revisionNumber = Request.Query["revision"];
-                var gotRevision = int.TryParse(revisionNumber, out int rev);
-                if (gotRevision)
-                    RevisionId = rev;
+                QueryCard = _cardRepository.GetCard(CardId.Value);
             }
         }
 

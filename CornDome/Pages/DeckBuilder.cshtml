@@ -13,6 +13,7 @@
 }
 
 <div class="builder-area">
+    @Html.AntiForgeryToken()
     <div class="tool-area">
         <fieldset class="stats">
             <legend>Stats</legend>
@@ -40,8 +41,20 @@
             <button id="validateButton" type="button" class="btn btn-lg btn-block btn-primary">Validate Deck</button>
             <button id="decklistExport" type="button" class="btn btn-lg btn-block btn-primary">Copy decklist to clipboard</button>
             <button id="permalinkExport" type="button" class="btn btn-lg btn-block btn-primary">Copy permalink to clipboard</button>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Request.Query["deck"])" asp-route-gzdeck="@(Request.Query["gzdeck"])">Try it out</a>
-            <button id="saveButton" type="button" class="btn btn-lg btn-block btn-primary">Save (Browser storage)</button>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)">Try it out</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button id="saveDatabaseButton2" type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
+                    Save Deck
+                </button>
+            }
+            else
+            {
+                <button id="disabledSave" type="button" class="btn btn-lg btn-block btn-secondary btn-disabled" disabled>
+                    Login to Save Decks
+                </button>
+            }
+            
             <button id="textExportUntap" type="button" class="btn btn-lg btn-block btn-primary">Untap.in Export</button>
             <button id="textExport" type="button" class="btn btn-lg btn-block btn-primary">Text Export</button>
             <textarea id="textExportField" style="width: 100%; display: none;" rows="20"></textarea>
@@ -204,6 +217,114 @@
     </div>
 </div>
 
+<!-- Create / Edit Deck Modal -->
+<div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true" style="color: black;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveModalLabel">@(Model.IsMyDeck ? "Save" : "Create") Deck</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger d-none" id="apiError" role="alert">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3 fs-4">⚠️</div>
+
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading mb-1" id="apiErrorTitle">
+                                Validation error
+                            </h5>
+
+                            <p class="mb-2" id="apiErrorMessage"></p>
+
+                            <ul class="mb-0" id="apiErrorList"></ul>
+                        </div>
+
+                        <button type="button"
+                                class="btn-close"
+                                aria-label="Close"
+                                onclick="document.getElementById('apiError').classList.add('d-none')">
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="deckName" class="form-label">
+                        Deck Name
+                    </label>
+                    <input class="form-control"
+                                id="deckName"
+                                name="DeckName"
+                                maxlength="100"
+                                value="@Model.DeckName"
+                                placeholder="Enter a deck name..." />
+                </div>
+                <div class="mb-3">
+                    <label for="deckDescription" class="form-label">
+                        Description
+                    </label>
+                    <textarea class="form-control"
+                              id="deckDescription"
+                              name="Description"
+                              rows="3"
+                              maxlength="400"
+                              placeholder="Enter a description...">@Model.Description</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="deckVisibility" class="form-label">
+                        Visibility
+                    </label>
+                    <select class="form-select"
+                            id="deckVisibility"
+                            name="Visibility">
+                        <option value="@((int)DeckVisibility.Visible)" selected="@(Model.Visibility == DeckVisibility.Visible)">Public</option>
+                        <option value="@((int)DeckVisibility.Limited)" selected="@(Model.Visibility == DeckVisibility.Limited)">Unlisted</option>
+                        <option value="@((int)DeckVisibility.Invisible)" selected="@(Model.Visibility == DeckVisibility.Invisible)">Private</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="deckIconCardId" class="form-label">
+                        Icon Card
+                    </label>
+                    
+                        <select class="form-select"
+                        id="deckIconCardId"
+                        name="IconCardId">
+                        @if (Model.QueryDeck != null)
+                        {
+                                List<Card> allDeckCards = [Model.QueryDeck.Hero];
+                                allDeckCards.AddRange(Model.QueryDeck.Cards);
+                                allDeckCards.AddRange(Model.QueryDeck.Landscapes);
+                            @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
+                            {
+                                <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
+                                    @card.LatestRevision.Name
+                                </option>
+                            }
+                        }
+                        </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button type="button" class="btn btn-primary" id="saveDatabaseButton">
+                    Save Deck
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script src="./js/enums.js" asp-append-version="true"></script>
     <script src="./js/helpers.js" asp-append-version="true"></script>
@@ -222,6 +343,80 @@
         };
 
         buildDeckIfExistsInQuery();
+
+        document.getElementById("saveDatabaseButton").onclick = async function () {
+            const alert = document.getElementById('apiError');
+
+            const token = document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            ).value;
+
+            const params = new URLSearchParams(window.location.search);
+            const deckId = params.get('id');
+
+            const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
+            const description = document.getElementById("deckDescription").value;
+            const deckName = document.getElementById("deckName").value;
+            const iconId = document.getElementById("deckIconCardId").value;
+
+            const response = await fetch('/api/Deck', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    deckContent: deckToString(),
+                    visibility: visibility,
+                    description: description,
+                    iconId: iconId == "" ? -1 : parseInt(iconId),
+                    deckName: deckName,
+                    deckId: deckId
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                const title = document.getElementById('apiErrorTitle');
+                const list = document.getElementById('apiErrorList');
+
+                title.textContent = result.title || 'Something went wrong';
+
+                list.innerHTML = '';
+
+                if (result.errors) {
+                    for (const [field, messages] of Object.entries(result.errors)) {
+                        for (const msg of messages) {
+                            const li = document.createElement('li');
+
+                            const strong = document.createElement('strong');
+                            strong.textContent = field + ': ';
+
+                            li.appendChild(strong);
+                            li.appendChild(document.createTextNode(msg));
+
+                            list.appendChild(li);
+                        }
+                    }
+                }
+
+                alert.classList.remove('d-none');
+            }
+            else {
+                alert(result.message);
+                const modalElement = document.getElementById('saveModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+
+                modal.hide();
+                alert.classList.add('d-none');
+            }
+        }
+
+        document.getElementById('saveModal').addEventListener('hidden.bs.modal', function () {
+            const alert = document.getElementById('apiError');
+            alert.classList.add('d-none');
+        });
     </script>
 }
 

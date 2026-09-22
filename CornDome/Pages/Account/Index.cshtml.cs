@@ -1,7 +1,7 @@
+using CornDome.Models;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace CornDome.Pages.Account
@@ -13,7 +13,7 @@ namespace CornDome.Pages.Account
     }
 
     [Authorize]
-    public class IndexModel(IUserRepository userRepository) : PageModel
+    public class IndexModel(IUserRepository userRepository) : BasePageModel
     {
         [BindProperty]
         public LocalUser LocalUser { get; set; } = new LocalUser();
@@ -33,8 +33,7 @@ namespace CornDome.Pages.Account
                 return Page();
             }
 
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             loggedInUser.UserName = LocalUser.Username;
             var updated = await userRepository.UpdateUser(loggedInUser);

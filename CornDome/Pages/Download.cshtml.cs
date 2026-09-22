@@ -1,8 +1,8 @@
 using CornDome.Models;
 using CornDome.Models.Cards;
+using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,12 +12,20 @@ using System.Web;
 
 namespace CornDome.Pages
 {
-    public class DownloadModel(Config configuration, ICardRepository cardRepository) : PageModel
+    public class DownloadModel(Config configuration, ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
-        private readonly ICardRepository _cardRepository = cardRepository;
+        [BindProperty(Name = "id", SupportsGet = true)]
+        public int? DeckId { get; set; }
+
+        [BindProperty(Name = "gzdeck", SupportsGet = true)]
+        public string GzDeck { get; set; }
+
+        [BindProperty(Name = "deck", SupportsGet = true)]
+        public string NonGZDeck { get; set; }
+
         private readonly Config config = configuration;
         public IEnumerable<Card> Cards { get; set; }
-        public Deck QueryDeck { get; set; } = null;
+        public QueryDeck QueryDeck { get; set; } = null;
 
         private const int cardWidth = 86;
         private const int cardHeight = 120;
@@ -137,42 +145,55 @@ namespace CornDome.Pages
             return stream.ToArray();
         }
         
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            Cards = _cardRepository.GetAll();
+            Cards = cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
+            await BuildDeckFromQuery();
+
+            if (QueryDeck != null)
             {
-                BuildDeckFromQuery();
+                var image = CreateCoordinates();
 
-                if (!IsInvalid)
-                {
-                    var image = CreateCoordinates();
-
-                    return File(image, "image/png", "download.png");
-                }
+                return File(image, "image/png", "download.png");
             }
 
             IsInvalid = true;
             return Page();
         }
 
-        private void BuildDeckFromQuery()
+        private async Task BuildDeckFromQuery()
         {
-            var nonGZDeck = Request.Query["deck"];
-            var gzDeck = Request.Query["gzdeck"];
+            var isLoggedIn = User.Identity.IsAuthenticated;
+            User user = isLoggedIn ? await GetUser() : null;
+            if (DeckId.HasValue)
+            {
+                bool accessible;
+                if (User.Identity.IsAuthenticated)
+                {
+                    accessible = deckRepository.DoesUserHaveAccess(DeckId.Value, user.Id);
+                }
+                else
+                {
+                    accessible = deckRepository.IsPublic(DeckId.Value);
+                }
 
-            if (!string.IsNullOrWhiteSpace(gzDeck))
-            {
-                QueryDeck = Deck.GetDeckFromGzip(gzDeck, Cards);
+                if (accessible)
+                {
+                    Deck deck = deckRepository.GetDeck(DeckId.Value);
+                    if (deck != null)
+                    {
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                    }
+                }
             }
-            else if (!string.IsNullOrWhiteSpace(nonGZDeck))
+            else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = Deck.GetFromQuery(nonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(NonGZDeck))
             {
-                IsInvalid = true;
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
             }
         }
     }

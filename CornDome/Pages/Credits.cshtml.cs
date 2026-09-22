@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages
 {
-    public class CreditsModel : PageModel
+    public class CreditsModel : BasePageModel
     {
         public void OnGet()
         {

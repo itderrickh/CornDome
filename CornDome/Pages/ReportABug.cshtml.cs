@@ -1,7 +1,6 @@
 using CornDome.Models;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
@@ -21,7 +20,7 @@ namespace CornDome.Pages
         public string Steps { get; set; }
     }
 
-    public class ReportABugModel(IBugReportRepository bugReportRepository) : PageModel
+    public class ReportABugModel(IBugReportRepository bugReportRepository) : BasePageModel
     {
         [BindProperty]
         public BugReportVm Bug { get; set; } = new();

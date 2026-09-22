@@ -1,11 +1,11 @@
+using CornDome.Models;
 using CornDome.Repository.Discord;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace CornDome.Pages.Play
 {
-    public class DisconnectModel(IDiscordRepository discordRepository) : PageModel
+    public class DisconnectModel(IDiscordRepository discordRepository) : BasePageModel
     {
         public async Task<IActionResult> OnPostAsync()
         {

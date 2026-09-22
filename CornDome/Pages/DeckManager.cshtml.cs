@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages
 {
-    public class DeckManagerModel : PageModel
+    public class DeckManagerModel : BasePageModel
     {
         public void OnGet()
         {

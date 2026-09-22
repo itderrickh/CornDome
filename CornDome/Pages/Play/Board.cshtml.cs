@@ -4,8 +4,6 @@ using CornDome.Repository;
 using CornDome.Repository.Discord;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Play
 {
@@ -17,7 +15,7 @@ namespace CornDome.Pages.Play
     }
 
     [Authorize]
-    public class BoardModel(Config config, IDiscordRepository discordRepository, IUserRepository userRepository) : PageModel
+    public class BoardModel(Config config, IDiscordRepository discordRepository) : BasePageModel
     {
         public DiscordConnection DiscordConnection { get; set; }
         public bool IsUserInServer { get; set; }
@@ -27,8 +25,7 @@ namespace CornDome.Pages.Play
 
         public async Task<IActionResult> OnGet()
         {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             DiscordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 

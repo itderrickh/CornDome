@@ -1,12 +1,12 @@
+using CornDome.Models;
 using CornDome.Models.Users;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Account
 {
-    public class LoginModel(SignInManager<User> signInManager) : PageModel
+    public class LoginModel(SignInManager<User> signInManager) : BasePageModel
     {
         private readonly SignInManager<User> _signInManager = signInManager;
         [BindProperty(Name="returnUrl", SupportsGet = true)]

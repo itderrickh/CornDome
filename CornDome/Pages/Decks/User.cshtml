@@ -1,0 +1,31 @@
+﻿@page
+@model CornDome.Pages.Decks.UserModel
+@{
+    ViewData["Title"] = "User's Decks";
+}
+
+@if (Model.UserNotFound)
+{
+    <h2>User not found.</h2>
+}
+else if (Model.UserId != null)
+{
+    <h2>@(Model.DisplayUsername)'s decks</h2>
+    <div class="row g-4">
+        <partial name="_DeckGrid" model="Model.DeckGrid" />
+    </div>
+}
+else
+{
+    <h2>No user selected.</h2>
+}
+
+
+@section Scripts {
+    <script src="/js/lazy-card.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/carddatabase.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/lazy-card.css" asp-append-version="true" />
+}

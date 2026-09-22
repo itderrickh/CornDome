@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using CornDome.Models;
 
 namespace CornDome.Pages.Resources
 {
-    public class PrivacyModel : PageModel
+    public class PrivacyModel : BasePageModel
     {
         public void OnGet()
         {

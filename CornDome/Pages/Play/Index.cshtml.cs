@@ -1,19 +1,16 @@
-using CornDome.Repository;
+using CornDome.Models;
 using CornDome.Repository.Discord;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CornDome.Pages.Play
 {
     [Authorize]
-    public class IndexModel(Config config, IUserRepository userRepository, IDiscordRepository discordRepository) : PageModel
+    public class IndexModel(Config config, IDiscordRepository discordRepository) : BasePageModel
     {
         public async Task<IActionResult> OnGet()
         {
-            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            var loggedInUser = await GetUser();
 
             var discordConnection = discordRepository.GetDiscordConnection(loggedInUser.Id);
 

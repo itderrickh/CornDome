@@ -1,8 +1,8 @@
+using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
@@ -10,25 +10,20 @@ using SixLabors.ImageSharp.Processing;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class EditModel(ICardRepository cardRepository, Config config) : PageModel
+    public class EditModel(ICardRepository cardRepository, Config config) : BasePageModel
     {
-        [BindProperty]
+        [BindProperty(Name = "id", SupportsGet = true)]
         public int CardId { get; set; }
         [BindProperty]
         public EditCard EditCard { get; set; }
         [BindProperty]
         public ImageUpload RevisionImageUpload { get; set; }
-        public string BaseUrl { get; set; } = config.BaseUrl;
         public List<CardSet> AllSets { get; set; }
         [BindProperty]
         public string SetIds { get; set; }
 
         public void OnGet()
         {
-            AllSets = cardRepository.GetAllSets();
-            var queryId = Request.Query["id"];
-            CardId = int.Parse(queryId);
-
             var cardFound = cardRepository.GetCard(CardId);
             EditCard = new EditCard()
             {
