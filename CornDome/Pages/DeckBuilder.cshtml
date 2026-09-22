@@ -258,22 +258,24 @@
                     <label for="deckIconCardId" class="form-label">
                         Icon Card
                     </label>
-
-                    <select class="form-select"
-                            id="deckIconCardId"
-                            name="IconCardId">
-                        @{
-                            List<Card> allDeckCards = [Model.QueryDeck.Hero];
-                            allDeckCards.AddRange(Model.QueryDeck.Cards);
-                            allDeckCards.AddRange(Model.QueryDeck.Landscapes);
-                        }
-                        @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
+                    
+                        <select class="form-select"
+                        id="deckIconCardId"
+                        name="IconCardId">
+                        @if (Model.QueryDeck != null)
                         {
-                            <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
-                                @card.LatestRevision.Name
-                            </option>
+                                List<Card> allDeckCards = [Model.QueryDeck.Hero];
+                                allDeckCards.AddRange(Model.QueryDeck.Cards);
+                                allDeckCards.AddRange(Model.QueryDeck.Landscapes);
+                            @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
+                            {
+                                <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
+                                    @card.LatestRevision.Name
+                                </option>
+                            }
+
                         }
-                    </select>
+                        </select>
                 </div>
 
             </div>
