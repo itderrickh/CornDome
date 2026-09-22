@@ -3,10 +3,11 @@ using CornDome.Models.Cards;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace CornDome.Pages
 {
-    public class GoldfishModel(ICardRepository cardRepository, Config config, MainContext mainContext) : PageModel
+    public class GoldfishModel(ICardRepository cardRepository, Config config, IDeckRepository deckRepository, IUserRepository userRepository) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
@@ -21,23 +22,29 @@ namespace CornDome.Pages
         [BindProperty(Name = "deck", SupportsGet = true)]
         public string NonGZDeck { get; set; }
 
-        public void OnGet()
+        public async Task OnGet()
         {
             Cards = _cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
-                BuildDeckFromQuery();
+            await BuildDeckFromQuery();
         }
 
-        private void BuildDeckFromQuery()
+        private async Task BuildDeckFromQuery()
         {
             if (DeckId.HasValue)
             {
-                // TODO ADD PERMISSIONS
-                var deck = mainContext.Decks.Where(x => x.Id == DeckId.Value).FirstOrDefault();
-                if (deck != null)
+                var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+                Deck deck = null;
+
+                if (deckRepository.DoesUserHaveAccess(DeckId.Value, loggedInUser.Id))
                 {
-                    QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                    deck = deckRepository.GetDeck(DeckId.Value);
+
+                    if (deck != null)
+                    {
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                    }
                 }
             }
             else if (!string.IsNullOrWhiteSpace(GzDeck))

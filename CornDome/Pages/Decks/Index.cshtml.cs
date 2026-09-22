@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {
-    public class IndexModel(MainContext mainContext, ICardRepository cardRepository, Config config) : PageModel
+    public class IndexModel(IDeckRepository deckRepository, ICardRepository cardRepository, IUserRepository userRepository, Config config) : PageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }
@@ -31,44 +32,29 @@ namespace CornDome.Pages.Decks
 
         public async Task OnGet()
         {
+            var userId = -1;
+            if (User.Identity.IsAuthenticated)
+            {
+                var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+                userId = loggedInUser.Id;
+            }
             if (PageNumber < 1)
             {
                 PageNumber = 1;
             }
 
-            var query = mainContext.Decks
-                .Include(deck => deck.User)
-                .Where(deck => deck.Visibility == DeckVisibility.Visible)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(Author))
-            {
-                query = query.Where(deck =>
-                    deck.User.UserName != null &&
-                    deck.User.UserName.Contains(Author));
-            }
-
-            if (CardId.HasValue)
-            {
-                query = query.Where(deck => deck.DeckString.Contains(CardId.Value.ToString() + ":") || deck.DeckString.StartsWith(CardId.Value.ToString() + ";"));
-            }
-
-            query = query.OrderByDescending(deck => deck.Modified);
-
-            var totalDecks = await query.CountAsync();
+            (int totalDecks, List<Deck> decks) results = deckRepository.GetAllVisibleDecks(Author, CardId, PageNumber, PageSize);
 
             TotalPages = (int)Math.Ceiling(
-                totalDecks / (double)PageSize);
+                results.totalDecks / (double)PageSize);
 
             if (TotalPages > 0 && PageNumber > TotalPages)
             {
                 PageNumber = TotalPages;
             }
 
-            Decks = await query
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .ToListAsync();
+            Decks = results.decks;
 
             DeckGrid = new DeckGridViewModel
             {
@@ -76,7 +62,8 @@ namespace CornDome.Pages.Decks
                 PageNumber = PageNumber,
                 TotalPages = TotalPages,
                 BaseUrl = BaseUrl,
-                Cards = [.. cardRepository.GetAll()]
+                Cards = [.. cardRepository.GetAll()],
+                UserId = userId
             };
         }
     }

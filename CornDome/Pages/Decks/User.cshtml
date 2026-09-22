@@ -4,7 +4,11 @@
     ViewData["Title"] = "User's Decks";
 }
 
-@if (Model.UserId != null)
+@if (Model.UserNotFound)
+{
+    <h2>User not found.</h2>
+}
+else if (Model.UserId != null)
 {
     <h2>@(Model.DisplayUsername)'s decks</h2>
     <div class="row g-4">

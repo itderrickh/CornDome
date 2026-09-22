@@ -4,9 +4,18 @@
     ViewData["Title"] = "My Decks";
 }
 
-<div class="row g-4">
-    <partial name="_DeckGrid" model="Model.DeckGrid" />
-</div>
+@if (Model.DeckGrid.Decks.Count == 0)
+{
+    <h2>You have no decks. Go forth and make some <a asp-page="/DeckBuilder">here</a>!</h2>
+}
+else
+{
+    <h2>My decks</h2>
+    <div class="row g-4">
+        <partial name="_DeckGrid" model="Model.DeckGrid" />
+    </div>
+}
+
 
 @section Scripts {
     <script src="/js/lazy-card.js" asp-append-version="true"></script>

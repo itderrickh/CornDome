@@ -12,5 +12,6 @@ namespace CornDome.Pages.Decks
         public int TotalPages { get; set; }
 
         public string BaseUrl { get; set; } = "";
+        public int UserId { get; set; }
     }
 }

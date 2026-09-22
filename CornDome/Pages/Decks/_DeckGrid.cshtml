@@ -9,7 +9,7 @@
 
                 <a class="text-decoration-none"
                    asp-page="/Deck"
-                   asp-route-gzdeck="@(DeckEncoder.UrlEncoder(deck.DeckString))">
+                   asp-route-id="@deck.Id">
 
                     <div class="card-body card-body-image"
                          style="background-image: url('@(Model.BaseUrl + iconCard.LatestRevision.GetRegularImage)');">
@@ -31,12 +31,22 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
-                            <div class="small text-muted text-end">
-                                <strong>Modified:</strong>
-                                @deck.Modified.ToString("MM/dd/yyyy")
+                        @if (deck.UserId == Model.UserId)
+                        {
+                            <div class="col-6 text-end">
+                                <button class="btn btn-danger">Delete</button>
                             </div>
-                        </div>
+                        }
+                        else
+                        {
+                            <div class="col-6">
+                                <div class="small text-muted text-end">
+                                    <strong>Modified:</strong>
+                                    @deck.Modified.ToString("MM/dd/yyyy")
+                                </div>
+                            </div>
+                        }
+                        
                     </div>
                 </div>
 

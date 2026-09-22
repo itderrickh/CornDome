@@ -1,6 +1,7 @@
 using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
+using CornDome.Models.Users;
 using CornDome.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 
 namespace CornDome.Pages
 {
-    public class DeckBuilderModel(ICardRepository cardRepository, Config config, IUserRepository userRepository, MainContext mainContext) : PageModel
+    public class DeckBuilderModel(ICardRepository cardRepository, Config config, IUserRepository userRepository, IDeckRepository deckRepository) : PageModel
     {
         private readonly ICardRepository _cardRepository = cardRepository;
         public IEnumerable<Card> Cards { get; set; }
@@ -25,7 +26,16 @@ namespace CornDome.Pages
         [BindProperty(Name = "deck", SupportsGet = true)]
         public string NonGZDeck { get; set; }
 
-        public void OnGet()
+        public bool IsDbDeck { get; set; } = false;
+        public bool IsMyDeck { get; set; } = false;
+        [BindProperty]
+        public string Description { get; set; }
+        [BindProperty]
+        public DeckVisibility Visibility { get; set; }
+        [BindProperty]
+        public int IconCard { get; set; }
+
+        public async Task OnGet()
         {
             Cards = _cardRepository.GetAll();
 
@@ -33,7 +43,7 @@ namespace CornDome.Pages
             {
                 if (Request.QueryString.HasValue)
                 {
-                    BuildDeckFromQuery();
+                    await BuildDeckFromQuery();
                 }
             }
             catch (Exception)
@@ -42,15 +52,49 @@ namespace CornDome.Pages
             }
         }
 
-        private void BuildDeckFromQuery()
+        private async Task<User> GetUser()
         {
+            var identifier = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var loggedInUser = await userRepository.GetUserById(int.Parse(identifier));
+            return loggedInUser;
+        }
+
+        private async Task BuildDeckFromQuery()
+        {
+            var isLoggedIn = User.Identity.IsAuthenticated;
+            User user = isLoggedIn ? await GetUser() : null;
             if (DeckId.HasValue)
             {
-                // TODO ADD PERMISSIONS
-                var deck = mainContext.Decks.Where(x => x.Id == DeckId.Value).FirstOrDefault();
-                if (deck != null)
+                var accessible = false;
+
+                if (User.Identity.IsAuthenticated)
                 {
-                    QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                    accessible = deckRepository.DoesUserHaveAccess(DeckId.Value, user.Id);
+                }
+                else
+                {
+                    accessible = deckRepository.IsPublic(DeckId.Value);
+                }
+
+                Deck deck = null;
+
+                if (accessible)
+                {
+                    deck = deckRepository.GetDeck(DeckId.Value);
+
+                    if (deck != null)
+                    {
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+
+                        if (isLoggedIn && deck.UserId == user.Id)
+                        {
+                            Description = ProfanityHelper.RelieveTheProfane(deck.Description);
+                            IconCard = deck.IconCardId;
+                            Visibility = deck.Visibility;
+                            IsMyDeck = true;
+                        }
+                        IsDbDeck = true;
+                    }
                 }
             }
             else if (!string.IsNullOrWhiteSpace(GzDeck))
@@ -93,25 +137,47 @@ namespace CornDome.Pages
                 });
             }
 
-            var ungzDeckString = DeckEncoder.UrlToDeck(request.DeckString);
-
-            mainContext.Decks.Add(new Deck()
+            var isSuccess = false;
+            // This deck exists already
+            if (request.DeckId.HasValue)
             {
-                Created = DateTime.Now,
-                DeckString = ungzDeckString,
-                Description = request.Description,
-                IconCardId = request.IconId,
-                Modified = DateTime.Now,
-                UserId = loggedInUser.Id,
-                Visibility = request.Visibility
-            });
-            mainContext.SaveChanges();
-
-            return new JsonResult(new
+                var deck = deckRepository.GetDeck(request.DeckId.Value);
+                if (deck != null && deck.UserId == loggedInUser.Id)
+                {
+                    isSuccess = deckRepository.ChangeDeckSettings(deck.Id, request.Visibility, ProfanityHelper.RelieveTheProfane(request.Description), request.IconId);
+                    isSuccess = deckRepository.ChangeDeckValue(deck.Id, request.DeckString);
+                }
+            }
+            else
             {
-                success = true,
-                message = "Deck saved successfully."
-            });
+                deckRepository.AddDeck(new Deck()
+                {
+                    Created = DateTime.Now,
+                    DeckString = request.DeckString,
+                    Description = ProfanityHelper.RelieveTheProfane(request.Description),
+                    IconCardId = request.IconId,
+                    Modified = DateTime.Now,
+                    UserId = loggedInUser.Id,
+                    Visibility = request.Visibility
+                });
+            }
+
+            if (isSuccess)
+            {
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = "Deck saved successfully."
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Deck did not save successfully."
+                });
+            }
         }
 
         public class SaveDeckRequest
@@ -125,6 +191,7 @@ namespace CornDome.Pages
             public string Description { get; set; }
             [Required]
             public int IconId { get; set; }
+            public int? DeckId { get; set; }
         }
     }
 }

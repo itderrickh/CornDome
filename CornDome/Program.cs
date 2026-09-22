@@ -26,6 +26,7 @@ namespace CornDome
             services.AddTransient<IDiscordRepository, DiscordRepository>();
             services.AddTransient<IBugReportRepository, BugReportRepository>();
             services.AddTransient<ILogEntryRepository, LogEntryRepository>();
+            services.AddTransient<IDeckRepository, DeckRepository>();
         }
 
         public static void AddDbContext(WebApplicationBuilder builder, IServiceCollection services)

@@ -4,13 +4,12 @@ using CornDome.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CornDome.Pages.Decks
 {
     [Authorize]
-    public class MineModel(MainContext mainContext, ICardRepository cardRepository, Config config, IUserRepository userRepository) : PageModel
+    public class MineModel(ICardRepository cardRepository, Config config, IUserRepository userRepository, IDeckRepository deckRepository) : PageModel
     {
         public List<Card> Cards { get; set; }
         public List<Deck> Decks { get; set; }
@@ -34,10 +33,7 @@ namespace CornDome.Pages.Decks
                 PageNumber = 1;
             }
 
-            var totalDecks = await mainContext.Decks
-                .Include(card => card.User)
-                .Where(u => u.UserId == loggedInUser.Id)
-                .CountAsync();
+            var totalDecks = deckRepository.GetTotalUserDecks(loggedInUser.Id);
 
             TotalPages = (int)Math.Ceiling(totalDecks / (double)PageSize);
 
@@ -46,13 +42,7 @@ namespace CornDome.Pages.Decks
                 PageNumber = TotalPages;
             }
 
-            Decks = await mainContext.Decks
-                .Include(card => card.User)
-                .Where(u => u.UserId == loggedInUser.Id)
-                .OrderByDescending(deck => deck.Modified)
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .ToListAsync();
+            Decks = deckRepository.GetUserDecks(loggedInUser.Id, PageNumber, PageSize);
 
             DeckGrid = new DeckGridViewModel
             {
@@ -60,7 +50,8 @@ namespace CornDome.Pages.Decks
                 PageNumber = PageNumber,
                 TotalPages = TotalPages,
                 BaseUrl = BaseUrl,
-                Cards = [.. cardRepository.GetAll()]
+                Cards = [.. cardRepository.GetAll()],
+                UserId = loggedInUser.Id
             };
         }
     }

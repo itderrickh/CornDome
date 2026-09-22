@@ -14,6 +14,7 @@ else
     ViewData["RenderMode"] = "wide";
     var totalCost = Model.QueryDeck.Cards.Select(x => x.LatestRevision.Cost).Sum();
     decimal averageCost = (decimal)totalCost / (decimal)Model.QueryDeck.Cards.Count;
+
     <div class="row">
         <div class="col-md-2 col-sm-2">
             <button class="btn btn-primary btn-block" id="showStats" onclick="showStats()">Show Stats And Actions</button>
@@ -46,7 +47,17 @@ else
                 <legend>Actions</legend>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Go To Deck Builder</a>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Download Image</a>
-                <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save (Database)</button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save Deck</button>
+                }
+                else
+                {
+                    <button id="disabledSave" type="button" class="btn btn-lg btn-block btn-secondary btn-disabled" disabled>
+                        Login to Save Decks
+                    </button>
+                }
+                
             </fieldset>
         </div>
         <div class="col-md-10 col-sm-10">
@@ -84,10 +95,10 @@ else
                 </div>
 
                 <style>
-                    .deck-card-image:hover {
-                    transform: scale(2);
-                    transition: transform .2s;
-                    }
+                            .deck-card-image:hover {
+                                transform: scale(2);
+                                transition: transform .2s;
+                            }
                 </style>
             }
         </div>
@@ -99,7 +110,7 @@ else
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="saveModalLabel">Create Deck</h5>
+                    <h5 class="modal-title" id="saveModalLabel">@(Model.IsMyDeck ? "Save" : "Create") Deck</h5>
                     <button type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
@@ -112,11 +123,11 @@ else
                             Description
                         </label>
                         <textarea class="form-control"
-                                    id="deckDescription"
-                                    name="Description"
-                                    rows="3"
-                                    maxlength="400"
-                                    placeholder="Enter a description..."></textarea>
+                                  id="deckDescription"
+                                  name="Description"
+                                  rows="3"
+                                  maxlength="400"
+                                  placeholder="Enter a description...">@Model.Description</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="deckVisibility" class="form-label">
@@ -125,9 +136,9 @@ else
                         <select class="form-select"
                                 id="deckVisibility"
                                 name="Visibility">
-                            <option value="@((int)DeckVisibility.Visible)">Public</option>
-                            <option value="@((int)DeckVisibility.Limited)">Unlisted</option>
-                            <option value="@((int)DeckVisibility.Invisible)">Private</option>
+                            <option value="@((int)DeckVisibility.Visible)" selected="@(Model.Visibility == DeckVisibility.Visible)">Public</option>
+                            <option value="@((int)DeckVisibility.Limited)" selected="@(Model.Visibility == DeckVisibility.Limited)">Unlisted</option>
+                            <option value="@((int)DeckVisibility.Invisible)" selected="@(Model.Visibility == DeckVisibility.Invisible)">Private</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -143,9 +154,9 @@ else
                                 allDeckCards.AddRange(Model.QueryDeck.Cards);
                                 allDeckCards.AddRange(Model.QueryDeck.Landscapes);
                             }
-                            @foreach (var card in allDeckCards.Distinct())
+                            @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
                             {
-                                <option value="@card.Id">
+                                <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
                                     @card.LatestRevision.Name
                                 </option>
                             }
@@ -226,73 +237,121 @@ else
             document.getElementById("actionsSection").style.display = "block";
         }
 
-        function deckToQuery(deck) {
-            var heroString = deck.hero != null ? parseInt(deck.hero) : "";
-            var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
-            var cardString = packString(deck.cards.map((x) => parseInt(x)));
-            if (heroString || landscapeString || cardString) {
-                var data = [heroString, landscapeString, cardString].join(';');
-                return data;
-            }
+                function deckToQuery(deck) {
+                    var heroString = deck.hero != null ? parseInt(deck.hero) : "";
+                    var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
+                    var cardString = packString(deck.cards.map((x) => parseInt(x)));
+                    if (heroString || landscapeString || cardString) {
+                        var data = [heroString, landscapeString, cardString].join(';');
+                        return data;
+                    }
 
-            return "";
-        }
-
-        document.getElementById("saveDatabaseButton").onclick = async function () {
-            var deck = {
-                'hero': null,
-                'landscapes': [],
-                'cards': []
-            }
-            document.querySelectorAll(".deck-card").forEach(function(card) {
-                if (card.dataset.type === 'hero') {
-                    deck.hero = card.dataset.cardId;
+                    return "";
                 }
-                if (card.dataset.type === 'landscape') {
-                    deck.landscapes.push(card.dataset.cardId);
+
+                document.getElementById("saveDatabaseButton").onclick = async function () {
+                    var deck = {
+                        'hero': null,
+                        'landscapes': [],
+                        'cards': []
+                    }
+                    document.querySelectorAll(".deck-card").forEach(function(card) {
+                        if (card.dataset.type === 'hero') {
+                            deck.hero = card.dataset.cardId;
+                        }
+                        if (card.dataset.type === 'landscape') {
+                            deck.landscapes.push(card.dataset.cardId);
+                        }
+                        if (card.dataset.type === 'card') {
+                            deck.cards.push(card.dataset.cardId);
+                        }
+                    });
+
+                    const params = new URLSearchParams(window.location.search);
+                    const deckId = params.get('id');
+
+                    const token = document.querySelector(
+                        'input[name="__RequestVerificationToken"]'
+                    ).value;
+
+                    const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
+                    const description = document.getElementById("deckDescription").value;
+                    const iconId = document.getElementById("deckIconCardId").value;
+
+                    const response = await fetch('?handler=SaveDeckToDatabase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify({
+                            deckString: deckToQuery(deck),
+                            visibility: visibility,
+                            description: description,
+                            iconId: iconId,
+                            deckId: deckId
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        alert(result.message);
+                        const modalElement = document.getElementById('saveModal');
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+
+                        modal.hide();
+                    }
+
+                    alert(result.message);
+                    const modalElement = document.getElementById('saveModal');
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+
+                    modal.hide();
                 }
-                if (card.dataset.type === 'card') {
-                    deck.cards.push(card.dataset.cardId);
+    </script>
+    <script>
+        document.getElementById("deckForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const button = document.getElementById("saveDeckButton");
+            const message = document.getElementById("saveMessage");
+
+            button.disabled = true;
+            button.textContent = "Saving...";
+            message.innerHTML = "";
+
+            try {
+                const response = await fetch(window.location.pathname + window.location.search, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: {
+                        "RequestVerificationToken":
+                            form.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    }
+                });
+
+                if (response.ok) {
+                    message.innerHTML =
+                        '<div class="alert alert-success">Deck saved successfully.</div>';
+                } else {
+                    const text = await response.text();
+
+                    message.innerHTML =
+                        '<div class="alert alert-danger">Unable to save the deck.</div>';
+
+                    console.error("Save failed:", response.status, text);
                 }
-            });
+            } catch (error) {
+                console.error(error);
 
-            const token = document.querySelector(
-                'input[name="__RequestVerificationToken"]'
-            ).value;
-
-            const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
-            const description = document.getElementById("deckDescription").value;
-            const iconId = document.getElementById("deckIconCardId").value;
-
-            const response = await fetch('?handler=SaveDeckToDatabase', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                },
-                body: JSON.stringify({
-                    deckString: deckToQuery(deck),
-                    visibility: visibility,
-                    description: description,
-                    iconId: iconId
-                })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                alert(result.message);
-                const modalElement = document.getElementById('saveModal');
-                const modal = bootstrap.Modal.getInstance(modalElement);
-
-                modal.hide();
+                message.innerHTML =
+                    '<div class="alert alert-danger">An error occurred while saving the deck.</div>';
+            } finally {
+                button.disabled = false;
+                button.textContent = "Save Deck";
             }
-
-            alert(result.message);
-            const modalElement = document.getElementById('saveModal');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-
-            modal.hide();
-        }
+        });
     </script>
 }
