@@ -36,10 +36,7 @@ namespace CornDome.Pages
 
             try
             {
-                if (Request.QueryString.HasValue)
-                {
-                    await BuildDeckFromQuery();
-                }
+                await BuildDeckFromQuery();
             }
             catch (Exception)
             {
@@ -53,8 +50,7 @@ namespace CornDome.Pages
             User user = isLoggedIn ? await GetUser() : null;
             if (DeckId.HasValue)
             {
-                var accessible = false;
-
+                bool accessible;
                 if (User.Identity.IsAuthenticated)
                 {
                     accessible = deckRepository.DoesUserHaveAccess(DeckId.Value, user.Id);

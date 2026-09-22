@@ -41,12 +41,6 @@ namespace CornDome.Pages.Tournaments
 
         private async Task Load()
         {
-            if (TournamentId <= 0)
-            {
-                var queryId = Request.Query["id"];
-                TournamentId = int.Parse(queryId);
-            }
-
             Tournament = tournamentContext.Tournaments
                 .Include(x => x.Rounds)
                 .ThenInclude(y => y.Matches)

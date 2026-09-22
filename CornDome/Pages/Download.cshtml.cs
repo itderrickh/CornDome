@@ -149,16 +149,13 @@ namespace CornDome.Pages
         {
             Cards = cardRepository.GetAll();
 
-            if (Request.QueryString.HasValue)
+            await BuildDeckFromQuery();
+
+            if (QueryDeck != null)
             {
-                await BuildDeckFromQuery();
+                var image = CreateCoordinates();
 
-                if (!IsInvalid)
-                {
-                    var image = CreateCoordinates();
-
-                    return File(image, "image/png", "download.png");
-                }
+                return File(image, "image/png", "download.png");
             }
 
             IsInvalid = true;
