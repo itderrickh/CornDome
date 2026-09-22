@@ -43,8 +43,7 @@ namespace CornDome.Pages
             User user = isLoggedIn ? await GetUser() : null;
             if (DeckId.HasValue)
             {
-                var accessible = false;
-
+                bool accessible;
                 if (User.Identity.IsAuthenticated)
                 {
                     accessible = deckRepository.DoesUserHaveAccess(DeckId.Value, user.Id);
@@ -52,14 +51,11 @@ namespace CornDome.Pages
                 else
                 {
                     accessible = deckRepository.IsPublic(DeckId.Value);
-                }                
-
-                Deck deck = null;
+                }
 
                 if (accessible)
                 {
-                    deck = deckRepository.GetDeck(DeckId.Value);
-
+                    Deck deck = deckRepository.GetDeck(DeckId.Value);
                     if (deck != null)
                     {
                         QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
