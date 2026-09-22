@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages
 {
-    public class DeckModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
+    public class DeckModel(ICardRepository cardRepository, IDeckRepository deckRepository, IUserRepository userRepository) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
@@ -66,14 +66,17 @@ namespace CornDome.Pages
 
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
-                            Description = ProfanityHelper.RelieveTheProfane(deck.Description);
-                            DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
-                            IconCard = deck.IconCardId;
-                            Visibility = deck.Visibility;
-                            Author = deck.User.UserName;
-                            AuthorId = deck.User.Id;
                             IsMyDeck = true;
                         }
+
+                        var author = await userRepository.GetUserById(deck.UserId);
+
+                        Description = ProfanityHelper.RelieveTheProfane(deck.Description);
+                        DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
+                        IconCard = deck.IconCardId;
+                        Visibility = deck.Visibility;
+                        Author = author.UserName;
+                        AuthorId = author.Id;
                         IsDbDeck = true;
                     }
                 }
