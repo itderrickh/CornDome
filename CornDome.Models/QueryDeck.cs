@@ -13,15 +13,15 @@ namespace CornDome.Models
 
         public static QueryDeck GetDeckFromGzip(string query, IEnumerable<Card> cards)
         {
+            query = query.Replace(" ", "+");
             byte[] compressedBytes;
             try
             {
                 // New Base64URL format
                 compressedBytes = WebEncoders.Base64UrlDecode(query);
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
-                // Older standard Base64 may have had '+' converted to spaces
                 query = Uri.UnescapeDataString(query);
 
                 compressedBytes = Convert.FromBase64String(query);
