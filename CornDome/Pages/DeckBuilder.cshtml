@@ -231,6 +231,27 @@
             </div>
 
             <div class="modal-body">
+                <div class="alert alert-danger d-none" id="apiError" role="alert">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3 fs-4">⚠️</div>
+
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading mb-1" id="apiErrorTitle">
+                                Validation error
+                            </h5>
+
+                            <p class="mb-2" id="apiErrorMessage"></p>
+
+                            <ul class="mb-0" id="apiErrorList"></ul>
+                        </div>
+
+                        <button type="button"
+                                class="btn-close"
+                                aria-label="Close"
+                                onclick="document.getElementById('apiError').classList.add('d-none')">
+                        </button>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="deckName" class="form-label">
                         Deck Name
@@ -284,7 +305,6 @@
                                     @card.LatestRevision.Name
                                 </option>
                             }
-
                         }
                         </select>
                 </div>
@@ -325,6 +345,8 @@
         buildDeckIfExistsInQuery();
 
         document.getElementById("saveDatabaseButton").onclick = async function () {
+            const alert = document.getElementById('apiError');
+
             const token = document.querySelector(
                 'input[name="__RequestVerificationToken"]'
             ).value;
@@ -344,10 +366,11 @@
                     'RequestVerificationToken': token
                 },
                 body: JSON.stringify({
-                    deckString: deckToString(),
+                    deckContent: deckToString(),
                     visibility: visibility,
                     description: description,
-                    iconId: iconId,
+                    iconId: iconId == "" ? -1 : parseInt(iconId),
+                    deckName: deckName,
                     deckId: deckId
                 })
             });
@@ -355,19 +378,45 @@
             const result = await response.json();
 
             if (!response.ok) {
+                const title = document.getElementById('apiErrorTitle');
+                const list = document.getElementById('apiErrorList');
+
+                title.textContent = result.title || 'Something went wrong';
+
+                list.innerHTML = '';
+
+                if (result.errors) {
+                    for (const [field, messages] of Object.entries(result.errors)) {
+                        for (const msg of messages) {
+                            const li = document.createElement('li');
+
+                            const strong = document.createElement('strong');
+                            strong.textContent = field + ': ';
+
+                            li.appendChild(strong);
+                            li.appendChild(document.createTextNode(msg));
+
+                            list.appendChild(li);
+                        }
+                    }
+                }
+
+                alert.classList.remove('d-none');
+            }
+            else {
                 alert(result.message);
                 const modalElement = document.getElementById('saveModal');
                 const modal = bootstrap.Modal.getInstance(modalElement);
 
                 modal.hide();
+                alert.classList.add('d-none');
             }
-
-            alert(result.message);
-            const modalElement = document.getElementById('saveModal');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-
-            modal.hide();
         }
+
+        document.getElementById('saveModal').addEventListener('hidden.bs.modal', function () {
+            const alert = document.getElementById('apiError');
+            alert.classList.add('d-none');
+        });
     </script>
 }
 

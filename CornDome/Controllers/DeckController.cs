@@ -11,11 +11,10 @@ namespace CornDome.Controllers
 {
     public class SaveDeckRequest
     {
-        [Required]
-        public string DeckString { get; set; }
+        [Required(ErrorMessage = "Deck cannot be empty")]
+        public string DeckContent { get; set; }
         [Required]
         public DeckVisibility Visibility { get; set; }
-        [Required]
         [StringLength(400)]
         public string Description { get; set; }
         [Required]
@@ -94,7 +93,7 @@ namespace CornDome.Controllers
                 if (deck != null && deck.UserId == loggedInUser.Id)
                 {
                     isSuccess = deckRepository.ChangeDeckSettings(deck.Id, request.Visibility, ProfanityHelper.RelieveTheProfane(request.Description), request.IconId, ProfanityHelper.RelieveTheProfane(request.DeckName));
-                    isSuccess = deckRepository.ChangeDeckValue(deck.Id, request.DeckString);
+                    isSuccess = deckRepository.ChangeDeckValue(deck.Id, request.DeckContent);
                 }
                 // Someone elses deck
                 else if (deck != null && deck.UserId != loggedInUser.Id)
@@ -102,7 +101,7 @@ namespace CornDome.Controllers
                     isSuccess = deckRepository.AddDeck(new Deck()
                     {
                         Created = DateTime.Now,
-                        DeckString = request.DeckString,
+                        DeckString = request.DeckContent,
                         DeckName = ProfanityHelper.RelieveTheProfane(request.DeckName),
                         Description = ProfanityHelper.RelieveTheProfane(request.Description),
                         IconCardId = request.IconId,
@@ -117,7 +116,7 @@ namespace CornDome.Controllers
                 isSuccess = deckRepository.AddDeck(new Deck()
                 {
                     Created = DateTime.Now,
-                    DeckString = request.DeckString,
+                    DeckString = request.DeckContent,
                     DeckName = ProfanityHelper.RelieveTheProfane(request.DeckName),
                     Description = ProfanityHelper.RelieveTheProfane(request.Description),
                     IconCardId = request.IconId,

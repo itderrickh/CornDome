@@ -61,18 +61,15 @@ else
             </fieldset>
         </div>
         <div class="col-md-10 col-sm-10">
-            @if (!string.IsNullOrWhiteSpace(Model.Description))
-            {
-                <div class="row p-1">
-                    <div class="col-8">
-                        <h5>@Model.Description</h5>
-                    </div>
-                    <div class="col-4 text-end">
-                        <h4><u>Deck Name:</u> <i>@Model.DeckName</i></h4>
-                        <h4><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h4>
-                    </div>
+            <div class="row p-1">
+                <div class="col-8">
+                    <h5>@Model.Description</h5>
                 </div>
-            }
+                <div class="col-4 text-end">
+                    <h4><u>Deck Name:</u> <i>@Model.DeckName</i></h4>
+                    <h4><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h4>
+                </div>
+            </div>
             @if (Model.QueryDeck != null)
             {
                 <div class="d-flex">
@@ -130,6 +127,27 @@ else
                 </div>
 
                 <div class="modal-body">
+                    <div class="alert alert-danger d-none" id="apiError" role="alert">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3 fs-4">⚠️</div>
+
+                            <div class="flex-grow-1">
+                                <h5 class="alert-heading mb-1" id="apiErrorTitle">
+                                    Validation error
+                                </h5>
+
+                                <p class="mb-2" id="apiErrorMessage"></p>
+
+                                <ul class="mb-0" id="apiErrorList"></ul>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-close"
+                                    aria-label="Close"
+                                    onclick="document.getElementById('apiError').classList.add('d-none')">
+                            </button>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="deckName" class="form-label">
                             Deck Name
@@ -260,81 +278,102 @@ else
             document.getElementById("actionsSection").style.display = "block";
         }
 
-                function deckToQuery(deck) {
-                    debugger;
-                    var heroString = deck.hero != null ? parseInt(deck.hero) : "";
-                    var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
-                    var cardString = packString(deck.cards.map((x) => parseInt(x)));
-                    if (heroString || landscapeString || cardString) {
-                        var data = [heroString, landscapeString, cardString].join(';');
-                        return data;
-                    }
+        function deckToQuery(deck) {
+            var heroString = deck.hero != null ? parseInt(deck.hero) : "";
+            var landscapeString = packString(deck.landscapes.map((x) => parseInt(x)));
+            var cardString = packString(deck.cards.map((x) => parseInt(x)));
+            if (heroString || landscapeString || cardString) {
+                var data = [heroString, landscapeString, cardString].join(';');
+                return data;
+            }
 
-                    return "";
+            return "";
+        }
+
+        document.getElementById("saveDatabaseButton").onclick = async function () {
+            var deck = {
+                'hero': null,
+                'landscapes': [],
+                'cards': []
+            }
+            document.querySelectorAll(".deck-card").forEach(function(card) {
+                if (card.dataset.type === 'hero') {
+                    deck.hero = card.dataset.cardId;
+                }
+                if (card.dataset.type === 'landscape') {
+                    deck.landscapes.push(card.dataset.cardId);
+                }
+                if (card.dataset.type === 'card') {
+                    deck.cards.push(card.dataset.cardId);
+                }
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const deckId = params.get('id');
+
+            const token = document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            ).value;
+
+            const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
+            const description = document.getElementById("deckDescription").value;
+            const iconId = document.getElementById("deckIconCardId").value;
+            const deckName = document.getElementById("deckName").value
+
+            const response = await fetch('/api/Deck', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    deckContent: deckToQuery(deck),
+                    visibility: visibility,
+                    description: description,
+                    iconId: iconId,
+                    deckId: deckId,
+                    deckName: deckName
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                const errorBox = document.getElementById('apiError');
+                const title = document.getElementById('apiErrorTitle');
+                const list = document.getElementById('apiErrorList');
+
+                title.textContent = result.title || 'Something went wrong';
+
+                list.innerHTML = '';
+
+                if (result.errors) {
+                    for (const [field, messages] of Object.entries(result.errors)) {
+                        for (const msg of messages) {
+                            const li = document.createElement('li');
+
+                            const strong = document.createElement('strong');
+                            strong.textContent = field + ': ';
+
+                            li.appendChild(strong);
+                            li.appendChild(document.createTextNode(msg));
+
+                            list.appendChild(li);
+                        }
+                    }
                 }
 
-                document.getElementById("saveDatabaseButton").onclick = async function () {
-                    var deck = {
-                        'hero': null,
-                        'landscapes': [],
-                        'cards': []
-                    }
-                    document.querySelectorAll(".deck-card").forEach(function(card) {
-                        debugger;
-                        if (card.dataset.type === 'hero') {
-                            deck.hero = card.dataset.cardId;
-                        }
-                        if (card.dataset.type === 'landscape') {
-                            deck.landscapes.push(card.dataset.cardId);
-                        }
-                        if (card.dataset.type === 'card') {
-                            deck.cards.push(card.dataset.cardId);
-                        }
-                    });
+                errorBox.classList.remove('d-none');
+            }
+            else {
+                alert(result.message);
+                const modalElement = document.getElementById('saveModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
 
-                    const params = new URLSearchParams(window.location.search);
-                    const deckId = params.get('id');
-
-                    const token = document.querySelector(
-                        'input[name="__RequestVerificationToken"]'
-                    ).value;
-
-                    const visibility = parseInt(document.getElementById("deckVisibility").value, 10);
-                    const description = document.getElementById("deckDescription").value;
-                    const iconId = document.getElementById("deckIconCardId").value;
-                    const deckName = document.getElementById("deckName").value
-
-                    const response = await fetch('/api/Deck', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'RequestVerificationToken': token
-                        },
-                        body: JSON.stringify({
-                            deckString: deckToQuery(deck),
-                            visibility: visibility,
-                            description: description,
-                            iconId: iconId,
-                            deckId: deckId,
-                            deckName: deckName
-                        })
-                    });
-
-                    const result = await response.json();
-
-                    if (!response.ok) {
-                        alert(result.message);
-                        const modalElement = document.getElementById('saveModal');
-                        const modal = bootstrap.Modal.getInstance(modalElement);
-
-                        modal.hide();
-                    }
-
-                    alert(result.message);
-                    const modalElement = document.getElementById('saveModal');
-                    const modal = bootstrap.Modal.getInstance(modalElement);
-
-                    modal.hide();
-                }
+                modal.hide();
+                const errorBox = document.getElementById('apiError');
+                errorBox.classList.add('d-none');
+            }
+        }
     </script>
 }
