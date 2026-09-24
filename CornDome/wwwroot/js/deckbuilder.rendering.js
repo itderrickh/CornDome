@@ -103,7 +103,7 @@ function renderData() {
     var teamworkCount = deck.cards.filter((x) => x.cardType === CardType.Teamwork).length;
     teamworkStatField.innerHTML = teamworkCount;
 
-    totalStatField.innerHTML = creatureCount + spellCount + buildingCount;
+    totalStatField.innerHTML = creatureCount + spellCount + buildingCount + teamworkCount;
 
     var bluePlainsStatField = document.getElementById('bp-stat');
     var cornfieldStatField = document.getElementById('cf-stat');
