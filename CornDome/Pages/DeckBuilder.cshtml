@@ -345,7 +345,7 @@
         buildDeckIfExistsInQuery();
 
         document.getElementById("saveDatabaseButton").onclick = async function () {
-            const alert = document.getElementById('apiError');
+            const errorBox = document.getElementById('apiError');
 
             const token = document.querySelector(
                 'input[name="__RequestVerificationToken"]'
@@ -401,7 +401,7 @@
                     }
                 }
 
-                alert.classList.remove('d-none');
+                errorBox.classList.remove('d-none');
             }
             else {
                 alert(result.message);
@@ -409,13 +409,13 @@
                 const modal = bootstrap.Modal.getInstance(modalElement);
 
                 modal.hide();
-                alert.classList.add('d-none');
+                errorBox.classList.add('d-none');
             }
         }
 
         document.getElementById('saveModal').addEventListener('hidden.bs.modal', function () {
-            const alert = document.getElementById('apiError');
-            alert.classList.add('d-none');
+            const errorBox = document.getElementById('apiError');
+            errorBox.classList.add('d-none');
         });
     </script>
 }
