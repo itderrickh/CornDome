@@ -308,6 +308,7 @@ else
                 }
             });
 
+            const errorBox = document.getElementById('apiError');
             const params = new URLSearchParams(window.location.search);
             const deckId = params.get('id');
 
@@ -339,7 +340,6 @@ else
             const result = await response.json();
 
             if (!response.ok) {
-                const errorBox = document.getElementById('apiError');
                 const title = document.getElementById('apiErrorTitle');
                 const list = document.getElementById('apiErrorList');
 
@@ -371,7 +371,7 @@ else
                 const modal = bootstrap.Modal.getInstance(modalElement);
 
                 modal.hide();
-                const errorBox = document.getElementById('apiError');
+                
                 errorBox.classList.add('d-none');
             }
         }
