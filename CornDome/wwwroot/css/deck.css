@@ -1,0 +1,40 @@
+﻿fieldset {
+    padding: 10px;
+    border: 1px solid lightgray;
+    margin-bottom: 20px;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-stamp {
+    background-image: url('/img/info.png');
+    background-position: center;
+    background-size: cover;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+}
+
+#showStats {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .info-stamp {
+        background-image: url('/img/info-light.png');
+    }
+}
+
+@media (max-width: 1024px) {
+    #showStats {
+        display: block;
+    }
+
+    #statsSection, #actionsSection {
+        display: none;
+    }
+}
