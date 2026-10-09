@@ -1,0 +1,25 @@
+﻿.oldPreview {
+    width: 200px;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.newPreview {
+    width: 200px;
+    height: 287px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: block;
+    text-align: center;
+}
+
+.upload-section {
+    margin-top: 20px;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
