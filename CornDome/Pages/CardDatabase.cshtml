@@ -141,22 +141,14 @@
 </div>
 
 @section Scripts {
-    <script src="./js/filter.js" asp-append-version="true"></script>
-    <script src="./js/sort.js" asp-append-version="true"></script>
-    <script src="./js/lazy-card.js" asp-append-version="true"></script>
-    <script>
-        document.addEventListener("filter-complete", function (e) {
-            console.log(e);
-            document.getElementById("cards-found").innerHTML = `Showing ${e.detail.filteredCount} of ${e.detail.totalElements} cards`;
-        });
-
-        var cards = document.querySelectorAll('.card-container');
-        filterDataset(cards);
-    </script>
+    <script src="~/js/filter.js" asp-append-version="true"></script>
+    <script src="~/js/sort.js" asp-append-version="true"></script>
+    <script src="~/js/lazy-card.js" asp-append-version="true"></script>
+    <script src="~/js/cardDatabase.js" asp-append-version="true"></script>
 }
 
 @section Styles {
-    <link rel="stylesheet" href="./css/carddatabase.css" asp-append-version="true" />
-    <link rel="stylesheet" href="./css/custom-checkbox.css" asp-append-version="true" />
-    <link rel="stylesheet" href="./css/lazy-card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/carddatabase.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-checkbox.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/lazy-card.css" asp-append-version="true" />
 }
