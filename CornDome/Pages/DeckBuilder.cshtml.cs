@@ -1,6 +1,7 @@
 using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
+using CornDome.Models.Main;
 using CornDome.Models.Users;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;

@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Main;
 using CornDome.Models.Users;
 using CornDome.Repository.Main;
 using CornDome.Repository.Users;

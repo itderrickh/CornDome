@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Play;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Discord;

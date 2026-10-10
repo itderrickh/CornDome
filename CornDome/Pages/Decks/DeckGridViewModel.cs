@@ -1,5 +1,5 @@
-﻿using CornDome.Models;
-using CornDome.Models.Cards;
+﻿using CornDome.Models.Cards;
+using CornDome.Models.Main;
 
 namespace CornDome.Pages.Decks
 {

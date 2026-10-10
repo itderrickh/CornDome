@@ -1,7 +1,7 @@
 ﻿using CornDome.Models.Users;
 using System.ComponentModel.DataAnnotations;
 
-namespace CornDome.Models
+namespace CornDome.Models.Main
 {
     public class DeckComment
     {

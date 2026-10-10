@@ -1,6 +1,6 @@
 ﻿using CornDome.Models.Users;
 
-namespace CornDome.Models
+namespace CornDome.Models.Main
 {
     public class BugReport
     {

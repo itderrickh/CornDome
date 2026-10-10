@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Main;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

@@ -1,4 +1,5 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Main;
+using CornDome.Models.Play;
 using CornDome.Models.Users;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Main;
 using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository.Main

@@ -1,4 +1,4 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Main;
 
 namespace CornDome.Repository.Main
 {

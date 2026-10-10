@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CornDome.Models
+namespace CornDome.Models.Main
 {
     [Table("CardFeedback")]
     public class FeedbackRequest

@@ -1,4 +1,4 @@
-﻿using CornDome.Models;
+﻿using CornDome.Models.Play;
 using CornDome.Models.Users;
 using System.Net.Http.Headers;
 using System.Text.Json;
