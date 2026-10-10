@@ -4,25 +4,38 @@
     ViewData["Title"] = "Upload Databases";
 }
 
-<h2>Upload 3 Database Files</h2>
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Admin/AppFlags">Database Restore</a>
+            </div>
+            <h1 class="fw-bold mb-2">Database Restore</h1>
+            <p class="text-muted mb-0">
+                Restore the database from backups. 
+            </p>
+        </div>
+    </div>
 
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label>CardsDb:</label>
-        <input class="form-control" type="file" name="CardsDb" />
-    </div>
-    <div class="form-group">
-        <label>TournamentsDb:</label>
-        <input class="form-control" type="file" name="TournamentsDb" />
-    </div>
-    <div class="form-group mb-2">
-        <label>MasterDb:</label>
-        <input class="form-control" type="file" name="MasterDb" />
-    </div>
-    <button class="btn btn-primary" type="submit">Backup, Upload, and Replace</button>
-</form>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="CardsDb">CardsDb:</label>
+            <input class="form-control" type="file" name="CardsDb" />
+        </div>
+        <div class="form-group">
+            <label for="TournamentsDb">TournamentsDb:</label>
+            <input class="form-control" type="file" name="TournamentsDb" />
+        </div>
+        <div class="form-group mb-2">
+            <label for="MasterDb">MasterDb:</label>
+            <input class="form-control" type="file" name="MasterDb" />
+        </div>
+        <button class="btn btn-primary mt-2" type="submit">Backup, Upload, and Replace</button>
+    </form>
 
-@if (Model.Message != null)
-{
-    <p>@Model.Message</p>
-}
+    @if (Model.Message != null)
+    {
+        <p>@Model.Message</p>
+    }
+
+</div>

@@ -1,135 +1,251 @@
 ﻿@page
 @model CornDome.Pages.Admin.IndexModel
+
 @{
-    ViewData["Title"] = "Admin Tools";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-@if (Model.LoggedInUser != null)
-{
-    <h3>Good morning, @(Model.LoggedInUser.UserName)!</h3>
-}
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-}
-
-<div class="container my-3">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="tools-tab" data-bs-toggle="tab" data-bs-target="#tools" type="button" role="tab" aria-controls="tools" aria-selected="true">Tools</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="user-manage-tab" data-bs-toggle="tab" data-bs-target="#user-manage" type="button" role="tab" aria-controls="user-manage" aria-selected="false">User Management</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="bugs-tab" data-bs-toggle="tab" data-bs-target="#bugs" type="button" role="tab" aria-controls="bugs" aria-selected="false">Bugs</button>
-        </li>
-    </ul>
-
-    <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade show active" id="tools" role="tabpanel" aria-labelledby="tools-tab">
-            <h2 class="mb-3">Tools</h2>
-            <div class="mb-3">
-                <a class="btn btn-primary" asp-page="/Admin/DatabaseBackup">Database Backup</a>
-                <a class="btn btn-danger" asp-page="/Admin/DatabaseRestore">Database Restore</a>
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a>
             </div>
+            <h1 class="fw-bold mb-2">Admin Dashboard</h1>
+            <p class="text-muted mb-0">
+                Manage your application, users, and infrastructure.
+            </p>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <h2 class="h5 fw-bold mb-1">Application Management</h2>
+        <p class="text-muted small mb-0">
+            Tools for managing CardDweeb functionality and users.
+        </p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-md-6 col-xl-4">
+            <a asp-page="/Admin/UserManagement"
+               class="admin-card card h-100 text-decoration-none">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-primary-subtle text-primary flex-shrink-0">
+                            <i class="bi bi-people-fill" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">User Management</h3>
+                            <p class="text-muted mb-3">
+                                Manage user accounts, review user details, and
+                                administer access to the application.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                Manage users <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="tab-pane fade" id="user-manage" role="tabpanel" aria-labelledby="user-manage-tab">
-            <h2 class="mb-3">User Management</h2>
-            <table class="table table-light table-striped w-100">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Email</th>
-                        <th>Username</th>
-                        <th>Last Login</th>
-                        <th>Roles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.Users.OrderBy(x => x.Id))
-                    {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Email</td>
-                            <td>@user.UserName</td>
-                            <td>@user.LastLogin</td>
-                            <td>
-                                <ul>
-                                    <form method="post" asp-page-handler="AddRole">
-                                        <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
-                                        <select asp-for="AddRoleId">
-                                            <option value="">- Select a Role -</option>
-                                            @foreach (var role in Model.Roles)
-                                            {
-                                                <option value="@role.Id">@role.Name</option>
-                                            }
-                                        </select>
-                                        <button type="submit" class="btn btn-primary">Add Role</button>
-                                    </form>
-                                    @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
-                                    {
-                                        <hr />
-                                    }
+        <div class="col-12 col-md-6 col-xl-4">
+            <a asp-page="/Admin/AppFlags"
+               class="admin-card card h-100 text-decoration-none">
+               <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-primary-subtle text-primary flex-shrink-0">
+                            <i class="bi bi-toggles" aria-hidden="true"></i>
+                        </div>
 
-                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
-                                    {
-                                        <li>
-                                            @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
-                                            <form method="post" asp-page-handler="RemoveRole" class="d-inline">
-                                                <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
-                                                <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
-                                                <button type="submit" class="btn btn-primary">Delete</button>
-                                            </form>
-                                        </li>
-                                    }
-                                </ul>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">App Flags</h3>
+                            <p class="text-muted mb-3">
+                                Enable or disable features without deploying
+                            application code.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                Manage Flags <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="tab-pane fade" id="bugs" role="tabpanel" aria-labelledby="bugs-tab">
-            <h2 class="mb-3">Bugs</h2>
-            <table class="table table-light table-striped w-100">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>User</th>
-                        <th>Description</th>
-                        <th>Steps</th>
-                        <th>Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var bug in Model.Bugs.OrderBy(x => x.CreatedAt))
-                    {
-                        <tr>
-                            <td>@bug.Title</td>
-                            <td>@bug?.User?.UserName</td>
-                            <td>@bug.Description</td>
-                            <td>@bug.Steps</td>
-                            <td>@bug.CreatedAt</td>
-                            <td>
-                                <form method="post" asp-page-handler="RemoveBug" class="d-inline">
-                                    <input type="text" name="RemoveBugId" value="@bug.Id" class="d-none" />
-                                    <button type="submit" class="btn btn-danger">Squash Bug</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="col-12 col-md-6 col-xl-4">
+            <a asp-page="/Admin/BugManagement"
+               class="admin-card card h-100 text-decoration-none">
+               <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-primary-subtle text-primary flex-shrink-0">
+                            <i class="bi bi-bug-fill" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">Bug Management</h3>
+                            <p class="text-muted mb-3">
+                                Review reported issues, investigate problems,
+                                and track bug reports.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                Review Bugs <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <a asp-page="/Admin/ErrorLogs"
+               class="admin-card card h-100 text-decoration-none">
+               <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-primary-subtle text-primary flex-shrink-0">
+                            <i class="bi bi-journal-x" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">Error Logs</h3>
+                            <p class="text-muted mb-3">
+                                View error logs from CardDweeb logging.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                View Logs <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+        <h2 class="h5 fw-bold mb-1">Infrastructure &amp; Data</h2>
+        <p class="text-muted small mb-0">
+            Manage database backups and recovery operations.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-12 col-md-6">
+            <a asp-page="/Admin/DatabaseBackup"
+               class="admin-card card h-100 text-decoration-none">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-info-subtle text-info-emphasis flex-shrink-0">
+                            <i class="bi bi-database-fill-check" aria-hidden="true"></i>
+                            <span class="visually-hidden">Database backup</span>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">Database Backup</h3>
+                            <p class="text-muted mb-3">
+                                Create and manage database backups to protect
+                                application data.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                Backup Now <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <a asp-page="/Admin/DatabaseRestore"
+               class="admin-card admin-card-danger card h-100 text-decoration-none">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-danger-subtle text-danger flex-shrink-0">
+                            <i class="bi bi-database-fill-gear" aria-hidden="true"></i>
+                            <span class="visually-hidden">Database restore</span>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <h3 class="h5 fw-bold text-body mb-0">
+                                    Database Restore
+                                </h3>
+                                <span class="badge text-bg-danger">Caution</span>
+                            </div>
+
+                            <p class="text-muted mb-3">
+                                Restore application data from a backup.
+                            </p>
+
+                            <span class="admin-card-link text-danger fw-semibold">
+                                Open restore tools <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
+
+<style>
+    .admin-card {
+        border: 1px solid var(--bs-border-color);
+        border-radius: 1rem;
+        background: var(--bs-body-bg);
+        transition: transform 160ms ease, box-shadow 160ms ease,
+                    border-color 160ms ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--bs-primary-border-subtle);
+        box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .08);
+    }
+
+    .admin-card:focus-visible {
+        outline: 3px solid var(--bs-primary);
+        outline-offset: 3px;
+    }
+
+    .admin-icon {
+        width: 3.25rem;
+        height: 3.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 3.25rem;
+        border-radius: .9rem;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-card-danger {
+        border-color: var(--bs-danger-border-subtle);
+    }
+
+    .admin-card-danger:hover {
+        border-color: var(--bs-danger);
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .admin-card {
+            transition: none;
+        }
+
+        .admin-card:hover {
+            transform: none;
+        }
+    }
+</style>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}

@@ -1,0 +1,87 @@
+﻿@page
+@model CornDome.Pages.Admin.UserManagementModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Admin/UserManagement">Users</a>
+            </div>
+            <h1 class="fw-bold mb-2">User Management</h1>
+            <p class="text-muted mb-0">
+                Edit user and roles.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-light table-striped w-100 table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Last Login</th>
+                        <th>Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users.OrderBy(x => x.Id))
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Email</td>
+                            <td>@user.UserName</td>
+                            <td>@user.LastLogin</td>
+                            <td>
+                                <ul>
+                                    <form method="post" asp-page-handler="AddRole">
+                                        <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
+                                        <select asp-for="AddRoleId">
+                                            <option value="">- Select a Role -</option>
+                                            @foreach (var role in Model.Roles)
+                                            {
+                                                <option value="@role.Id">@role.Name</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">Add Role</button>
+                                    </form>
+                                    @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
+                                    {
+                                        <hr />
+                                    }
+
+                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
+                                    {
+                                        <li>
+                                            @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
+                                            <form method="post" asp-page-handler="RemoveRole" class="d-inline">
+                                                <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
+                                                <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
