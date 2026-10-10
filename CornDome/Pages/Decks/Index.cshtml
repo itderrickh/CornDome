@@ -64,7 +64,8 @@
 </div>
 
 @section Scripts {
-    <script src="/js/lazy-card.js" asp-append-version="true"></script>
+    <script src="~/js/decks/deckgrid.js" asp-append-version="true"></script>
+    <script src="~/js/lazy-card.js" asp-append-version="true"></script>
 
     <script>
         const cardSearch = document.getElementById("cardSearch");
@@ -82,12 +83,17 @@
     </script>
 }
 
+
+
+
 @section Styles {
+    <link rel="stylesheet" href="~/css/decks/deckgrid.css" asp-append-version="true" />
+
     <link rel="stylesheet"
-          href="/css/carddatabase.css"
+          href="~/css/carddatabase.css"
           asp-append-version="true" />
 
     <link rel="stylesheet"
-          href="/css/lazy-card.css"
+          href="~/css/lazy-card.css"
           asp-append-version="true" />
 }

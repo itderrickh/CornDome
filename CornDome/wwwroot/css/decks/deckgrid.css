@@ -1,0 +1,35 @@
+﻿.deck-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border-radius: .25rem;
+}
+
+.card-body {
+    border: 4px solid rgba(0,0,0,.125);
+}
+
+.card-body:hover {
+    border: 4px solid orange;
+}
+
+.card-body-image {
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: 484px;
+    background-position-x: -50px;
+    background-position-y: -100px;
+    position: relative;
+}
+
+.card-body-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .25);
+    pointer-events: none;
+}
