@@ -5,18 +5,18 @@
 }
 
 <h1>Settings</h1>
-<div>Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" /></div>
+<div>Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" alt="Discord Avatar" /></div>
 
 @if (Model.IsUserInServer)
 {
     <h2>Preferences:</h2>
     <form method="post">
         <div class="mb-3">
-            <input asp-for="Form.WantsToPlay" type="checkbox" class="form-check-input" /> <label>Put me on the public board</label>
+            <input asp-for="Form.WantsToPlay" type="checkbox" class="form-check-input" /> <label asp-for="Form.WantsToPlay">Put me on the public board</label>
         </div>
 
         <div class="mb-3">
-            <label>Time Zone</label>
+            <label asp-for="Form.TimeZone">Time Zone</label>
             <select asp-for="Form.TimeZone" class="form-select">
                 @foreach (var tz in Model.TimeZones)
                 {
@@ -25,16 +25,16 @@
             </select>
         </div>
         <div class="mb-3">
-            <label>Address Me As</label>
+            <label asp-for="Form.AddressMeAs">Address Me As</label>
             <input asp-for="Form.AddressMeAs" type="text" class="form-control" />
         </div>
         <div class="mb-3">
-            <label>Pronouns</label>
+            <label asp-for="Form.Pronouns">Pronouns</label>
             <input asp-for="Form.Pronouns" type="text" class="form-control" />
         </div>
 
         <div class="mb-3">
-            <label>Game Format</label>
+            <label asp-for="Form.GameFormat">Game Format</label>
             <select asp-for="Form.GameFormat" class="form-select">
                 <option>Starter Decks</option>
                 <option>No Ban List</option>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Platform</label>
+            <label asp-for="Form.Platform">Platform</label>
             <select asp-for="Form.Platform" class="form-select">
                 <option>Untap.in</option>
                 <option>Webcam</option>
@@ -62,7 +62,7 @@
                            asp-for="Form.Days[i].IsAvailable"
                            onclick="toggleDisplays()"
                            data-day="@i" />
-                    <strong>@Model.Form.Days[i].Day</strong>
+                    <label asp-for="Form.Days[i].IsAvailable"><strong>@Model.Form.Days[i].Day</strong></label>
                 </div>
 
                 <div class="col">

@@ -1,5 +1,13 @@
 ﻿.custom-checkbox {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .checkbox-label {
@@ -12,12 +20,17 @@
     border: 2px solid transparent;
 }
 
+/* Visible keyboard focus indicator */
+.custom-checkbox:focus-visible + .checkbox-label {
+    outline: 3px solid #005fcc;
+    outline-offset: 3px;
+}
+
 .checkbox-label-burn {
     background-image: url('/img/burn.webp');
 }
 
 .custom-checkbox-burn:checked + .checkbox-label-burn {
-    background-image: url('/img/burn.webp');
     border: 2px solid red;
 }
 
@@ -26,7 +39,6 @@
 }
 
 .custom-checkbox-freeze:checked + .checkbox-label-freeze {
-    background-image: url('/img/frozentop.webp');
     border: 2px solid red;
 }
 
@@ -35,6 +47,5 @@
 }
 
 .custom-checkbox-attack:checked + .checkbox-label-attack {
-    background-image: url('/img/attack.webp');
     border: 2px solid red;
 }
