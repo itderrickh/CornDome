@@ -18,7 +18,12 @@ namespace CornDome
 {
     public class Program
     {
-        public const string POOLING = ";Pooling=False";
+        private const string POOLING = ";Pooling=False";
+        private const string OCTET_STREAM = "application/octet-stream";
+        private const string DATA_PROTECTION_KEYS_WINDOWS = "DataProtectionKeys";
+        private const string DATA_PROTECTION_KEYS_LINUX = "/var/myapp/keys";
+        private const int DISCORD_TIMEOUT = 30;
+
         public static void AddRepositories(IServiceCollection services)
         {
             services.AddTransient<IRoleRepository, RoleRepository>();
@@ -63,25 +68,25 @@ namespace CornDome
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
-                DefaultContentType = "application/octet-stream"
+                DefaultContentType = OCTET_STREAM
             });
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(builder.Configuration["Cards:Images"]),
+                FileProvider = new PhysicalFileProvider(builder.Configuration[ConfigConstants.IMAGEPATH]),
                 RequestPath = AppConstants.CARD_STATIC_IMAGE_ROUTE
             });
         }
 
         public static void AddAuthentication(WebApplicationBuilder builder)
         {
-            string clientId = !string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientId"])
-                ? builder.Configuration["Authentication:Google:ClientId"]
-                : Environment.GetEnvironmentVariable("Authentication__Google__ClientId");
+            string clientId = !string.IsNullOrEmpty(builder.Configuration[ConfigConstants.GOOGLE_CLIENTID_PATH])
+                ? builder.Configuration[ConfigConstants.GOOGLE_CLIENTID_PATH]
+                : Environment.GetEnvironmentVariable(ConfigConstants.GOOGLE_CLIENTID_ENV_PATH);
 
-            string clientSecret = !string.IsNullOrEmpty(builder.Configuration["Authentication:Google:ClientSecret"])
-                ? builder.Configuration["Authentication:Google:ClientSecret"]
-                : Environment.GetEnvironmentVariable("Authentication__Google__ClientSecret");
+            string clientSecret = !string.IsNullOrEmpty(builder.Configuration[ConfigConstants.GOOGLE_CLIENTSECRET_PATH])
+                ? builder.Configuration[ConfigConstants.GOOGLE_CLIENTSECRET_PATH]
+                : Environment.GetEnvironmentVariable(ConfigConstants.GOOGLE_CLIENTSECRET_ENV_PATH);
 
             builder.Services.AddAuthentication()
                 .AddGoogle(options =>
@@ -131,8 +136,8 @@ namespace CornDome
             builder.Services.AddControllers();
 
             var keyFolder = builder.Environment.IsDevelopment()
-                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppConstants.APP_NAME, "DataProtectionKeys")
-                : "/var/myapp/keys";  // Linux production path
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppConstants.APP_NAME, DATA_PROTECTION_KEYS_WINDOWS)
+                : DATA_PROTECTION_KEYS_LINUX;  // Linux production path
 
             builder.Services.AddDataProtection()
                .PersistKeysToFileSystem(new DirectoryInfo(keyFolder))
@@ -141,7 +146,7 @@ namespace CornDome
             builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
                 client.BaseAddress = new Uri(AppConstants.DISCORD_TOKEN_ROUTE);
-                client.Timeout = TimeSpan.FromSeconds(30);
+                client.Timeout = TimeSpan.FromSeconds(DISCORD_TIMEOUT);
             });
 
 

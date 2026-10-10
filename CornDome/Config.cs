@@ -4,6 +4,33 @@ using System.Reflection;
 
 namespace CornDome
 {
+    public static class ConfigConstants
+    {
+        public const string UPLOADPATH = "Cards:Uploads";
+        public const string IMAGEPATH = "Cards:Images";
+        public const string CARD_CHANGE_LOG_PATH = "Cards:CardModifiedLogs";
+
+        public const string DBPATH_CARDS = "DatabasePaths:CardsDb";
+        public const string DBPATH_MASTER = "DatabasePaths:MasterDb";
+        public const string DBPATH_TOURNAMENT = "DatabasePaths:TournamentDb";
+        public const string DBPATH_BACKUP_LOCATION = "DatabasePaths:BackupLocation";
+
+        public const string BRANDING_TITLE = "Branding:Title";
+        public const string CONTENT_STORE_IMAGES = "ContentStore:Images";
+
+        public const string DISCORD_SECRET_PATH = "Authentication:Discord:ClientSecret";
+        public const string DISCORD_CLIENTID_PATH = "Authentication:Discord:ClientId";
+        public const string DISCORD_GUILDID_PATH = "Authentication:Discord:GuildId";
+
+        public const string GOOGLE_CLIENTID_PATH = "Authentication:Google:ClientId";
+        public const string GOOGLE_CLIENTSECRET_PATH = "Authentication:Google:ClientSecret";
+
+        public const string GOOGLE_CLIENTID_ENV_PATH = "Authentication:Google:ClientId";
+        public const string GOOGLE_CLIENTSECRET_ENV_PATH = "Authentication:Google:ClientSecret";
+
+        public const string IMAGE_URL_PATH = "/CardImages/";
+    }
+
     public class Branding
     {
         public string Title { get; set; }
@@ -26,7 +53,6 @@ namespace CornDome
 
     public class ContentStore
     {
-        public string Articles { get; set; }
         public string Images { get; set; }
     }
 
@@ -39,7 +65,7 @@ namespace CornDome
         public DiscordConfiguration DiscordClient { get; set; }
         public string BaseUrl { get
             {
-                return "/CardImages/";
+                return ConfigConstants.IMAGE_URL_PATH;
             } }
         public string Version { get; set; }
 
@@ -47,24 +73,24 @@ namespace CornDome
         {
             AppData = new AppData()
             {
-                UploadPath = configuration["Cards:Uploads"],
-                ImagePath = configuration["Cards:Images"],
-                CardModifiedLogs = configuration["Cards:CardModifiedLogs"]
+                UploadPath = configuration[ConfigConstants.UPLOADPATH],
+                ImagePath = configuration[ConfigConstants.IMAGEPATH],
+                CardModifiedLogs = configuration[ConfigConstants.CARD_CHANGE_LOG_PATH]
             };
             DatabasePaths = new DatabasePaths()
             {
-                CardsDb = configuration["DatabasePaths:CardsDb"],
-                MasterDb = configuration["DatabasePaths:MasterDb"],
-                TournamentDb = configuration["DatabasePaths:TournamentDb"],
-                BackupLocation = configuration["DatabasePaths:BackupLocation"],
+                CardsDb = configuration[ConfigConstants.DBPATH_CARDS],
+                MasterDb = configuration[ConfigConstants.DBPATH_MASTER],
+                TournamentDb = configuration[ConfigConstants.DBPATH_TOURNAMENT],
+                BackupLocation = configuration[ConfigConstants.DBPATH_BACKUP_LOCATION],
             };
-            Branding = new Branding() { Title = configuration["Branding:Title"] };
-            ContentStore = new ContentStore() { Articles = configuration["ContentStore:Articles"], Images = configuration["ContentStore:Images"] };
+            Branding = new Branding() { Title = configuration[ConfigConstants.BRANDING_TITLE] };
+            ContentStore = new ContentStore() { Images = configuration[ConfigConstants.CONTENT_STORE_IMAGES] };
             DiscordClient = new DiscordConfiguration()
             {
-                ClientId = configuration["Authentication:Discord:ClientId"],
-                ClientSecret = configuration["Authentication:Discord:ClientSecret"],
-                GuildId = configuration["Authentication:Discord:GuildId"],
+                ClientId = configuration[ConfigConstants.DISCORD_CLIENTID_PATH],
+                ClientSecret = configuration[ConfigConstants.DISCORD_SECRET_PATH],
+                GuildId = configuration[ConfigConstants.DISCORD_GUILDID_PATH],
             };
             
             Assembly assembly = Assembly.GetExecutingAssembly();
