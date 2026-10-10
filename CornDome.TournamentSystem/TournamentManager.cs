@@ -1,8 +1,8 @@
 ﻿using CornDome.Repository.Tournaments;
 using CornDome.Models.Tournaments;
 using Microsoft.EntityFrameworkCore;
-using CornDome.Repository;
 using CornDome.Models.Users;
+using CornDome.Repository.Users;
 
 namespace CornDome.TournamentSystem
 {

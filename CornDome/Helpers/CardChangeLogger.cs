@@ -1,4 +1,4 @@
-﻿using CornDome.Repository;
+﻿using CornDome.Repository.Cards;
 
 namespace CornDome.Helpers
 {

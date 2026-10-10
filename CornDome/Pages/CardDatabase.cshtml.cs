@@ -1,6 +1,6 @@
 using CornDome.Models;
 using CornDome.Models.Cards;
-using CornDome.Repository;
+using CornDome.Repository.Cards;
 
 namespace CornDome.Pages
 {

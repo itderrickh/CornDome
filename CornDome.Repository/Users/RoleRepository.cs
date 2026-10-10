@@ -1,6 +1,6 @@
 ﻿using CornDome.Models.Users;
 
-namespace CornDome.Repository
+namespace CornDome.Repository.Users
 {
     public interface IRoleRepository
     {

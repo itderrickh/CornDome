@@ -1,5 +1,5 @@
 using CornDome.Models;
-using CornDome.Repository;
+using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

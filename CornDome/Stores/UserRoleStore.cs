@@ -1,5 +1,5 @@
 ﻿using CornDome.Models.Users;
-using CornDome.Repository;
+using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace CornDome.Stores

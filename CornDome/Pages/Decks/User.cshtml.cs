@@ -1,6 +1,8 @@
 using CornDome.Models;
 using CornDome.Models.Cards;
-using CornDome.Repository;
+using CornDome.Repository.Cards;
+using CornDome.Repository.Main;
+using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Decks

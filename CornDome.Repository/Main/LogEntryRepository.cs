@@ -1,7 +1,7 @@
 ﻿using CornDome.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CornDome.Repository
+namespace CornDome.Repository.Main
 {
     public interface ILogEntryRepository
     {

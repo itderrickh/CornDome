@@ -1,4 +1,4 @@
-﻿namespace CornDome.Repository
+﻿namespace CornDome.Repository.Cards
 {
     public interface ICardChangeLogger
     {

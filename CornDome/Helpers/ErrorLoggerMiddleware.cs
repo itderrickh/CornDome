@@ -1,5 +1,5 @@
 ﻿using CornDome.Models;
-using CornDome.Repository;
+using CornDome.Repository.Main;
 using System.Diagnostics;
 
 namespace CornDome.Helpers

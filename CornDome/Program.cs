@@ -1,8 +1,11 @@
 using CornDome.Helpers;
 using CornDome.Models.Users;
 using CornDome.Repository;
+using CornDome.Repository.Cards;
 using CornDome.Repository.Discord;
+using CornDome.Repository.Main;
 using CornDome.Repository.Tournaments;
+using CornDome.Repository.Users;
 using CornDome.Stores;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;

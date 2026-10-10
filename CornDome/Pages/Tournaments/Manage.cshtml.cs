@@ -1,8 +1,8 @@
 using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
-using CornDome.Repository;
 using CornDome.Repository.Tournaments;
+using CornDome.Repository.Users;
 using CornDome.TournamentSystem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

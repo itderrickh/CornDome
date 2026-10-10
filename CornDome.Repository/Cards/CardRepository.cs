@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
-namespace CornDome.Repository
+namespace CornDome.Repository.Cards
 {
     public interface ICardRepository
     {

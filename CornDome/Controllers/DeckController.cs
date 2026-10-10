@@ -1,7 +1,7 @@
 ﻿using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Users;
-using CornDome.Repository;
+using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

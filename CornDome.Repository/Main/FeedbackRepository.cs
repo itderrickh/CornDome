@@ -1,6 +1,6 @@
 ﻿using CornDome.Models;
 
-namespace CornDome.Repository
+namespace CornDome.Repository.Main
 {
     public interface IFeedbackRepository
     {

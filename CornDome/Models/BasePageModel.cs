@@ -1,6 +1,6 @@
 ﻿using CornDome.Helpers;
 using CornDome.Models.Users;
-using CornDome.Repository;
+using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 

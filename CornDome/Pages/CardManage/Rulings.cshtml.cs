@@ -1,6 +1,6 @@
 using CornDome.Models;
 using CornDome.Models.Cards;
-using CornDome.Repository;
+using CornDome.Repository.Cards;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
