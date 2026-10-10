@@ -22,7 +22,7 @@
             </div>
             <h1 class="fw-bold mb-2">User Management</h1>
             <p class="text-muted mb-0">
-                Edit user and roles.
+                Edit user and roles. (Users active in the last 30 days: @Model.Users.Where(x => x.LastLogin > DateTime.Now.AddDays(-30)).Count())
             </p>
         </div>
     </div>
@@ -46,7 +46,7 @@
                             <td>@user.Id</td>
                             <td>@user.Email</td>
                             <td>@user.UserName</td>
-                            <td>@user.LastLogin</td>
+                            <td>@(user.LastLogin == DateTime.MinValue ? "" : user.LastLogin)</td>
                             <td>
                                 <ul>
                                     <form method="post" asp-page-handler="AddRole">
