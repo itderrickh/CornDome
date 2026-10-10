@@ -1,0 +1,95 @@
+﻿
+@page
+@model CornDome.Pages.Admin.AppFlagsModel
+
+@{
+    ViewData["Title"] = "Application Flags";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Application Flags</h1>
+            <p class="text-muted mb-0">
+                Enable or disable application features.
+            </p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Flags.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                No application flags found.
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var flag in Model.Flags)
+                    {
+                        <tr>
+                            <td>
+                                <code>@flag.Name</code>
+                            </td>
+                            <td>
+                                @(string.IsNullOrWhiteSpace(flag.Description)
+                                    ? "No description"
+                                    : flag.Description)
+                            </td>
+                            <td>
+                                @if (flag.Active)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <form method="post"
+                                      asp-page-handler="Toggle"
+                                      class="d-inline">
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@flag.Id" />
+
+                                    @if (flag.Active)
+                                    {
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger">
+                                            Disable
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-success">
+                                            Enable
+                                        </button>
+                                    }
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

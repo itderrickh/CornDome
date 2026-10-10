@@ -1,6 +1,7 @@
 ﻿using CornDome.Models.Main;
 using CornDome.Models.Play;
 using CornDome.Models.Users;
+using CornDome.Repository.Main;
 using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository
@@ -18,6 +19,7 @@ namespace CornDome.Repository
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Deck> Decks { get; set; }
         public DbSet<DeckComment> DeckComments { get; set; }
+        public DbSet<AppFlag> AppFlags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,6 +39,7 @@ namespace CornDome.Repository
             modelBuilder.Entity<FeedbackRequest>();
             modelBuilder.Entity<BugReport>();
             modelBuilder.Entity<LogEntry>();
+            modelBuilder.Entity<AppFlag>();
 
             modelBuilder.Entity<PlayAvailability>()
                 .HasOne(c => c.User)

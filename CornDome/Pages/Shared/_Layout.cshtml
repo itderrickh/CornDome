@@ -1,4 +1,4 @@
-﻿@using Microsoft.Extensions.Configuration
+﻿@inject AppFlagHelper AppFlags
 @inject Config Config
 @inject IWebHostEnvironment hostingEnv
 @{
@@ -71,7 +71,7 @@
                         <li class="nav-item">
                             <a class="top-nav-item" asp-area="" asp-page="/Play/Index">Play</a>
                         </li>
-                        @if (User.IsInRole("Admin"))
+                        @if (AppFlags.IsActive("EnableTournaments"))
                         {
                             <li class="nav-item">
                                 <a class="top-nav-item" asp-area="" asp-page="/Tournaments/Index">Tournaments</a>
@@ -97,7 +97,7 @@
                                     
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Account/Index">Profile</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Play/Settings">Play Settings</a></li>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (AppFlags.IsActive("EnableTournaments"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li>
                                     }
@@ -107,7 +107,7 @@
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Index">Admin Panel</a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Admin/ErrorLogs">Error Logs</a></li>
                                     }
-                                    @if (User.IsInRole("Admin") || User.IsInRole("TournamentManager"))
+                                    @if (AppFlags.IsActive("EnableTournaments") && User.IsInRole("Admin") || User.IsInRole("TournamentManager"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Admin">Manage Tournaments</a></li>
                                     }

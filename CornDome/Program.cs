@@ -30,6 +30,12 @@ namespace CornDome
             services.AddTransient<IBugReportRepository, BugReportRepository>();
             services.AddTransient<ILogEntryRepository, LogEntryRepository>();
             services.AddTransient<IDeckRepository, DeckRepository>();
+            services.AddTransient<IAppFlagRepository, AppFlagRepository>();
+        }
+
+        public static void AddHelpers(IServiceCollection services)
+        {
+            services.AddScoped<AppFlagHelper>();
         }
 
         public static void AddDbContext(WebApplicationBuilder builder, IServiceCollection services)
@@ -141,6 +147,7 @@ namespace CornDome
 
             AddDbContext(builder, builder.Services);
             AddRepositories(builder.Services);
+            AddHelpers(builder.Services);
             AddAuthentication(builder);
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>

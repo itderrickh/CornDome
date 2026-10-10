@@ -17,7 +17,7 @@ namespace CornDome.Repository.Migrations.Main
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
-            modelBuilder.Entity("CornDome.Models.BugReport", b =>
+            modelBuilder.Entity("CornDome.Models.Main.BugReport", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("BugReports");
                 });
 
-            modelBuilder.Entity("CornDome.Models.Deck", b =>
+            modelBuilder.Entity("CornDome.Models.Main.Deck", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +82,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("Decks");
                 });
 
-            modelBuilder.Entity("CornDome.Models.DeckComment", b =>
+            modelBuilder.Entity("CornDome.Models.Main.DeckComment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,7 +113,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("DeckComments");
                 });
 
-            modelBuilder.Entity("CornDome.Models.FeedbackRequest", b =>
+            modelBuilder.Entity("CornDome.Models.Main.FeedbackRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,7 +133,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("CardFeedback");
                 });
 
-            modelBuilder.Entity("CornDome.Models.LogEntry", b =>
+            modelBuilder.Entity("CornDome.Models.Main.LogEntry", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +174,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("LogEntries");
                 });
 
-            modelBuilder.Entity("CornDome.Models.PlayAvailability", b =>
+            modelBuilder.Entity("CornDome.Models.Play.PlayAvailability", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,7 +202,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("PlayAvailabilities");
                 });
 
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
+            modelBuilder.Entity("CornDome.Models.Play.PlayPreferences", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -367,7 +367,27 @@ namespace CornDome.Repository.Migrations.Main
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("CornDome.Models.BugReport", b =>
+            modelBuilder.Entity("CornDome.Repository.Main.AppFlag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppFlags");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Main.BugReport", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
                         .WithMany()
@@ -376,7 +396,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CornDome.Models.Deck", b =>
+            modelBuilder.Entity("CornDome.Models.Main.Deck", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
                         .WithMany()
@@ -387,9 +407,9 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CornDome.Models.DeckComment", b =>
+            modelBuilder.Entity("CornDome.Models.Main.DeckComment", b =>
                 {
-                    b.HasOne("CornDome.Models.Deck", "Deck")
+                    b.HasOne("CornDome.Models.Main.Deck", "Deck")
                         .WithMany("DeckComments")
                         .HasForeignKey("DeckId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,7 +426,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CornDome.Models.PlayAvailability", b =>
+            modelBuilder.Entity("CornDome.Models.Play.PlayAvailability", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
                         .WithMany("PlayAvailabilities")
@@ -417,7 +437,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CornDome.Models.PlayPreferences", b =>
+            modelBuilder.Entity("CornDome.Models.Play.PlayPreferences", b =>
                 {
                     b.HasOne("CornDome.Models.Users.User", "User")
                         .WithMany()
@@ -458,7 +478,7 @@ namespace CornDome.Repository.Migrations.Main
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CornDome.Models.Deck", b =>
+            modelBuilder.Entity("CornDome.Models.Main.Deck", b =>
                 {
                     b.Navigation("DeckComments");
                 });
