@@ -1,0 +1,193 @@
+﻿
+@page
+@model CornDome.Pages.Admin.RoleManagementModel
+
+@{
+    ViewData["Title"] = "Role Management";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Admin/RoleManagement">Roles</a>
+            </div>
+            <h1 class="fw-bold mb-2">Role Management</h1>
+            <p class="text-muted mb-0">
+                Modify the application roles
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+            @successMessage
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-danger alert-dismissible fade show"
+             role="alert">
+            @errorMessage
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-body">
+                    <h2 class="h5 mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add Role
+                    </h2>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Add">
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3"
+                             role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="RoleName"
+                                   class="form-label">
+                                Role Name
+                            </label>
+
+                            <input asp-for="RoleName"
+                                   class="form-control"
+                                   maxlength="256"
+                                   placeholder="e.g. Moderator"
+                                   autocomplete="off"
+                                   required />
+
+                            <span asp-validation-for="RoleName"
+                                  class="text-danger"></span>
+
+                            <div class="form-text">
+                                Role names must be unique.
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Create Role
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-body d-flex
+                            justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">
+                        <i class="bi bi-shield-lock me-2"></i>
+                        Existing Roles
+                    </h2>
+
+                    <span class="badge text-bg-secondary">
+                        @Model.Roles.Count total
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Role Name</th>
+                                <th scope="col">Role ID</th>
+                                <th scope="col" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Roles.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="3"
+                                        class="text-center text-muted py-4">
+                                        No roles found.
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fw-semibold">
+                                                @role.Name
+                                            </span>
+
+                                            @if (string.Equals(
+                                                role.Name,
+                                                "Admin",
+                                                StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <span class="badge text-bg-primary ms-2">
+                                                    Protected
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            <code>@role.Id</code>
+                                        </td>
+
+                                        <td class="text-end">
+                                            @if (!string.Equals(
+                                                role.Name,
+                                                "Admin",
+                                                StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <form method="post"
+                                                      asp-page-handler="Delete"
+                                                      asp-route-id="@role.Id"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Are you sure you want to delete the role @role.Name?');">
+
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash me-1"></i>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary"
+                                                        disabled
+                                                        title="The Admin role is protected">
+                                                    <i class="bi bi-lock me-1"></i>
+                                                    Protected
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer text-muted small">
+                    Deletion is disabled for roles assigned to users.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

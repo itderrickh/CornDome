@@ -121,6 +121,8 @@ namespace CornDome
                     policy.RequireRole(AppConstants.ROLE_CARD_MANAGER, AppConstants.ROLE_ADMIN));
                 options.AddPolicy("rulingManager", policy =>
                     policy.RequireRole(AppConstants.ROLE_RULING_MANAGER, AppConstants.ROLE_ADMIN));
+                options.AddPolicy("coolGuy", policy =>
+                    policy.RequireRole(AppConstants.ROLE_COOL_GUY));
             });
         }
 

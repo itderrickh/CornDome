@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository.Users
 {
@@ -10,6 +11,7 @@ namespace CornDome.Repository.Users
         Task<Role> FindById(int id);
         Task<Role> FindByName(string roleName);
         Task<IEnumerable<Role>> GetAll();
+        IQueryable<Role> GetAllRolesQueryable();
     }
     public class RoleRepository(MainContext context) : IRoleRepository
     {        
@@ -47,7 +49,13 @@ namespace CornDome.Repository.Users
         {
             try
             {
-                context.Remove(role);
+                var existingRole = await context.Set<Role>()
+                    .FirstOrDefaultAsync(r => r.Id == role.Id);
+
+                if (existingRole == null)
+                    return false;
+
+                context.Remove(existingRole);
 
                 await context.SaveChangesAsync();
                 return true;
@@ -71,6 +79,11 @@ namespace CornDome.Repository.Users
         public async Task<IEnumerable<Role>> GetAll()
         {
             return context.Roles;
+        }
+
+        public IQueryable<Role> GetAllRolesQueryable()
+        {
+            return context.Roles.AsNoTracking();
         }
     }
 }

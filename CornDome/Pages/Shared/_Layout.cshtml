@@ -32,7 +32,12 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-image: url('/img/background.webp')">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/card-dweeb.png" alt="Card Dweeb Logo" /></a>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("CoolGuy")) {
+                    <a class="navbar-brand" asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/card-coolguy.png" alt="Card Dweeb Logo" /></a>
+                }
+                else {
+                    <a class="navbar-brand" asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/card-dweeb.png" alt="Card Dweeb Logo" /></a>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

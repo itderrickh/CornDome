@@ -50,6 +50,32 @@
                 </div>
             </a>
         </div>
+        <div class="col-12 col-md-6 col-xl-4">
+            <a asp-page="/Admin/RoleManagement"
+               class="admin-card card h-100 text-decoration-none">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="admin-icon bg-primary-subtle text-primary flex-shrink-0">
+                            <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h5 fw-bold text-body">Role Management</h3>
+                            <p class="text-muted mb-3">
+                                Manage application roles and permissions by creating new roles or deleting existing ones.
+                            </p>
+
+                            <span class="admin-card-link text-primary fw-semibold">
+                                Manage roles <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    <div class="row g-4 mb-5">
+        
 
         <div class="col-12 col-md-6 col-xl-4">
             <a asp-page="/Admin/AppFlags"
@@ -63,8 +89,7 @@
                         <div class="flex-grow-1">
                             <h3 class="h5 fw-bold text-body">App Flags</h3>
                             <p class="text-muted mb-3">
-                                Enable or disable features without deploying
-                            application code.
+                                Enable or disable features without deploying application code.
                             </p>
 
                             <span class="admin-card-link text-primary fw-semibold">

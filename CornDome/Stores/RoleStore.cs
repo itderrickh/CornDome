@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CornDome.Stores
 {
-    public class RoleStore(IRoleRepository roleRepository) : IRoleStore<Role>
+    public class RoleStore(IRoleRepository roleRepository) : IRoleStore<Role>, IQueryableRoleStore<Role>
     {
         private readonly IRoleRepository _roleRepo = roleRepository;
 
@@ -38,6 +38,8 @@ namespace CornDome.Stores
             return result;
         }
 
+        public IQueryable<Role> Roles => _roleRepo.GetAllRolesQueryable();
+
         public void Dispose()
         {
         }
@@ -65,7 +67,6 @@ namespace CornDome.Stores
 
         public Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
         {
-            role.Name = normalizedName;
             return Task.CompletedTask;
         }
 
