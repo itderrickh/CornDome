@@ -5,10 +5,7 @@ using CornDome.Models.Users;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 using System.Collections.Concurrent;
 using System.Web;
 
@@ -31,122 +28,214 @@ namespace CornDome.Pages
 
         private const int cardWidth = 86;
         private const int cardHeight = 120;
-        private const int finalImageWidth = (borderX * 2) + (cardWidth * 10);
-        private int finalImageHeight;
         private const int borderX = 20;
         private const int borderY = 20;
 
+        private const int finalImageWidth = (borderX * 2) + (cardWidth * 10);
+
+        private int finalImageHeight;
+
         public string ImageString { get; set; }
-        public ConcurrentDictionary<string, Image<Rgb24>> imageCache = new();
+
+        public ConcurrentDictionary<string, SKBitmap> imageCache = new();
+
         public bool IsInvalid = false;
+
         public byte[] CreateCoordinates()
         {
-            Parallel.ForEach(QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name), card =>
-            {
-                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
-                if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
-                {
-                    imageCache[cardPath] = Image.Load<Rgb24>(cardPath);
-                }
-            });
+            var coordinates = new List<(int X, int Y)>();
 
-            // X, Y
-            var coordinates = new List<(int, int)>();
+            // Hero and landscape positions.
             for (var topX = 0; topX < 5; topX++)
             {
-                coordinates.Add((borderX + (topX * cardWidth * 2), borderY));
+                coordinates.Add((
+                    borderX + (topX * cardWidth * 2),
+                    borderY));
             }
 
-            var numberOfRows = (int)Math.Round(QueryDeck.Cards.Count / 10m, MidpointRounding.ToPositiveInfinity);
-            finalImageHeight = ((borderY * 2) + (cardHeight * 2) + (numberOfRows * cardHeight));
+            var numberOfRows = (int)Math.Round(
+                QueryDeck.Cards.Count / 10m,
+                MidpointRounding.ToPositiveInfinity);
 
+            finalImageHeight =
+                (borderY * 2) +
+                (cardHeight * 2) +
+                (numberOfRows * cardHeight);
+
+            // Card positions.
             for (var y = 0; y < numberOfRows; y++)
             {
                 for (var x = 0; x < 10; x++)
                 {
-                    coordinates.Add((borderX + (x * cardWidth), (borderY + (cardHeight * 2)) + (y * cardHeight)));
+                    coordinates.Add((
+                        borderX + (x * cardWidth),
+                        (borderY + (cardHeight * 2)) +
+                        (y * cardHeight)));
                 }
             }
 
-            var coordCounter = 0;
-            using var outputImage = new Image<Rgba32>(finalImageWidth, finalImageHeight);
-
-            // Load Hero Image
-            if (QueryDeck.Hero != null)
+            // Use consistent path handling and avoid loading duplicates.
+            SKBitmap? LoadImage(string relativePath, bool decodeUrl = false)
             {
-                var heroPath = Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage);
-                if (System.IO.File.Exists(heroPath))
+                if (decodeUrl)
+                    relativePath = HttpUtility.UrlDecode(relativePath);
+
+                var path = Path.Combine(
+                    config.AppData.ImagePath, relativePath);
+
+                if (imageCache.TryGetValue(path, out var cached))
+                    return cached;
+
+                if (!System.IO.File.Exists(path))
+                    return null;
+
+                var bitmap = SKBitmap.Decode(path);
+
+                if (bitmap == null)
+                    return null;
+
+                if (imageCache.TryAdd(path, bitmap))
+                    return bitmap;
+
+                // Another thread may have inserted the same path.
+                bitmap.Dispose();
+
+                return imageCache.TryGetValue(path, out cached) ? cached : null;
+            }
+
+            try
+            {
+                // Preload images into the cache.
+                if (QueryDeck.Hero != null)
                 {
-                    imageCache[heroPath] = Image.Load<Rgb24>(heroPath);
+                    LoadImage(QueryDeck.Hero.LatestRevision.GetSmallImage);
                 }
-            }
 
-            // Load Landscape Images
-            foreach (var landscape in QueryDeck.Landscapes)
-            {
-                var landPath = Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage);
-                if (!imageCache.ContainsKey(landPath) && System.IO.File.Exists(landPath))
+                foreach (var landscape in QueryDeck.Landscapes)
                 {
-                    imageCache[landPath] = Image.Load<Rgb24>(landPath);
+                    LoadImage(landscape.LatestRevision.GetSmallImage);
                 }
-            }
 
-            // Load Card Images
-            foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
-            {
-                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
-                if (!imageCache.ContainsKey(cardPath) && System.IO.File.Exists(cardPath))
+                foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
                 {
-                    imageCache[cardPath] = Image.Load<Rgb24>(cardPath);
+                    LoadImage(
+                        card.LatestRevision.GetSmallImage,
+                        decodeUrl: true);
                 }
-            }
 
-            // **DRAW IMAGES FROM CACHE**
-            if (QueryDeck.Hero != null && imageCache.TryGetValue(Path.Combine(config.AppData.ImagePath, QueryDeck.Hero.LatestRevision.GetSmallImage), out var heroImage))
-            {
-                var heroLoc = coordinates[coordCounter];
-                heroImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
-                outputImage.Mutate(o => o.DrawImage(heroImage, new Point(heroLoc.Item1, heroLoc.Item2), 1f));
-            }
-            coordCounter++;
+                using var outputBitmap = new SKBitmap(
+                    new SKImageInfo(
+                        finalImageWidth,
+                        finalImageHeight,
+                        SKColorType.Rgba8888,
+                        SKAlphaType.Premul));
 
-            foreach (var landscape in QueryDeck.Landscapes)
-            {
-                var landLoc = coordinates[coordCounter];
-                var landPath = Path.Combine(config.AppData.ImagePath, landscape.LatestRevision.GetSmallImage);
-                if (imageCache.TryGetValue(landPath, out var landImage))
+                using var canvas = new SKCanvas(outputBitmap);
+
+                // Preserve the transparent background of the original.
+                canvas.Clear(SKColors.Transparent);
+
+                var sampling = new SKSamplingOptions(
+                    SKFilterMode.Linear,
+                    SKMipmapMode.Linear);
+
+                // Draw the hero.
+                var coordCounter = 0;
+
+                if (QueryDeck.Hero != null)
                 {
-                    landImage.Mutate(ci => ci.Resize(new Size(cardWidth * 2, cardHeight * 2)));
-                    outputImage.Mutate(o => o.DrawImage(landImage, new Point(landLoc.Item1, landLoc.Item2), 1f));
+                    var heroPath = Path.Combine(
+                        config.AppData.ImagePath,
+                        QueryDeck.Hero.LatestRevision.GetSmallImage);
+
+                    if (imageCache.TryGetValue(heroPath, out var heroImage))
+                    {
+                        var loc = coordinates[coordCounter];
+
+                        canvas.DrawBitmap(
+                            heroImage,
+                            new SKRect(
+                                loc.X,
+                                loc.Y,
+                                loc.X + cardWidth * 2,
+                                loc.Y + cardHeight * 2),
+                            sampling);
+                    }
                 }
+
                 coordCounter++;
-            }
 
-            foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
-            {
-                var cardLoc = coordinates[coordCounter];
-                var cardPath = Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(card.LatestRevision.GetSmallImage));
-                if (imageCache.TryGetValue(cardPath, out var cardImage))
+                // Draw landscapes.
+                foreach (var landscape in QueryDeck.Landscapes)
                 {
-                    cardImage.Mutate(ci => ci.Resize(new Size(cardWidth, cardHeight)));
-                    outputImage.Mutate(o => o.DrawImage(cardImage, new Point(cardLoc.Item1, cardLoc.Item2), 1f));
+                    var loc = coordinates[coordCounter];
+
+                    var landPath = Path.Combine(
+                        config.AppData.ImagePath,
+                        landscape.LatestRevision.GetSmallImage);
+
+                    if (imageCache.TryGetValue(
+                        landPath, out var landImage))
+                    {
+                        canvas.DrawBitmap(
+                            landImage,
+                            new SKRect(
+                                loc.X,
+                                loc.Y,
+                                loc.X + cardWidth * 2,
+                                loc.Y + cardHeight * 2),
+                            sampling);
+                    }
+
+                    coordCounter++;
                 }
-                coordCounter++;
-            }
 
-            // Dispose of cached images to free memory
-            foreach (var img in imageCache.Values)
+                // Draw cards in alphabetical order.
+                foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
+                {
+                    var loc = coordinates[coordCounter];
+
+                    var cardPath = Path.Combine(
+                        config.AppData.ImagePath,
+                        HttpUtility.UrlDecode(
+                            card.LatestRevision.GetSmallImage));
+
+                    if (imageCache.TryGetValue(
+                        cardPath, out var cardImage))
+                    {
+                        canvas.DrawBitmap(
+                            cardImage,
+                            new SKRect(
+                                loc.X,
+                                loc.Y,
+                                loc.X + cardWidth,
+                                loc.Y + cardHeight),
+                            sampling);
+                    }
+
+                    coordCounter++;
+                }
+
+                canvas.Flush();
+
+                using var image = SKImage.FromBitmap(outputBitmap);
+                using var encoded = image.Encode(
+                    SKEncodedImageFormat.Png, 100);
+
+                return encoded.ToArray();
+            }
+            finally
             {
-                img.Dispose();
+                // Release all cached native image memory.
+                foreach (var img in imageCache.Values)
+                {
+                    img.Dispose();
+                }
+
+                imageCache.Clear();
             }
-
-            using var stream = new MemoryStream();
-            outputImage.Save(stream, new PngEncoder());
-            stream.Seek(0, SeekOrigin.Begin);
-
-            return stream.ToArray();
         }
-        
+
         public async Task<IActionResult> OnGet()
         {
             Cards = cardRepository.GetAll();

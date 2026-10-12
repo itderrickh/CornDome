@@ -5,9 +5,7 @@ using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 
 namespace CornDome.Pages.CardManage
 {
@@ -86,36 +84,62 @@ namespace CornDome.Pages.CardManage
             return RedirectToPage("/CardManage/Index");
         }
 
+
         private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight)
         {
-            var uploadsFolder = config.AppData.ImagePath;
-            if (!Directory.Exists(uploadsFolder))
-                Directory.CreateDirectory(uploadsFolder);
-
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File is empty or null");
 
+            if (maxWidth <= 0 || maxHeight <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(maxWidth), "Image dimensions must be positive.");
+
+            var uploadsFolder = config.AppData.ImagePath;
+            var outputFolder = Path.Combine(
+                uploadsFolder, "generated", "small");
+
+            Directory.CreateDirectory(outputFolder);
+
             await using var inputStream = file.OpenReadStream();
-            using var image = await SixLabors.ImageSharp.Image.LoadAsync(inputStream);
+            using var bitmap = SKBitmap.Decode(inputStream);
 
-            // Resize with high quality
-            image.Mutate(x => x.Resize(new ResizeOptions
+            if (bitmap == null)
+                throw new ArgumentException("Invalid or unsupported image.");
+
+            // Calculate dimensions while preserving the aspect ratio.
+            var scale = Math.Min(
+                (double)maxWidth / bitmap.Width,
+                (double)maxHeight / bitmap.Height);
+
+            // Don't enlarge images that are already smaller.
+            scale = Math.Min(scale, 1.0);
+
+            var width = Math.Max(1, (int)Math.Round(bitmap.Width * scale));
+            var height = Math.Max(1, (int)Math.Round(bitmap.Height * scale));
+
+            using var resized = bitmap.Resize(
+                new SKImageInfo(width, height),
+                new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None))
+                ?? throw new InvalidOperationException("Image resize failed.");
+
+            using var image = SKImage.FromBitmap(resized);
+            using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
+
+            var uniqueFileName =
+                $"{cardRevision.Name.Replace(" ", "_")}.png";
+
+            var filePath = Path.Combine(outputFolder, uniqueFileName);
+
+            await using (var outputStream = new FileStream(
+                filePath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                Mode = ResizeMode.Max, // Keeps aspect ratio
-                Size = new Size(maxWidth, maxHeight),
-                Sampler = KnownResamplers.Lanczos3 // Very good quality
-            }));
-
-            // Save with a unique filename
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-            var uniqueFileName = $"{cardRevision.Name.Replace(" ", "_")}{ext}";
-            var filePath = Path.Combine(uploadsFolder, "generated", "small", uniqueFileName);
-            await using var outputStream = new FileStream(filePath, FileMode.OpenOrCreate);
-            await image.SaveAsync(outputStream, new PngEncoder()); // or new JpegEncoder()
+                encoded.SaveTo(outputStream);
+            }
 
             return $"generated/small/{uniqueFileName}";
         }
     }
+
 
     public class AddCard
     {
