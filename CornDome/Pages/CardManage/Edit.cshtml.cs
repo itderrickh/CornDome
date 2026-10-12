@@ -3,9 +3,6 @@ using CornDome.Models.Cards;
 using CornDome.Repository.Cards;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
 
 namespace CornDome.Pages.CardManage

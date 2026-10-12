@@ -1,4 +1,3 @@
-using Amazon.Runtime.Internal;
 using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
