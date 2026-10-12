@@ -1,0 +1,85 @@
+﻿@page
+@model CornDome.Pages.Resources.PDFCreatorModel
+@{
+    ViewData["Title"] = "Adventure Time: Card Wars PDF Creator";
+}
+
+<div class="container py-4">
+    <div class="text-center mb-5 container">
+        <h1>Application provided by Viktor at <a href="https://github.com/BVviktor/CardWars_PrinterApp/tree/main">this link.</a></h1>
+        <strong>This tool allows you to arrange printable PDF files of your favorite CardWars cards and decks.</strong>
+        <p style="font-size: 12px; margin-top: 10px;"><i>Please review the disclaimer at the bottom of this page before downloading and using this software.</i></p>
+        
+    </div>
+    <article class="readme-content mb-4">
+        @Html.Raw(Model.HtmlContent.Replace(
+            "src=\"screenshot.png\"",
+            "src=\"/screenshot.png\""))
+    </article>
+    <i><strong>Disclaimer:</strong> This is an unofficial, fan-made utility provided "as is," without warranties to the fullest extent permitted by law. Download and use it at your own risk. This tool is not affiliated with or endorsed by Adventure Time, Cryptozoic Entertainment, Frederator Studios, or Cartoon Network. Third-party card images and game content remain subject to their respective owners' rights.</i>
+</div>
+
+<style>
+    .readme-content {
+        margin: 0 auto;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        border: 1px solid lightgray;
+        padding: 5px;
+    }
+
+    .readme-content h1,
+    .readme-content h2,
+    .readme-content h3 {
+        margin-top: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .readme-content h1 {
+        margin-top: 0;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .readme-content h2 {
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .readme-content p,
+    .readme-content ul,
+    .readme-content ol {
+        margin-bottom: 1rem;
+    }
+
+    .readme-content img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem auto;
+        border-radius: 0.5rem;
+    }
+
+    .readme-content pre {
+        padding: 1rem;
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .readme-content code {
+        font-size: 0.9em;
+    }
+
+    .readme-content pre code {
+        font-size: 0.875rem;
+    }
+
+    .readme-content a {
+        overflow-wrap: anywhere;
+    }
+
+    .readme-content li + li {
+        margin-top: 0.25rem;
+    }
+</style>
