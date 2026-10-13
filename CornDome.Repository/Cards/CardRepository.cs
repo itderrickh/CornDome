@@ -7,6 +7,8 @@ namespace CornDome.Repository.Cards
     public interface ICardRepository
     {
         IEnumerable<Card> GetAll();
+        Task<int> GetCount();
+        Task<IEnumerable<Card>> GetCards(int limit, int offset);
         Card GetCard(int id);
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
         Card AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
@@ -16,6 +18,8 @@ namespace CornDome.Repository.Cards
         bool AddRevisionImage(CardImage cardImage);
         bool DeleteCard(int cardId);
         List<CardSet> GetAllSets();
+        List<Landscape> GetAllLandscapes();
+        List<CardType> GetAllCardTypes();
         List<CardSet> GetSetsByIds(int[] ids);
         Card GetCardOfTheDay(DateTime day);
     }
@@ -30,6 +34,29 @@ namespace CornDome.Repository.Cards
                 .Include(card => card.Revisions)
                 .ThenInclude(cardRev => cardRev.CardSets)
                 .ToList();
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await context.Cards.CountAsync();
+        }
+
+        public async Task<IEnumerable<Card>> GetCards(int limit, int offset)
+        {
+            return await context.Cards
+                .AsNoTracking()
+                .Include(card => card.Revisions)
+                    .ThenInclude(cardRev => cardRev.CardImages)
+                .Include(card => card.Revisions)
+                    .ThenInclude(cardRev => cardRev.CardSets)
+                .Include(card => card.Revisions)
+                    .ThenInclude(cardRev => cardRev.Landscape)
+                .Include(card => card.Revisions)
+                    .ThenInclude(cardRev => cardRev.CardType)
+                .OrderBy(card => card.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
         }
 
         public Card GetCard(int id)
@@ -62,6 +89,16 @@ namespace CornDome.Repository.Cards
         public List<CardSet> GetAllSets()
         {
             return [.. context.CardSets];
+        }
+
+        public List<Landscape> GetAllLandscapes()
+        {
+            return [.. context.Landscapes];
+        }
+
+        public List<CardType> GetAllCardTypes()
+        {
+            return [.. context.CardTypes];
         }
 
         public List<CardSet> GetSetsByIds(int[] ids)

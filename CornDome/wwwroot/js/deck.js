@@ -47,7 +47,7 @@ document.getElementById("saveDatabaseButton").onclick = async function () {
     const iconId = document.getElementById("deckIconCardId").value;
     const deckName = document.getElementById("deckName").value
 
-    const response = await fetch('/api/Deck', {
+    const response = await fetch('/api/Decks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

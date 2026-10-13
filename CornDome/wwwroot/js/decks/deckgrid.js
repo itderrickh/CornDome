@@ -25,7 +25,7 @@ document.getElementById('confirmDeleteDeck')
                 'input[name="__RequestVerificationToken"]'
             ).value;
 
-            const response = await fetch(`/api/Deck/${deleteDeckId}`, {
+            const response = await fetch(`/api/Decks/${deleteDeckId}`, {
                 method: 'DELETE',
                 headers: {
                     'RequestVerificationToken': token

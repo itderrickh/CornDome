@@ -13,7 +13,7 @@
     border: 4px solid rgba(0,0,0,.125);
 }
 
-.card-body:hover {
+.deck-card .card-body:hover {
     border: 4px solid orange;
 }
 

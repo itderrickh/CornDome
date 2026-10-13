@@ -7,7 +7,7 @@ namespace CornDome.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-
+        private string UserAgent => Request.Headers.UserAgent.ToString();
     }
 
     [Authorize]

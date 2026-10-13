@@ -1,11 +1,14 @@
 ﻿using CornDome.Helpers;
+using CornDome.Models;
 using CornDome.Models.Main;
 using CornDome.Models.Users;
+using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace CornDome.Controllers
 {
@@ -28,8 +31,52 @@ namespace CornDome.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class DeckController(UserManager<User> userManager, IDeckRepository deckRepository) : AuthorizedBaseController(userManager)
+    public class DecksController(UserManager<User> userManager, IDeckRepository deckRepository) : AuthorizedBaseController(userManager)
     {
+        [HttpGet]
+        [AllowAnonymous]
+        [RequireUserAgent]
+        public async Task<IActionResult> GetDecks([FromQuery] int limit = ApiPagination.DefaultLimit, [FromQuery] int offset = ApiPagination.DefaultOffset)
+        {
+            if (limit < 1 || limit > 100)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid limit",
+                    Detail = $"Limit must be between 1 and {100}.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
+            if (offset < 0)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid offset",
+                    Detail = "Offset must be zero or greater.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
+            var stopwatch = Stopwatch.StartNew();
+            (int count, List<Deck> decks) = deckRepository.GetAllVisibleDecks(null, null, offset, limit);
+            var serializedDecks = decks.Select(x => new SerializableDeck(x));
+            stopwatch.Stop();
+
+            var response = new ApiCollectionResponse<object>
+            {
+                Data = serializedDecks.Cast<object>().ToList(),
+                Elapsed = stopwatch.Elapsed.TotalMilliseconds,
+                Next = ApiPagination.GetNextUrl(Request, count, limit, offset),
+                Total = count,
+                Count = serializedDecks.Count(),
+                Limit = limit,
+                Offset = offset
+            };
+
+            return Ok(response);
+        }
+        
         [HttpDelete("{deckId}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveDeck(int deckId)
