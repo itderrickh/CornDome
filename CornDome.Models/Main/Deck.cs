@@ -52,26 +52,32 @@ namespace CornDome.Models.Main
                 };
             }
 
-            var landscapes = parts[1].Split(",");
-            foreach (var landscape in landscapes)
+            if (!string.IsNullOrEmpty(parts[1]))
             {
-                var pieces = landscape.Split(":");
-                Landscapes.Add(new SerializedCard()
+                var landscapes = parts[1].Split(",");
+                foreach (var landscape in landscapes)
                 {
-                    CardId = int.Parse(pieces[0]),
-                    Count = int.Parse(pieces[1])
-                });
+                    var pieces = landscape.Split(":");
+                    Landscapes.Add(new SerializedCard()
+                    {
+                        CardId = int.Parse(pieces[0]),
+                        Count = int.Parse(pieces[1])
+                    });
+                }
             }
 
-            var cards = parts[1].Split(",");
-            foreach (var card in cards)
+            if (!string.IsNullOrEmpty(parts[2]))
             {
-                var pieces = card.Split(":");
-                Cards.Add(new SerializedCard()
+                var cards = parts[2].Split(",");
+                foreach (var card in cards)
                 {
-                    CardId = int.Parse(pieces[0]),
-                    Count = int.Parse(pieces[1])
-                });
+                    var pieces = card.Split(":");
+                    Cards.Add(new SerializedCard()
+                    {
+                        CardId = int.Parse(pieces[0]),
+                        Count = int.Parse(pieces[1])
+                    });
+                }
             }
         }
         public int Id { get; set; }
