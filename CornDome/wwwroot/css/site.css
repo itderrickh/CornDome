@@ -48,6 +48,9 @@ html[data-color-mode="0"] {
         color: var(--text-color);
     }
 
+    .table-hover > tbody > tr:hover {
+        color: var(--text-color);
+    }
 
     .card-detail {
         display: flex;
@@ -73,7 +76,7 @@ html[data-color-mode="0"] {
     }
 
     .table-striped > tbody > tr:nth-of-type(2n+1) {
-        color: white;
+        color: var(--text-color);
     }
 
     .accordion-item {

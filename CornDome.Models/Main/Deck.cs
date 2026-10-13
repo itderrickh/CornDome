@@ -43,7 +43,7 @@ namespace CornDome.Models.Main
             Visibility = deck.Visibility;
 
             var parts = deck.DeckString.Split(";");
-            if (!string.IsNullOrEmpty(parts[0])
+            if (!string.IsNullOrEmpty(parts[0]))
             {
                 Hero = new SerializedCard()
                 {
