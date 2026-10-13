@@ -43,11 +43,14 @@ namespace CornDome.Models.Main
             Visibility = deck.Visibility;
 
             var parts = deck.DeckString.Split(";");
-            Hero = new SerializedCard()
+            if (!string.IsNullOrEmpty(parts[0])
             {
-                Count = 1,
-                CardId = int.Parse(parts[0])
-            };
+                Hero = new SerializedCard()
+                {
+                    Count = 1,
+                    CardId = int.Parse(parts[0])
+                };
+            }
 
             var landscapes = parts[1].Split(",");
             foreach (var landscape in landscapes)
