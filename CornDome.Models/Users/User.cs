@@ -11,5 +11,6 @@ namespace CornDome.Models.Users
         public ICollection<DiscordConnection> DiscordConnections { get; set; } = [];
         public ICollection<PlayAvailability> PlayAvailabilities { get; set; } = [];
         public DateTime LastLogin { get; set; }
+        public int ColorMode { get; set; }
     }
 }

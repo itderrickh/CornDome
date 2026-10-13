@@ -15,7 +15,7 @@ namespace CornDome.Repository.Migrations.Main
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
 
             modelBuilder.Entity("CornDome.Models.Main.BugReport", b =>
                 {
@@ -303,6 +303,9 @@ namespace CornDome.Repository.Migrations.Main
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ColorMode")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")

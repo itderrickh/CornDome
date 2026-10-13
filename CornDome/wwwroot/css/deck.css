@@ -23,11 +23,7 @@
     display: none;
 }
 
-@media (prefers-color-scheme: dark) {
-    .info-stamp {
-        background-image: url('/img/info-light.png');
-    }
-}
+
 
 @media (max-width: 1024px) {
     #showStats {

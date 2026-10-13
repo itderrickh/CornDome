@@ -10,6 +10,7 @@ namespace CornDome.Pages.Account
     {
         public string Username { get; set; }
         public string Email { get; set; }
+        public int ColorMode { get; set; }
     }
 
     [Authorize]
@@ -24,6 +25,7 @@ namespace CornDome.Pages.Account
 
             LocalUser.Email = loggedInUser?.Email;
             LocalUser.Username = User.Identity.Name;
+            LocalUser.ColorMode = loggedInUser.ColorMode;
         }
 
         public async Task<IActionResult> OnPost()
@@ -36,6 +38,7 @@ namespace CornDome.Pages.Account
             var loggedInUser = await GetUser();
 
             loggedInUser.UserName = LocalUser.Username;
+            loggedInUser.ColorMode = LocalUser.ColorMode;
             var updated = await userRepository.UpdateUser(loggedInUser);
 
             if (updated)

@@ -9,9 +9,14 @@
         logoHeight = 40;
         bodyClass = "container-fluid";
     }
+
+    var user = await Model.GetUser();
+    var colorMode = user != null
+        ? user.ColorMode
+        : 0;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-color-mode="@colorMode">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
