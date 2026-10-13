@@ -1,9 +1,10 @@
+using CornDome.Models;
 using Markdig;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Resources
 {
-    public class PDFCreatorModel(IWebHostEnvironment environment) : PageModel
+    public class PDFCreatorModel(IWebHostEnvironment environment) : BasePageModel
     {
         public string HtmlContent { get; private set; } = string.Empty;
 

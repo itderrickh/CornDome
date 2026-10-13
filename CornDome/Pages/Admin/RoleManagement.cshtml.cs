@@ -1,4 +1,4 @@
-
+using CornDome.Models;
 using CornDome.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CornDome.Pages.Admin;
 
 [Authorize(Policy = "admin")]
-public class RoleManagementModel(RoleManager<Role> roleManager, UserManager<User> userManager) : PageModel
+public class RoleManagementModel(RoleManager<Role> roleManager, UserManager<User> userManager) : BasePageModel
 {
 
     public IList<Role> Roles { get; private set; } = new List<Role>();

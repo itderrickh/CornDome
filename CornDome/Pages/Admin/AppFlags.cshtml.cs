@@ -1,3 +1,4 @@
+using CornDome.Models;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class AppFlagsModel : PageModel
+    public class AppFlagsModel : BasePageModel
     {
         private readonly IAppFlagRepository _appFlagRepository;
 
