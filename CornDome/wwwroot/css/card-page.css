@@ -12,3 +12,10 @@
     padding: 10px;
 }
 
+
+.card-detail-image {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}

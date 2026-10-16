@@ -23,7 +23,12 @@ else
     </div>
     <div class="card-detail">
         <div class="w-50">
-            <img class="w-100" style="max-width: 500px;" alt="@selectedRevision.Name" src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
+            <img class="w-100 card-detail-image" 
+                width="500"
+                decoding="async"
+                fetchpriority="high"
+                alt="@selectedRevision.Name"
+                src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
         </div>
         <div class="w-50 p-4">
             @if (Model.QueryCard.IsCustomCard)

@@ -74,7 +74,11 @@ namespace CornDome
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(builder.Configuration[ConfigConstants.IMAGEPATH]),
-                RequestPath = AppConstants.CARD_STATIC_IMAGE_ROUTE
+                RequestPath = AppConstants.CARD_STATIC_IMAGE_ROUTE,
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers.CacheControl = "public,max-age=2592000";
+                }
             });
         }
 
