@@ -41,7 +41,7 @@
             <button id="validateButton" type="button" class="btn btn-lg btn-block btn-primary">Validate Deck</button>
             <button id="decklistExport" type="button" class="btn btn-lg btn-block btn-primary">Copy decklist to clipboard</button>
             <button id="permalinkExport" type="button" class="btn btn-lg btn-block btn-primary">Copy permalink to clipboard</button>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)">Try it out</a>
+            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Try it out</a>
             @if (User.Identity.IsAuthenticated)
             {
                 <button id="saveDatabaseButton2" type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
