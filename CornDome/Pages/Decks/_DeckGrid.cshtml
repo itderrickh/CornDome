@@ -70,7 +70,7 @@
 
             <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
                 <a class="page-link"
-                   href="?page=@(Model.PageNumber - 1)">
+                   href="?pageNumber=@(Model.PageNumber - 1)">
                     Previous
                 </a>
             </li>
@@ -79,7 +79,7 @@
             {
                 <li class="page-item @(i == Model.PageNumber ? "active" : "")">
                     <a class="page-link"
-                       href="?page=@i">
+                       href="?pageNumber=@i">
                         @i
                     </a>
                 </li>
@@ -87,7 +87,7 @@
 
             <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
                 <a class="page-link"
-                   href="?page=@(Model.PageNumber + 1)">
+                   href="?pageNumber=@(Model.PageNumber + 1)">
                     Next
                 </a>
             </li>
