@@ -16,7 +16,6 @@ namespace CornDome.Helpers
             try
             {
                 await next(context);
-                stopwatch.Stop();
             }
             catch (Exception ex)
             {
@@ -28,7 +27,7 @@ namespace CornDome.Helpers
                     Method = context.Request.Method,
                     Path = context.Request.Path,
                     QueryString = context.Request.QueryString.Value,
-                    StatusCode = context.Response.StatusCode,
+                    StatusCode = StatusCodes.Status500InternalServerError,
                     DurationMs = stopwatch.ElapsedMilliseconds,
                     UserName = context.User.Identity?.Name,
                     RemoteIp = context.Connection.RemoteIpAddress?.ToString(),
@@ -37,6 +36,10 @@ namespace CornDome.Helpers
                 });
 
                 throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
             }
         }
     }
