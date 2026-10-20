@@ -13,7 +13,13 @@ else
     @Html.AntiForgeryToken()
     ViewData["RenderMode"] = "wide";
     var totalCost = Model.QueryDeck.Cards.Select(x => x.LatestRevision.Cost).Sum();
-    decimal averageCost = (decimal)totalCost / (decimal)Model.QueryDeck.Cards.Count;
+
+    decimal averageCost = 0;
+
+    if (Model.QueryDeck.Cards.Count > 0)
+    {
+        averageCost = (decimal)totalCost / (decimal)Model.QueryDeck.Cards.Count;
+    }
 
     <div class="row">
         <div class="col-md-2 col-sm-2">
