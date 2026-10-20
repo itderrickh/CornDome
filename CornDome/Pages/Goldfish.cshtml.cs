@@ -32,7 +32,7 @@ namespace CornDome.Pages
             if (DeckId.HasValue)
             {
                 var loggedInUser = await GetUser();
-                if (deckRepository.DoesUserHaveAccess(DeckId.Value, loggedInUser.Id))
+                if (loggedInUser != null && deckRepository.DoesUserHaveAccess(DeckId.Value, loggedInUser.Id))
                 {
                     Deck deck = deckRepository.GetDeck(DeckId.Value);
                     if (deck != null)
