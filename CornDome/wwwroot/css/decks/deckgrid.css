@@ -20,16 +20,16 @@
 .card-body-image {
     height: 200px;
     background-repeat: no-repeat;
-    background-size: 484px;
-    background-position-x: -50px;
-    background-position-y: -100px;
+    background-size: 443px;
+    background-position-x: -21px;
+    background-position-y: -112px;
     position: relative;
 }
 
 .card-body-image::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -4px;
     background: rgba(0, 0, 0, .25);
     pointer-events: none;
 }

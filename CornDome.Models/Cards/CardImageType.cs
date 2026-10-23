@@ -7,7 +7,8 @@ namespace CornDome.Models.Cards
         XSmall = 0,
         Small = 1,
         Regular = 2,
-        Large = 3
+        Large = 3,
+        Optimized = 4
     }
 
     [Table("cardImageType")]
@@ -28,6 +29,8 @@ namespace CornDome.Models.Cards
                     return "Regular";
                 case CardImageTypeEnum.Large:
                     return "Large";
+                case CardImageTypeEnum.Optimized:
+                    return "Optimized";
                 default:
                     return "";
             }

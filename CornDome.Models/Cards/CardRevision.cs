@@ -57,6 +57,17 @@ namespace CornDome.Models.Cards
             }
         }
 
+        public string GetOptimizedImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Optimized)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Large)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl ?? "";
+            }
+        }
+
         public string GetLargestImage
         {
             get

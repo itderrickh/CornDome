@@ -83,7 +83,7 @@ else
                     {
                         <div class="w-20">
                             <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id" class="deck-card" data-card-id="@Model.QueryDeck.Hero.Id" data-type="hero">
-                                <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetLargestImage)" />
+                                <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetOptimizedImage)" />
                             </a>
                         </div>
                     }
@@ -92,7 +92,7 @@ else
                     {
                         <div class="w-20">
                             <a asp-page="/Card" asp-route-id="@landscape.Id" class="deck-card" data-card-id="@landscape.Id" data-type="landscape">
-                                <img class="w-100" alt="@landscape.LatestRevision.Name" src="@(Model.BaseUrl + landscape.LatestRevision.GetLargestImage)" />
+                                <img class="w-100" alt="@landscape.LatestRevision.Name" src="@(Model.BaseUrl + landscape.LatestRevision.GetOptimizedImage)" />
                             </a>
                         </div>
                     }
@@ -103,7 +103,7 @@ else
                     {
                         <div class="w-10">
                             <a asp-page="/Card" asp-route-id="@card.Id" class="deck-card" data-card-id="@card.Id" data-type="card">
-                                <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@(Model.BaseUrl + card.LatestRevision.GetLargestImage)" />
+                                <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@(Model.BaseUrl + card.LatestRevision.GetOptimizedImage)" />
                             </a>
                         </div>
                     }

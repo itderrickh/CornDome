@@ -59,7 +59,7 @@ namespace CornDome.Pages.CardManage
 
             var addedCard = cardRepository.AddCard(card, revision, cardImage);
 
-            var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 227, 320);
+            var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 227, 320, "small");
             if (smallImagePath != null && addedCard != null)
             {
                 var cardImageSmall = new CardImage()
@@ -81,11 +81,33 @@ namespace CornDome.Pages.CardManage
                 });
             }
 
+            var optimizedImagePath = await CreateSmallImage(revision, AddCard.Image, 600, 850, "medium");
+            if (optimizedImagePath != null && addedCard != null)
+            {
+                var cardImageOptimized = new CardImage()
+                {
+                    CardImageTypeId = 4,
+                    ImageUrl = optimizedImagePath,
+                    RevisionId = addedCard.LatestRevision.Id
+                };
+                cardRepository.AddRevisionImage(cardImageOptimized);
+            }
+            else
+            {
+                await logEntryRepository.InsertAsync(new LogEntry()
+                {
+                    Timestamp = DateTime.Now,
+                    Exception = $"Error inserting card {AddCard?.Name}",
+                    Method = "OnPost",
+                    UserName = loggedInUser?.UserName
+                });
+            }
+
             return RedirectToPage("/CardManage/Index");
         }
 
 
-        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight)
+        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight, string size)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File is empty or null");
@@ -96,7 +118,7 @@ namespace CornDome.Pages.CardManage
 
             var uploadsFolder = config.AppData.ImagePath;
             var outputFolder = Path.Combine(
-                uploadsFolder, "generated", "small");
+                uploadsFolder, "generated", size);
 
             Directory.CreateDirectory(outputFolder);
 
@@ -136,7 +158,7 @@ namespace CornDome.Pages.CardManage
                 encoded.SaveTo(outputStream);
             }
 
-            return $"generated/small/{uniqueFileName}";
+            return $"generated/${size}/{uniqueFileName}";
         }
     }
 
