@@ -28,7 +28,7 @@ else
                 decoding="async"
                 fetchpriority="high"
                 alt="@selectedRevision.Name"
-                src="@(Model.BaseUrl + selectedRevision.GetLargestImage)" />
+                src="@(Model.BaseUrl + selectedRevision.GetOptimizedImage)" />
         </div>
         <div class="w-50 p-4">
             @if (Model.QueryCard.IsCustomCard)

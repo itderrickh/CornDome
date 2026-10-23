@@ -15,7 +15,7 @@
             <div style="padding: 10px 5px; border-bottom: 1px solid lightgray">
                 <h3>Card of the Day</h3>
                 <a asp-page="/Card" asp-route-id="@Model.CardOfTheDay.Id">
-                    <img class="w-100" style="max-width: 250px;" alt="@Model.CardOfTheDay.LatestRevision.Name" src="@(Model.BaseUrl + Model.CardOfTheDay.LatestRevision.GetLargestImage)" />
+                    <img class="w-100" style="max-width: 250px;" alt="@Model.CardOfTheDay.LatestRevision.Name" src="@(Model.BaseUrl + Model.CardOfTheDay.LatestRevision.GetOptimizedImage)" />
                 </a>
             </div>
             <div style="padding: 10px 5px; border-bottom: 1px solid lightgray">
