@@ -2,6 +2,7 @@ using CornDome.Models;
 using CornDome.Models.Play;
 using CornDome.Models.Users;
 using CornDome.Repository.Discord;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Play
@@ -25,6 +26,7 @@ namespace CornDome.Pages.Play
         public List<AvailabilityDayVm> Days { get; set; } = new();
     }
 
+    [Authorize]
     public class SettingsModel(Config config, IDiscordRepository discordRepository) : BasePageModel
     {
         public DiscordConnection DiscordConnection { get; set; }
