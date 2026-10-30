@@ -22,6 +22,7 @@ namespace CornDome.Pages.CardManage
 
         public void OnGet()
         {
+            AllSets = cardRepository.GetAllSets();
             var cardFound = cardRepository.GetCard(CardId);
             EditCard = new EditCard()
             {
