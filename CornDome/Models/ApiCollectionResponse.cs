@@ -6,7 +6,7 @@
 
         public required double Elapsed { get; init; }
 
-        public string? Next { get; init; }
+        public string Next { get; init; }
 
         public required int Total { get; init; }
 

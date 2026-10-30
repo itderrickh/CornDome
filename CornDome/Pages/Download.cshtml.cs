@@ -75,7 +75,7 @@ namespace CornDome.Pages
             }
 
             // Use consistent path handling and avoid loading duplicates.
-            SKBitmap? LoadImage(string relativePath, bool decodeUrl = false)
+            SKBitmap LoadImage(string relativePath, bool decodeUrl = false)
             {
                 if (decodeUrl)
                     relativePath = HttpUtility.UrlDecode(relativePath);
