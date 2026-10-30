@@ -34,11 +34,4 @@
     <ProjectReference Include="..\CornDome.TournamentSystem\CornDome.TournamentSystem.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Pages\Account\Login.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
