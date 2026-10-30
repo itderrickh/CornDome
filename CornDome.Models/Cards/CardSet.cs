@@ -35,6 +35,9 @@ namespace CornDome.Models.Cards
         CustomCards = 16,
         LandOfLegends = 17,
         Kickstarter3 = 18,
+        AdultFinnVSHunsonAbadeer = 19,
+        GolbVSBananaGuard = 20,
+        PrinceGumballVSMarshallLee = 21
     }
 
     public static class SetConverter
@@ -62,6 +65,9 @@ namespace CornDome.Models.Cards
                 Set.CustomCards => "Custom Community Cards",
                 Set.LandOfLegends => "Land of Legends",
                 Set.Kickstarter3 => "Kickstarter #3",
+                Set.AdultFinnVSHunsonAbadeer => "Adult Finn Vs Hunson Abadeer",
+                Set.GolbVSBananaGuard => "Golb Vs Banana Guard",
+                Set.PrinceGumballVSMarshallLee => "Prince Gumball Vs Marshall Lee",
                 _ => "",
             };
         }
@@ -89,6 +95,9 @@ namespace CornDome.Models.Cards
                 Set.CustomCards => "custom",
                 Set.LandOfLegends => "lol",
                 Set.Kickstarter3 => "ks3",
+                Set.AdultFinnVSHunsonAbadeer => "cp10",
+                Set.GolbVSBananaGuard => "cp11",
+                Set.PrinceGumballVSMarshallLee => "cp12",
                 _ => "",
             };
         }
