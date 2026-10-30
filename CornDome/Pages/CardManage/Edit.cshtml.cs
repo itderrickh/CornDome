@@ -35,7 +35,7 @@ namespace CornDome.Pages.CardManage
                 Defense = cardFound.LatestRevision.Defense,
                 RevisionId = cardFound.LatestRevision.Id,
                 CardSets = [.. cardFound.LatestRevision.CardSets],
-                ImageUrl = cardFound.LatestRevision.GetRegularImage
+                ImageUrl = cardFound.LatestRevision.GetOptimizedImage
             };
         }
 
@@ -79,7 +79,7 @@ namespace CornDome.Pages.CardManage
                 // Add a small image if we updated successfully
                 if (isEverythingGoingWell)
                 {
-                    var smallImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 227, 320);
+                    var smallImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 227, 320, "small");
                     if (!string.IsNullOrEmpty(smallImagePath))
                     {
                         CardImage smallImage = new()
@@ -91,12 +91,33 @@ namespace CornDome.Pages.CardManage
                         isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
                     }
                 }
+
+                // Add a optimized image if we updated successfully
+                if (isEverythingGoingWell)
+                {
+                    var optimizedImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 600, 850, "medium");
+                    if (optimizedImagePath != null)
+                    {
+                        var cardImageOptimized = new CardImage()
+                        {
+                            CardImageTypeId = 4,
+                            ImageUrl = optimizedImagePath,
+                            RevisionId = cardRevision.Id
+                        };
+                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, optimizedImagePath, 4);
+                    }
+                }
             }
 
             if (card != null && card.Id == CardId)
             {
-                var setIds = SetIds.Split(',').Select(int.Parse).ToArray();
-                var setsToUpdate = cardRepository.GetSetsByIds(setIds);
+                var setsToUpdate = new List<CardSet>();
+
+                if (SetIds != null)
+                {
+                    var setIds = SetIds.Split(',').Select(int.Parse).ToArray();
+                    setsToUpdate = cardRepository.GetSetsByIds(setIds);
+                }
 
                 card.LatestRevision.Ability = EditCard.Ability;
                 card.LatestRevision.Attack = EditCard.Attack;
@@ -133,7 +154,7 @@ namespace CornDome.Pages.CardManage
             return RedirectToPage(new { id = CardId });
         }
 
-        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight)
+        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight, string size)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File is empty or null");
@@ -144,7 +165,7 @@ namespace CornDome.Pages.CardManage
 
             var uploadsFolder = config.AppData.ImagePath;
             var outputFolder = Path.Combine(
-                uploadsFolder, "generated", "small");
+                uploadsFolder, "generated", size);
 
             Directory.CreateDirectory(outputFolder);
 
@@ -184,7 +205,7 @@ namespace CornDome.Pages.CardManage
                 encoded.SaveTo(outputStream);
             }
 
-            return $"generated/small/{uniqueFileName}";
+            return $"generated/{size}/{uniqueFileName}";
         }
 
         private async Task<string> UploadImage(CardRevision cardRevision, ImageUpload upload)

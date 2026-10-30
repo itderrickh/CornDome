@@ -158,7 +158,7 @@ namespace CornDome.Pages.CardManage
                 encoded.SaveTo(outputStream);
             }
 
-            return $"generated/${size}/{uniqueFileName}";
+            return $"generated/{size}/{uniqueFileName}";
         }
     }
 
