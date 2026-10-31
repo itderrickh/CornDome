@@ -57,7 +57,23 @@ namespace CornDome.Pages.CardManage
                 await AddCard.Image.CopyToAsync(stream);
             }
 
-            var addedCard = cardRepository.AddCard(card, revision, cardImage);
+            var addedCard = cardRepository.AddCard(card, revision);
+
+            if (addedCard != null)
+            {
+                cardImage.RevisionId = addedCard.LatestRevision.Id;
+                cardRepository.AddRevisionImage(cardImage);
+            }
+            else
+            {
+                await logEntryRepository.InsertAsync(new LogEntry()
+                {
+                    Timestamp = DateTime.Now,
+                    Exception = $"Error inserting card {AddCard?.Name}",
+                    Method = "OnPost",
+                    UserName = loggedInUser?.UserName
+                });
+            }
 
             var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 227, 320, "small");
             if (smallImagePath != null && addedCard != null)

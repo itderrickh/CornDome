@@ -11,7 +11,7 @@ namespace CornDome.Repository.Cards
         Task<IEnumerable<Card>> GetCards(int limit, int offset);
         Card GetCard(int id);
         IEnumerable<Card> GetCardsFromQuery(List<string> query);
-        Card AddCard(Card card, CardRevision cardRevision, CardImage cardImage);
+        Card AddCard(Card card, CardRevision cardRevision);
         bool UpdateCardAndRevisions(Card card);
         bool UpdateRevisionRulings(Card card);
         bool UpdateRevisionImage(CardRevision revision, string newImagePath, int cardImageTypeId);
@@ -225,7 +225,7 @@ namespace CornDome.Repository.Cards
             return false;
         }
 
-        public Card AddCard(Card card, CardRevision cardRevision, CardImage cardImage)
+        public Card AddCard(Card card, CardRevision cardRevision)
         {
             var addedCardId = -1;
             using var transcation = context.Database.BeginTransaction();
@@ -241,16 +241,12 @@ namespace CornDome.Repository.Cards
                 context.Add(revisionToInsert);
                 var revisionId = context.SaveChanges();
 
-                cardImage.RevisionId = revisionToInsert.Id;
-                context.Add(cardImage);
-                context.SaveChanges();
-
                 transcation.Commit();
-                logger.LogCardChange($"Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}, Card Image: {JsonSerializer.Serialize(cardImage)}");
+                logger.LogCardChange($"Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}");
             }
             catch (Exception)
             {
-                logger.LogCardChange($"Error Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}, Card Image: {JsonSerializer.Serialize(cardImage)}");
+                logger.LogCardChange($"Error Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}");
                 transcation.Rollback();
             }
 
@@ -269,7 +265,7 @@ namespace CornDome.Repository.Cards
             if (cardRevision.TypeId == (int)CardTypeEnum.Creature)
             {
                 dbRev.Ability = cardRevision.Ability;
-                //dbRev.SetId = cardRevision.SetId;
+                dbRev.CardSets = cardRevision.CardSets;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.Attack = cardRevision.Attack;
                 dbRev.Defense = cardRevision.Defense;
@@ -278,26 +274,26 @@ namespace CornDome.Repository.Cards
             else if (cardRevision.TypeId == (int)CardTypeEnum.Spell)
             {
                 dbRev.Ability = cardRevision.Ability;
-                //dbRev.SetId = cardRevision.SetId;
+                dbRev.CardSets = cardRevision.CardSets;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Hero)
             {
                 dbRev.Ability = cardRevision.Ability;
-                //dbRev.SetId = cardRevision.SetId;
+                dbRev.CardSets = cardRevision.CardSets;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Building)
             {
                 dbRev.Ability = cardRevision.Ability;
-                //dbRev.SetId = cardRevision.SetId;
+                dbRev.CardSets = cardRevision.CardSets;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }
             else if (cardRevision.TypeId == (int)CardTypeEnum.Teamwork)
             {
                 dbRev.Ability = cardRevision.Ability;
-                //dbRev.SetId = cardRevision.SetId;
+                dbRev.CardSets = cardRevision.CardSets;
                 dbRev.Cost = cardRevision.Cost;
                 dbRev.LandscapeId = cardRevision.LandscapeId;
             }
