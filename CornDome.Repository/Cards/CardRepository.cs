@@ -29,10 +29,12 @@ namespace CornDome.Repository.Cards
         public IEnumerable<Card> GetAll()
         {
             return context.Cards
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardImages)
+                    .ThenInclude(cardRev => cardRev.CardImages)
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardSets)
+                    .ThenInclude(cardRev => cardRev.CardSets)
                 .ToList();
         }
 
@@ -45,6 +47,7 @@ namespace CornDome.Repository.Cards
         {
             return await context.Cards
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Include(card => card.Revisions)
                     .ThenInclude(cardRev => cardRev.CardImages)
                 .Include(card => card.Revisions)
@@ -62,48 +65,63 @@ namespace CornDome.Repository.Cards
         public Card GetCard(int id)
         {
             return context.Cards
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardImages)
+                    .ThenInclude(cardRev => cardRev.CardImages)
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardSets)
+                    .ThenInclude(cardRev => cardRev.CardSets)
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.Landscape)
+                    .ThenInclude(cardRev => cardRev.Landscape)
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardType)
+                    .ThenInclude(cardRev => cardRev.CardType)
                 .FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<Card> GetCardsFromQuery(List<string> query)
         {
-            var cardsWithLatestRevisions = context.Cards
+            if (query == null || query.Count == 0)
+                return [];
+
+            return context.Cards
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(card => card.Revisions)
-                .ThenInclude(cardRev => cardRev.CardSets)
+                    .ThenInclude(revision => revision.CardSets)
+                .Where(card =>
+                    query.Contains(
+                        card.Revisions
+                            .OrderByDescending(revision => revision.RevisionNumber)
+                            .Select(revision => revision.Name)
+                            .FirstOrDefault()))
                 .ToList();
-
-            var filtered = cardsWithLatestRevisions
-                .Where(card => query.Contains(card.LatestRevision.Name));
-
-            return filtered;
         }
 
         public List<CardSet> GetAllSets()
         {
-            return [.. context.CardSets];
+            return context.CardSets
+                .AsNoTracking()
+                .ToList();
         }
 
         public List<Landscape> GetAllLandscapes()
         {
-            return [.. context.Landscapes];
+            return context.Landscapes
+                .AsNoTracking()
+                .ToList();
         }
 
         public List<CardType> GetAllCardTypes()
         {
-            return [.. context.CardTypes];
+            return context.CardTypes.AsNoTracking().ToList();
         }
 
         public List<CardSet> GetSetsByIds(int[] ids)
         {
-            return [.. context.CardSets.Where(x => ids.Contains(x.Id))];
+            return context.CardSets
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.Id))
+                .ToList();
         }
 
         public bool UpdateRevisionRulings(Card card)
@@ -176,7 +194,7 @@ namespace CornDome.Repository.Cards
                         if (revision.TypeId == (int)CardTypeEnum.Creature)
                         {
                             dbRev.Ability = revision.Ability;
-                            //dbRev.SetId = revision.SetId;
+                            dbRev.CardSets = revision.CardSets;
                             dbRev.Cost = revision.Cost;
                             dbRev.Attack = revision.Attack;
                             dbRev.Defense = revision.Defense;
@@ -185,26 +203,26 @@ namespace CornDome.Repository.Cards
                         else if (revision.TypeId == (int)CardTypeEnum.Spell)
                         {
                             dbRev.Ability = revision.Ability;
-                            //dbRev.SetId = revision.SetId;
+                            dbRev.CardSets = revision.CardSets;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Hero)
                         {
                             dbRev.Ability = revision.Ability;
-                            //dbRev.SetId = revision.SetId;
+                            dbRev.CardSets = revision.CardSets;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Building)
                         {
                             dbRev.Ability = revision.Ability;
-                            //dbRev.SetId = revision.SetId;
+                            dbRev.CardSets = revision.CardSets;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
                         else if (revision.TypeId == (int)CardTypeEnum.Teamwork)
                         {
                             dbRev.Ability = revision.Ability;
-                            //dbRev.SetId = revision.SetId;
+                            dbRev.CardSets = revision.CardSets;
                             dbRev.Cost = revision.Cost;
                             dbRev.LandscapeId = revision.LandscapeId;
                         }
