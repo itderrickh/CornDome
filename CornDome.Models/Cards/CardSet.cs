@@ -67,7 +67,7 @@ namespace CornDome.Models.Cards
                 Set.LandOfLegends => "Land of Legends",
                 Set.Kickstarter3 => "Kickstarter #3",
                 Set.AdultFinnVSHunsonAbadeer => "Adult Finn Vs Hunson Abadeer",
-                Set.GolbVSBananaGuard => "Golb Vs Banana Guard",
+                Set.GolbVSBananaGuard => "GOLB Vs Banana Guard",
                 Set.PrinceGumballVSMarshallLee => "Prince Gumball Vs Marshall Lee",
                 Set.DoublesTrouble => "Doubles Trouble",
                 _ => "",
