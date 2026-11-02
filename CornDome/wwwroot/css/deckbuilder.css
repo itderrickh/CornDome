@@ -108,16 +108,16 @@ fieldset {
 }
 
 .deck-area {
-    width: 50%;
+    width: 55%;
     margin-right: 10px;
 }
 
 .library-area {
-    width: 25%;
+    width: 30%;
 }
 
 .tool-area {
-    width: 25%;
+    width: 15%;
     margin-right: 10px;
 }
 
