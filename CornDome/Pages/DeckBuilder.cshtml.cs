@@ -12,6 +12,7 @@ namespace CornDome.Pages
     public class DeckBuilderModel(ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
+        public IEnumerable<CardSet> Sets { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
         public bool QueryBuildFailed { get; set; } = false;
         [BindProperty(Name = "id", SupportsGet = true)]
@@ -37,6 +38,7 @@ namespace CornDome.Pages
         public async Task OnGet()
         {
             Cards = cardRepository.GetAll();
+            Sets = cardRepository.GetAllSets();
 
             try
             {
@@ -76,8 +78,8 @@ namespace CornDome.Pages
 
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
-                            Description = ProfanityHelper.RelieveTheProfane(deck.Description);
-                            DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
+                            Description = deck.Description;
+                            DeckName = deck.DeckName;
                             IconCard = deck.IconCardId;
                             Visibility = deck.Visibility;
                             IsMyDeck = true;

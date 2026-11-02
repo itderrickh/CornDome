@@ -73,8 +73,8 @@ namespace CornDome.Pages
 
                         var author = await userRepository.GetUserById(deck.UserId);
 
-                        Description = ProfanityHelper.RelieveTheProfane(deck.Description);
-                        DeckName = ProfanityHelper.RelieveTheProfane(deck.DeckName);
+                        Description = deck.Description;
+                        DeckName = deck.DeckName;
                         IconCard = deck.IconCardId;
                         Visibility = deck.Visibility;
                         Author = author.UserName;

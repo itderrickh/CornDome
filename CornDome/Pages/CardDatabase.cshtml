@@ -26,9 +26,9 @@
                     <label for="setFilter" class="filter-label">Set: </label>
                     <select id="setFilter">
                         <option value="">- None -</option>
-                        @foreach (Set set in Enum.GetValues<Set>())
+                        @foreach (CardSet set in Model.Sets)
                         {
-                            <option value="@((int)set)">@SetConverter.ToString(set)</option>
+                            <option value="@(set.Id)">@set.Description</option>
                         }
                     </select>
                 </div>
