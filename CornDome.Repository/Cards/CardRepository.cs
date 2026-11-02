@@ -156,10 +156,10 @@ namespace CornDome.Repository.Cards
                 transaction.Commit();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 transaction.Rollback();
-                logger.LogCardChange($"Error Updating Card: {JsonSerializer.Serialize(card)}");
+                logger.LogCardChange($"Error Updating Card: {JsonSerializer.Serialize(card)}, {ex}");
             }
 
             return false;
@@ -234,10 +234,10 @@ namespace CornDome.Repository.Cards
                 transaction.Commit();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 transaction.Rollback();
-                logger.LogCardChange($"Error Updating Card: {JsonSerializer.Serialize(card)}");
+                logger.LogCardChange($"Error Updating Card: {JsonSerializer.Serialize(card)}, {ex}");
             }
 
             return false;
@@ -262,9 +262,9 @@ namespace CornDome.Repository.Cards
                 transcation.Commit();
                 logger.LogCardChange($"Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                logger.LogCardChange($"Error Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}");
+                logger.LogCardChange($"Error Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}, {ex}");
                 transcation.Rollback();
             }
 
