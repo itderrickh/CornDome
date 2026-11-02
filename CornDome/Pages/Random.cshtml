@@ -48,7 +48,7 @@
         {
             <div class="card-text-section">
                 <span class="bold-label">Set: </span><br />
-                <span class="mr-1">@(string.Join(", ", selectedRevision.CardSets.Select(x => @SetConverter.ToString((Set)x.Id))))</span>
+                <span class="mr-1">@(string.Join(", ", selectedRevision.CardSets.Select(x => x.Description)))</span>
             </div>
         }
 
