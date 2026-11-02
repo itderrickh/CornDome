@@ -250,6 +250,15 @@ namespace CornDome.Repository.Cards
 
             try
             {
+                // Resolve existing card sets from the database
+                cardRevision.CardSets = cardRevision.CardSets
+                    .Select(x => context.Set<CardSet>().Find(x.Id))
+                    .Where(x => x != null)
+                    .ToList();
+
+                // Remove revisions from the card since we're inserting separately
+                card.Revisions = [];
+
                 context.Add(card);
                 context.SaveChanges();
 
@@ -257,7 +266,7 @@ namespace CornDome.Repository.Cards
                 revisionToInsert.CardId = card.Id;
                 addedCardId = card.Id;
                 context.Add(revisionToInsert);
-                var revisionId = context.SaveChanges();
+                context.SaveChanges();
 
                 transcation.Commit();
                 logger.LogCardChange($"Adding card: {cardRevision.Name}, Card: {JsonSerializer.Serialize(card)}, Revision: {JsonSerializer.Serialize(cardRevision)}");
