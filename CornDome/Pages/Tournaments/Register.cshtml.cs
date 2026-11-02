@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 
 namespace CornDome.Pages.Tournaments
 {
+    [AppFlag("EnableTournaments")]
     [Authorize]
     public class RegisterModel(TournamentContext tournamentContext) : BasePageModel
     {

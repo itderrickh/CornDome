@@ -1,10 +1,14 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Repository.Tournaments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Tournaments
 {
+    [AppFlag("EnableTournaments")]
+    [Authorize(Policy = "tournamentOrganizer")]
     public class DeleteModel(TournamentContext tournamentContext) : BasePageModel
     {
         [BindProperty]

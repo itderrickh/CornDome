@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Tournaments
 {
+    [AppFlag("EnableTournaments")]
     public class ViewModel(TournamentContext tournamentContext, IUserRepository userRepository) : BasePageModel
     {
         public Tournament Tournament { get; set; }

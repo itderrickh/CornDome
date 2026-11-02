@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Tournaments;
 using CornDome.Models.Users;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Pages.Tournaments
 {
+    [AppFlag("EnableTournaments")]
     [Authorize(Policy = "tournamentOrganizer")]
     public class ManageModel(TournamentContext tournamentContext, IUserRepository userRepository) : BasePageModel
     {
