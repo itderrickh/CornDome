@@ -10,6 +10,7 @@ namespace CornDome.Models.Cards
     {
         public int Id { get; set; }
         public string Value { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 
     public enum DarklandsCardTypeEnum
@@ -28,10 +29,10 @@ namespace CornDome.Models.Cards
             return cardType switch
             {
                 DarklandsCardTypeEnum.Creature => "Creature",
-                DarklandsCardTypeEnum.Overlord => "Overlord"
+                DarklandsCardTypeEnum.Overlord => "Overlord",
                 DarklandsCardTypeEnum.Curse => "Curse",
                 DarklandsCardTypeEnum.Barrier => "Barrier",
-                DarklandsCardTypeEnum.DifficultySetting => "DifficultySetting"
+                DarklandsCardTypeEnum.DifficultySetting => "Difficulty Setting",
                 _ => "",
             };
         }

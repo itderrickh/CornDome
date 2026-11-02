@@ -1,0 +1,48 @@
+﻿.darklands-card {
+    width: 250px;
+    margin: 8px;
+    padding: 12px;
+    border: 2px solid #444;
+    border-radius: 10px;
+    background: #292929;
+    color: white;
+}
+
+.darklands-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.darklands-card h3 {
+    margin: 0;
+    text-align: center;
+}
+
+.darklands-card-type,
+.darklands-card-overlord {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.darklands-card-ability {
+    padding: 10px;
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+    white-space: pre-wrap;
+}
+
+.darklands-card-stats {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+}
+
+.darklands-card-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 226 / 320;
+    object-fit: contain;
+    border-radius: 6px;
+}

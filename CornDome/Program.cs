@@ -28,6 +28,7 @@ namespace CornDome
         {
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<IDarklandsCardRepository, DarklandsCardRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IFeedbackRepository, FeedbackRepository>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();

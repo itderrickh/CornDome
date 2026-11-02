@@ -12,6 +12,10 @@ namespace CornDome.Repository
         public DbSet<CardSet> CardSets { get; set; }
         public DbSet<Landscape> Landscapes { get; set; }
         public DbSet<CardType> CardTypes { get; set; }
+        public DbSet<DarklandsCard> DarklandsCards { get; set; }
+        public DbSet<DarklandsCardType> DarklandsCardTypes { get; set; }
+        public DbSet<DarklandsOverlord> DarklandsOverlords { get; set; }
+        public DbSet<DarklandsCardImage> DarklandsCardImages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -62,6 +66,31 @@ namespace CornDome.Repository
                 .WithOne(ci => ci.Revision)
                 .HasForeignKey(ci => ci.RevisionId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<DarklandsCard>(entity =>
+            {
+                entity.HasOne(x => x.CardType)
+                    .WithMany()
+                    .HasForeignKey(x => x.CardTypeId)
+                    .IsRequired();
+
+                entity.HasOne(x => x.Overlord)
+                    .WithMany()
+                    .HasForeignKey(x => x.OverlordId)
+                    .IsRequired(false);
+
+            });
+
+            modelBuilder.Entity<DarklandsCardImage>(entity =>
+            {
+                entity.HasOne(x => x.CardImageType)
+                    .WithMany()
+                    .HasForeignKey(x => x.CardImageTypeId);
+
+                entity.HasOne(x => x.Card)
+                    .WithMany(x => x.Images)
+                    .HasForeignKey(x => x.CardId);
+            });
         }
     }
 }

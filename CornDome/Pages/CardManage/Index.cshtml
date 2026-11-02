@@ -20,11 +20,16 @@
             <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">Feedback</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="edit-cards-tab" data-bs-toggle="tab" data-bs-target="#edit-cards" type="button" role="tab" aria-controls="edit-cards" aria-selected="false">Edit Cards</button>
+            <button class="nav-link active" id="edit-cards-tab" data-bs-toggle="tab" data-bs-target="#edit-cards" type="button" role="tab" aria-controls="edit-cards" aria-selected="true">Edit Cards</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="darklands-cards-tab" data-bs-toggle="tab" data-bs-target="#darklands-cards" type="button" role="tab" aria-controls="darklands-cards" aria-selected="false">Darklands Cards</button>
         </li>
     </ul>
 
     <div class="tab-content mt-3" id="myTabContent">
+
+        <!-- Feedback -->
         <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
             <h2 class="mb-3">Feedback</h2>
             <table class="table table-striped w-100">
@@ -57,10 +62,12 @@
             </table>
         </div>
 
+        <!-- Regular Cards -->
         <div class="tab-pane fade show active" id="edit-cards" role="tabpanel" aria-labelledby="edit-cards-tab">
             <div class="mb-2">
                 <a asp-page="/CardManage/Add" class="btn btn-primary">Add a Card</a>
             </div>
+
             <fieldset id="filterBox" class="mb-3">
                 <legend>Filters</legend>
                 <div class="filter-group">
@@ -98,11 +105,74 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Darklands Cards -->
+        <div class="tab-pane fade" id="darklands-cards" role="tabpanel" aria-labelledby="darklands-cards-tab">
+            <div class="mb-2">
+                <a asp-page="/Darklands/Add" class="btn btn-primary">Add a Darklands Card</a>
+            </div>
+
+            <fieldset class="mb-3">
+                <legend>Filters</legend>
+                <div class="filter-group">
+                    <label for="darklandsNameFilter" class="filter-label">Name: </label>
+                    <input type="text" class="form-control" id="darklandsNameFilter" />
+                </div>
+            </fieldset>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Card Type</th>
+                        <th>Overlord</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in Model.DarklandsCards)
+                    {
+                        <tr data-name="@card.Name" class="darklands-card-row">
+                            <td>@card.Id</td>
+                            <td>
+                                <a asp-page="/Darklands/Card" asp-route-id="@card.Id">@card.Name</a>
+                            </td>
+                            <td>@card.CardType?.Description</td>
+                            <td>@card.Overlord?.Description</td>
+                            <td>
+                                <a class="btn btn-primary" asp-page="/Darklands/Edit" asp-route-id="@card.Id">Edit</a>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <form asp-page-handler="DeleteDarklandsCard" class="mt-2"
+                                          onsubmit="return confirm('Are you sure you want to delete this Darklands card?');">
+                                        <input type="hidden" name="DeleteDarklandsCardId" value="@card.Id" />
+                                        <button type="submit" class="btn btn-danger">Delete Card</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script src="~/js/cardManage/index.js" asp-append-version="true"></script>
+    <script src="~/js/cardManage/darklands-index.js" asp-append-version="true"></script>
+    <script>
+        document.getElementById("darklandsNameFilter").oninput = function () {
+            const filter = this.value.toLowerCase();
+
+            document.querySelectorAll(".darklands-card-row").forEach(row => {
+                const name = (row.dataset.name || "").toLowerCase();
+                row.style.display = name.includes(filter) ? "" : "none";
+            });
+        };
+    </script>
 }
 
 @section Styles {

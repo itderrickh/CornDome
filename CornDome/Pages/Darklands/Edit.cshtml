@@ -1,0 +1,129 @@
+﻿@page "{id:int}"
+@model CornDome.Pages.Darklands.EditModel
+@{
+    ViewData["Title"] = "Edit Darklands Card";
+}
+
+<div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="CardId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group mb-1">
+            <label>Name:</label>
+            <input type="text" class="form-control" asp-for="EditCard.Name" />
+        </div>
+
+        <div class="form-group mb-1">
+            <label>Card Type:</label>
+            <select class="form-control" asp-for="EditCard.CardTypeId">
+                @foreach (var cardType in Model.CardTypes)
+                {
+                    <option value="@cardType.Id">@cardType.Description</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-1">
+            <label>Overlord:</label>
+            <select class="form-control" asp-for="EditCard.OverlordId">
+                <option value="">-- None --</option>
+                @foreach (var overlord in Model.Overlords)
+                {
+                    <option value="@overlord.Id">@overlord.Description</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-1">
+            <label>Ability:</label>
+            <textarea class="form-control" asp-for="EditCard.Ability" rows="3"></textarea>
+        </div>
+
+        <div class="form-group mb-1">
+            <label>Attack:</label>
+            <input type="number" class="form-control" asp-for="EditCard.Attack" />
+        </div>
+
+        <div class="form-group mb-1">
+            <label>Defense:</label>
+            <input type="number" class="form-control" asp-for="EditCard.Defense" />
+        </div>
+
+        <div class="form-group mb-1 imageField">
+            <div class="row">
+                <h3>Image Editing:</h3>
+
+                <div class="col-6 preview-box">
+                    <h4>Old Image</h4>
+                    @if (Model.OldImageUrl != null)
+                    {
+                        <img class="oldPreview"
+                             src="@(Model.BaseUrl + Model.OldImageUrl)"
+                             alt="Old Darklands Card" />
+                    }
+                    else
+                    {
+                        <p>No image available.</p>
+                    }
+                </div>
+
+                <div class="col-6 preview-box">
+                    <h4>New Image</h4>
+                    <img class="newPreview" src="" alt="Image Preview" />
+
+                    <div class="upload-section">
+                        <input type="file"
+                               asp-for="Image"
+                               class="fileInput"
+                               accept="image/*" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cardManage/edit.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.fileInput').forEach((input) => {
+            input.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+
+                // find the nearest newPreview in the same parent container
+                const preview = event.target.closest('.preview-box').querySelector('img, #newPreview')
+                                || event.target.closest('.col-6').querySelector('.newPreview');
+
+                reader.onload = (e) => {
+                    if (preview) preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+}

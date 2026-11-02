@@ -15,6 +15,7 @@ namespace CornDome.Models.Cards
 
     public enum DarklandsOverlordEnum
     {
+        None,
         CaptainRatbeard,
         SkyklorTheOozemother,
         QuarksExperiment,
@@ -27,6 +28,7 @@ namespace CornDome.Models.Cards
         {
             return cardType switch
             {
+                DarklandsOverlordEnum.None => "None",
                 DarklandsOverlordEnum.CaptainRatbeard => "Captain Ratbeard",
                 DarklandsOverlordEnum.SkyklorTheOozemother => "Skyklor, the Oozemother",
                 DarklandsOverlordEnum.QuarksExperiment => "Quark's Experiment",

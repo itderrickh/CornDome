@@ -9,19 +9,28 @@ using Microsoft.AspNetCore.Mvc;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : BasePageModel
+    public class IndexModel(
+        ICardRepository cardRepository,
+        IFeedbackRepository feedbackRepository,
+        IDarklandsCardRepository darklandsRepository) : BasePageModel
     {
-        public IEnumerable<Card> Cards { get; set; }
-        public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; }
+        public IEnumerable<Card> Cards { get; set; } = [];
+        public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; } = [];
+        public IEnumerable<DarklandsCard> DarklandsCards { get; set; } = [];
+
         [BindProperty]
         public int DeleteFeedbackId { get; set; }
         [BindProperty]
         public int DeleteCardId { get; set; }
 
-        public async void OnGet()
+        [BindProperty]
+        public int DeleteDarklandsCardId { get; set; }
+
+        public async Task OnGetAsync()
         {
             FeedbackRequests = await feedbackRepository.GetAllFeedback();
             Cards = cardRepository.GetAll();
+            DarklandsCards = await darklandsRepository.GetDarklandsCards();
         }
 
         public async Task<IActionResult> OnPostDeleteFeedback()
@@ -39,9 +48,7 @@ namespace CornDome.Pages.CardManage
         public async Task<IActionResult> OnPostDeleteCard()
         {
             if (!User.IsInRole("Admin"))
-            {
                 return Forbid();
-            }
 
             var result = cardRepository.DeleteCard(DeleteCardId);
 
@@ -49,6 +56,21 @@ namespace CornDome.Pages.CardManage
                 TempData["SuccessMessage"] = "Delete card succeeded";
             else
                 TempData["ErrorMessage"] = "Delete card failed";
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteDarklandsCard()
+        {
+            if (!User.IsInRole("Admin"))
+                return Forbid();
+
+            var result = await darklandsRepository.DeleteDarklandsCard(DeleteDarklandsCardId);
+
+            if (result)
+                TempData["SuccessMessage"] = "Delete Darklands card succeeded";
+            else
+                TempData["ErrorMessage"] = "Delete Darklands card failed";
 
             return RedirectToPage();
         }

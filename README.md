@@ -165,6 +165,7 @@ When changing database entities, create and apply an Entity Framework Core migra
 ```bash
 `dotnet ef migrations add [Name] --context TournamentContext --project CornDome.Repository --startup-project CornDome`
 `dotnet ef migrations add [Name] --context MainContext --project CornDome.Repository --startup-project CornDome`
+`dotnet ef migrations add [Name] --context CardDatabaseContext --project CornDome.Repository --startup-project CornDome`
 ```
 
 Before submitting changes, verify that the application builds successfully and test the affected functionality.
