@@ -37,7 +37,8 @@ namespace CornDome.Models.Cards
         Kickstarter3 = 18,
         AdultFinnVSHunsonAbadeer = 19,
         GolbVSBananaGuard = 20,
-        PrinceGumballVSMarshallLee = 21
+        PrinceGumballVSMarshallLee = 21,
+        DoublesTrouble = 22
     }
 
     public static class SetConverter
@@ -68,6 +69,7 @@ namespace CornDome.Models.Cards
                 Set.AdultFinnVSHunsonAbadeer => "Adult Finn Vs Hunson Abadeer",
                 Set.GolbVSBananaGuard => "Golb Vs Banana Guard",
                 Set.PrinceGumballVSMarshallLee => "Prince Gumball Vs Marshall Lee",
+                Set.DoublesTrouble => "Doubles Trouble",
                 _ => "",
             };
         }
@@ -98,6 +100,7 @@ namespace CornDome.Models.Cards
                 Set.AdultFinnVSHunsonAbadeer => "cp10",
                 Set.GolbVSBananaGuard => "cp11",
                 Set.PrinceGumballVSMarshallLee => "cp12",
+                Set.DoublesTrouble => "dbt",
                 _ => "",
             };
         }
