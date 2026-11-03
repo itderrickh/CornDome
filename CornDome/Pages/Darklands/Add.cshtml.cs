@@ -47,31 +47,6 @@ namespace CornDome.Pages.Darklands
                 AddCard.CardType = (await repository.GetDarklandsCardTypes())
                     .FirstOrDefault(x => x.Id == AddCard.CardTypeId)!;
 
-                AddCard.Overlord = AddCard.OverlordId.HasValue
-                    ? (await repository.GetDarklandsOverlords())
-                        .FirstOrDefault(x => x.Id == AddCard.OverlordId.Value)
-                    : null;
-
-                if (AddCard.CardType == null)
-                {
-                    ModelState.AddModelError(
-                        "AddCard.CardTypeId",
-                        "The selected card type does not exist.");
-
-                    await LoadOptions();
-                    return Page();
-                }
-
-                if (AddCard.OverlordId.HasValue && AddCard.Overlord == null)
-                {
-                    ModelState.AddModelError(
-                        "AddCard.OverlordId",
-                        "The selected Overlord does not exist.");
-
-                    await LoadOptions();
-                    return Page();
-                }
-
                 // Save the original uploaded image.
                 var fileName = $"{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(Image!.FileName)}";
                 var uploadPath = Path.Combine(config.AppData.UploadPath, fileName);
@@ -84,6 +59,7 @@ namespace CornDome.Pages.Darklands
                 }
 
                 AddCard.Images = [];
+                AddCard.Overlord = null;
 
                 var addedCard = await repository.AddDarklandsCard(AddCard);
 
@@ -141,7 +117,7 @@ namespace CornDome.Pages.Darklands
                 return Page();
             }
 
-            return RedirectToPage("./CardDatabase");
+            return RedirectToPage("./Manage");
         }
 
         private async Task LoadOptions()
