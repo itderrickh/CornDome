@@ -15,9 +15,6 @@ namespace CornDome.Pages.CardManage
         [BindProperty]
         public int DeleteCardId { get; set; }
 
-        [BindProperty]
-        public int DeleteDarklandsCardId { get; set; }
-
         public async Task OnGetAsync()
         {
             Cards = cardRepository.GetAll();
