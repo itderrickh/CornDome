@@ -7,7 +7,7 @@ namespace CornDome.Helpers
         AttributeTargets.Class | AttributeTargets.Method,
         AllowMultiple = false,
         Inherited = true)]
-    public class AppFlagAttribute : Attribute, IAsyncActionFilter
+    public class AppFlagAttribute : Attribute, IAsyncActionFilter, IAsyncPageFilter
     {
         private readonly string _flagName;
 
@@ -39,6 +39,27 @@ namespace CornDome.Helpers
             }
 
             await next();
+        }
+
+        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+        {
+            var appFlags = context.HttpContext.RequestServices
+                .GetRequiredService<AppFlagHelper>();
+
+            var isActive = appFlags.IsActive(_flagName);
+
+            if (!isActive)
+            {
+                context.Result = new NotFoundResult();
+                return;
+            }
+
+            await next();
+        }
+
+        public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+        {
+            return Task.CompletedTask;
         }
     }
 }
