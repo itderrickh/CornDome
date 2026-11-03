@@ -41,6 +41,7 @@ namespace CornDome.Repository.Cards
         public async Task<DarklandsCard?> GetDarklandsCard(int id)
         {
             return await context.DarklandsCards
+                .AsNoTracking()
                 .Include(x => x.CardType)
                 .Include(x => x.Overlord)
                 .Include(x => x.Images)
@@ -50,6 +51,7 @@ namespace CornDome.Repository.Cards
         public async Task<IList<DarklandsCard>> GetDarklandsCards()
         {
             return await context.DarklandsCards
+                .AsNoTracking()
                 .Include(x => x.CardType)
                 .Include(x => x.Overlord)
                 .Include(x => x.Images)
@@ -91,12 +93,13 @@ namespace CornDome.Repository.Cards
         public async Task<DarklandsCardType?> GetDarklandsCardType(int id)
         {
             return await context.DarklandsCardTypes
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IList<DarklandsCardType>> GetDarklandsCardTypes()
         {
-            return await context.DarklandsCardTypes.ToListAsync();
+            return await context.DarklandsCardTypes.AsNoTracking().ToListAsync();
         }
 
         public async Task<DarklandsCardType> AddDarklandsCardType(DarklandsCardType cardType)
@@ -133,12 +136,13 @@ namespace CornDome.Repository.Cards
         public async Task<DarklandsOverlord?> GetDarklandsOverlord(int id)
         {
             return await context.DarklandsOverlords
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IList<DarklandsOverlord>> GetDarklandsOverlords()
         {
-            return await context.DarklandsOverlords.ToListAsync();
+            return await context.DarklandsOverlords.AsNoTracking().ToListAsync();
         }
 
         public async Task<DarklandsOverlord> AddDarklandsOverlord(DarklandsOverlord overlord)
