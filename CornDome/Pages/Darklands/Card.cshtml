@@ -1,0 +1,111 @@
+﻿@page "{id:int}"
+@model CornDome.Pages.Darklands.CardModel
+
+@{
+    if (Model.QueryCard == null)
+    {
+        ViewData["Title"] = "Invalid card ID";
+    }
+    else
+    {
+        ViewData["Title"] = Model.QueryCard.Name;
+    }
+}
+
+@if (Model.QueryCard == null)
+{
+    <h1>Invalid card ID.</h1>
+}
+else
+{
+    var card = Model.QueryCard;
+
+    var image = card.Images?
+        .FirstOrDefault(x => x.CardImageTypeId == 4)?.ImageUrl
+        ?? card.Images?.FirstOrDefault(x => x.CardImageTypeId == 2)?.ImageUrl
+        ?? card.Images?.FirstOrDefault()?.ImageUrl;
+
+    <div>
+        <h1>@card.Name</h1>
+    </div>
+
+    <div class="card-detail">
+        <div class="w-50">
+            @if (!string.IsNullOrEmpty(image))
+            {
+                <img class="w-100 card-detail-image"
+                     width="500"
+                     decoding="async"
+                     fetchpriority="high"
+                     alt="@card.Name"
+                     src="@(Model.BaseUrl + image)" />
+            }
+        </div>
+
+        <div class="w-50 p-4">
+            <div class="card-text-section">
+                <span class="bold-label">Card Type: </span><br />
+                <span>@card.CardType?.Description</span>
+            </div>
+
+            @if (card.Overlord != null)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Overlord: </span><br />
+                    <span>@card.Overlord.Description</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(card.Ability))
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Ability: </span><br />
+                    <span>
+                        @{
+                            var abilityWithPlaceholders = card.Ability.Replace(
+                                "[ATTACK]",
+                                @"<img src=""/img/attack.webp"" style=""width: 20px; height: 20px;"" />");
+                        }
+                        @Html.Raw(abilityWithPlaceholders)
+                    </span>
+                </div>
+            }
+
+            @if (card.Attack.HasValue || card.Defense.HasValue)
+            {
+                <div class="card-text-section d-flex">
+                    @if (card.Attack.HasValue)
+                    {
+                        <div class="w-50">
+                            <span class="bold-label">Attack: </span>
+                            <span>@card.Attack</span>
+                        </div>
+                    }
+
+                    @if (card.Defense.HasValue)
+                    {
+                        <div>
+                            <span class="bold-label">Defense: </span>
+                            <span>@card.Defense</span>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
+            {
+                <div class="card-text-section">
+                    <a class="bold-label btn btn-primary"
+                       asp-page="/Darklands/Edit"
+                       asp-route-id="@card.Id">
+                        Edit Card
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/card-page.css" asp-append-version="true" />
+}

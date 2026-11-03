@@ -1,0 +1,95 @@
+﻿@page
+@model CornDome.Pages.Darklands.AddModel
+@{
+    ViewData["Title"] = "Add Darklands Card";
+}
+
+<div>
+    <h2>Add a Darklands Card</h2>
+
+    <form method="post" enctype="multipart/form-data"
+          style="border: 1px solid white; padding: 8px 10px;">
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.Name">Name:</label>
+            <input type="text" asp-for="AddCard.Name" class="form-control" />
+            <span asp-validation-for="AddCard.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.CardTypeId">Card Type:</label>
+            <select class="form-control" asp-for="AddCard.CardTypeId">
+                <option value="">- Select Card Type -</option>
+                @foreach (var cardType in Model.CardTypes)
+                {
+                    <option value="@cardType.Id">@cardType.Value</option>
+                }
+            </select>
+            <span asp-validation-for="AddCard.CardTypeId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.OverlordId">Overlord:</label>
+            <select class="form-control" asp-for="AddCard.OverlordId">
+                @foreach (var overlord in Model.Overlords)
+                {
+                    <option value="@overlord.Id">@overlord.Value</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.Ability">Ability:</label>
+            <textarea class="form-control" asp-for="AddCard.Ability" rows="3"></textarea>
+        </div>
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.Attack">Attack:</label>
+            <input type="number" class="form-control" asp-for="AddCard.Attack" />
+        </div>
+
+        <div class="form-group mb-1">
+            <label asp-for="AddCard.Defense">Defense:</label>
+            <input type="number" class="form-control" asp-for="AddCard.Defense" />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group mb-2">
+            <label>Image:</label>
+            <input class="form-control mb-2" id="fileInput"
+                   type="file" asp-for="Image" accept="image/*" />
+            <span asp-validation-for="Image" class="text-danger"></span>
+
+            <img class="newPreview" src="" alt="Image Preview" />
+        </div>
+
+        <div class="form-group mb-1">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cardManage/add.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('fileInput').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            // find the nearest newPreview in the same parent container
+            const preview = event.target.parentElement.querySelector(".newPreview");
+
+            reader.onload = (e) => {
+                if (preview) preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+}

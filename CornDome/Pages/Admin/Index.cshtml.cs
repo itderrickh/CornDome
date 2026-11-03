@@ -31,6 +31,15 @@ namespace CornDome.Pages.Admin
                     Area = "/CardManage/Feedback",
                     LinkText = "Review Feedback"
                 });
+
+                adminAreas.Add(new AdminArea()
+                {
+                    Name = "DarkLand Card Management",
+                    Description = "Manage the DarkLand card database. This is different than the regular CardDweeb database.",
+                    Icon = "bi-card-checklist",
+                    Area = "/Darklands/Manage",
+                    LinkText = "Manage Cards"
+                });
             }
 
             if (User.IsInRole("RulingManager") || User.IsInRole("Admin"))

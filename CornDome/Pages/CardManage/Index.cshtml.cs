@@ -15,7 +15,7 @@ namespace CornDome.Pages.CardManage
         [BindProperty]
         public int DeleteCardId { get; set; }
 
-        public async void OnGet()
+        public async Task OnGetAsync()
         {
             Cards = cardRepository.GetAll();
         }
@@ -23,9 +23,7 @@ namespace CornDome.Pages.CardManage
         public async Task<IActionResult> OnPostDeleteCard()
         {
             if (!User.IsInRole("Admin"))
-            {
                 return Forbid();
-            }
 
             var result = cardRepository.DeleteCard(DeleteCardId);
 
