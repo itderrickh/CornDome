@@ -37,7 +37,7 @@
                 <datalist id="cardList">
                     @foreach (var card in Model.DeckGrid.Cards)
                     {
-                        <option value="@card.LatestRevision.Name"
+                        <option value="@card.Name"
                                 data-card-id="@card.Id">
                         </option>
                     }

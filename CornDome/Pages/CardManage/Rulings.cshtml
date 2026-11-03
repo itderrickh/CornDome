@@ -18,30 +18,16 @@
     <form method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CardId" />
         <input type="hidden" asp-for="EditCard.Id" />
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
-            {
-                var revision = Model.EditCard.Revisions[i];
-                var isActive = Model.EditCard.Revisions.Count == (i + 1) ? "active" : "";
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link @isActive" id="tab@(i)" data-bs-toggle="tab" data-bs-target="#tab-content@(i)" type="button" role="tab" aria-controls="tab-content@(i)" aria-selected="false">Revision #@(i)</button>
-                </li>
-            }
-        </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
-            @for (var i = 0; i < Model.EditCard.Revisions.Count; i++)
-            {
-                var isActive = Model.EditCard.Revisions.Count == (i + 1) ? "show active" : "";
-                <input type="hidden" asp-for="EditCard.Revisions[i].Id" />
-                <input type="hidden" asp-for="EditCard.Revisions[i].CardId" />
-                <div class="tab-pane fade @isActive" id="tab-content@(i)" role="tabpanel" aria-labelledby="tab@(i)">
+                <input type="hidden" asp-for="EditCard.Id" />
+                <div class="tab-pane fade" id="tab-content" role="tabpanel" aria-labelledby="tab">
                     <div class="form-group mb-1">
-                        <label>Name: </label><input type="text" disabled class="form-control" value="@(Model.EditCard.Revisions[i].Name)" />
+                        <label>Name: </label><input type="text" disabled class="form-control" value="@(Model.EditCard.Name)" />
                     </div>
 
                     <div class="form-group mb-1">
-                        <select style="display: none;" class="form-control cardType hide" asp-for="EditCard.Revisions[i].TypeId">
+                        <select style="display: none;" class="form-control cardType hide" asp-for="EditCard.TypeId">
                             <option value="@((int)CardTypeEnum.Creature)">Creature</option>
                             <option value="@((int)CardTypeEnum.Spell)">Spell</option>
                             <option value="@((int)CardTypeEnum.Building)">Building</option>
@@ -49,25 +35,25 @@
                             <option value="@((int)CardTypeEnum.Hero)">Hero</option>
                             <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
                         </select>
-                        <label>Card Type: </label><input type="text" disabled class="form-control" value="@(CardTypeConverter.ToString((CardTypeEnum)Model.EditCard.Revisions[i].TypeId))" />
+                        <label>Card Type: </label><input type="text" disabled class="form-control" value="@(CardTypeConverter.ToString((CardTypeEnum)Model.EditCard.TypeId))" />
                     </div>
 
                     <div id="optionalFields">
                         <div class="form-group mb-1 abilityField">
                             <label>Ability: </label>
-                            <input type="text" class="form-control" disabled value="@(Model.EditCard.Revisions[i].Ability)" />
+                            <input type="text" class="form-control" disabled value="@(Model.EditCard.Ability)" />
                         </div>
 
                         <div class="form-group mb-1 rulingField">
                             <label>Rulings: </label>
-                            <textarea class="form-control" asp-for="EditCard.Revisions[i].Rulings"></textarea>
+                            <textarea class="form-control" asp-for="EditCard.Rulings"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group mb-1 imageField">
                         <div class="row">
                             @* Only show the regular image for posting *@
-                            @foreach (var image in Model.EditCard.Revisions[i].CardImages.Where(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular))
+                            @foreach (var image in Model.EditCard.CardImages.Where(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular))
                             {
                                 <div class="col-6 preview-box">
                                     <h4>Image</h4>
@@ -78,7 +64,6 @@
 
                     </div>
                 </div>
-            }
         </div>
         <div class="mt-2">
             <button type="submit" class="btn btn-primary">

@@ -1,10 +1,9 @@
 ﻿@page
 @model CornDome.Pages.RandomModel
 @{
-    ViewData["Title"] = Model.QueryCard.LatestRevision.Name;
+    ViewData["Title"] = Model.QueryCard.Name;
 
-    var selectedRevision = Model.QueryCard.LatestRevision;
-    selectedRevision = Model.QueryCard.Revisions.OrderBy(x => x.RevisionNumber).FirstOrDefault();
+    var selectedRevision = Model.QueryCard;
 }
 
 <div>

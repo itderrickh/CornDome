@@ -17,8 +17,6 @@ namespace CornDome.Pages
 
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? CardId { get; set; }
-        [BindProperty(Name = "revision", SupportsGet = true)]
-        public int? RevisionId { get; set; }
 
         public void OnGet()
         {

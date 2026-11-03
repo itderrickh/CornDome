@@ -6,7 +6,6 @@ namespace CornDome.Repository
     public class CardDatabaseContext(DbContextOptions<CardDatabaseContext> options) : DbContext(options)
     {
         public DbSet<Card> Cards { get; set; }
-        public DbSet<CardRevision> CardRevisions { get; set; }
         public DbSet<CardImage> CardImages { get; set; }
         public DbSet<CardImageType> CardImageTypes { get; set; }
         public DbSet<CardSet> CardSets { get; set; }
@@ -30,42 +29,28 @@ namespace CornDome.Repository
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure the relationship between Card and CardRevision
             modelBuilder.Entity<Card>()
-                .HasMany(c => c.Revisions)
-                .WithOne(cr => cr.Card)
-                .HasForeignKey(cr => cr.CardId)
+                .HasMany(c => c.CardImages)
+                .WithOne(ci => ci.Card)
+                .HasForeignKey(ci => ci.CardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure the relationship between CardRevision and CardImage
-            modelBuilder.Entity<CardRevision>()
-                .HasMany(cr => cr.CardImages)
-                .WithOne(ci => ci.Revision)
-                .HasForeignKey(ci => ci.RevisionId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Card>()
+                .HasMany(c => c.CardSets)
+                .WithMany(s => s.Cards)
+                .UsingEntity(j => j.ToTable("cardSet"));
 
-            modelBuilder.Entity<CardRevision>()
-                .HasMany(cr => cr.CardSets)
-                .WithMany(s => s.Revisions)
-                .UsingEntity(j => j.ToTable("revisionSet"));
-
-            modelBuilder.Entity<CardRevision>()
-                .HasOne(cr => cr.Landscape)
+            modelBuilder.Entity<Card>()
+                .HasOne(c => c.Landscape)
                 .WithMany()
-                .HasForeignKey(cr => cr.LandscapeId)
+                .HasForeignKey(c => c.LandscapeId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<CardRevision>()
-                .HasOne(cr => cr.CardType)
+            modelBuilder.Entity<Card>()
+                .HasOne(c => c.CardType)
                 .WithMany()
-                .HasForeignKey(cr => cr.TypeId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<CardRevision>()
-                .HasMany(cr => cr.CardImages)
-                .WithOne(ci => ci.Revision)
-                .HasForeignKey(ci => ci.RevisionId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(c => c.TypeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DarklandsCard>(entity =>
             {

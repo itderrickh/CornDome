@@ -17,7 +17,7 @@ public class RandomModel(ICardRepository cardRepository) : BasePageModel
     {
         var cards = cardRepository.GetAll()
             .Where(x => x.IsCustomCard == false)
-            .Where(x => TypesToGenerate.Contains(x.LatestRevision.TypeId)).ToList();
+            .Where(x => TypesToGenerate.Contains(x.TypeId)).ToList();
         var randomCard = cards[Random.Shared.Next(cards.Count)];
 
         var queryId = randomCard.Id;

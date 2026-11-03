@@ -57,12 +57,11 @@ namespace CornDome.Pages.CardManage
                 await AddCard.Image.CopyToAsync(stream);
             }
 
-            var addedCard = cardRepository.AddCard(card, revision);
+            var addedCard = cardRepository.AddCard(card);
 
             if (addedCard != null)
             {
-                cardImage.RevisionId = addedCard.LatestRevision.Id;
-                cardRepository.AddRevisionImage(cardImage);
+                cardRepository.AddCardImage(cardImage);
             }
             else
             {
@@ -81,10 +80,9 @@ namespace CornDome.Pages.CardManage
                 var cardImageSmall = new CardImage()
                 {
                     CardImageTypeId = 1,
-                    ImageUrl = smallImagePath,
-                    RevisionId = addedCard.LatestRevision.Id
+                    ImageUrl = smallImagePath
                 };
-                cardRepository.AddRevisionImage(cardImageSmall);
+                cardRepository.AddCardImage(cardImageSmall);
             }
             else
             {
@@ -103,10 +101,9 @@ namespace CornDome.Pages.CardManage
                 var cardImageOptimized = new CardImage()
                 {
                     CardImageTypeId = 4,
-                    ImageUrl = optimizedImagePath,
-                    RevisionId = addedCard.LatestRevision.Id
+                    ImageUrl = optimizedImagePath
                 };
-                cardRepository.AddRevisionImage(cardImageOptimized);
+                cardRepository.AddCardImage(cardImageOptimized);
             }
             else
             {

@@ -7,7 +7,7 @@
     }
     else
     {
-        ViewData["Title"] = Model.QueryCard?.LatestRevision.Name;
+        ViewData["Title"] = Model.QueryCard?.Name;
     }
 }
 
@@ -17,7 +17,7 @@
 }
 else
 {
-    var selectedRevision = Model.QueryCard.LatestRevision;
+    var selectedRevision = Model.QueryCard;
     <div>
         <h1>@selectedRevision.Name</h1>
     </div>
@@ -60,7 +60,7 @@ else
                 </div>
             }
 
-            @if (selectedRevision.CardSets != null)
+            @if (selectedRevision.CardSets != null && selectedRevision.CardSets.Count > 0)
             {
                 <div class="card-text-section">
                     <span class="bold-label">Set: </span><br />
@@ -103,8 +103,7 @@ else
                         <div class="form-group">
                             <label for="feedback">Feedback: </label>
                             <input name="feedback" id="feedback-input" type="text" class="form-control" required placeholder="What is incorrect on this page?" />
-                            <input name="card" id="feedback-card" type="hidden" class="form-control" value="@selectedRevision.CardId" />
-                            <input name="revision" id="feedback-revision" type="hidden" class="form-control" value="@selectedRevision.Id" />
+                            <input name="card" id="feedback-card" type="hidden" class="form-control" value="@selectedRevision.Id" />
                         </div>
                         <div class="form-group mt-2">
                             <button type="button" id="feedback-submit" class="btn btn-primary" onclick="submitFeedback()">Submit</button>
@@ -121,14 +120,14 @@ else
             @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
             {
                 <div class="card-text-section">
-                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@selectedRevision.CardId">Edit Card</a>
+                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@selectedRevision.Id">Edit Card</a>
                 </div>
             }
 
             @if (User.IsInRole("Admin") || User.IsInRole("RulingManager"))
             {
                 <div class="card-text-section">
-                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Rulings" asp-route-id="@selectedRevision.CardId">Edit Rulings</a>
+                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Rulings" asp-route-id="@selectedRevision.Id">Edit Rulings</a>
                 </div>
             }
         </div>

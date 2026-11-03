@@ -37,15 +37,7 @@ namespace CornDome.Models.Cards
         {
             get
             {
-                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl ?? GetRegularImage;
-            }
-        }
-
-        public string GetRegularImage
-        {
-            get
-            {
-                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular)?.ImageUrl ?? GetLargeImage;
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl ?? GetLargeImage;
             }
         }
 

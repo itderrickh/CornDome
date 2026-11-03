@@ -117,7 +117,7 @@
 
 <div>
     <div class="d-flex flex-wrap" id="card-list">
-        @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
+        @foreach (var card in Model.Cards.OrderBy(x => x.Name))
         {
             CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true, CardImageType = CardImageTypeEnum.XSmall, BaseUrl = Model.BaseUrl };
             <a asp-page="/Card" asp-route-id="@card.Id" class="card-element">

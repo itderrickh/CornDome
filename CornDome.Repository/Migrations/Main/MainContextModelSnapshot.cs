@@ -125,9 +125,6 @@ namespace CornDome.Repository.Migrations.Main
                     b.Property<string>("Feedback")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RevisionId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("CardFeedback");
