@@ -60,38 +60,6 @@ namespace CornDome.Pages.Darklands
                 if (existingCard == null)
                     return NotFound();
 
-                // Validate the selected related entities.
-                var cardType = (await repository.GetDarklandsCardTypes())
-                    .FirstOrDefault(x => x.Id == EditCard.CardTypeId);
-
-                if (cardType == null)
-                {
-                    ModelState.AddModelError(
-                        "EditCard.CardTypeId",
-                        "Please select a valid card type.");
-
-                    await ReloadPageData();
-                    return Page();
-                }
-
-                DarklandsOverlord? overlord = null;
-
-                if (EditCard.OverlordId.HasValue)
-                {
-                    overlord = (await repository.GetDarklandsOverlords())
-                        .FirstOrDefault(x => x.Id == EditCard.OverlordId.Value);
-
-                    if (overlord == null)
-                    {
-                        ModelState.AddModelError(
-                            "EditCard.OverlordId",
-                            "Please select a valid Overlord.");
-
-                        await ReloadPageData();
-                        return Page();
-                    }
-                }
-
                 // Update card properties without replacing its navigation collections.
                 existingCard.Name = EditCard.Name;
                 existingCard.CardTypeId = EditCard.CardTypeId;
@@ -99,9 +67,6 @@ namespace CornDome.Pages.Darklands
                 existingCard.Ability = EditCard.Ability;
                 existingCard.Attack = EditCard.Attack;
                 existingCard.Defense = EditCard.Defense;
-
-                existingCard.CardType = cardType;
-                existingCard.Overlord = overlord;
 
                 await repository.EditDarklandsCard(existingCard);
 
@@ -134,7 +99,7 @@ namespace CornDome.Pages.Darklands
 
         private async Task ReplaceImages(DarklandsCard card)
         {
-            var fileName = $"{Guid.NewGuid():N}{Path.GetExtension(Image!.FileName)}";
+            var fileName = $"{card.Name.Replace(" ", "_")}{Path.GetExtension(Image!.FileName)}";
 
             Directory.CreateDirectory(config.AppData.UploadPath);
 
@@ -221,7 +186,7 @@ namespace CornDome.Pages.Darklands
             using var image = SKImage.FromBitmap(resized);
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
 
-            var uniqueFileName = $"{Guid.NewGuid():N}.png";
+            var uniqueFileName = $"{cardName.Replace(" ", "_")}.png";
             var filePath = Path.Combine(outputFolder, uniqueFileName);
 
             await using (var outputStream = new FileStream(
