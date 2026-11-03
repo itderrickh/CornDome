@@ -62,9 +62,10 @@ else
                     <span class="bold-label">Ability: </span><br />
                     <span>
                         @{
-                            var abilityWithPlaceholders = card.Ability.Replace(
-                                "[ATTACK]",
-                                @"<img src=""/img/attack.webp"" style=""width: 20px; height: 20px;"" />");
+                            var abilityWithPlaceholders = card.Ability
+                                .Replace("[ATTACK]",@"<img src=""/img/attack.webp"" style=""width: 20px; height: 20px;"" />")
+                                .Replace("[Difficulty1]", @"<img src=""/img/difficulty1.png"" style=""width: 32px; height: 32px;"" />")
+                                .Replace("[Difficulty2]", @"<img src=""/img/difficulty2.png"" style=""width: 32px; height: 32px;"" />");
                         }
                         @Html.Raw(abilityWithPlaceholders)
                     </span>
