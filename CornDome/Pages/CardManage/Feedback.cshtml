@@ -35,7 +35,6 @@
                     <tr>
                         <th>Link</th>
                         <th>CardId</th>
-                        <th>RevisionId</th>
                         <th>Feedback</th>
                         <th></th>
                     </tr>
@@ -48,7 +47,6 @@
                             <tr>
                                 <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId">Link</a></td>
                                 <td>@feedbackRequest.CardId</td>
-                                <td>@feedbackRequest.RevisionId</td>
                                 <td>@feedbackRequest.Feedback</td>
                                 <td>
                                     <form method="post" asp-page-handler="DeleteFeedback">
@@ -63,7 +61,6 @@
                     {
                         <tr>
                             <td>No feedback submitted</td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td>

@@ -9,14 +9,12 @@ function hideFeedbackForm() {
 function submitFeedback() {
     var text = document.getElementById("feedback-input").value;
     var card = document.getElementById("feedback-card").value;
-    var revision = document.getElementById("feedback-revision").value;
 
     hideFeedbackForm();
 
     var feedbackForm = {
         feedback: text,
-        cardId: parseInt(card, 10),
-        revisionId: parseInt(revision, 10)
+        cardId: parseInt(card, 10)
     };
 
     fetch('/Card?handler=Feedback', {

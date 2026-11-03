@@ -11,6 +11,6 @@ namespace CornDome.Models.Cards
         public string Description { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         [JsonIgnore]
-        public virtual ICollection<CardRevision> Revisions { get; set; } = [];
+        public ICollection<Card> Cards { get; set; } = [];
     }
 }

@@ -12,7 +12,7 @@ else
 {
     @Html.AntiForgeryToken()
     ViewData["RenderMode"] = "wide";
-    var totalCost = Model.QueryDeck.Cards.Select(x => x.LatestRevision.Cost).Sum();
+    var totalCost = Model.QueryDeck.Cards.Select(x => x.Cost).Sum();
 
     decimal averageCost = 0;
 
@@ -30,23 +30,23 @@ else
                 <br />
                 <div><span class="info-stamp" title="Only 1 Hero is allowed per deck."></span> Heroes: <span id="heroes-stat">@(Model.QueryDeck.Hero != null ? "1" : "0")</span></div>
                 <div><span class="info-stamp" title="Only 4 Landscapes are allowed per deck."></span> Landscapes: <span id="landscapes-stat">@Model.QueryDeck.Landscapes.Count()</span></div>
-                <div><span class="info-stamp" title="You can have as many creatures as you like."></span> Creatures: <span id="creature-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Creature).Count()</span></div>
-                <div><span class="info-stamp" title="You can have as many spells as you like."></span> Spells: <span id="spell-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Spell).Count()</span></div>
-                <div><span class="info-stamp" title="You can have as many buildings as you like."></span> Buildings: <span id="building-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Building).Count()</span></div>
-                <div><span class="info-stamp" title="You can have as many teamworks as you like."></span> Teamworks: <span id="teamwork-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.TypeId == (int)CardTypeEnum.Teamwork).Count()</span></div>
+                <div><span class="info-stamp" title="You can have as many creatures as you like."></span> Creatures: <span id="creature-stat">@Model.QueryDeck.Cards.Where(x => x.TypeId == (int)CardTypeEnum.Creature).Count()</span></div>
+                <div><span class="info-stamp" title="You can have as many spells as you like."></span> Spells: <span id="spell-stat">@Model.QueryDeck.Cards.Where(x => x.TypeId == (int)CardTypeEnum.Spell).Count()</span></div>
+                <div><span class="info-stamp" title="You can have as many buildings as you like."></span> Buildings: <span id="building-stat">@Model.QueryDeck.Cards.Where(x => x.TypeId == (int)CardTypeEnum.Building).Count()</span></div>
+                <div><span class="info-stamp" title="You can have as many teamworks as you like."></span> Teamworks: <span id="teamwork-stat">@Model.QueryDeck.Cards.Where(x => x.TypeId == (int)CardTypeEnum.Teamwork).Count()</span></div>
                 <hr />
                 <div>Average Cost: <span id="average-cost">@averageCost.ToString("F2")</span></div>
                 <div>Total Cost: <span id="total-cost">@totalCost</span></div>
                 <hr />
                 <h3>Landscape Ratios</h3>
-                <div>Blue Plains: <span id="bp-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.BluePlains).Count()</span></div>
-                <div>Cornfield: <span id="cf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.CornField).Count()</span></div>
-                <div>Useless Swamp: <span id="us-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.UselessSwamp).Count()</span></div>
-                <div>SandyLands: <span id="sl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.SandyLands).Count()</span></div>
-                <div>NiceLands: <span id="nl-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.NiceLands).Count()</span></div>
-                <div>IcyLands: <span id="il-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.IcyLands).Count()</span></div>
-                <div>Rainbow: <span id="rb-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.Rainbow).Count()</span></div>
-                <div>LavaFlats: <span id="lf-stat">@Model.QueryDeck.Cards.Where(x => x.LatestRevision.LandscapeId == (int)LandscapeEnum.LavaFlats).Count()</span></div>
+                <div>Blue Plains: <span id="bp-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.BluePlains).Count()</span></div>
+                <div>Cornfield: <span id="cf-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.CornField).Count()</span></div>
+                <div>Useless Swamp: <span id="us-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.UselessSwamp).Count()</span></div>
+                <div>SandyLands: <span id="sl-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.SandyLands).Count()</span></div>
+                <div>NiceLands: <span id="nl-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.NiceLands).Count()</span></div>
+                <div>IcyLands: <span id="il-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.IcyLands).Count()</span></div>
+                <div>Rainbow: <span id="rb-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.Rainbow).Count()</span></div>
+                <div>LavaFlats: <span id="lf-stat">@Model.QueryDeck.Cards.Where(x => x.LandscapeId == (int)LandscapeEnum.LavaFlats).Count()</span></div>
             </fieldset>
 
             <fieldset id="actionsSection">
@@ -83,7 +83,7 @@ else
                     {
                         <div class="w-20">
                             <a asp-page="/Card" asp-route-id="@Model.QueryDeck.Hero.Id" class="deck-card" data-card-id="@Model.QueryDeck.Hero.Id" data-type="hero">
-                                <img class="w-100" alt="@Model.QueryDeck.Hero.LatestRevision.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.LatestRevision.GetOptimizedImage)" />
+                                <img class="w-100" alt="@Model.QueryDeck.Hero.Name" src="@(Model.BaseUrl + Model.QueryDeck.Hero.GetOptimizedImage)" />
                             </a>
                         </div>
                     }
@@ -92,18 +92,18 @@ else
                     {
                         <div class="w-20">
                             <a asp-page="/Card" asp-route-id="@landscape.Id" class="deck-card" data-card-id="@landscape.Id" data-type="landscape">
-                                <img class="w-100" alt="@landscape.LatestRevision.Name" src="@(Model.BaseUrl + landscape.LatestRevision.GetOptimizedImage)" />
+                                <img class="w-100" alt="@landscape.Name" src="@(Model.BaseUrl + landscape.GetOptimizedImage)" />
                             </a>
                         </div>
                     }
                 </div>
 
                 <div class="d-flex flex-wrap">
-                    @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null).OrderBy(x => x.LatestRevision.Name))
+                    @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null).OrderBy(x => x.Name))
                     {
                         <div class="w-10">
                             <a asp-page="/Card" asp-route-id="@card.Id" class="deck-card" data-card-id="@card.Id" data-type="card">
-                                <img class="deck-card-image w-100" alt="@card.LatestRevision.Name" src="@(Model.BaseUrl + card.LatestRevision.GetOptimizedImage)" />
+                                <img class="deck-card-image w-100" alt="@card.Name" src="@(Model.BaseUrl + card.GetOptimizedImage)" />
                             </a>
                         </div>
                     }
@@ -204,7 +204,7 @@ else
                             @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
                             {
                                 <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
-                                    @card.LatestRevision.Name
+                                    @card.Name
                                 </option>
                             }
                         </select>

@@ -7,14 +7,77 @@ namespace CornDome.Models.Cards
     {
         public int Id { get; set; }
         public bool IsCustomCard { get; set; }
-        public IList<CardRevision> Revisions { get; set; } = [];
-        public CardRevision LatestRevision
+
+        public string Name { get; set; } = string.Empty;
+        public int TypeId { get; set; }
+        public string Ability { get; set; } = string.Empty;
+        public int? LandscapeId { get; set; }
+        public int? Cost { get; set; }
+        public int? Attack { get; set; }
+        public int? Defense { get; set; }
+        public string Rulings { get; set; } = string.Empty;
+
+        public ICollection<CardImage> CardImages { get; set; } = [];
+        public ICollection<CardSet> CardSets { get; set; } = [];
+
+        public CardType CardType { get; set; }
+        public Landscape Landscape { get; set; }
+
+        public string GetExtraSmallImage
         {
             get
             {
-                return Revisions
-                    .OrderByDescending(x => x.RevisionNumber)
-                    .FirstOrDefault();
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.XSmall)?.ImageUrl ?? GetSmallImage;
+            }
+        }
+
+        public string GetSmallImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl ?? GetLargeImage;
+            }
+        }
+
+        public string GetLargeImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Large)?.ImageUrl ?? "";
+            }
+        }
+
+        public string GetOptimizedImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Optimized)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Large)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl ?? "";
+            }
+        }
+
+        public string GetLargestImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Large)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Optimized)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.XSmall)?.ImageUrl ?? "";
+            }
+        }
+
+        public string GetSmallestImage
+        {
+            get
+            {
+                return CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.XSmall)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Small)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Regular)?.ImageUrl
+                    ?? CardImages.FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Large)?.ImageUrl ?? "";
             }
         }
     }

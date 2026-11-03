@@ -27,16 +27,16 @@ namespace CornDome.Pages.CardManage
             EditCard = new EditCard()
             {
                 IsCustomCard = cardFound.IsCustomCard,
-                Name = cardFound.LatestRevision.Name,
-                TypeId = cardFound.LatestRevision.TypeId,
-                Ability = cardFound.LatestRevision.Ability,
-                LandscapeId = cardFound.LatestRevision.LandscapeId,
-                Cost = cardFound.LatestRevision.Cost,
-                Attack = cardFound.LatestRevision.Attack,
-                Defense = cardFound.LatestRevision.Defense,
-                RevisionId = cardFound.LatestRevision.Id,
-                CardSets = [.. cardFound.LatestRevision.CardSets],
-                ImageUrl = cardFound.LatestRevision.GetOptimizedImage
+                Name = cardFound.Name,
+                TypeId = cardFound.TypeId,
+                Ability = cardFound.Ability,
+                LandscapeId = cardFound.LandscapeId,
+                Cost = cardFound.Cost,
+                Attack = cardFound.Attack,
+                Defense = cardFound.Defense,
+                Id = cardFound.Id,
+                CardSets = [.. cardFound.CardSets],
+                ImageUrl = cardFound.GetOptimizedImage
             };
         }
 
@@ -49,63 +49,40 @@ namespace CornDome.Pages.CardManage
             if (imageToUpload.File != null)
             {
                 var isEverythingGoingWell = false;
-                var cardRevision = card.Revisions.FirstOrDefault(x => x.Id == EditCard.RevisionId);
 
-                if (cardRevision == null)
-                {
-                    TempData["ErrorMessage"] = "There was an issue saving the card.";
-                    EditCard = new EditCard()
-                    {
-                        IsCustomCard = card.IsCustomCard,
-                        Name = card.LatestRevision.Name,
-                        TypeId = card.LatestRevision.TypeId,
-                        Ability = card.LatestRevision.Ability,
-                        LandscapeId = card.LatestRevision.LandscapeId,
-                        Cost = card.LatestRevision.Cost,
-                        Attack = card.LatestRevision.Attack,
-                        Defense = card.LatestRevision.Defense,
-                        RevisionId = card.LatestRevision.Id,
-                        ImageUrl = card.LatestRevision.GetRegularImage,
-                        CardSets = [.. card.LatestRevision.CardSets]
-                    };
-                    return RedirectToPage(new { id = CardId });
-                }
-
-                string updatedString = await UploadImage(cardRevision, imageToUpload);
+                string updatedString = await UploadImage(card, imageToUpload);
                 if (!string.IsNullOrEmpty(updatedString))
                 {
-                    isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, updatedString, 2);
+                    isEverythingGoingWell = cardRepository.UpdateCardImage(card.Id, updatedString, 2);
                 }
 
                 // Add a small image if we updated successfully
                 if (isEverythingGoingWell)
                 {
-                    var smallImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 227, 320, "small");
+                    var smallImagePath = await CreateSmallImage(card, imageToUpload.File, 227, 320, "small");
                     if (!string.IsNullOrEmpty(smallImagePath))
                     {
                         CardImage smallImage = new()
                         {
                             CardImageTypeId = (int)CardImageTypeEnum.Small,
-                            ImageUrl = smallImagePath,
-                            RevisionId = cardRevision.Id
+                            ImageUrl = smallImagePath
                         };
-                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, smallImagePath, 1);
+                        isEverythingGoingWell = cardRepository.UpdateCardImage(card.Id, smallImagePath, 1);
                     }
                 }
 
                 // Add a optimized image if we updated successfully
                 if (isEverythingGoingWell)
                 {
-                    var optimizedImagePath = await CreateSmallImage(cardRevision, imageToUpload.File, 600, 850, "medium");
+                    var optimizedImagePath = await CreateSmallImage(card, imageToUpload.File, 600, 850, "medium");
                     if (optimizedImagePath != null)
                     {
                         var cardImageOptimized = new CardImage()
                         {
                             CardImageTypeId = 4,
-                            ImageUrl = optimizedImagePath,
-                            RevisionId = cardRevision.Id
+                            ImageUrl = optimizedImagePath
                         };
-                        isEverythingGoingWell = cardRepository.UpdateRevisionImage(cardRevision, optimizedImagePath, 4);
+                        isEverythingGoingWell = cardRepository.UpdateCardImage(card.Id, optimizedImagePath, 4);
                     }
                 }
             }
@@ -120,19 +97,19 @@ namespace CornDome.Pages.CardManage
                     setsToUpdate = cardRepository.GetSetsByIds(setIds);
                 }
 
-                card.LatestRevision.CardSets.Clear();
+                card.CardSets.Clear();
 
-                card.LatestRevision.Ability = EditCard.Ability;
-                card.LatestRevision.Attack = EditCard.Attack;
+                card.Ability = EditCard.Ability;
+                card.Attack = EditCard.Attack;
                 card.IsCustomCard = EditCard.IsCustomCard;
-                card.LatestRevision.TypeId = EditCard.TypeId;
-                card.LatestRevision.Name = EditCard.Name;
-                card.LatestRevision.Cost = EditCard.Cost;
-                card.LatestRevision.Defense = EditCard.Defense;
-                card.LatestRevision.LandscapeId = EditCard.LandscapeId;
-                card.LatestRevision.CardSets = setsToUpdate;
+                card.TypeId = EditCard.TypeId;
+                card.Name = EditCard.Name;
+                card.Cost = EditCard.Cost;
+                card.Defense = EditCard.Defense;
+                card.LandscapeId = EditCard.LandscapeId;
+                card.CardSets = setsToUpdate;
 
-                isSuccess = cardRepository.UpdateCardAndRevisions(card);
+                isSuccess = cardRepository.UpdateCard(card);
             }
 
             if (isSuccess)
@@ -143,21 +120,21 @@ namespace CornDome.Pages.CardManage
             EditCard = new EditCard()
             {
                 IsCustomCard = card.IsCustomCard,
-                Name = card.LatestRevision.Name,
-                TypeId = card.LatestRevision.TypeId,
-                Ability = card.LatestRevision.Ability,
-                LandscapeId = card.LatestRevision.LandscapeId,
-                Cost = card.LatestRevision.Cost,
-                Attack = card.LatestRevision.Attack,
-                Defense = card.LatestRevision.Defense,
-                RevisionId = card.LatestRevision.Id,
-                ImageUrl = card.LatestRevision.GetRegularImage,
-                CardSets = [.. card.LatestRevision.CardSets]
+                Name = card.Name,
+                TypeId = card.TypeId,
+                Ability = card.Ability,
+                LandscapeId = card.LandscapeId,
+                Cost = card.Cost,
+                Attack = card.Attack,
+                Defense = card.Defense,
+                Id = card.Id,
+                ImageUrl = card.GetOptimizedImage,
+                CardSets = [.. card.CardSets]
             };
             return RedirectToPage(new { id = CardId });
         }
 
-        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight, string size)
+        private async Task<string> CreateSmallImage(Card cardRevision, IFormFile file, int maxWidth, int maxHeight, string size)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File is empty or null");
@@ -211,7 +188,7 @@ namespace CornDome.Pages.CardManage
             return $"generated/{size}/{uniqueFileName}";
         }
 
-        private async Task<string> UploadImage(CardRevision cardRevision, ImageUpload upload)
+        private async Task<string> UploadImage(Card cardRevision, ImageUpload upload)
         {
             var uploadsFolder = config.AppData.UploadPath;
             if (!Directory.Exists(uploadsFolder))
@@ -254,6 +231,6 @@ namespace CornDome.Pages.CardManage
         public int? Defense { get; set; }
         public IFormFile Image { get; set; }
         public string ImageUrl { get; set; }
-        public int RevisionId { get; set; }
+        public int Id { get; set; }
     }
 }

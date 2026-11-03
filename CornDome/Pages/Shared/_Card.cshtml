@@ -1,21 +1,21 @@
 ﻿@model Models.CardViewModel
 
 @{
-    var cardImage = Model.Card.LatestRevision.GetRegularImage;
+    var cardImage = Model.Card.GetOptimizedImage;
 
     if (Model.CardImageType == CardImageTypeEnum.XSmall)
-        cardImage = Model.Card.LatestRevision.GetExtraSmallImage;
+        cardImage = Model.Card.GetExtraSmallImage;
     else if (Model.CardImageType == CardImageTypeEnum.Small)
-        cardImage = Model.Card.LatestRevision.GetSmallImage;
+        cardImage = Model.Card.GetSmallImage;
     else if (Model.CardImageType == CardImageTypeEnum.Large)
-        cardImage = Model.Card.LatestRevision.GetLargeImage;
+        cardImage = Model.Card.GetLargeImage;
 
     var customCardStyle = Model.Card.IsCustomCard ? "display: none;" : "";
-    var cardSets = Model.Card.LatestRevision.CardSets;
+    var cardSets = Model.Card.CardSets;
     var cardSetText = "";
     if (cardSets != null)
     {
-        cardSetText = string.Join(",", Model.Card.LatestRevision.CardSets.Select(x => $"#{x.Id}#"));
+        cardSetText = string.Join(",", Model.Card.CardSets.Select(x => $"#{x.Id}#"));
     }
 }
 
@@ -23,19 +23,18 @@
      class="card-container"
      data-id="@Model.Card.Id"
      data-custom="@Model.Card.IsCustomCard"
-     data-revision="@Model.Card.LatestRevision.RevisionNumber"
      data-card-image="@(Model.BaseUrl + cardImage)"
-     data-card-type="@Model.Card.LatestRevision.TypeId"
-     data-landscape="@(Model.Card.LatestRevision.LandscapeId)"
-     data-name="@Model.Card.LatestRevision.Name"
-     data-ability="@Model.Card.LatestRevision.Ability"
-     data-cost="@(Model.Card.LatestRevision.Cost.HasValue ? Model.Card.LatestRevision.Cost.ToString() : "")"
+     data-card-type="@Model.Card.TypeId"
+     data-landscape="@(Model.Card.LandscapeId)"
+     data-name="@Model.Card.Name"
+     data-ability="@Model.Card.Ability"
+     data-cost="@(Model.Card.Cost.HasValue ? Model.Card.Cost.ToString() : "")"
      data-set="@(cardSetText)"
-     data-attack="@(Model.Card.LatestRevision.Attack.HasValue ? Model.Card.LatestRevision.Attack.ToString() : "")"
-     data-defense="@(Model.Card.LatestRevision.Defense.HasValue ? Model.Card.LatestRevision.Defense.ToString() : "")">
+     data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
+     data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
     <div class="card-image">
         <img data-src="@(Model.BaseUrl + cardImage)"
-             alt="@Model.Card.LatestRevision.Name"
+             alt="@Model.Card.Name"
              class="lazy-image w-100"
              loading="lazy" />
         @if (Model.IsAddable)

@@ -7,7 +7,6 @@ namespace CornDome.Models.Main
     {
         public string Feedback { get; set; }
         public int CardId { get; set; }
-        public int RevisionId { get; set; }
         public int Id { get; set; }
     }
 }

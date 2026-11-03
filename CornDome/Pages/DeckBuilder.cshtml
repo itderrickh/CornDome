@@ -197,7 +197,7 @@
             </div>
         </fieldset>
         <div class="d-flex flex-wrap" id="card-list">
-            @foreach (var card in Model.Cards.OrderBy(x => x.LatestRevision.Name))
+            @foreach (var card in Model.Cards.OrderBy(x => x.Name))
             {
                 CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true, BaseUrl = Model.BaseUrl };
                 <div class="card-element">
@@ -293,7 +293,7 @@
                             @foreach (var card in allDeckCards.Where(x => x != null).Distinct())
                             {
                                 <option value="@card.Id" selected="@(Model.IconCard == card.Id)">
-                                    @card.LatestRevision.Name
+                                    @card.Name
                                 </option>
                             }
                         }

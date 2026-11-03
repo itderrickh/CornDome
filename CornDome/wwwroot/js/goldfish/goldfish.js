@@ -308,7 +308,7 @@ function handCardTemplate(card) {
                                     class="hand-card"
                                     data-id="${card.Id}"
                                     data-card="${data}">
-                                            <img class="deck-card-image w-100" alt="${card.LatestRevision.Name}" src="${baseUrl}${card.LatestRevision.GetRegularImage}" />
+                                            <img class="deck-card-image w-100" alt="${card.Name}" src="${baseUrl}${card.GetOptimizedImage}" />
                                     </div>
                             `;
 }

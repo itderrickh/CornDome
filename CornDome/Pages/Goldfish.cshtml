@@ -39,10 +39,10 @@ else
 
             <div class="d-flex flex-wrap position-relative w-55" style="width: 55%;">
                 <div class="d-flex w-100" style="height: 65%">
-                    <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[0].LatestRevision.GetRegularImage)"></cd-landscape>
-                    <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[1].LatestRevision.GetRegularImage)"></cd-landscape>
-                    <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[2].LatestRevision.GetRegularImage)"></cd-landscape>
-                    <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].LatestRevision.Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[3].LatestRevision.GetRegularImage)"></cd-landscape>
+                    <cd-landscape id="landscape1" class="landscape drop-landscape" data-landscape="landscape1" alt-text="@Model.QueryDeck.Landscapes[0].Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[0].GetOptimizedImage)"></cd-landscape>
+                    <cd-landscape id="landscape2" class="landscape drop-landscape" data-landscape="landscape2" alt-text="@Model.QueryDeck.Landscapes[1].Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[1].GetOptimizedImage)"></cd-landscape>
+                    <cd-landscape id="landscape3" class="landscape drop-landscape" data-landscape="landscape3" alt-text="@Model.QueryDeck.Landscapes[2].Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[2].GetOptimizedImage)"></cd-landscape>
+                    <cd-landscape id="landscape4" class="landscape drop-landscape" data-landscape="landscape4" alt-text="@Model.QueryDeck.Landscapes[3].Name" landscape-image="@(Model.BaseUrl + @Model.QueryDeck.Landscapes[3].GetOptimizedImage)"></cd-landscape>
                 </div>
 
                 <div class="d-flex w-100" style="height: 35%">

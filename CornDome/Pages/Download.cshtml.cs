@@ -108,18 +108,18 @@ namespace CornDome.Pages
                 // Preload images into the cache.
                 if (QueryDeck.Hero != null)
                 {
-                    LoadImage(QueryDeck.Hero.LatestRevision.GetSmallImage);
+                    LoadImage(QueryDeck.Hero.GetSmallImage);
                 }
 
                 foreach (var landscape in QueryDeck.Landscapes)
                 {
-                    LoadImage(landscape.LatestRevision.GetSmallImage);
+                    LoadImage(landscape.GetSmallImage);
                 }
 
-                foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
+                foreach (var card in QueryDeck.Cards.OrderBy(x => x.Name))
                 {
                     LoadImage(
-                        card.LatestRevision.GetSmallImage,
+                        card.GetSmallImage,
                         decodeUrl: true);
                 }
 
@@ -146,7 +146,7 @@ namespace CornDome.Pages
                 {
                     var heroPath = Path.Combine(
                         config.AppData.ImagePath,
-                        QueryDeck.Hero.LatestRevision.GetSmallImage);
+                        QueryDeck.Hero.GetSmallImage);
 
                     if (imageCache.TryGetValue(heroPath, out var heroImage))
                     {
@@ -172,7 +172,7 @@ namespace CornDome.Pages
 
                     var landPath = Path.Combine(
                         config.AppData.ImagePath,
-                        landscape.LatestRevision.GetSmallImage);
+                        landscape.GetSmallImage);
 
                     if (imageCache.TryGetValue(
                         landPath, out var landImage))
@@ -191,14 +191,14 @@ namespace CornDome.Pages
                 }
 
                 // Draw cards in alphabetical order.
-                foreach (var card in QueryDeck.Cards.OrderBy(x => x.LatestRevision.Name))
+                foreach (var card in QueryDeck.Cards.OrderBy(x => x.Name))
                 {
                     var loc = coordinates[coordCounter];
 
                     var cardPath = Path.Combine(
                         config.AppData.ImagePath,
                         HttpUtility.UrlDecode(
-                            card.LatestRevision.GetSmallImage));
+                            card.GetSmallImage));
 
                     if (imageCache.TryGetValue(
                         cardPath, out var cardImage))

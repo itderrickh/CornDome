@@ -48,9 +48,9 @@
                 <tbody>
                     @foreach (var card in Model.Cards)
                     {
-                        <tr data-name="@card.LatestRevision.Name" class="card-row">
+                        <tr data-name="@card.Name" class="card-row">
                             <td>@card.Id</td>
-                            <td><a asp-page="/Card" asp-route-id="@card.Id">@card.LatestRevision.Name</a></td>
+                            <td><a asp-page="/Card" asp-route-id="@card.Id">@card.Name</a></td>
                             <td>
                                 <a class="btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@card.Id">Edit</a>
                                 @if (User.IsInRole("Admin"))

@@ -26,7 +26,7 @@ namespace CornDome.Pages.CardManage
 
             if (card != null && card.Id == CardId)
             {
-                isSuccess = cardRepository.UpdateRevisionRulings(EditCard);
+                isSuccess = cardRepository.UpdateCardRulings(EditCard);
                 isSuccess = true;
             }
 
