@@ -60,6 +60,7 @@ namespace CornDome.Pages.Darklands
 
                 AddCard.Images = [];
                 AddCard.Overlord = null;
+                AddCard.CardType = null;
 
                 var addedCard = await repository.AddDarklandsCard(AddCard);
 
