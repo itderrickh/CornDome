@@ -69,7 +69,6 @@ namespace CornDome.Repository.Cards
         public Card GetCard(int id)
         {
             return context.Cards
-                .AsNoTracking()
                 .AsSplitQuery()
                 .Include(card => card.Revisions)
                     .ThenInclude(cardRev => cardRev.CardImages)
@@ -123,7 +122,6 @@ namespace CornDome.Repository.Cards
         public List<CardSet> GetSetsByIds(int[] ids)
         {
             return context.CardSets
-                .AsNoTracking()
                 .Where(x => ids.Contains(x.Id))
                 .ToList();
         }
@@ -183,57 +181,6 @@ namespace CornDome.Repository.Cards
 
                 dbCard.IsCustomCard = card.IsCustomCard;
                 context.SaveChanges();
-
-                foreach (var revision in card.Revisions)
-                {
-                    var dbRev = context.CardRevisions.FirstOrDefault(x => x.Id == revision.Id);
-                    var beforeChanges = "";
-                    if (dbRev != null)
-                    {
-                        beforeChanges = JsonSerializer.Serialize(dbRev);
-
-                        dbRev.Name = revision.Name;
-                        dbRev.TypeId = revision.TypeId;
-
-                        if (revision.TypeId == (int)CardTypeEnum.Creature)
-                        {
-                            dbRev.Ability = revision.Ability;
-                            dbRev.CardSets = revision.CardSets;
-                            dbRev.Cost = revision.Cost;
-                            dbRev.Attack = revision.Attack;
-                            dbRev.Defense = revision.Defense;
-                            dbRev.LandscapeId = revision.LandscapeId;
-                        }
-                        else if (revision.TypeId == (int)CardTypeEnum.Spell)
-                        {
-                            dbRev.Ability = revision.Ability;
-                            dbRev.CardSets = revision.CardSets;
-                            dbRev.Cost = revision.Cost;
-                            dbRev.LandscapeId = revision.LandscapeId;
-                        }
-                        else if (revision.TypeId == (int)CardTypeEnum.Hero)
-                        {
-                            dbRev.Ability = revision.Ability;
-                            dbRev.CardSets = revision.CardSets;
-                        }
-                        else if (revision.TypeId == (int)CardTypeEnum.Building)
-                        {
-                            dbRev.Ability = revision.Ability;
-                            dbRev.CardSets = revision.CardSets;
-                            dbRev.Cost = revision.Cost;
-                            dbRev.LandscapeId = revision.LandscapeId;
-                        }
-                        else if (revision.TypeId == (int)CardTypeEnum.Teamwork)
-                        {
-                            dbRev.Ability = revision.Ability;
-                            dbRev.CardSets = revision.CardSets;
-                            dbRev.Cost = revision.Cost;
-                            dbRev.LandscapeId = revision.LandscapeId;
-                        }
-                    }
-                    context.SaveChanges();
-                    logger.LogCardChange($"Updating card revision: {revision.Name}, Updated: {JsonSerializer.Serialize(revision)}");
-                }
 
                 transaction.Commit();
                 return true;

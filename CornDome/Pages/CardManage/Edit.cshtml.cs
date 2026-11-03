@@ -120,6 +120,8 @@ namespace CornDome.Pages.CardManage
                     setsToUpdate = cardRepository.GetSetsByIds(setIds);
                 }
 
+                card.LatestRevision.CardSets.Clear();
+
                 card.LatestRevision.Ability = EditCard.Ability;
                 card.LatestRevision.Attack = EditCard.Attack;
                 card.IsCustomCard = EditCard.IsCustomCard;
