@@ -1,0 +1,120 @@
+﻿@page
+@model CornDome.Pages.Darklands.DarklandsCardDatabaseModel
+@{
+    ViewData["Title"] = "Darklands Card Database";
+}
+
+<div>
+    <fieldset id="filterBox" class="d-grid">
+        <legend>Filters and Sort</legend>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="filter-group">
+                    <label for="cardTypeFilter" class="filter-label">Card Type:</label>
+                    <select id="cardTypeFilter">
+                        <option value="">None</option>
+                        @foreach (var cardType in Model.CardTypes)
+                        {
+                            <option value="@cardType.Id">@cardType.Description</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="overlordFilter" class="filter-label">Overlord:</label>
+                    <select id="overlordFilter">
+                        @foreach (var overlord in Model.Overlords)
+                        {
+                            <option value="@overlord.Id">@overlord.Description</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="nameFilter" class="filter-label">Name:</label>
+                    <input type="text" id="nameFilter" />
+                </div>
+
+                <div class="filter-group">
+                    <label for="abilityFilter" class="filter-label">Ability:</label>
+                    <input type="text" id="abilityFilter" />
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <div class="filter-group">
+                    <label for="attackFilter" class="filter-label">Attack:</label>
+                    <input type="number" id="attackFilter" />
+                </div>
+
+                <div class="filter-group">
+                    <label for="defenseFilter" class="filter-label">Defense:</label>
+                    <input type="number" id="defenseFilter" />
+                </div>
+
+                <div class="filter-group">
+                    <label for="sortOption" class="filter-label">Sort By:</label>
+                    <select id="sortOption" autocomplete="off">
+                        <option value="name">Name</option>
+                        <option value="cardType">Card Type</option>
+                        <option value="overlord">Overlord</option>
+                        <option value="attack">Attack</option>
+                        <option value="defense">Defense</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sortAscDesc" class="filter-label">Sort Direction:</label>
+                    <select id="sortAscDesc" autocomplete="off">
+                        <option value="a">Ascending</option>
+                        <option value="b">Descending</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div class="filter-count text-center">
+    <span id="cards-found"></span>
+</div>
+
+<div>
+    <div class="d-flex flex-wrap" id="card-list">
+        @foreach (var card in Model.Cards.OrderBy(x => x.Name))
+        {
+            var image = card.Images?
+                .FirstOrDefault(x => x.CardImageTypeId == (int)CardImageTypeEnum.Optimized)
+                ?? card.Images?.FirstOrDefault();
+
+            <a asp-page="/Darklands/Card" asp-route-id="@card.Id" class="card-element">
+                <div style="width: 120px;"
+                     class="card-container"
+                     data-name="@card.Name"
+                     data-ability="@card.Ability"
+                     data-card-type="@card.CardTypeId"
+                     data-overlord="@card.OverlordId"
+                     data-attack="@(card.Attack.HasValue ? card.Attack.ToString() : "")"
+                     data-defense="@(card.Defense.HasValue ? card.Defense.ToString() : "")">
+                    <div class="card-image">
+                        <img data-src="@(Model.BaseUrl + image.ImageUrl)"
+                             alt="@card.Name"
+                             class="lazy-image w-100"
+                             loading="lazy" />
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/lazy-card.js" asp-append-version="true"></script>
+    <script src="~/js/darklands/cardDatabase.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/carddatabase.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/darklands/cardDatabase.css" asp-append-version="true" />
+}

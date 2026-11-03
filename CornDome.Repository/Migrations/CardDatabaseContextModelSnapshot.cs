@@ -14,7 +14,7 @@ namespace CornDome.Repository.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.13");
 
             modelBuilder.Entity("CardRevisionCardSet", b =>
                 {
@@ -164,6 +164,102 @@ namespace CornDome.Repository.Migrations
                     b.ToTable("cardType");
                 });
 
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Ability")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Attack")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CardTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Defense")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OverlordId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardTypeId");
+
+                    b.HasIndex("OverlordId");
+
+                    b.ToTable("darklands_card");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CardImageTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DarklandsCardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("CardImageTypeId");
+
+                    b.HasIndex("DarklandsCardId");
+
+                    b.ToTable("darklands_cardimage");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("darklands_cardtype");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsOverlord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("darklands_overlord");
+                });
+
             modelBuilder.Entity("CornDome.Models.Cards.Landscape", b =>
                 {
                     b.Property<int>("Id")
@@ -241,6 +337,46 @@ namespace CornDome.Repository.Migrations
                     b.Navigation("Landscape");
                 });
 
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCard", b =>
+                {
+                    b.HasOne("CornDome.Models.Cards.DarklandsCardType", "CardType")
+                        .WithMany()
+                        .HasForeignKey("CardTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CornDome.Models.Cards.DarklandsOverlord", "Overlord")
+                        .WithMany()
+                        .HasForeignKey("OverlordId");
+
+                    b.Navigation("CardType");
+
+                    b.Navigation("Overlord");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardImage", b =>
+                {
+                    b.HasOne("CornDome.Models.Cards.DarklandsCard", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CornDome.Models.Cards.CardImageType", "CardImageType")
+                        .WithMany()
+                        .HasForeignKey("CardImageTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CornDome.Models.Cards.DarklandsCard", null)
+                        .WithMany("Images")
+                        .HasForeignKey("DarklandsCardId");
+
+                    b.Navigation("Card");
+
+                    b.Navigation("CardImageType");
+                });
+
             modelBuilder.Entity("CornDome.Models.Cards.Card", b =>
                 {
                     b.Navigation("Revisions");
@@ -249,6 +385,11 @@ namespace CornDome.Repository.Migrations
             modelBuilder.Entity("CornDome.Models.Cards.CardRevision", b =>
                 {
                     b.Navigation("CardImages");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.DarklandsCard", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }
