@@ -172,7 +172,7 @@ namespace CornDome.Pages.Darklands
             using var image = SKImage.FromBitmap(resized);
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
 
-            var uniqueFileName = $"{Guid.NewGuid():N}.png";
+            var uniqueFileName = $"{cardName.Replace(" ", "_")}.png";
             var filePath = Path.Combine(outputFolder, uniqueFileName);
 
             await using (var outputStream = new FileStream(
