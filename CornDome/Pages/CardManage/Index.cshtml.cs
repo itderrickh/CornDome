@@ -9,31 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class IndexModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : BasePageModel
+    public class IndexModel(ICardRepository cardRepository) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
-        public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; }
-        [BindProperty]
-        public int DeleteFeedbackId { get; set; }
         [BindProperty]
         public int DeleteCardId { get; set; }
 
         public async void OnGet()
         {
-            FeedbackRequests = await feedbackRepository.GetAllFeedback();
             Cards = cardRepository.GetAll();
-        }
-
-        public async Task<IActionResult> OnPostDeleteFeedback()
-        {
-            var result = await feedbackRepository.DeleteFeedback(DeleteFeedbackId);
-
-            if (result)
-                TempData["SuccessMessage"] = "Delete feedback succeeded";
-            else
-                TempData["ErrorMessage"] = "Delete feedback failed";
-
-            return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteCard()

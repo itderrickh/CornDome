@@ -112,17 +112,13 @@
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Index">Admin Panel</a></li>
                                     }
                                     @if (AppFlags.IsActive("EnableTournaments") && User.IsInRole("Admin") || User.IsInRole("TournamentManager"))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Admin">Manage Tournaments</a></li>
-                                    }
-                                    @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-page="/CardManage/Index">Manage Cards</a></li>
                                     }
 
                                     @if (User.IsInRole("Admin") || User.IsInRole("TournamentManager") || User.IsInRole("CardManager"))

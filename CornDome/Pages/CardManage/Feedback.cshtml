@@ -1,0 +1,82 @@
+﻿@page
+@model CornDome.Pages.CardManage.FeedbackModel
+@{
+    ViewData["Title"] = "Card Feedback";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/CardManage/Feedback">Card Feedback</a>
+            </div>
+            <h1 class="fw-bold mb-2">Card Feedback</h1>
+            <p class="text-muted mb-0">
+                Review all the feedback received from CardDweeb users.
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="tab-content mt-3">
+        <div id="feedback">
+            <h2 class="mb-3">Feedback</h2>
+            <table class="table table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>CardId</th>
+                        <th>RevisionId</th>
+                        <th>Feedback</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.FeedbackRequests.Count() > 0)
+                    {
+                        @foreach (var feedbackRequest in Model.FeedbackRequests.OrderBy(x => x.CardId))
+                        {
+                            <tr>
+                                <td><a asp-page="/Card" asp-route-id="@feedbackRequest.CardId">Link</a></td>
+                                <td>@feedbackRequest.CardId</td>
+                                <td>@feedbackRequest.RevisionId</td>
+                                <td>@feedbackRequest.Feedback</td>
+                                <td>
+                                    <form method="post" asp-page-handler="DeleteFeedback">
+                                        <input type="text" name="DeleteFeedbackId" value="@feedbackRequest.Id" class="d-none" />
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>No feedback submitted</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cardManage/index.css" asp-append-version="true" />
+}
