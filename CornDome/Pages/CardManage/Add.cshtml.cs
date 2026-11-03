@@ -31,7 +31,7 @@ namespace CornDome.Pages.CardManage
 
             var loggedInUser = await GetUser();
 
-            var setIds = AddCard.SetIds.Split(',').Select(int.Parse).ToArray();
+            var setIds = AddCard.SetIds?.Split(',').Select(int.Parse).ToArray();
             var sets = cardRepository.GetSetsByIds(setIds);
             var card = new Card() {
                 IsCustomCard = AddCard.IsCustomCard,
@@ -44,11 +44,7 @@ namespace CornDome.Pages.CardManage
                 Cost = AddCard.Cost,
                 Name = AddCard.Name
             };
-            var cardImage = new CardImage()
-            {
-                CardImageTypeId = 2,
-                ImageUrl = $"upload/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"
-            };
+            
 
             using (var stream = System.IO.File.Create($"{config.AppData.UploadPath}/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"))
             {
@@ -56,9 +52,15 @@ namespace CornDome.Pages.CardManage
             }
 
             var addedCard = cardRepository.AddCard(card);
-
+            
             if (addedCard != null)
             {
+                var cardImage = new CardImage()
+                {
+                    CardImageTypeId = 2,
+                    ImageUrl = $"upload/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}",
+                    CardId = addedCard.Id
+                };
                 cardRepository.AddCardImage(cardImage);
             }
             else
@@ -78,7 +80,8 @@ namespace CornDome.Pages.CardManage
                 var cardImageSmall = new CardImage()
                 {
                     CardImageTypeId = 1,
-                    ImageUrl = smallImagePath
+                    ImageUrl = smallImagePath,
+                    CardId = addedCard.Id
                 };
                 cardRepository.AddCardImage(cardImageSmall);
             }
@@ -99,7 +102,8 @@ namespace CornDome.Pages.CardManage
                 var cardImageOptimized = new CardImage()
                 {
                     CardImageTypeId = 4,
-                    ImageUrl = optimizedImagePath
+                    ImageUrl = optimizedImagePath,
+                    CardId = addedCard.Id
                 };
                 cardRepository.AddCardImage(cardImageOptimized);
             }
