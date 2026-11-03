@@ -78,14 +78,18 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/SampleDecks">Sample Decks</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                DarkLands
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                <li><a class="dropdown-item" asp-area="" asp-page="/Darklands/CardDatabase">Card Database</a></li>
-                            </ul>
-                        </li>
+                        @if (AppFlags.IsActive("EnableDarkLands") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    DarkLands
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Darklands/CardDatabase">Card Database</a></li>
+                                </ul>
+                            </li>
+                        }
+                        
                         <li class="nav-item">
                             <a class="top-nav-item" asp-area="" asp-page="/Play/Index">Play</a>
                         </li>

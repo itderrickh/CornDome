@@ -21,7 +21,6 @@ namespace CornDome.Pages.CardManage
         public async Task OnGetAsync()
         {
             Cards = cardRepository.GetAll();
-            DarklandsCards = await darklandsRepository.GetDarklandsCards();
         }
 
         public async Task<IActionResult> OnPostDeleteCard()
@@ -35,21 +34,6 @@ namespace CornDome.Pages.CardManage
                 TempData["SuccessMessage"] = "Delete card succeeded";
             else
                 TempData["ErrorMessage"] = "Delete card failed";
-
-            return RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostDeleteDarklandsCard()
-        {
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
-            var result = await darklandsRepository.DeleteDarklandsCard(DeleteDarklandsCardId);
-
-            if (result)
-                TempData["SuccessMessage"] = "Delete Darklands card succeeded";
-            else
-                TempData["ErrorMessage"] = "Delete Darklands card failed";
 
             return RedirectToPage();
         }
