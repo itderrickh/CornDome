@@ -209,9 +209,6 @@ namespace CornDome.Repository.Migrations
                     b.Property<int>("CardImageTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DarklandsCardId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
@@ -220,8 +217,6 @@ namespace CornDome.Repository.Migrations
                     b.HasIndex("CardId");
 
                     b.HasIndex("CardImageTypeId");
-
-                    b.HasIndex("DarklandsCardId");
 
                     b.ToTable("darklands_cardimage");
                 });
@@ -357,7 +352,7 @@ namespace CornDome.Repository.Migrations
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardImage", b =>
                 {
                     b.HasOne("CornDome.Models.Cards.DarklandsCard", "Card")
-                        .WithMany()
+                        .WithMany("Images")
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -367,10 +362,6 @@ namespace CornDome.Repository.Migrations
                         .HasForeignKey("CardImageTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CornDome.Models.Cards.DarklandsCard", null)
-                        .WithMany("Images")
-                        .HasForeignKey("DarklandsCardId");
 
                     b.Navigation("Card");
 

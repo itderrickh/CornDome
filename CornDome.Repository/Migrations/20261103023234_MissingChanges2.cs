@@ -5,7 +5,7 @@
 namespace CornDome.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class MissingChanges : Migration
+    public partial class MissingChanges2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

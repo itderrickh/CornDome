@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CornDome.Repository.Migrations
 {
     [DbContext(typeof(CardDatabaseContext))]
-    [Migration("20261103022652_MissingChanges")]
-    partial class MissingChanges
+    [Migration("20261103023234_MissingChanges2")]
+    partial class MissingChanges2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
