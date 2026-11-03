@@ -19,7 +19,8 @@ namespace CornDome.Models.Cards
         Overlord,
         Curse,
         Barrier,
-        DifficultySetting
+        DifficultySetting,
+        Landscape
     }
 
     public static class DarklandsCardTypeConverter
@@ -33,6 +34,7 @@ namespace CornDome.Models.Cards
                 DarklandsCardTypeEnum.Curse => "Curse",
                 DarklandsCardTypeEnum.Barrier => "Barrier",
                 DarklandsCardTypeEnum.DifficultySetting => "Difficulty Setting",
+                DarklandsCardTypeEnum.Landscape => "Landscape",
                 _ => "",
             };
         }
