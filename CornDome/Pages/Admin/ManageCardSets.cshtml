@@ -1,0 +1,138 @@
+﻿@page
+@model CornDome.Pages.Admin.ManageCardSetsModel
+
+@{
+    ViewData["Title"] = "Manage Card Sets";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Admin/ManageCardSets">Manage Card Sets</a>
+            </div>
+            <h1 class="fw-bold mb-2">Manage Sets</h1>
+            <p class="text-muted mb-0">
+                Add, edit, or remove card sets.
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Add Set -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-body">
+            <h5 class="mb-0">Add Set</h5>
+        </div>
+
+        <div class="card-body">
+            <form method="post" asp-page-handler="Add">
+                <div class="row align-items-end g-3">
+                    <div class="col-md-9">
+                        <label asp-for="Description" class="form-label">Set Name</label>
+                        <input asp-for="Description"
+                               class="form-control"
+                               placeholder="Enter set name" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Add Set
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Existing Sets -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-body d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Existing Sets</h5>
+            <span class="badge bg-secondary">@Model.Sets.Count() sets</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 90px;">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Sets.Any())
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center py-4">
+                                No sets found.
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var set in Model.Sets.OrderBy(s => s.Id))
+                    {
+                        <tr>
+                            <td>
+                                <code>@set.Id</code>
+                            </td>
+                            <td>
+                                <form method="post"
+                                      asp-page-handler="Update"
+                                      class="d-flex gap-2 align-items-center">
+                                    <input type="hidden" name="SetId" value="@set.Id" />
+
+                                    <input type="text"
+                                           name="Description"
+                                           value="@set.Description"
+                                           class="form-control form-control-sm"
+                                           required />
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-primary text-nowrap">
+                                        Save
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-end">
+                                <form method="post"
+                                      asp-page-handler="Delete"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this set? It will be removed from any card revisions using it.');">
+                                    <input type="hidden" name="SetId" value="@set.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

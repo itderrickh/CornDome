@@ -21,6 +21,10 @@ namespace CornDome.Repository.Cards
         List<Landscape> GetAllLandscapes();
         List<CardType> GetAllCardTypes();
         List<CardSet> GetSetsByIds(int[] ids);
+
+        bool AddSet(CardSet cardSet);
+        bool UpdateSet(CardSet cardSet);
+        bool DeleteSet(int setId);
         Card GetCardOfTheDay(DateTime day);
     }
 
@@ -417,6 +421,81 @@ namespace CornDome.Repository.Cards
             }
 
             return deleteSuccess;
+        }
+
+        public bool AddSet(CardSet cardSet)
+        {
+            try
+            {
+                context.CardSets.Add(cardSet);
+                context.SaveChanges();
+
+                logger.LogCardChange($"Successfully added card set: {cardSet.Description}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogCardChange($"Error adding card set: {JsonSerializer.Serialize(cardSet)}. Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool UpdateSet(CardSet cardSet)
+        {
+            try
+            {
+                var existingSet = context.CardSets.FirstOrDefault(x => x.Id == cardSet.Id);
+
+                if (existingSet == null)
+                    return false;
+
+                context.Entry(existingSet).CurrentValues.SetValues(cardSet);
+                context.SaveChanges();
+
+                logger.LogCardChange($"Successfully updated card set: {cardSet.Description}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogCardChange($"Error updating card set: {JsonSerializer.Serialize(cardSet)}. Error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool DeleteSet(int setId)
+        {
+            try
+            {
+                var set = context.CardSets.FirstOrDefault(x => x.Id == setId);
+
+                if (set == null)
+                    return false;
+
+                // Remove this set from all card revisions that reference it.
+                var revisions = context.CardRevisions
+                    .Include(x => x.CardSets)
+                    .Where(x => x.CardSets.Any(s => s.Id == setId))
+                    .ToList();
+
+                foreach (var revision in revisions)
+                {
+                    revision.CardSets.Remove(set);
+                }
+
+                context.CardSets.Remove(set);
+                context.SaveChanges();
+
+                logger.LogCardChange($"Successfully deleted card set: {set.Description}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogCardChange($"Error deleting card set: {setId}. Error: {ex.Message}");
+                return false;
+            }
         }
 
         public Card GetCardOfTheDay(DateTime day)
