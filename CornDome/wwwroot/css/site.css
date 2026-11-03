@@ -37,61 +37,36 @@ html[data-color-mode="0"] {
         --border-color: #444444;
         --card-detail-color: rgb(15, 15, 15);
     }
+}
 
-    .dropdown-menu {
-        background-color: var(--card-detail-color);
-        color: var(--text-color);
-    }
 
-    .dropdown-item {
-        background-color: var(--card-detail-color);
-        color: var(--text-color);
-    }
+.dropdown-menu {
+    background-color: var(--card-detail-color);
+    color: var(--text-color);
+}
 
-    .table-hover > tbody > tr:hover {
-        color: var(--text-color);
-    }
+.dropdown-item {
+    background-color: var(--card-detail-color);
+    color: var(--text-color);
+}
 
-    .card-detail {
-        display: flex;
-        background-color: var(--card-detail-color);
-        padding: 10px
-    }
+.form-control, .form-control:focus {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
 
-    .info-stamp {
-        background-image: url('/img/info-light.png');
-    }
+.table-hover > tbody > tr:hover {
+    color: var(--text-color);
+}
 
-    body {
-        background-color: black;
-        color: white;
-    }
+.card-detail {
+    display: flex;
+    background-color: var(--card-detail-color);
+    padding: 10px
+}
 
-    .card {
-        background-color: #333;
-    }
-
-    .table {
-        color: inherit;
-    }
-
-    .table-striped > tbody > tr:nth-of-type(2n+1) {
-        color: var(--text-color);
-    }
-
-    .accordion-item {
-        background-color: rgb(30, 30, 30);
-        color: white;
-    }
-
-    #tournamentAccordian .accordion-button {
-        background-color: rgb(15, 15, 15);
-        color: white;
-    }
-
-    table.tournament-results {
-        color: white;
-    }
+.info-stamp {
+    background-image: url('/img/info-light.png');
 }
 
 body {
@@ -103,6 +78,14 @@ body {
     background-color: var(--card-bg);
     color: var(--text-color);
     border-color: var(--border-color);
+}
+
+.table {
+    color: var(--text-color);
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    color: var(--text-color);
 }
 
 html {
