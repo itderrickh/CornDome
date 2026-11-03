@@ -48,7 +48,7 @@ else
                 <span>@card.CardType?.Description</span>
             </div>
 
-            @if (card.Overlord != null)
+            @if (card.Overlord != null && card.OverlordId != (int)DarklandsOverlordEnum.None)
             {
                 <div class="card-text-section">
                     <span class="bold-label">Overlord: </span><br />
