@@ -19,7 +19,8 @@ namespace CornDome.Models.Cards
         CaptainRatbeard,
         SkyklorTheOozemother,
         QuarksExperiment,
-        TheCrushasaurus
+        TheCrushasaurus,
+        TheThreeWeeFates
     }
 
     public static class DarklandsOverlordEnumConverter
@@ -33,6 +34,7 @@ namespace CornDome.Models.Cards
                 DarklandsOverlordEnum.SkyklorTheOozemother => "Skyklor, the Oozemother",
                 DarklandsOverlordEnum.QuarksExperiment => "Quark's Experiment",
                 DarklandsOverlordEnum.TheCrushasaurus => "The Crushasaurus!!!",
+                DarklandsOverlordEnum.TheThreeWeeFates => "The Three Wee Fates",
                 _ => "",
             };
         }
