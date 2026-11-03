@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CornDome.Repository.Migrations
 {
     [DbContext(typeof(CardDatabaseContext))]
-    [Migration("20261103023234_MissingChanges2")]
-    partial class MissingChanges2
+    [Migration("20261103223024_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,19 +19,19 @@ namespace CornDome.Repository.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.13");
 
-            modelBuilder.Entity("CardRevisionCardSet", b =>
+            modelBuilder.Entity("CardCardSet", b =>
                 {
                     b.Property<int>("CardSetsId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RevisionsId")
+                    b.Property<int>("CardsId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("CardSetsId", "RevisionsId");
+                    b.HasKey("CardSetsId", "CardsId");
 
-                    b.HasIndex("RevisionsId");
+                    b.HasIndex("CardsId");
 
-                    b.ToTable("revisionSet", (string)null);
+                    b.ToTable("cardSet", (string)null);
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.Card", b =>
@@ -40,10 +40,38 @@ namespace CornDome.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Ability")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Attack")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Cost")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Defense")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsCustomCard")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("LandscapeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Rulings")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LandscapeId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("card");
                 });
@@ -54,20 +82,20 @@ namespace CornDome.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CardId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("CardImageTypeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RevisionId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CardImageTypeId");
+                    b.HasIndex("CardId");
 
-                    b.HasIndex("RevisionId");
+                    b.HasIndex("CardImageTypeId");
 
                     b.ToTable("cardImage");
                 });
@@ -84,53 +112,6 @@ namespace CornDome.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("cardImageType");
-                });
-
-            modelBuilder.Entity("CornDome.Models.Cards.CardRevision", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Ability")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("Attack")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Cost")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Defense")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("LandscapeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("RevisionNumber")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Rulings")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CardId");
-
-                    b.HasIndex("LandscapeId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("revision");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.CardSet", b =>
@@ -275,7 +256,7 @@ namespace CornDome.Repository.Migrations
                     b.ToTable("landscape");
                 });
 
-            modelBuilder.Entity("CardRevisionCardSet", b =>
+            modelBuilder.Entity("CardCardSet", b =>
                 {
                     b.HasOne("CornDome.Models.Cards.CardSet", null)
                         .WithMany()
@@ -283,40 +264,15 @@ namespace CornDome.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CornDome.Models.Cards.CardRevision", null)
+                    b.HasOne("CornDome.Models.Cards.Card", null)
                         .WithMany()
-                        .HasForeignKey("RevisionsId")
+                        .HasForeignKey("CardsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CornDome.Models.Cards.CardImage", b =>
+            modelBuilder.Entity("CornDome.Models.Cards.Card", b =>
                 {
-                    b.HasOne("CornDome.Models.Cards.CardImageType", "CardImageType")
-                        .WithMany()
-                        .HasForeignKey("CardImageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CornDome.Models.Cards.CardRevision", "Revision")
-                        .WithMany("CardImages")
-                        .HasForeignKey("RevisionId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.Navigation("CardImageType");
-
-                    b.Navigation("Revision");
-                });
-
-            modelBuilder.Entity("CornDome.Models.Cards.CardRevision", b =>
-                {
-                    b.HasOne("CornDome.Models.Cards.Card", "Card")
-                        .WithMany("Revisions")
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CornDome.Models.Cards.Landscape", "Landscape")
                         .WithMany()
                         .HasForeignKey("LandscapeId")
@@ -325,14 +281,31 @@ namespace CornDome.Repository.Migrations
                     b.HasOne("CornDome.Models.Cards.CardType", "CardType")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Card");
 
                     b.Navigation("CardType");
 
                     b.Navigation("Landscape");
+                });
+
+            modelBuilder.Entity("CornDome.Models.Cards.CardImage", b =>
+                {
+                    b.HasOne("CornDome.Models.Cards.Card", "Card")
+                        .WithMany("CardImages")
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CornDome.Models.Cards.CardImageType", "CardImageType")
+                        .WithMany()
+                        .HasForeignKey("CardImageTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
+
+                    b.Navigation("CardImageType");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsCard", b =>
@@ -372,11 +345,6 @@ namespace CornDome.Repository.Migrations
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.Card", b =>
-                {
-                    b.Navigation("Revisions");
-                });
-
-            modelBuilder.Entity("CornDome.Models.Cards.CardRevision", b =>
                 {
                     b.Navigation("CardImages");
                 });

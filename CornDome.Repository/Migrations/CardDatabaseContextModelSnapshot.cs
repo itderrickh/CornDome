@@ -70,7 +70,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("card", (string)null);
+                    b.ToTable("card");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.CardImage", b =>
@@ -94,7 +94,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasIndex("CardImageTypeId");
 
-                    b.ToTable("cardImage", (string)null);
+                    b.ToTable("cardImage");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.CardImageType", b =>
@@ -108,7 +108,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("cardImageType", (string)null);
+                    b.ToTable("cardImageType");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.CardSet", b =>
@@ -128,7 +128,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("set", (string)null);
+                    b.ToTable("set");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.CardType", b =>
@@ -142,7 +142,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("cardType", (string)null);
+                    b.ToTable("cardType");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsCard", b =>
@@ -175,7 +175,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasIndex("OverlordId");
 
-                    b.ToTable("darklands_card", (string)null);
+                    b.ToTable("darklands_card");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardImage", b =>
@@ -199,7 +199,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasIndex("CardImageTypeId");
 
-                    b.ToTable("darklands_cardimage", (string)null);
+                    b.ToTable("darklands_cardimage");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsCardType", b =>
@@ -216,7 +216,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("darklands_cardtype", (string)null);
+                    b.ToTable("darklands_cardtype");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.DarklandsOverlord", b =>
@@ -233,7 +233,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("darklands_overlord", (string)null);
+                    b.ToTable("darklands_overlord");
                 });
 
             modelBuilder.Entity("CornDome.Models.Cards.Landscape", b =>
@@ -250,7 +250,7 @@ namespace CornDome.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("landscape", (string)null);
+                    b.ToTable("landscape");
                 });
 
             modelBuilder.Entity("CardCardSet", b =>
