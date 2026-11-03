@@ -33,9 +33,8 @@ namespace CornDome.Pages.CardManage
 
             var setIds = AddCard.SetIds.Split(',').Select(int.Parse).ToArray();
             var sets = cardRepository.GetSetsByIds(setIds);
-            var card = new Card() { IsCustomCard = AddCard.IsCustomCard };
-            var revision = new CardRevision()
-            {
+            var card = new Card() {
+                IsCustomCard = AddCard.IsCustomCard,
                 Ability = AddCard.Ability,
                 Attack = AddCard.Attack,
                 Defense = AddCard.Defense,
@@ -43,8 +42,7 @@ namespace CornDome.Pages.CardManage
                 TypeId = AddCard.TypeId,
                 LandscapeId = AddCard.LandscapeId,
                 Cost = AddCard.Cost,
-                Name = AddCard.Name,
-                RevisionNumber = 1
+                Name = AddCard.Name
             };
             var cardImage = new CardImage()
             {
@@ -74,7 +72,7 @@ namespace CornDome.Pages.CardManage
                 });
             }
 
-            var smallImagePath = await CreateSmallImage(revision, AddCard.Image, 227, 320, "small");
+            var smallImagePath = await CreateSmallImage(card, AddCard.Image, 227, 320, "small");
             if (smallImagePath != null && addedCard != null)
             {
                 var cardImageSmall = new CardImage()
@@ -95,7 +93,7 @@ namespace CornDome.Pages.CardManage
                 });
             }
 
-            var optimizedImagePath = await CreateSmallImage(revision, AddCard.Image, 600, 850, "medium");
+            var optimizedImagePath = await CreateSmallImage(card, AddCard.Image, 600, 850, "medium");
             if (optimizedImagePath != null && addedCard != null)
             {
                 var cardImageOptimized = new CardImage()
@@ -120,7 +118,7 @@ namespace CornDome.Pages.CardManage
         }
 
 
-        private async Task<string> CreateSmallImage(CardRevision cardRevision, IFormFile file, int maxWidth, int maxHeight, string size)
+        private async Task<string> CreateSmallImage(Card card, IFormFile file, int maxWidth, int maxHeight, string size)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("File is empty or null");
@@ -161,7 +159,7 @@ namespace CornDome.Pages.CardManage
             using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
 
             var uniqueFileName =
-                $"{cardRevision.Name.Replace(" ", "_")}.png";
+                $"{card.Name.Replace(" ", "_")}.png";
 
             var filePath = Path.Combine(outputFolder, uniqueFileName);
 
