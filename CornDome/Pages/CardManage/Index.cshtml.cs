@@ -9,17 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CornDome.Pages.CardManage
 {
     [Authorize(Policy = "cardManager")]
-    public class IndexModel(
-        ICardRepository cardRepository,
-        IFeedbackRepository feedbackRepository,
-        IDarklandsCardRepository darklandsRepository) : BasePageModel
+    public class IndexModel(ICardRepository cardRepository) : BasePageModel
     {
-        public IEnumerable<Card> Cards { get; set; } = [];
-        public IEnumerable<FeedbackRequest> FeedbackRequests { get; set; } = [];
-        public IEnumerable<DarklandsCard> DarklandsCards { get; set; } = [];
-
-        [BindProperty]
-        public int DeleteFeedbackId { get; set; }
+        public IEnumerable<Card> Cards { get; set; }
         [BindProperty]
         public int DeleteCardId { get; set; }
 
@@ -28,21 +20,8 @@ namespace CornDome.Pages.CardManage
 
         public async Task OnGetAsync()
         {
-            FeedbackRequests = await feedbackRepository.GetAllFeedback();
             Cards = cardRepository.GetAll();
             DarklandsCards = await darklandsRepository.GetDarklandsCards();
-        }
-
-        public async Task<IActionResult> OnPostDeleteFeedback()
-        {
-            var result = await feedbackRepository.DeleteFeedback(DeleteFeedbackId);
-
-            if (result)
-                TempData["SuccessMessage"] = "Delete feedback succeeded";
-            else
-                TempData["ErrorMessage"] = "Delete feedback failed";
-
-            return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteCard()
