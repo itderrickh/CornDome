@@ -44,7 +44,7 @@ namespace CornDome.Pages.CardManage
                 Cost = AddCard.Cost,
                 Name = AddCard.Name
             };
-            
+
 
             using (var stream = System.IO.File.Create($"{config.AppData.UploadPath}/{AddCard.Name.Replace(" ", "_")}{Path.GetExtension(AddCard.Image.FileName)}"))
             {
