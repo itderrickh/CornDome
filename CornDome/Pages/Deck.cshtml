@@ -53,6 +53,7 @@ else
                 <legend>Actions</legend>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Go To Deck Builder</a>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Download Image</a>
+                <a class="btn btn-lg btn-block btn-primary" asp-page="/Printer/PDF" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Print as PDF</a>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save Deck</button>
