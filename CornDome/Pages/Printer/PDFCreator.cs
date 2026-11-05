@@ -1,6 +1,7 @@
 ﻿
 using CornDome.Models.Cards;
 using SkiaSharp;
+using System.Web;
 
 namespace CornDome.Pages.Printer
 {
@@ -62,7 +63,7 @@ namespace CornDome.Pages.Printer
             float Height,
             float Width);
 
-        private string GetImageFullPath(string cardImagePath) => Path.Combine(config.AppData.ImagePath, cardImagePath);
+        private string GetImageFullPath(string cardImagePath) => Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(cardImagePath));
 
         public Task<byte[]> GeneratePdf(IEnumerable<PrintableCard> cards)
         {
