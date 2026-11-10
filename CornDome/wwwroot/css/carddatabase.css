@@ -8,6 +8,10 @@
     margin-bottom: 15px;
 }
 
+#filterBox {
+    margin-top: 10px;
+}
+
 #filterBox .filter-group {
     margin-bottom: 5px;
 }

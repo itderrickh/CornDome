@@ -3,6 +3,14 @@
 @{
     ViewData["RenderMode"] = "wide";
     ViewData["Title"] = "Deck Builder";
+    var user = await Model.GetUser();
+}
+
+@if (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin"))
+{
+    <div class="mb-2">
+        <partial name="_BannerAd" />
+    </div>
 }
 
 @if (Model.QueryBuildFailed)
