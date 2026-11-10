@@ -1,3 +1,8 @@
+.navbar {
+    padding-top: inherit !important;
+    padding-bottom: inherit !important;
+}
+
 /* Light mode */
 html[data-color-mode="1"] {
     color-scheme: light;

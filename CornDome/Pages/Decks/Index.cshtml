@@ -2,9 +2,17 @@
 @model CornDome.Pages.Decks.IndexModel
 @{
     ViewData["Title"] = "User Submited Decks";
+    var user = await Model.GetUser();
 }
 
-<form method="get" class="card shadow-sm mb-4">
+@if (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin"))
+{
+    <div>
+        <partial name="_BannerAd" />
+    </div>
+}
+
+<form method="get" class="card shadow-sm mb-4 mt-2">
     <div class="card-body">
         <div class="row g-3">
 

@@ -2,9 +2,17 @@
 @model CornDome.Pages.Darklands.DarklandsCardDatabaseModel
 @{
     ViewData["Title"] = "Darklands Card Database";
+    var user = await Model.GetUser();
 }
 
-<div>
+@if (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin"))
+{
+    <div>
+        <partial name="_BannerAd" />
+    </div>
+}
+
+<div class="mt-2">
     <fieldset id="filterBox" class="d-grid">
         <legend>Filters and Sort</legend>
 
