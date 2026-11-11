@@ -1,11 +1,12 @@
 ﻿@page
+@inject AppFlagHelper AppFlags
 @model CornDome.Pages.Decks.IndexModel
 @{
     ViewData["Title"] = "User Submited Decks";
     var user = await Model.GetUser();
 }
 
-@if (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin"))
+@if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
 {
     <div>
         <partial name="_BannerAd" />

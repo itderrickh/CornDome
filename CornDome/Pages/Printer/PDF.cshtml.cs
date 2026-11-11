@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Printer
 {
-    public class PDFModel(ICardRepository cardRepository, IDeckRepository deckRepository, IUserRepository userRepository, Config config) : BasePageModel
+    public class PDFModel(ICardRepository cardRepository, IDeckRepository deckRepository, Config config) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;

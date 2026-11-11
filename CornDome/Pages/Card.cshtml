@@ -1,4 +1,5 @@
 ﻿@page
+@inject AppFlagHelper AppFlags
 @model CornDome.Pages.CardModel
 @{
     if (Model.QueryCard == null)
@@ -9,6 +10,14 @@
     {
         ViewData["Title"] = Model.QueryCard?.Name;
     }
+    var user = await Model.GetUser();
+}
+
+@if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+{
+    <div class="mb-2">
+        <partial name="_BannerAd" />
+    </div>
 }
 
 @if (Model.QueryCard == null)
