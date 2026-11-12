@@ -329,13 +329,18 @@ else
 }
 
 @section Scripts {
-    <script>
-        var userId = @user.Id;
-        var comments = JSON.parse('@(Json.Serialize(Model.DbDeck.DeckComments))');
-    </script>
+@if (Model.DbDeck != null)
+    {
+        <script>
+            var userId = @user.Id;
+            var comments = JSON.parse('@(Json.Serialize(Model.DbDeck.DeckComments))');
+        </script>
+        <script src="~/js/deckcomments.js" asp-append-version="true"></script>
+    }
+    
     <script src="~/js/enums.js" asp-append-version="true"></script>
     <script src="~/js/helpers.js" asp-append-version="true"></script>
     <script src="~/js/deckStorage.js" asp-append-version="true"></script>
     <script src="~/js/deck.js" asp-append-version="true"></script>
-    <script src="~/js/deckcomments.js" asp-append-version="true"></script>
+    
 }
