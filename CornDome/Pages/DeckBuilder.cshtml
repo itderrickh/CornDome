@@ -9,7 +9,7 @@
 
 @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
 {
-    <div class="mb-2">
+    <div class="mb-2 container">
         <partial name="_BannerAd" />
     </div>
 }

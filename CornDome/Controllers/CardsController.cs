@@ -9,7 +9,7 @@ namespace CornDome.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [RequireUserAgent]
-    public class CardsController(ICardRepository cardRepository) : BaseController
+    public class CardsController(ICardRepository cardRepository, IDarklandsCardRepository darklandsCardRepository) : BaseController
     {
         [HttpGet]
         public async Task<IActionResult> GetCards([FromQuery] int limit = ApiPagination.DefaultLimit, [FromQuery] int offset = ApiPagination.DefaultOffset)
@@ -49,6 +49,91 @@ namespace CornDome.Controllers
                 Count = cards.Count(),
                 Limit = limit,
                 Offset = offset
+            };
+
+            return Ok(response);
+        }
+
+        [HttpGet("darklands")]
+        public async Task<IActionResult> GetDarklandsCards([FromQuery] int limit = ApiPagination.DefaultLimit, [FromQuery] int offset = ApiPagination.DefaultOffset)
+        {
+            if (limit < 1 || limit > ApiPagination.MaxLimit)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid limit",
+                    Detail = $"Limit must be between 1 and {ApiPagination.MaxLimit}.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
+            if (offset < 0)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid offset",
+                    Detail = "Offset must be zero or greater.",
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
+
+            var stopwatch = Stopwatch.StartNew();
+            var total = await darklandsCardRepository.GetCount();
+            var cards = await darklandsCardRepository.GetAll(limit, offset);
+            stopwatch.Stop();
+
+            var response = new ApiCollectionResponse<object>
+            {
+                Data = [.. cards.Cast<object>()],
+                Elapsed = stopwatch.Elapsed.TotalMilliseconds,
+                Next = ApiPagination.GetNextUrl(
+                    Request, total, limit, offset),
+                Total = total,
+                Count = cards.Count(),
+                Limit = limit,
+                Offset = offset
+            };
+
+            return Ok(response);
+        }
+
+        [HttpGet("darklands/overlords")]
+        public async Task<IActionResult> GetOverlords()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var overlords = await darklandsCardRepository.GetAllOverlords();
+            stopwatch.Stop();
+
+            var response = new ApiCollectionResponse<object>
+            {
+                Data = [.. overlords.Cast<object>()],
+                Elapsed = stopwatch.Elapsed.TotalMilliseconds,
+                Next = null,
+                Total = overlords.Count(),
+                Count = overlords.Count(),
+                Limit = overlords.Count(),
+                Offset = 0
+            };
+
+            return Ok(response);
+        }
+
+        [HttpGet("darklands/types")]
+        public async Task<IActionResult> GetDarklandsTypes()
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var cardTypes = await darklandsCardRepository.GetAllCardTypes();
+            stopwatch.Stop();
+
+            var response = new ApiCollectionResponse<object>
+            {
+                Data = [.. cardTypes.Cast<object>()],
+                Elapsed = stopwatch.Elapsed.TotalMilliseconds,
+                Next = null,
+                Total = cardTypes.Count(),
+                Count = cardTypes.Count(),
+                Limit = cardTypes.Count(),
+                Offset = 0
             };
 
             return Ok(response);

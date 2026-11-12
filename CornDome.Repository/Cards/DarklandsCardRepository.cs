@@ -1,29 +1,31 @@
 ﻿using CornDome.Models.Cards;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CornDome.Repository.Cards
 {
     public interface IDarklandsCardRepository
     {
+        Task<IList<DarklandsCard>> GetAll(int limit, int offset);
+        Task<int> GetCount();
+        Task<IList<DarklandsOverlord>> GetAllOverlords();
+        Task<IList<DarklandsCardType>> GetAllCardTypes();
+
         // Darklands Cards
-        Task<DarklandsCard?> GetDarklandsCard(int id);
+        Task<DarklandsCard> GetDarklandsCard(int id);
         Task<IList<DarklandsCard>> GetDarklandsCards();
         Task<DarklandsCard> AddDarklandsCard(DarklandsCard card);
         Task<DarklandsCard> EditDarklandsCard(DarklandsCard card);
         Task<bool> DeleteDarklandsCard(int id);
 
         // Darklands Card Types
-        Task<DarklandsCardType?> GetDarklandsCardType(int id);
+        Task<DarklandsCardType> GetDarklandsCardType(int id);
         Task<IList<DarklandsCardType>> GetDarklandsCardTypes();
         Task<DarklandsCardType> AddDarklandsCardType(DarklandsCardType cardType);
         Task<DarklandsCardType> EditDarklandsCardType(DarklandsCardType cardType);
         Task<bool> DeleteDarklandsCardType(int id);
 
         // Darklands Overlords
-        Task<DarklandsOverlord?> GetDarklandsOverlord(int id);
+        Task<DarklandsOverlord> GetDarklandsOverlord(int id);
         Task<IList<DarklandsOverlord>> GetDarklandsOverlords();
         Task<DarklandsOverlord> AddDarklandsOverlord(DarklandsOverlord overlord);
         Task<DarklandsOverlord> EditDarklandsOverlord(DarklandsOverlord overlord);
@@ -35,10 +37,37 @@ namespace CornDome.Repository.Cards
 
     public class DarklandsCardRepository(CardDatabaseContext context) : IDarklandsCardRepository
     {
+        public async Task<IList<DarklandsCard>> GetAll(int limit, int offset)
+        {
+            return await context.DarklandsCards
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Include(x => x.CardType)
+                .Include(x => x.Overlord)
+                .Include(x => x.Images)
+                .OrderBy(x => x.Id)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await context.DarklandsCards.CountAsync();
+        }
+
+        public async Task<IList<DarklandsOverlord>> GetAllOverlords()
+        {
+            return await context.DarklandsOverlords.ToListAsync();
+        }
+
+        public async Task<IList<DarklandsCardType>> GetAllCardTypes()
+        {
+            return await context.DarklandsCardTypes.ToListAsync();
+        }
 
         // Darklands Cards
-
-        public async Task<DarklandsCard?> GetDarklandsCard(int id)
+        public async Task<DarklandsCard> GetDarklandsCard(int id)
         {
             return await context.DarklandsCards
                 .AsNoTracking()
@@ -90,7 +119,7 @@ namespace CornDome.Repository.Cards
 
         // Darklands Card Types
 
-        public async Task<DarklandsCardType?> GetDarklandsCardType(int id)
+        public async Task<DarklandsCardType> GetDarklandsCardType(int id)
         {
             return await context.DarklandsCardTypes
                 .AsNoTracking()
@@ -133,7 +162,7 @@ namespace CornDome.Repository.Cards
 
         // Darklands Overlords
 
-        public async Task<DarklandsOverlord?> GetDarklandsOverlord(int id)
+        public async Task<DarklandsOverlord> GetDarklandsOverlord(int id)
         {
             return await context.DarklandsOverlords
                 .AsNoTracking()

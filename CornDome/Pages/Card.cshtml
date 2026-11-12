@@ -13,13 +13,6 @@
     var user = await Model.GetUser();
 }
 
-@if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
-{
-    <div class="mb-2">
-        <partial name="_BannerAd" />
-    </div>
-}
-
 @if (Model.QueryCard == null)
 {
     <h1>Invalid card ID.</h1>
@@ -137,6 +130,13 @@ else
             {
                 <div class="card-text-section">
                     <a class="bold-label btn btn-primary" asp-page="/CardManage/Rulings" asp-route-id="@selectedRevision.Id">Edit Rulings</a>
+                </div>
+            }
+
+            @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+            {
+                <div class="mt-5">
+                    <partial name="_BannerAd" />
                 </div>
             }
         </div>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CornDome.Models.Cards
 {
@@ -16,7 +13,7 @@ namespace CornDome.Models.Cards
         public int? Attack { get; set; }
         public int? Defense { get; set; }
         public int? OverlordId { get; set; }
-        public virtual DarklandsOverlord? Overlord { get; set; }
+        public virtual DarklandsOverlord Overlord { get; set; }
         public virtual IList<DarklandsCardImage> Images { get; set; } = [];
     }
 }

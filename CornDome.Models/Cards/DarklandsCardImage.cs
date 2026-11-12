@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Cards
@@ -15,6 +12,7 @@ namespace CornDome.Models.Cards
 
         public CardImageType CardImageType { get; set; }
         public int CardId { get; set; }
+        [JsonIgnore]
         public virtual DarklandsCard Card { get; set; }
     }
 }
