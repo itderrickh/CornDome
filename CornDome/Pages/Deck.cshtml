@@ -145,73 +145,76 @@ else
         </div>
     </div>
 
-    <div class="mt-4">
-        <hr />
-    </div>
+    @if (Model.DbDeck != null)
+    {
+        <div class="mt-4">
+            <hr />
+        </div>
 
-    <div class="container">
-        <section class="deck-comments" id="deckComments">
-            <div class="comments-header">
-                <h3>
-                    <i class="bi bi-chat-square-text"></i>
-                    Deck Discussion
-                    <span class="comment-count" id="commentCount">(@(Model.DbDeck.DeckComments?.Count ?? 0))</span>
-                </h3>
+        <div class="container">
+            <section class="deck-comments" id="deckComments">
+                <div class="comments-header">
+                    <h3>
+                        <i class="bi bi-chat-square-text"></i>
+                        Deck Discussion
+                        <span class="comment-count" id="commentCount">(@(Model.DbDeck.DeckComments?.Count ?? 0))</span>
+                    </h3>
 
-                <select id="commentSort" class="comment-sort">
-                    <option value="newest">Newest first</option>
-                    <option value="oldest">Oldest first</option>
-                </select>
-            </div>
+                    <select id="commentSort" class="comment-sort">
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                    </select>
+                </div>
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <!-- New comment -->
-                <div class="comment-composer">
-                    <div class="comment-avatar">@user.UserName.FirstOrDefault()</div>
-                    <div class="composer-content">
-                        <textarea id="commentInput"
-                                  placeholder="What do you think about this deck?"
-                                  rows="2"></textarea>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <!-- New comment -->
+                    <div class="comment-composer">
+                        <div class="comment-avatar">@user.UserName.FirstOrDefault()</div>
+                        <div class="composer-content">
+                            <textarea id="commentInput"
+                                      placeholder="What do you think about this deck?"
+                                      rows="2"></textarea>
 
-                        <div class="composer-footer">
-                            <span class="composer-hint">
-                                Be respectful and keep it constructive.
-                            </span>
-                            <button id="postComment" class="comment-submit">
-                                Post Comment
-                            </button>
+                            <div class="composer-footer">
+                                <span class="composer-hint">
+                                    Be respectful and keep it constructive.
+                                </span>
+                                <button id="postComment" class="comment-submit">
+                                    Post Comment
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <p>Login to comment</p>
-            }
+                }
+                else
+                {
+                    <p>Login to comment</p>
+                }
 
-            <div id="comment-list" data-deck-id="@Model.DbDeck.Id">
+                <div id="comment-list" data-deck-id="@Model.DbDeck.Id">
                 
-                <div class="comment-replies">
-                    @foreach (var comment in Model.DbDeck.DeckComments.OrderByDescending(x => x.Timestamp))
-                    {
-                        <div class="comment-reply">
-                            <div class="comment-avatar" style="background:#6551a5">
-                                @comment.User.UserName.FirstOrDefault()
-                            </div>
-                            <div class="comment-body">
-                                <div class="comment-meta">
-                                    <span class="comment-author">@comment.User.UserName</span>
-                                <span class="comment-time">@comment.Timestamp.ToString("MMM dd, yyyy h:mm tt")</span>
+                    <div class="comment-replies">
+                        @foreach (var comment in Model.DbDeck.DeckComments.OrderByDescending(x => x.Timestamp))
+                        {
+                            <div class="comment-reply">
+                                <div class="comment-avatar" style="background:#6551a5">
+                                    @comment.User.UserName.FirstOrDefault()
                                 </div>
-                                <div class="comment-text">@comment.CommentText</div>
+                                <div class="comment-body">
+                                    <div class="comment-meta">
+                                        <span class="comment-author">@comment.User.UserName</span>
+                                        <span class="comment-time">@comment.Timestamp.ToString("MMM dd, yyyy h:mm tt")</span>
+                                    </div>
+                                    <div class="comment-text">@comment.CommentText</div>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
+    }
     
     <!-- Create / Edit Deck Modal -->
     <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true" style="color: black;">
