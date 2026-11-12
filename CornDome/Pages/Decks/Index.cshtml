@@ -53,6 +53,20 @@
                 </datalist>
             </div>
 
+            <div class="col-12 col-md-4">
+                <label asp-for="Sort" class="form-label">
+                    Sort By
+                </label>
+
+                <select asp-for="Sort" class="form-select">
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="views">Most Viewed</option>
+                    <option value="likes">Most Liked</option>
+                    <option value="comments">Most Commented</option>
+                </select>
+            </div>
+
             <div class="col-12 d-flex gap-2">
                 <button type="submit" class="btn btn-primary">
                     Filter
@@ -92,10 +106,8 @@
     </script>
 }
 
-
-
-
 @section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/decks/deckgrid.css" asp-append-version="true" />
 
     <link rel="stylesheet"

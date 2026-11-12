@@ -1,5 +1,6 @@
 ﻿using CornDome.Models.Users;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Main
 {
@@ -10,8 +11,8 @@ namespace CornDome.Models.Main
         public int UserId { get; set; }
         public User User { get; set; }
         public int DeckId { get; set; }
+        [JsonIgnore]
         public Deck Deck { get; set; }
-        public bool IsUpvoted { get; set; }
         [MaxLength(400)]
         public string CommentText { get; set; }
     }

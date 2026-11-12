@@ -2,6 +2,7 @@
 @model CornDome.Pages.DeckModel
 @{
     ViewData["Title"] = "Deck";
+    var user = await Model.GetUser();
 }
 
 @if (Model.QueryDeck == null)
@@ -19,6 +20,50 @@ else
     if (Model.QueryDeck.Cards.Count > 0)
     {
         averageCost = (decimal)totalCost / (decimal)Model.QueryDeck.Cards.Count;
+    }
+
+    @if (Model.DbDeck != null)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2><i>@Model.DbDeck.DeckName</i></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>@Model.DbDeck.Description</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h5>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-1">
+                    <a href="#deckComments" style="color: inherit; text-decoration: inherit;"><span class="mr-1">@Model.DbDeck.DeckComments.Count()</span> <i class="bi bi-chat"></i></a>
+                </div>
+                <div class="col-1">
+                    <span class="mr-1 like-count">@Model.DbDeck.DeckLikes.Where(x => x.Liked).Count()</span> 
+                    <i class="bi like-icon @(Model.DbDeck.DeckLikes.Any(x => x.UserId == user.Id && x.Liked) ? "bi-hand-thumbs-up-fill liked" : "bi-hand-thumbs-up")"
+                        data-deck-id="@Model.DbDeck.Id"
+                        role="button"
+                        title="Like this deck"
+                        aria-label="Like this deck"
+                        aria-pressed="@Model.DbDeck.DeckLikes.Any(x => x.UserId == user.Id && x.Liked)"></i>
+                </div>
+                <div class="col-1">
+                    <span class="mr-1">@Model.DbDeck.Views</span> <i class="bi bi-eye"></i>
+                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="col-1">
+                        <i class="bi bi-floppy save-icon" data-bs-toggle="modal" data-bs-target="#saveModal" style="cursor: pointer;"></i>
+                    </div>
+                }
+            </div>
+        </div>
     }
 
     <div class="row">
@@ -54,29 +99,9 @@ else
                 <a class="btn btn-lg btn-block btn-primary" asp-page="DeckBuilder" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Go To Deck Builder</a>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="Download" asp-route-deck="@Model.NonGZDeck" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Download Image</a>
                 <a class="btn btn-lg btn-block btn-primary" asp-page="/Printer/PDF" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Print as PDF</a>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save Deck</button>
-                }
-                else
-                {
-                    <button id="disabledSave" type="button" class="btn btn-lg btn-block btn-secondary btn-disabled" disabled>
-                        Login to Save Decks
-                    </button>
-                }
-                
             </fieldset>
         </div>
-        <div class="col-md-10 col-sm-10">
-            <div class="row p-1">
-                <div class="col-8">
-                    <h5>@Model.Description</h5>
-                </div>
-                <div class="col-4 text-end">
-                    <h4><u>Deck Name:</u> <i>@Model.DeckName</i></h4>
-                    <h4><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h4>
-                </div>
-            </div>
+        <div class="col-md-8 col-sm-8">
             @if (Model.QueryDeck != null)
             {
                 <div class="d-flex">
@@ -111,15 +136,83 @@ else
                 </div>
 
                 <style>
-                            .deck-card-image:hover {
-                                transform: scale(2);
-                                transition: transform .2s;
-                            }
+                    .deck-card-image:hover {
+                        transform: scale(2);
+                        transition: transform .2s;
+                    }
                 </style>
             }
         </div>
     </div>
 
+    <div class="mt-4">
+        <hr />
+    </div>
+
+    <div class="container">
+        <section class="deck-comments" id="deckComments">
+            <div class="comments-header">
+                <h3>
+                    <i class="bi bi-chat-square-text"></i>
+                    Deck Discussion
+                    <span class="comment-count" id="commentCount">(@(Model.DbDeck.DeckComments?.Count ?? 0))</span>
+                </h3>
+
+                <select id="commentSort" class="comment-sort">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                </select>
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <!-- New comment -->
+                <div class="comment-composer">
+                    <div class="comment-avatar">@user.UserName.FirstOrDefault()</div>
+                    <div class="composer-content">
+                        <textarea id="commentInput"
+                                  placeholder="What do you think about this deck?"
+                                  rows="2"></textarea>
+
+                        <div class="composer-footer">
+                            <span class="composer-hint">
+                                Be respectful and keep it constructive.
+                            </span>
+                            <button id="postComment" class="comment-submit">
+                                Post Comment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p>Login to comment</p>
+            }
+
+            <div id="comment-list" data-deck-id="@Model.DbDeck.Id">
+                
+                <div class="comment-replies">
+                    @foreach (var comment in Model.DbDeck.DeckComments.OrderByDescending(x => x.Timestamp))
+                    {
+                        <div class="comment-reply">
+                            <div class="comment-avatar" style="background:#6551a5">
+                                @comment.User.UserName.FirstOrDefault()
+                            </div>
+                            <div class="comment-body">
+                                <div class="comment-meta">
+                                    <span class="comment-author">@comment.User.UserName</span>
+                                <span class="comment-time">@comment.Timestamp.ToString("MMM dd, yyyy h:mm tt")</span>
+                                </div>
+                                <div class="comment-text">@comment.CommentText</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+    
     <!-- Create / Edit Deck Modal -->
     <div class="modal fade" id="saveModal" tabindex="-1" aria-labelledby="saveModalLabel" aria-hidden="true" style="color: black;">
         <div class="modal-dialog modal-dialog-centered">
@@ -229,11 +322,17 @@ else
 
 @section Styles {
     <link rel="stylesheet" href="~/css/deck.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
 
 @section Scripts {
+    <script>
+        var userId = @user.Id;
+        var comments = JSON.parse('@(Json.Serialize(Model.DbDeck.DeckComments))');
+    </script>
     <script src="~/js/enums.js" asp-append-version="true"></script>
     <script src="~/js/helpers.js" asp-append-version="true"></script>
     <script src="~/js/deckStorage.js" asp-append-version="true"></script>
     <script src="~/js/deck.js" asp-append-version="true"></script>
+    <script src="~/js/deckcomments.js" asp-append-version="true"></script>
 }

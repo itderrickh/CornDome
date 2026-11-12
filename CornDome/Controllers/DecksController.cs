@@ -2,7 +2,6 @@
 using CornDome.Models;
 using CornDome.Models.Main;
 using CornDome.Models.Users;
-using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +25,18 @@ namespace CornDome.Controllers
         [Required]
         [StringLength(100)]
         public string DeckName { get; set; }
+    }
+
+    public class ToggleLikeRequest
+    {
+        public int DeckId { get; set; }
+    }
+
+    public class AddDeckCommentRequest
+    {
+        [Required]
+        [StringLength(400, MinimumLength = 1)]
+        public string CommentText { get; set; }
     }
 
     [ApiController]
@@ -59,7 +70,7 @@ namespace CornDome.Controllers
             }
 
             var stopwatch = Stopwatch.StartNew();
-            (int count, List<Deck> decks) = deckRepository.GetAllVisibleDecks(null, null, offset, limit);
+            (int count, List<Deck> decks) = deckRepository.GetAllVisibleDecks(null, null, offset, limit, "newest");
             var serializedDecks = decks.Select(x => new SerializableDeck(x));
             stopwatch.Stop();
 
@@ -76,7 +87,7 @@ namespace CornDome.Controllers
 
             return Ok(response);
         }
-        
+
         [HttpDelete("{deckId}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveDeck(int deckId)
@@ -189,6 +200,122 @@ namespace CornDome.Controllers
                     message = "Deck did not save successfully."
                 });
             }
+        }
+
+        [HttpPost("{deckId}/like")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleDeckLike(int deckId)
+        {
+            var loggedInUser = await GetUser();
+            if (loggedInUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid deck data.",
+                    errors = ModelState
+                        .Where(x => x.Value?.Errors.Count > 0)
+                        .ToDictionary(
+                            x => x.Key,
+                            x => x.Value!.Errors.Select(e => e.ErrorMessage)
+                        )
+                });
+            }
+
+            var deck = deckRepository.GetDeck(deckId);
+            if (deck != null)
+            {
+                var liked = deckRepository.ToggleLike(loggedInUser.Id, deckId);
+                return Ok(new
+                {
+                    success = true,
+                    liked
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    success = false
+                });
+            }
+        }
+
+        [HttpPost("{deckId}/comments")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(int deckId, [FromBody] AddDeckCommentRequest request)
+        {
+            var loggedInUser = await GetUser();
+
+            if (loggedInUser == null)
+                return Unauthorized();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Comment must be between 1 and 400 characters."
+                });
+            }
+
+            var deck = deckRepository.GetDeck(deckId);
+
+            if (deck == null ||
+                !deckRepository.DoesUserHaveAccess(deckId, loggedInUser.Id))
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Deck not found."
+                });
+            }
+
+            var commentText = request.CommentText.Trim();
+
+            if (string.IsNullOrWhiteSpace(commentText))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Comment cannot be empty."
+                });
+            }
+
+            var success = deckRepository.AddComment(
+                loggedInUser.Id,
+                deckId,
+                commentText
+            );
+
+            if (!success)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Unable to add comment."
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                comment = new
+                {
+                    commentText,
+                    user = new
+                    {
+                        userName = loggedInUser.UserName,
+                        id = loggedInUser.Id
+                    },
+                    timestamp = DateTime.Now.ToString("o")
+                }
+            });
         }
     }
 }

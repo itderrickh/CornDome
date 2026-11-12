@@ -16,6 +16,22 @@
 
                     <div class="card-body card-body-image"
                          style="background-image: url('@(Model.BaseUrl + iconCard.GetOptimizedImage)');">
+                        <div class="deck-stats-overlay">
+                            <div class="deck-stat">
+                                <i class="bi bi-eye"></i>
+                                <span>@deck.Views</span>
+                            </div>
+
+                            <div class="deck-stat">
+                                <i class="bi bi-chat-dots"></i>
+                                <span>@deck.DeckComments.Count</span>
+                            </div>
+
+                            <div class="deck-stat">
+                                <i class="bi bi-heart"></i>
+                                <span>@deck.DeckLikes.Count</span>
+                            </div>
+                        </div>
                     </div>
                 </a>
 

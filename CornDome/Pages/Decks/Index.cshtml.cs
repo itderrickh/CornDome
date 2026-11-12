@@ -24,6 +24,8 @@ namespace CornDome.Pages.Decks
 
         [BindProperty(SupportsGet = true)]
         public int? CardId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string Sort { get; set; } = "newest";
 
         public DeckGridViewModel DeckGrid { get; set; } = new();
 
@@ -40,7 +42,7 @@ namespace CornDome.Pages.Decks
                 PageNumber = 1;
             }
 
-            (int totalDecks, List<Deck> decks) = deckRepository.GetAllVisibleDecks(Author, CardId, PageNumber, PageSize);
+            (int totalDecks, List<Deck> decks) = deckRepository.GetAllVisibleDecks(Author, CardId, PageNumber, PageSize, Sort);
 
             TotalPages = (int)Math.Ceiling(
                 totalDecks / (double)PageSize);

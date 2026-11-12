@@ -1,4 +1,3 @@
-using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Models.Main;
@@ -35,6 +34,8 @@ namespace CornDome.Pages
         public int IconCard { get; set; }
         public string Author { get; set; }
         public int AuthorId { get; set; }
+
+        public Deck DbDeck { get; set; }
 
         public async Task OnGet()
         {
@@ -80,6 +81,8 @@ namespace CornDome.Pages
                         Author = author.UserName;
                         AuthorId = author.Id;
                         IsDbDeck = true;
+                        DbDeck = deck;
+                        deckRepository.AddView(deck.Id);
                     }
                 }
             }

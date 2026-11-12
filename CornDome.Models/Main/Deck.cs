@@ -1,5 +1,6 @@
 ﻿using CornDome.Models.Cards;
 using CornDome.Models.Users;
+using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Main
 {
@@ -24,8 +25,10 @@ namespace CornDome.Models.Main
         public DateTime Modified { get; set; }
 
         public DeckVisibility Visibility { get; set; }
+        public int Views { get; set; }
 
         public virtual List<DeckComment> DeckComments { get; set; }
+        public virtual List<DeckLike> DeckLikes { get; set; }
     }
 
     public class SerializableDeck

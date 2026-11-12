@@ -19,6 +19,7 @@ namespace CornDome.Repository
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Deck> Decks { get; set; }
         public DbSet<DeckComment> DeckComments { get; set; }
+        public DbSet<DeckLike> DeckLikes { get; set; }
         public DbSet<AppFlag> AppFlags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -94,6 +95,20 @@ namespace CornDome.Repository
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(c => c.Deck)
                     .WithMany(d => d.DeckComments)
+                    .HasForeignKey(c => c.DeckId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<DeckLike>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.User)
+                    .WithMany()
+                    .HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(c => c.Deck)
+                    .WithMany(d => d.DeckLikes)
                     .HasForeignKey(c => c.DeckId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
