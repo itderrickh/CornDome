@@ -72,10 +72,8 @@
                                 Resources
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                <li><a class="dropdown-item" asp-area="" asp-page="/Resources/PreconDecklists">Collectors Pack Decklists</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Decks/User" asp-route-userId="0">Collectors Pack Decklists</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/Rulebook">Official Rulebook</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="" asp-page="/Resources/SampleDecks">Sample Decks</a></li>
                             </ul>
                         </li>
                         @if (AppFlags.IsActive("EnableDarkLands") || User.IsInRole("Admin"))

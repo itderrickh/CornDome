@@ -10,7 +10,15 @@
 }
 else if (Model.UserId != null)
 {
-    <h2>@(Model.DisplayUsername)'s decks</h2>
+    if (Model.UserId == 0)
+    {
+        <h2>Collector Pack Decklists</h2>
+    }
+    else
+    {
+        <h2>@(Model.DisplayUsername)'s decks</h2>
+    }
+    
     <div class="row g-4">
         <partial name="_DeckGrid" model="Model.DeckGrid" />
     </div>
