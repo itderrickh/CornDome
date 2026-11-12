@@ -82,7 +82,11 @@ namespace CornDome.Pages
                         AuthorId = author.Id;
                         IsDbDeck = true;
                         DbDeck = deck;
-                        deckRepository.AddView(deck.Id);
+
+                        if (!IsMyDeck)
+                        { 
+                            deckRepository.AddView(deck.Id);
+                        }
                     }
                 }
             }
