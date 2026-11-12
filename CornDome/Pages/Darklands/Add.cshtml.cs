@@ -16,7 +16,7 @@ namespace CornDome.Pages.Darklands
         public DarklandsCard AddCard { get; set; } = new();
 
         [BindProperty]
-        public IFormFile? Image { get; set; }
+        public IFormFile Image { get; set; }
 
         public IList<DarklandsCardType> CardTypes { get; set; } = [];
         public IList<DarklandsOverlord> Overlords { get; set; } = [];
@@ -62,13 +62,8 @@ namespace CornDome.Pages.Darklands
                 AddCard.Overlord = null;
                 AddCard.CardType = null;
 
-                var addedCard = await repository.AddDarklandsCard(AddCard);
-
-                if (addedCard == null)
-                {
-                    throw new InvalidOperationException(
+                var addedCard = await repository.AddDarklandsCard(AddCard) ?? throw new InvalidOperationException(
                         $"Error inserting Darklands card {AddCard.Name}.");
-                }
 
                 // Original image.
                 await repository.AddDarklandsCardImage(new DarklandsCardImage

@@ -19,12 +19,12 @@ namespace CornDome.Pages.Darklands
         public DarklandsCard EditCard { get; set; } = new();
 
         [BindProperty]
-        public IFormFile? Image { get; set; }
+        public IFormFile Image { get; set; }
 
         public IList<DarklandsCardType> CardTypes { get; set; } = [];
         public IList<DarklandsOverlord> Overlords { get; set; } = [];
 
-        public string? OldImageUrl { get; set; }
+        public string OldImageUrl { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -201,7 +201,7 @@ namespace CornDome.Pages.Darklands
             return $"generated/{size}/{uniqueFileName}";
         }
 
-        private string? GetOriginalImage(DarklandsCard card)
+        private string GetOriginalImage(DarklandsCard card)
         {
             return card.Images?
                 .FirstOrDefault(x => x.CardImageTypeId == 2)?.ImageUrl
