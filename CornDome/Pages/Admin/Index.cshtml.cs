@@ -114,7 +114,7 @@ namespace CornDome.Pages.Admin
 
                 adminAreas.Add(new AdminArea()
                 {
-                    Name = "Database backup",
+                    Name = "Database restore",
                     Description = "Restore application data from a backup.",
                     Icon = "bi-database-fill-gear",
                     Area = "/Admin/DatabaseRestore",
