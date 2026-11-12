@@ -67,9 +67,12 @@ namespace CornDome.Models
                     var cardId = int.Parse(lsString.Split(":")[0]);
                     var count = int.Parse(lsString.Split(":")[1]);
                     var card = cards.FirstOrDefault(x => x.Id == cardId);
-                    for (var i = 0; i < count; i++)
+                    if (card != null)
                     {
-                        deckToReturn.Landscapes.Add(card);
+                        for (var i = 0; i < count; i++)
+                        {
+                            deckToReturn.Landscapes.Add(card);
+                        }
                     }
                 }
             }
@@ -81,9 +84,12 @@ namespace CornDome.Models
                     var cardId = int.Parse(csString.Split(":")[0]);
                     var count = int.Parse(csString.Split(":")[1]);
                     var card = cards.FirstOrDefault(x => x.Id == cardId);
-                    for (var i = 0; i < count; i++)
+                    if (card != null)
                     {
-                        deckToReturn.Cards.Add(card);
+                        for (var i = 0; i < count; i++)
+                        {
+                            deckToReturn.Cards.Add(card);
+                        }
                     }
                 }
             }
