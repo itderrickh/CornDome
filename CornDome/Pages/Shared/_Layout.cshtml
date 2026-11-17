@@ -93,9 +93,12 @@
                         <li class="nav-item">
                             <a class="top-nav-item" asp-area="" asp-page="/Play/Index">Play</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="top-nav-item" asp-area="" asp-page="/Dweeble/Index">Dweeble</a>
-                        </li>
+                        @if (AppFlags.IsActive("EnableDweeble"))
+                        {
+                            <li class="nav-item">
+                                <a class="top-nav-item" asp-area="" asp-page="/Dweeble/Index">Dweeble</a>
+                            </li>
+                        }
                         @if (AppFlags.IsActive("EnableTournaments"))
                         {
                             <li class="nav-item">

@@ -15,7 +15,7 @@ partial class MainContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261117175202_AddingDailyGuessingGame";
+    public override string LastMigrationId => "20261117211331_AddingDweebleFlag";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {

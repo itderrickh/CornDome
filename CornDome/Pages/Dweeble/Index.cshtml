@@ -10,21 +10,22 @@
 @Html.AntiForgeryToken()
 
 <div class="dweeble-layout">
-    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
-    {
-        <!-- Left advertisement -->
-        <aside class="dweeble-ad dweeble-ad-left">
+    <!-- Left advertisement -->
+    <aside class="dweeble-ad dweeble-ad-left">
+        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        {
             <partial name="_BannerAd" />
-        </aside>
-    }
+        }
+    </aside>
     
-    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
-    {
-        <!-- Left advertisement -->
-        <aside class="dweeble-ad dweeble-ad-top">
+    
+    <!-- Left advertisement -->
+    <aside class="dweeble-ad dweeble-ad-top">
+        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        {
             <partial name="_BannerAd" />
-        </aside>
-    }
+        }
+    </aside>
 
     <main class="daily-game">
 
@@ -179,13 +180,14 @@
 
     </main>
 
-    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
-    {
-        <!-- Left advertisement -->
-        <aside class="dweeble-ad dweeble-ad-right">
+    
+    <!-- Left advertisement -->
+    <aside class="dweeble-ad dweeble-ad-right">
+        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        {
             <partial name="_BannerAd" />
-        </aside>
-    }
+        }
+    </aside>
 </div>
 
 @section Styles {
