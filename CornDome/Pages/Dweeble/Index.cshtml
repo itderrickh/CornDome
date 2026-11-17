@@ -1,13 +1,32 @@
 ﻿@page
+@inject AppFlagHelper AppFlags
 @model CornDome.Pages.Dweeble.IndexModel
 @{
     ViewData["Title"] = "Dweeble";
+    ViewData["RenderMode"] = "wide";
+    var user = await Model.GetUser();
 }
 
 @Html.AntiForgeryToken()
 
-<div class="container py-4">
-    <div class="daily-game">
+<div class="dweeble-layout">
+    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+    {
+        <!-- Left advertisement -->
+        <aside class="dweeble-ad dweeble-ad-left">
+            <partial name="_BannerAd" />
+        </aside>
+    }
+    
+    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+    {
+        <!-- Left advertisement -->
+        <aside class="dweeble-ad dweeble-ad-top">
+            <partial name="_BannerAd" />
+        </aside>
+    }
+
+    <main class="daily-game">
 
         <div class="daily-header">
             <div>
@@ -78,8 +97,8 @@
                 <div id="costDisplay">?</div>
                 <div class="attribute-input">
                     <input id="costGuess"
-                           placeholder="Guess cost..."
-                           autocomplete="off" />
+                            placeholder="Guess cost..."
+                            autocomplete="off" />
                     <button data-guess="cost">Guess</button>
                 </div>
             </div>
@@ -89,8 +108,8 @@
                 <div id="attackDisplay">?</div>
                 <div class="attribute-input">
                     <input id="attackGuess"
-                           placeholder="Guess attack..."
-                           autocomplete="off" />
+                            placeholder="Guess attack..."
+                            autocomplete="off" />
                     <button data-guess="attack">Guess</button>
                 </div>
             </div>
@@ -100,8 +119,8 @@
                 <div id="defenseDisplay">?</div>
                 <div class="attribute-input">
                     <input id="defenseGuess"
-                           placeholder="Guess defense..."
-                           autocomplete="off" />
+                            placeholder="Guess defense..."
+                            autocomplete="off" />
                     <button data-guess="defense">Guess</button>
                 </div>
             </div>
@@ -131,12 +150,12 @@
         </div>
 
         <div id="gameMessage" class="daily-message"
-             aria-live="polite">
+                aria-live="polite">
             Good luck!
         </div>
 
         <div id="gameResult" class="daily-result"
-             style="display:none">
+                style="display:none">
 
             <h2 id="resultTitle"></h2>
             <p id="resultDescription"></p>
@@ -158,7 +177,15 @@
             <span>New mystery card every day at midnight Central Time.</span>
         </div>
 
-    </div>
+    </main>
+
+    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+    {
+        <!-- Left advertisement -->
+        <aside class="dweeble-ad dweeble-ad-right">
+            <partial name="_BannerAd" />
+        </aside>
+    }
 </div>
 
 @section Styles {
