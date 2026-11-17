@@ -1,0 +1,304 @@
+﻿.daily-game {
+    --daily-bg: #171a21;
+    --daily-panel: #222833;
+    --daily-border: #384150;
+    --daily-text: #f1f3f5;
+    --daily-muted: #9ba5b4;
+    --daily-gold: #d6a84f;
+    --daily-green: #36b37e;
+    --daily-red: #dc5b5b;
+    background: var(--daily-bg);
+    color: var(--daily-text);
+    border: 1px solid var(--daily-border);
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+    .daily-game * {
+        box-sizing: border-box;
+    }
+
+.daily-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-bottom: 1px solid var(--daily-border);
+    padding-bottom: 20px;
+}
+
+.daily-disclaimer {
+    font-weight: bold;
+    color: var(--daily-red);
+    text-align: center;
+    border-bottom: 1px solid var(--daily-border);
+    padding: 20px 0;
+}
+
+    .daily-header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .daily-header p {
+        color: var(--daily-muted);
+        margin: 5px 0 0;
+    }
+
+.daily-number {
+    text-align: right;
+}
+
+    .daily-number span,
+    .daily-stats span,
+    .daily-label,
+    .daily-attribute > span {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: var(--daily-muted);
+    }
+
+    .daily-number strong {
+        color: var(--daily-gold);
+    }
+
+.daily-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 18px 0;
+    text-align: center;
+}
+
+    .daily-stats strong {
+        display: block;
+        font-size: 23px;
+        margin-top: 5px;
+    }
+
+.daily-name-section {
+    text-align: center;
+    background: var(--daily-panel);
+    border: 1px solid var(--daily-border);
+    border-radius: 12px;
+    padding: 25px 15px;
+    margin-bottom: 20px;
+}
+
+    #daily-name-section.win {
+        background: var(--daily-green);
+    }
+
+.daily-name {
+    font-size: clamp(21px, 5vw, 34px);
+    font-weight: 900;
+    letter-spacing: 5px;
+    margin-top: 18px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.daily-attributes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.daily-attribute {
+    background: var(--daily-panel);
+    border: 1px solid var(--daily-border);
+    border-radius: 10px;
+    padding: 16px;
+    min-width: 0;
+}
+
+    .daily-attribute > div:first-of-type {
+        font-size: 17px;
+        font-weight: 800;
+        margin: 9px 0;
+        overflow-wrap: anywhere;
+    }
+
+    .daily-attribute .revealed {
+        color: var(--daily-gold);
+    }
+
+    .daily-attribute.ability {
+        grid-column: 1 / -1;
+    }
+
+        .daily-attribute.ability > div {
+            line-height: 1.5;
+        }
+
+.attribute-input {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+    .attribute-input input {
+        width: 100%;
+        min-width: 0;
+        background: var(--daily-bg);
+        color: white;
+        border: 1px solid var(--daily-border);
+        border-radius: 6px;
+        padding: 9px;
+    }
+
+    .attribute-input select {
+        width: 100%;
+        min-width: 0;
+        background: var(--daily-bg);
+        color: white;
+        border: 1px solid var(--daily-border);
+        border-radius: 6px;
+        padding: 9px;
+    }
+
+    .attribute-input button {
+        background: var(--daily-gold);
+        color: #171a21;
+        border: 0;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+        .attribute-input select:disabled,
+        .attribute-input button:disabled,
+        .attribute-input input:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+.daily-keyboard-section {
+    margin-top: 25px;
+}
+
+.daily-keyboard {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.daily-key {
+    background: #303846;
+    color: white;
+    border: 1px solid #465061;
+    border-radius: 6px;
+    min-height: 43px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s;
+}
+
+    .daily-key:hover:not(:disabled) {
+        background: var(--daily-gold);
+        color: #171a21;
+    }
+
+    .daily-key.correct {
+        background: var(--daily-green);
+        border-color: var(--daily-green);
+    }
+
+    .daily-key.incorrect {
+        background: var(--daily-red);
+        border-color: var(--daily-red);
+        opacity: .5;
+    }
+
+    .daily-key:disabled {
+        cursor: default;
+    }
+
+.daily-message {
+    background: var(--daily-panel);
+    border-radius: 8px;
+    padding: 13px;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--daily-muted);
+}
+
+    .daily-message.success {
+        color: var(--daily-green);
+    }
+
+    .daily-message.error {
+        color: var(--daily-red);
+    }
+
+.daily-result {
+    text-align: center;
+    background: var(--daily-panel);
+    border: 1px solid var(--daily-gold);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+    .daily-result h2 {
+        color: var(--daily-gold);
+    }
+
+.leaderboard-button {
+    background: var(--daily-gold);
+    color: #171a21;
+    border: 0;
+    border-radius: 7px;
+    padding: 11px 22px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.alltime-button {
+    background: var(--daily-green);
+    color: #171a21;
+    border: 0;
+    border-radius: 7px;
+    padding: 11px 22px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.daily-footer {
+    color: var(--daily-muted);
+    text-align: center;
+    font-size: 12px;
+    margin-top: 25px;
+}
+
+@media(max-width: 600px) {
+    .daily-game {
+        padding: 14px;
+    }
+
+    .daily-header h1 {
+        font-size: 22px;
+    }
+
+    .daily-attributes {
+        grid-template-columns: 1fr;
+    }
+
+    .daily-attribute.ability {
+        grid-column: auto;
+    }
+
+    .daily-keyboard {
+        gap: 5px;
+    }
+
+    .daily-key {
+        min-height: 39px;
+    }
+}

@@ -118,7 +118,6 @@ body {
 
 .top-nav-item {
     color: white !important;
-    font-weight: bold;
     font-size: 1.3em;
     text-decoration: none;
     padding: 10px 10px
@@ -133,7 +132,6 @@ body {
 }
 
 .nav-item:hover {
-    background-color: #5e5e5e33;
     color: white !important;
     border-bottom: 2px solid orange;
 }

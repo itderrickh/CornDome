@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Main;
+using CornDome.Models.Main.DailyCard;
 using CornDome.Models.Play;
 using CornDome.Models.Users;
 using CornDome.Repository.Main;
@@ -21,6 +22,8 @@ namespace CornDome.Repository
         public DbSet<DeckComment> DeckComments { get; set; }
         public DbSet<DeckLike> DeckLikes { get; set; }
         public DbSet<AppFlag> AppFlags { get; set; }
+        public DbSet<DailyCard> DailyCards { get; set; }
+        public DbSet<DailyCardGame> DailyCardGames { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -112,6 +115,20 @@ namespace CornDome.Repository
                     .HasForeignKey(c => c.DeckId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<DailyCard>()
+                .HasIndex(x => x.Date)
+                .IsUnique();
+
+            modelBuilder.Entity<DailyCardGame>()
+                .HasIndex(x => new { x.DailyCardId, x.PlayerKey })
+                .IsUnique();
+
+            modelBuilder.Entity<DailyCardGame>()
+                .HasOne(x => x.DailyCard)
+                .WithMany(x => x.Games)
+                .HasForeignKey(x => x.DailyCardId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

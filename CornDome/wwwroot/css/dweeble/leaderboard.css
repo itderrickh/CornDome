@@ -1,0 +1,220 @@
+﻿.daily-leaderboard-page {
+    --lb-bg: #171a21;
+    --lb-panel: #222833;
+    --lb-border: #384150;
+    --lb-text: #f1f3f5;
+    --lb-muted: #9ba5b4;
+    --lb-gold: #d6a84f;
+    --lb-green: #36b37e;
+    max-width: 1000px;
+    margin: auto;
+    color: var(--lb-text);
+}
+
+.leaderboard-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0px 0 25px 0;
+}
+
+.leaderboard-eyebrow {
+    color: var(--lb-gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.leaderboard-page-header h1 {
+    font-size: 34px;
+    font-weight: 900;
+    margin: 7px 0;
+}
+
+.leaderboard-page-header p {
+    color: var(--lb-muted);
+    margin: 0;
+}
+
+.leaderboard-date {
+    color: var(--lb-muted);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.leaderboard-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+    .leaderboard-summary > div {
+        background: var(--lb-panel);
+        border: 1px solid var(--lb-border);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .leaderboard-summary span,
+    .leaderboard-your-rank span {
+        display: block;
+        color: var(--lb-muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .leaderboard-summary strong {
+        display: block;
+        font-size: 25px;
+        margin-top: 8px;
+    }
+
+.leaderboard-your-rank {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
+    background: rgba(54, 179, 126, .09);
+    border: 1px solid var(--lb-green);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+    .leaderboard-your-rank strong {
+        display: block;
+        font-size: 19px;
+        margin-top: 6px;
+    }
+
+.leaderboard-card {
+    background: var(--lb-panel);
+    border: 1px solid var(--lb-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.leaderboard-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--lb-border);
+}
+
+    .leaderboard-card-header h2 {
+        font-size: 20px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+        .leaderboard-card-header h2 i {
+            color: var(--lb-gold);
+            margin-right: 7px;
+        }
+
+    .leaderboard-card-header > span {
+        color: var(--lb-muted);
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+.leaderboard-table-wrapper {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .leaderboard-table th {
+        color: var(--lb-muted);
+        font-size: 10px;
+        letter-spacing: 1px;
+        padding: 15px 20px;
+        text-align: left;
+    }
+
+    .leaderboard-table td {
+        padding: 16px 20px;
+        border-top: 1px solid var(--lb-border);
+        font-size: 14px;
+    }
+
+    .leaderboard-table tbody tr:hover {
+        background: rgba(255,255,255,.025);
+    }
+
+    .leaderboard-table .current-player {
+        background: rgba(54, 179, 126, .09);
+    }
+
+.rank-cell {
+    font-weight: 800;
+    width: 80px;
+}
+
+.player-cell {
+    font-weight: 700;
+}
+
+.you-badge {
+    background: rgba(54, 179, 126, .15);
+    color: var(--lb-green);
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+}
+
+.leaderboard-empty {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+    .leaderboard-empty > i {
+        font-size: 40px;
+        color: var(--lb-gold);
+    }
+
+    .leaderboard-empty h3 {
+        margin-top: 15px;
+    }
+
+    .leaderboard-empty p {
+        color: var(--lb-muted);
+    }
+
+.leaderboard-footer {
+    margin-top: 20px;
+}
+
+    .leaderboard-footer a {
+        color: var(--lb-muted);
+        text-decoration: none;
+    }
+
+        .leaderboard-footer a:hover {
+            color: var(--lb-gold);
+        }
+
+@media(max-width: 600px) {
+    .leaderboard-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .leaderboard-your-rank {
+        flex-wrap: wrap;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 13px 10px;
+        font-size: 12px;
+    }
+}

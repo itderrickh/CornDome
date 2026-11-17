@@ -15,7 +15,7 @@ partial class MainContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261112183902_AddingDeckLikes";
+    public override string LastMigrationId => "20261117175202_AddingDailyGuessingGame";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -48,6 +48,70 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.HasIndex("UserId");
 
                 b.ToTable("BugReports");
+            });
+
+        modelBuilder.Entity("CornDome.Models.Main.DailyCard.DailyCard", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("CardId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateOnly>("Date")
+                    .HasColumnType("TEXT");
+
+                b.HasKey("Id");
+
+                b.HasIndex("Date")
+                    .IsUnique();
+
+                b.ToTable("dailyCard");
+            });
+
+        modelBuilder.Entity("CornDome.Models.Main.DailyCard.DailyCardGame", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateTime?>("Completed")
+                    .HasColumnType("TEXT");
+
+                b.Property<int>("DailyCardId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("GuessedAttributes")
+                    .HasMaxLength(100)
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("GuessedLetters")
+                    .HasMaxLength(26)
+                    .HasColumnType("TEXT");
+
+                b.Property<bool>("IsComplete")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Mistakes")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("PlayerKey")
+                    .HasMaxLength(100)
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime>("Started")
+                    .HasColumnType("TEXT");
+
+                b.Property<bool>("Won")
+                    .HasColumnType("INTEGER");
+
+                b.HasKey("Id");
+
+                b.HasIndex("DailyCardId", "PlayerKey")
+                    .IsUnique();
+
+                b.ToTable("dailyCardGame");
             });
 
         modelBuilder.Entity("CornDome.Models.Main.Deck", b =>
@@ -425,6 +489,17 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.Navigation("User");
             });
 
+        modelBuilder.Entity("CornDome.Models.Main.DailyCard.DailyCardGame", b =>
+            {
+                b.HasOne("CornDome.Models.Main.DailyCard.DailyCard", "DailyCard")
+                    .WithMany("Games")
+                    .HasForeignKey("DailyCardId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("DailyCard");
+            });
+
         modelBuilder.Entity("CornDome.Models.Main.Deck", b =>
             {
                 b.HasOne("CornDome.Models.Users.User", "User")
@@ -524,6 +599,11 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.Navigation("Role");
 
                 b.Navigation("User");
+            });
+
+        modelBuilder.Entity("CornDome.Models.Main.DailyCard.DailyCard", b =>
+            {
+                b.Navigation("Games");
             });
 
         modelBuilder.Entity("CornDome.Models.Main.Deck", b =>

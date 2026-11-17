@@ -1,0 +1,237 @@
+using CornDome.Models;
+using CornDome.Models.Main.DailyCard;
+using CornDome.Repository.Cards;
+using CornDome.Repository.Main;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace CornDome.Pages.Dweeble
+{
+    [IgnoreAntiforgeryToken]
+    public class IndexModel(IGameRepository gameRepository, ICardRepository cardRepository) : BasePageModel
+    {
+        private const int MaxMistakes = 7;
+
+        public void OnGet()
+        {
+        }
+
+        private string GetPlayerKey()
+        {
+            var userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier
+            );
+
+            if (User.Identity?.IsAuthenticated == true &&
+                !string.IsNullOrWhiteSpace(userId))
+            {
+                return $"user:{userId}";
+            }
+
+            const string cookieName = "CardDweebDailyGuest";
+
+            if (Request.Cookies.TryGetValue(cookieName, out var guestId) &&
+                Guid.TryParse(guestId, out var parsed))
+            {
+                return $"guest:{parsed}";
+            }
+
+            var newGuestId = Guid.NewGuid().ToString();
+
+            Response.Cookies.Append(
+                cookieName,
+                newGuestId,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = Request.IsHttps,
+                    SameSite = SameSiteMode.Lax,
+                    IsEssential = true,
+                    Expires = DateTimeOffset.UtcNow.AddYears(1)
+                }
+            );
+
+            return $"guest:{newGuestId}";
+        }
+
+        private async Task<DailyCardGame> GetGameAsync()
+        {
+            var dailyCard = await gameRepository.GetTodayCardAsync();
+
+            var playerKey = GetPlayerKey();
+
+            var game = await gameRepository.GetDailyCardGameAsync(playerKey);
+
+            if (game != null)
+                return game;
+
+            game = new DailyCardGame
+            {
+                DailyCardId = dailyCard.Id,
+                PlayerKey = playerKey,
+                Started = DateTime.UtcNow
+            };
+
+            await gameRepository.AddGame(game, playerKey);
+
+            return game;
+        }
+
+        public async Task<IActionResult> OnGetStateAsync()
+        {
+            var game = await GetGameAsync();
+
+            var dailyCard = await gameRepository.GetTodayCardAsync();
+
+            return new JsonResult(BuildResponse(game, dailyCard));
+        }
+
+        public async Task<IActionResult> OnPostGuessLetterAsync([FromBody] GuessRequest request)
+        {
+            var letter = request.Value?.Trim().ToUpperInvariant();
+
+            if (letter == null ||
+                letter.Length != 1 ||
+                letter[0] < 'A' ||
+                letter[0] > 'Z')
+            {
+                return BadRequest(new { error = "Invalid letter." });
+            }
+
+            var game = await GetGameAsync();
+
+            if (game.IsComplete)
+                return BadRequest(new { error = "Game already completed." });
+
+            if (game.GuessedLetters.Contains(letter))
+                return BadRequest(new { error = "Letter already guessed." });
+
+            var dailyCard = await gameRepository.GetTodayCardAsync();
+
+            var card = cardRepository.GetCard(game.DailyCard.CardId);
+            await gameRepository.UpdateGameLetterGuess(game, card, letter, MaxMistakes);
+
+            return new JsonResult(BuildResponse(game, dailyCard));
+        }
+
+        public async Task<IActionResult> OnPostGuessAttributeAsync([FromBody] GuessRequest request)
+        {
+            var key = request.Key?.Trim().ToLowerInvariant();
+            var value = request.Value?.Trim();
+
+            var allowed = new[]
+            {
+                "landscape",
+                "cost",
+                "attack",
+                "defense",
+                "type"
+            };
+
+            if (key == null ||
+                !allowed.Contains(key) ||
+                string.IsNullOrWhiteSpace(value))
+            {
+                return BadRequest(new { error = "Invalid guess." });
+            }
+
+            var game = await GetGameAsync();
+
+            if (game.IsComplete)
+                return BadRequest(new { error = "Game already completed." });
+
+            if (game.GetAttributes().Contains(key))
+                return BadRequest(new { error = "Attribute already guessed." });
+
+            var dailyCard = await gameRepository.GetTodayCardAsync();
+            var card = cardRepository.GetCard(dailyCard.CardId);
+
+            var answer = key switch
+            {
+                "landscape" => card.Landscape?.Value ?? "None",
+                "cost" => card.Cost?.ToString() ?? "None",
+                "attack" => card.Attack?.ToString() ?? "None",
+                "defense" => card.Defense?.ToString() ?? "None",
+                "type" => card.CardType?.Value ?? "None",
+                _ => string.Empty
+            };
+
+            await gameRepository.UpdateGameAttributeGuess(game, card, value, answer, key, MaxMistakes);
+
+            return new JsonResult(BuildResponse(game, dailyCard));
+        }
+
+        private object BuildResponse(DailyCardGame game, DailyCard dailyCard)
+        {
+            var card = cardRepository.GetCard(dailyCard.CardId);
+
+            var attributes = game.GetAttributes();
+
+            var nameComplete = game.IsNameComplete(card.Name);
+
+            var revealed = game.IsComplete;
+
+            var namePattern = new string(
+                card.Name.Select(c =>
+                    !char.IsLetter(c) ||
+                    game.GuessedLetters.Contains(
+                        char.ToUpperInvariant(c))
+                        ? c
+                        : '_'
+                ).ToArray()
+            );
+
+            var abilityPattern = new string(
+                card.Ability.Select(c =>
+                    !char.IsLetter(c) ||
+                    game.GuessedLetters.Contains(
+                        char.ToUpperInvariant(c))
+                        ? c
+                        : '_'
+                ).ToArray()
+            );
+
+            return new
+            {
+                date = dailyCard.Date.ToString("yyyy-MM-dd"),
+                namePattern,
+                abilityPattern = nameComplete ? card.Ability : abilityPattern,
+                guessedLetters = game.GuessedLetters,
+                mistakes = game.Mistakes,
+                maxMistakes = MaxMistakes,
+                nameComplete,
+                isComplete = game.IsComplete,
+                won = game.IsComplete && game.Won,
+
+                landscape = attributes.Contains("landscape") || revealed
+                    ? card.Landscape?.Value ?? "None"
+                    : null,
+
+                cost = attributes.Contains("cost") || revealed
+                    ? card.Cost?.ToString() ?? "None"
+                    : null,
+
+                attack = attributes.Contains("attack") || revealed
+                    ? card.Attack?.ToString() ?? "None"
+                    : null,
+
+                defense = attributes.Contains("defense") || revealed
+                    ? card.Defense?.ToString() ?? "None"
+                    : null,
+
+                type = attributes.Contains("type") || revealed
+                    ? card.CardType?.Value ?? "None"
+                    : null,
+
+                // Only expose the actual card name after the game ends.
+                cardName = revealed ? card.Name : null
+            };
+        }
+
+        public class GuessRequest
+        {
+            public string? Key { get; set; }
+            public string? Value { get; set; }
+        }
+    }
+}

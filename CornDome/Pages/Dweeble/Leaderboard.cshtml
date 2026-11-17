@@ -1,0 +1,184 @@
+﻿@page
+@model CornDome.Pages.Dweeble.LeaderboardModel
+@{
+    ViewData["Title"] = "Dweeble Leaderboard";
+}
+
+<div class="container py-4">
+    <div class="daily-leaderboard-page">
+
+        <div class="leaderboard-page-header">
+            <div>
+                <span class="leaderboard-eyebrow">
+                    Dweeble
+                </span>
+
+                <h1>Leaderboard</h1>
+
+                <p>
+                    See how you stack up against the community.
+                </p>
+            </div>
+
+            <div class="leaderboard-date">
+                <i class="bi bi-calendar3"></i>
+                @Model.ChallengeDate.ToString("MMMM dd, yyyy")
+            </div>
+        </div>
+
+        <div class="leaderboard-summary">
+            <div>
+                <span>PLAYERS WHO SOLVED IT</span>
+                <strong>@Model.TotalPlayers</strong>
+            </div>
+
+            <div>
+                <span>DAILY CHALLENGE</span>
+                <strong>Today's Card</strong>
+            </div>
+        </div>
+
+        @if (Model.CurrentPlayer != null)
+        {
+            <div class="leaderboard-your-rank">
+                <div>
+                    <span>YOUR RANK</span>
+                    <strong>#@Model.CurrentPlayer.Rank</strong>
+                </div>
+
+                <div>
+                    <span>@Model.CurrentPlayer.DisplayName</span>
+                    <strong>
+                        @Model.CurrentPlayer.Mistakes mistakes
+                    </strong>
+                </div>
+
+                <div>
+                    <span>COMPLETION TIME</span>
+                    <strong>
+                        @TimeSpan.FromSeconds(
+                            Model.CurrentPlayer.Seconds
+                        ).ToString(@"m\:ss")
+                    </strong>
+                </div>
+            </div>
+        }
+
+        <div class="leaderboard-card">
+
+            <div class="leaderboard-card-header">
+                <h2>
+                    <i class="bi bi-trophy-fill"></i>
+                    Today's Champions
+                </h2>
+
+                <span>TOP 50</span>
+            </div>
+
+            @if (!Model.Players.Any())
+            {
+                <div class="leaderboard-empty">
+                    <i class="bi bi-stars"></i>
+
+                    <h3>No winners yet!</h3>
+
+                    <p>
+                        Be the first to solve today's mystery card.
+                    </p>
+
+                    <a asp-page="/Dweeble/Index" class="btn btn-warning">
+                        Play Dweeble
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="leaderboard-table-wrapper">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>RANK</th>
+                                <th>PLAYER</th>
+                                <th>MISTAKES</th>
+                                <th>TIME</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var player in Model.Players)
+                            {
+                                <tr class="@(player.IsCurrentPlayer
+                                    ? "current-player" : "")">
+
+                                    <td class="rank-cell">
+                                        @if (player.Rank == 1)
+                                        {
+                                            <span>🥇</span>
+                                        }
+                                        else if (player.Rank == 2)
+                                        {
+                                            <span>🥈</span>
+                                        }
+                                        else if (player.Rank == 3)
+                                        {
+                                            <span>🥉</span>
+                                        }
+                                        else
+                                        {
+                                            <span>#@player.Rank</span>
+                                        }
+                                    </td>
+
+                                    <td class="player-cell">
+                                        @player.DisplayName
+
+                                        @if (player.IsCurrentPlayer)
+                                        {
+                                            <span class="you-badge">
+                                                YOU
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @player.Mistakes
+                                    </td>
+
+                                    <td>
+                                        @TimeSpan.FromSeconds(
+                                            player.Seconds
+                                        ).ToString(@"m\:ss")
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+
+        <div class="leaderboard-footer">
+            <div>
+                <a asp-page="/Dweeble/AllTimeLeaderboard">
+                    <i class="bi bi-arrow-right"></i>
+                    To All Time Leaderboard
+                </a>
+            </div>
+            
+            <div>
+                <a asp-page="/Dweeble/Index">
+                    <i class="bi bi-arrow-left"></i>
+                    To Dweeble
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dweeble/leaderboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}

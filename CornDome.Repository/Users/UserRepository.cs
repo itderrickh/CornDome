@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository.Users
 {
@@ -11,6 +12,7 @@ namespace CornDome.Repository.Users
         Task<User> GetUserByUsername(string username);
         Task<IEnumerable<User>> GetAll();
         Task<bool> LoginSuccess(User user);
+        Task<List<User>> GetByIds(int[] ids);
     }
 
     public class UserRepository(MainContext context) : IUserRepository
@@ -83,6 +85,13 @@ namespace CornDome.Repository.Users
             {
                 return false;
             }
+        }
+
+        public async Task<List<User>> GetByIds(int[] ids)
+        {
+            return await context.Users
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
         }
     }
 }

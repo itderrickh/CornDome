@@ -37,6 +37,7 @@ namespace CornDome
             services.AddTransient<ILogEntryRepository, LogEntryRepository>();
             services.AddTransient<IDeckRepository, DeckRepository>();
             services.AddTransient<IAppFlagRepository, AppFlagRepository>();
+            services.AddTransient<IGameRepository, GameRepository>();
         }
 
         public static void AddHelpers(IServiceCollection services)

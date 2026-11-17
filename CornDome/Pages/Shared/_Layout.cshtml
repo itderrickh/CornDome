@@ -2,11 +2,11 @@
 @inject Config Config
 @inject IWebHostEnvironment hostingEnv
 @{
-    var logoHeight = 80;
+    var logoHeight = 48;
     var bodyClass = "container";
     @if (ViewData["RenderMode"] != null && ViewData["RenderMode"].ToString() == "wide")
     {
-        logoHeight = 40;
+        logoHeight = 48;
         bodyClass = "container-fluid";
     }
 
@@ -23,22 +23,26 @@
     <meta name="description" content="The Card Dweeb website is a utility fan-site for the Adventure Time Card Wars Trading Card Game. Card Dweeb aims to simplify deckbuilding and providing content to Card Wars players." />
     <meta name="version" content="@Config.Version" />
     <meta name="google-site-verification" content="O40lDDVcbne0b51R8zKcZTr7LYWBFWErv6UoLtvOSRo" />
-    <link rel="icon" type="image/x-icon" href="~/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="~/img/logo.ico">
     <title>@Config.Branding.Title - @ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1907330476230243" crossorigin="anonymous"></script>
+    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+    {
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1907330476230243" crossorigin="anonymous"></script>
+    }
+    
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-image: url('/img/background.png')">
             <div class="container">
                 @if (User.Identity.IsAuthenticated && User.IsInRole("CoolGuy")) {
-                    <a class="navbar-brand" asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/card-coolguy.png" alt="Card Dweeb Logo" /></a>
+                    <a asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/logo-cool.png" alt="Card Dweeb Logo" /></a>
                 }
                 else {
-                    <a class="navbar-brand" asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/card-dweeb.png" alt="Card Dweeb Logo" /></a>
+                    <a asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/logo.png" alt="Card Dweeb Logo" /></a>
                 }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -89,6 +93,9 @@
                         <li class="nav-item">
                             <a class="top-nav-item" asp-area="" asp-page="/Play/Index">Play</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="top-nav-item" asp-area="" asp-page="/Dweeble/Index">Dweeble</a>
+                        </li>
                         @if (AppFlags.IsActive("EnableTournaments"))
                         {
                             <li class="nav-item">
@@ -99,7 +106,7 @@
                             <a class="top-nav-item" asp-area="" asp-page="/LifeCounter">Life Counter</a>
                         </li>
                         <li class="nav-item">
-                            <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 36px; height: 36px;" src="~/img/discord.png" /></a>
+                            <a class="top-nav-item" href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 32px; height: 32px;" src="~/img/discord.png" /></a>
                         </li>
                     </ul>
                 </div>
