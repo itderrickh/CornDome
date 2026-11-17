@@ -1,8 +1,6 @@
 ﻿using CornDome.Models.Cards;
 using CornDome.Models.Main.DailyCard;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Diagnostics.Metrics;
 
 namespace CornDome.Repository.Main
 {

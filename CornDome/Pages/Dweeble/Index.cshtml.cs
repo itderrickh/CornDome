@@ -91,9 +91,7 @@ namespace CornDome.Pages.Dweeble
             var letter = request.Value?.Trim().ToUpperInvariant();
 
             if (letter == null ||
-                letter.Length != 1 ||
-                letter[0] < 'A' ||
-                letter[0] > 'Z')
+                letter.Length != 1)
             {
                 return BadRequest(new { error = "Invalid letter." });
             }
@@ -161,6 +159,11 @@ namespace CornDome.Pages.Dweeble
             return new JsonResult(BuildResponse(game, dailyCard));
         }
 
+        private static bool IsInCharacters(char s)
+        {
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(s.ToString(), StringComparison.CurrentCultureIgnoreCase);
+        }
+
         private object BuildResponse(DailyCardGame game, DailyCard dailyCard)
         {
             var card = cardRepository.GetCard(dailyCard.CardId);
@@ -173,7 +176,7 @@ namespace CornDome.Pages.Dweeble
 
             var namePattern = new string(
                 card.Name.Select(c =>
-                    !char.IsLetter(c) ||
+                    !IsInCharacters(c) ||
                     game.GuessedLetters.Contains(
                         char.ToUpperInvariant(c))
                         ? c
@@ -183,7 +186,7 @@ namespace CornDome.Pages.Dweeble
 
             var abilityPattern = new string(
                 card.Ability.Select(c =>
-                    !char.IsLetter(c) ||
+                    !IsInCharacters(c) ||
                     game.GuessedLetters.Contains(
                         char.ToUpperInvariant(c))
                         ? c

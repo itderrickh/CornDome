@@ -3,7 +3,7 @@
 
     if (!root) return;
 
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
 
     let state = null;
 
