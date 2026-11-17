@@ -205,7 +205,7 @@ namespace CornDome.Pages.Dweeble
                 nameComplete,
                 isComplete = game.IsComplete,
                 won = game.IsComplete && game.Won,
-
+                cardImage = game.IsComplete ? (BaseUrl + card.GetOptimizedImage) : "",
                 landscape = attributes.Contains("landscape") || revealed
                     ? card.Landscape?.Value ?? "None"
                     : null,

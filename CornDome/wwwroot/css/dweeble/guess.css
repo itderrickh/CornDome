@@ -1,4 +1,13 @@
-﻿.daily-game {
+﻿#mysteryCard {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.daily-game {
     --daily-bg: #171a21;
     --daily-panel: #222833;
     --daily-border: #384150;

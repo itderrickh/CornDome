@@ -257,6 +257,7 @@
 
         if (state.won) {
             document.getElementById("daily-name-section").classList.add("win");
+            document.getElementById("mysteryCard").src = state.cardImage;
             launchConfetti();
         }
 
