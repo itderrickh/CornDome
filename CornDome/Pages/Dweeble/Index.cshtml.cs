@@ -84,43 +84,43 @@ namespace CornDome.Pages.Dweeble
             return $"guest:{newGuestId}";
         }
 
-        private string GetPlayerKey()
-        {
-            var userId = User.FindFirstValue(
-                ClaimTypes.NameIdentifier
-            );
+        //private string GetPlayerKey()
+        //{
+        //    var userId = User.FindFirstValue(
+        //        ClaimTypes.NameIdentifier
+        //    );
 
-            if (User.Identity?.IsAuthenticated == true &&
-                !string.IsNullOrWhiteSpace(userId))
-            {
-                return $"user:{userId}";
-            }
+        //    if (User.Identity?.IsAuthenticated == true &&
+        //        !string.IsNullOrWhiteSpace(userId))
+        //    {
+        //        return $"user:{userId}";
+        //    }
 
-            const string cookieName = "CardDweebDailyGuest";
+        //    const string cookieName = "CardDweebDailyGuest";
 
-            if (Request.Cookies.TryGetValue(cookieName, out var guestId) &&
-                Guid.TryParse(guestId, out var parsed))
-            {
-                return $"guest:{parsed}";
-            }
+        //    if (Request.Cookies.TryGetValue(cookieName, out var guestId) &&
+        //        Guid.TryParse(guestId, out var parsed))
+        //    {
+        //        return $"guest:{parsed}";
+        //    }
 
-            var newGuestId = Guid.NewGuid().ToString();
+        //    var newGuestId = Guid.NewGuid().ToString();
 
-            Response.Cookies.Append(
-                cookieName,
-                newGuestId,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = Request.IsHttps,
-                    SameSite = SameSiteMode.Lax,
-                    IsEssential = true,
-                    Expires = DateTimeOffset.UtcNow.AddYears(1)
-                }
-            );
+        //    Response.Cookies.Append(
+        //        cookieName,
+        //        newGuestId,
+        //        new CookieOptions
+        //        {
+        //            HttpOnly = true,
+        //            Secure = Request.IsHttps,
+        //            SameSite = SameSiteMode.Lax,
+        //            IsEssential = true,
+        //            Expires = DateTimeOffset.UtcNow.AddYears(1)
+        //        }
+        //    );
 
-            return $"guest:{newGuestId}";
-        }
+        //    return $"guest:{newGuestId}";
+        //}
 
         private async Task<DailyCardGame> GetGameAsync()
         {
