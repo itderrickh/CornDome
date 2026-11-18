@@ -14,6 +14,7 @@ namespace CornDome.Repository.Main
         Task UpdateGameNameGuess(DailyCardGame game, Card card, string guess, int maxMistakes);
         Task<IList<DailyCardGame>> GetSuccessfulDweeblesToday();
         Task<List<DailyCardGame>> GetAllTimeDweebles();
+        Task MigrateGuestGame(DailyCardGame game, string newId);
     }
 
     public class GameRepository(MainContext mainContext, CardDatabaseContext cardDatabaseContext) : IGameRepository
@@ -219,6 +220,19 @@ namespace CornDome.Repository.Main
             }
 
             await mainContext.SaveChangesAsync();
+        }
+
+        public async Task MigrateGuestGame(DailyCardGame game, string newId)
+        {
+            try
+            {
+                game.PlayerKey = newId;
+                await mainContext.SaveChangesAsync();
+            }
+            catch
+            {
+
+            }
         }
     }
 }

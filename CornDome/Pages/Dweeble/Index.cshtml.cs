@@ -17,6 +17,73 @@ namespace CornDome.Pages.Dweeble
         {
         }
 
+        private async Task<string> GetPlayerKeyAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            const string cookieName = "CardDweebDailyGuest";
+
+            var hasGuestCookie = Request.Cookies.TryGetValue(cookieName, out var guestId);
+            var hasGuestId = Guid.TryParse(guestId, out var parsedGuestId);
+
+            // Authenticated user
+            if (User.Identity?.IsAuthenticated == true &&
+                !string.IsNullOrWhiteSpace(userId))
+            {
+                var userKey = $"user:{userId}";
+
+                // If they have a guest cookie, attempt to migrate their game.
+                if (hasGuestCookie && hasGuestId)
+                {
+                    var guestKey = $"guest:{parsedGuestId}";
+
+                    var userGame = await gameRepository.GetDailyCardGameAsync(userKey);
+
+                    if (userGame == null)
+                    {
+                        var guestGame = await gameRepository.GetDailyCardGameAsync(guestKey);
+
+                        if (guestGame != null)
+                        {
+                            guestGame.PlayerKey = userKey;
+
+                            // You'll need a repository method to persist this change.
+                            await gameRepository.MigrateGuestGame(guestGame, userKey);
+                        }
+                    }
+
+                    // Remove the guest cookie after processing.
+                    Response.Cookies.Delete(cookieName);
+                }
+
+                return userKey;
+            }
+
+            // Anonymous guest
+            if (hasGuestCookie)
+            {
+                return $"guest:{parsedGuestId}";
+            }
+
+            // Create a new guest ID
+            var newGuestId = Guid.NewGuid().ToString();
+
+            Response.Cookies.Append(
+                cookieName,
+                newGuestId,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = Request.IsHttps,
+                    SameSite = SameSiteMode.Lax,
+                    IsEssential = true,
+                    Expires = DateTimeOffset.UtcNow.AddYears(1)
+                }
+            );
+
+            return $"guest:{newGuestId}";
+        }
+
         private string GetPlayerKey()
         {
             var userId = User.FindFirstValue(
@@ -59,7 +126,7 @@ namespace CornDome.Pages.Dweeble
         {
             var dailyCard = await gameRepository.GetTodayCardAsync();
 
-            var playerKey = GetPlayerKey();
+            var playerKey = await GetPlayerKeyAsync();
 
             var game = await gameRepository.GetDailyCardGameAsync(playerKey);
 
