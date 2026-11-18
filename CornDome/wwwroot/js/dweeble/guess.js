@@ -274,6 +274,30 @@
         );
     }
 
+    function updateCountdown() {
+        const now = new Date();
+
+        // Get the next midnight UTC
+        const nextMidnight = new Date();
+        nextMidnight.setUTCHours(24, 0, 0, 0);
+
+        // Calculate remaining milliseconds
+        const remaining = nextMidnight - now;
+
+        // Convert to hours, minutes, and seconds
+        const totalSeconds = Math.floor(remaining / 1000);
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        // Format countdown
+        const formatted =
+            `${String(hours).padStart(2, '0') }:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        document.getElementById('countDownTimer').textContent = formatted;
+    }
+
     root.querySelectorAll("[data-guess]").forEach(button => {
         button.addEventListener("click", () => {
             guessAttribute(button.dataset.guess);
@@ -290,4 +314,6 @@
     });
 
     refresh();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 })();
