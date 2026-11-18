@@ -30,10 +30,12 @@ namespace CornDome.Repository.Cards
         bool DeleteSet(int setId);
 
         Card GetCardOfTheDay(DateTime day);
+        IQueryable<Card> DweebQuery(string query);
     }
 
     public class CardRepository(
         CardDatabaseContext context,
+        DweebQueryLanguage dqlSearchService,
         ICardChangeLogger logger) : ICardRepository
     {
         private static readonly JsonSerializerOptions JsonOptions = new()
@@ -486,6 +488,17 @@ namespace CornDome.Repository.Cards
         private static string Serialize(object value)
         {
             return JsonSerializer.Serialize(value, JsonOptions);
+        }
+
+        public IQueryable<Card> DweebQuery(string query)
+        {
+            return dqlSearchService.Apply(
+                context.Cards
+                    .Include(x => x.CardType)
+                    .Include(x => x.Landscape)
+                    .AsNoTracking(),
+                query
+            );
         }
 
         #endregion

@@ -201,5 +201,40 @@ namespace CornDome.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("query")]
+        public IActionResult DweebQuery([FromQuery] string q)
+        {
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
+
+                var cards = cardRepository.DweebQuery(q).ToList();
+
+                stopwatch.Stop();
+
+                var response = new ApiCollectionResponse<object>
+                {
+                    Data = cards.Cast<object>().ToList(),
+                    Elapsed = stopwatch.Elapsed.TotalMilliseconds,
+                    Next = null,
+                    Total = cards.Count,
+                    Count = cards.Count,
+                    Limit = cards.Count,
+                    Offset = 0
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid query",
+                    status = 400
+                });
+            }
+            
+        }
     }
 }

@@ -1,0 +1,458 @@
+﻿@page
+@model CornDome.Pages.Admin.QueryTesterModel
+@{
+    ViewData["Title"] = "Dweeb Query";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Dweeb Query</h2>
+        <span id="queryStatus" class="text-muted small">Ready</span>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <label for="queryInput" class="form-label fw-bold">
+                Search Cards
+            </label>
+
+            <div class="input-group">
+                <input type="text"
+                       id="queryInput"
+                       class="form-control"
+                       placeholder='Try: type=Creature && cost<=3'
+                       autocomplete="off"
+                       spellcheck="false" />
+
+                <button id="searchButton" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+
+                <button id="clearButton" class="btn btn-outline-secondary">
+                    Clear
+                </button>
+            </div>
+
+            <div class="form-text">
+                Supports DQL operators, parentheses, and quoted phrases.
+            </div>
+
+            <div id="queryError"
+                 class="alert alert-danger mt-3 mb-0 d-none"
+                 role="alert"></div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Example Queries</strong>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-sm btn-outline-secondary example-query"
+                    data-query="dragon">
+                dragon
+            </button>
+
+            <button class="btn btn-sm btn-outline-secondary example-query"
+                    data-query="type=Creature">
+                type=Creature
+            </button>
+
+            <button class="btn btn-sm btn-outline-secondary example-query"
+                    data-query="cost<=3 && type=Creature">
+                cost<=3 && type=Creature
+            </button>
+
+            <button class="btn btn-sm btn-outline-secondary example-query"
+                    data-query="(type=Creature || type=Hero) && !custom">
+                (type=Creature || type=Hero) && !custom
+            </button>
+
+            <button class="btn btn-sm btn-outline-secondary example-query"
+                    data-query="landscape:Cornfield">
+                landscape:Cornfield
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Results</div>
+                    <div class="fs-4 fw-bold" id="resultCount">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Query Time</div>
+                    <div class="fs-4 fw-bold" id="queryTime">0 ms</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <strong>Card Results</strong>
+            <span class="text-muted small" id="resultDescription"></span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Cost</th>
+                        <th>Attack</th>
+                        <th>Defense</th>
+                        <th>Custom</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Enter a query to search for cards.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const queryInput = document.getElementById("queryInput");
+            const searchButton = document.getElementById("searchButton");
+            const clearButton = document.getElementById("clearButton");
+
+            const resultsBody = document.getElementById("resultsBody");
+            const queryStatus = document.getElementById("queryStatus");
+            const queryError = document.getElementById("queryError");
+
+            const resultCount = document.getElementById("resultCount");
+            const queryTime = document.getElementById("queryTime");
+            const resultDescription = document.getElementById("resultDescription");
+
+            // Change this to match your controller's actual route.
+            const queryUrl = "/api/cards/query";
+
+            let debounceTimer;
+            let currentRequest;
+
+            function validateDql(query) {
+                if (!query.trim())
+                    return { valid: false, incomplete: false, message: "" };
+
+                const fields = [
+                    "name", "ability", "rulings", "landscape", "type",
+                    "cost", "attack", "defense", "custom", "id"
+                ];
+
+                // Incomplete expressions should wait for more input.
+                const trimmed = query.trim();
+
+                if (/[&|!<>=:~]$/.test(trimmed) ||
+                    /\b(and|or)$/i.test(trimmed)) {
+                    return {
+                        valid: false,
+                        incomplete: true,
+                        message: "Waiting for a value or expression..."
+                    };
+                }
+
+                // Check balanced parentheses.
+                let depth = 0;
+                let quoted = false;
+
+                for (let i = 0; i < query.length; i++) {
+                    if (query[i] === '"' && query[i - 1] !== '\\')
+                        quoted = !quoted;
+
+                    if (quoted)
+                        continue;
+
+                    if (query[i] === '(') depth++;
+                    if (query[i] === ')') depth--;
+
+                    if (depth < 0) {
+                        return {
+                            valid: false,
+                            incomplete: false,
+                            message: "Unexpected closing parenthesis."
+                        };
+                    }
+                }
+
+                if (quoted || depth > 0) {
+                    return {
+                        valid: false,
+                        incomplete: true,
+                        message: quoted
+                            ? "Unclosed quotation marks."
+                            : "Waiting for closing parenthesis."
+                    };
+                }
+
+                // Validate field names.
+                const fieldPattern = /([a-zA-Z]+)\s*(>=|<=|!=|=|:|>|<)/g;
+                let match;
+
+                while ((match = fieldPattern.exec(query)) !== null) {
+                    if (!fields.includes(match[1].toLowerCase())) {
+                        return {
+                            valid: false,
+                            incomplete: false,
+                            message: `Unknown search field '${match[1]}'.`
+                        };
+                    }
+
+                    if (match[2] === "~=" &&
+                        match[1].toLowerCase() !== "name") {
+                        return {
+                            valid: false,
+                            incomplete: false,
+                            message: "'~=' is only supported for card names."
+                        };
+                    }
+                }
+
+                // Check for incomplete logical operators.
+                if (/(&&|\|\|)\s*(\)|$)/.test(query)) {
+                    return {
+                        valid: false,
+                        incomplete: true,
+                        message: "Expected another search condition."
+                    };
+                }
+
+                return {
+                    valid: true,
+                    incomplete: false,
+                    message: ""
+                };
+            }
+
+            async function executeQuery() {
+                const validation = validateDql(queryInput.value);
+
+                if (!validation.valid) {
+                    queryStatus.textContent = "Invalid query";
+                    return;
+                }
+
+                const query = queryInput.value.trim();
+
+                clearTimeout(debounceTimer);
+
+                if (currentRequest) {
+                    currentRequest.abort();
+                    currentRequest = null;
+                }
+
+                queryError.classList.add("d-none");
+
+                if (!query) {
+                    resetResults();
+                    return;
+                }
+
+                const controller = new AbortController();
+                currentRequest = controller;
+
+                queryStatus.textContent = "Searching...";
+                searchButton.disabled = true;
+
+                resultsBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="spinner-border spinner-border-sm me-2"></div>
+                            Searching cards...
+                        </td>
+                    </tr>`;
+
+                try {
+                    const url = new URL(queryUrl, window.location.origin);
+                    url.searchParams.set("q", query);
+
+                    const response = await fetch(url, {
+                        method: "GET",
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        signal: controller.signal
+                    });
+
+                    if (!response.ok) {
+                        const message = await response.text();
+                        throw new Error(message || `Request failed (${response.status})`);
+                    }
+
+                    const result = await response.json();
+
+                    // Ignore stale responses.
+                    if (currentRequest !== controller)
+                        return;
+
+                    renderResults(result);
+
+                    queryStatus.textContent = "Complete";
+                }
+                catch (error) {
+                    if (error.name === "AbortError")
+                        return;
+
+                    queryStatus.textContent = "Error";
+                    queryError.textContent = error.message;
+                    queryError.classList.remove("d-none");
+
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center text-danger py-4">
+                                Unable to execute query.
+                            </td>
+                        </tr>`;
+                }
+                finally {
+                    if (currentRequest === controller) {
+                        currentRequest = null;
+                        searchButton.disabled = false;
+                    }
+                }
+            }
+
+            function renderResults(result) {
+                const cards = result.data ?? [];
+
+                resultCount.textContent = result.total ?? cards.length;
+                queryTime.textContent = `${Number(result.elapsed ?? 0).toFixed(2)} ms`;
+
+                resultDescription.textContent =
+                    `Showing ${cards.length} card(s)`;
+
+                resultsBody.replaceChildren();
+
+                if (cards.length === 0) {
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No cards found.
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                for (const card of cards) {
+                    const row = document.createElement("tr");
+
+                    const type = card.cardType?.value ?? card.cardType?.name ?? "-";
+
+                    const values = [
+                        card.name,
+                        type,
+                        card.cost ?? "-",
+                        card.attack ?? "-",
+                        card.defense ?? "-",
+                        card.isCustomCard ? "Yes" : "No"
+                    ];
+
+                    for (const value of values) {
+                        const cell = document.createElement("td");
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    }
+
+                    resultsBody.appendChild(row);
+                }
+            }
+
+            function resetResults() {
+                resultCount.textContent = "0";
+                queryTime.textContent = "0 ms";
+                resultDescription.textContent = "";
+                queryStatus.textContent = "Ready";
+
+                resultsBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Enter a query to search for cards.
+                        </td>
+                    </tr>`;
+            }
+
+            function scheduleSearch() {
+                clearTimeout(debounceTimer);
+
+                if (currentRequest) {
+                    currentRequest.abort();
+                    currentRequest = null;
+                }
+
+                const validation = validateDql(queryInput.value);
+
+                queryError.classList.add("d-none");
+
+                if (!queryInput.value.trim()) {
+                    resetResults();
+                    return;
+                }
+
+                if (!validation.valid) {
+                    queryStatus.textContent = validation.incomplete
+                        ? "Incomplete query"
+                        : "Invalid query";
+
+                    queryError.textContent = validation.message;
+                    queryError.classList.remove("d-none");
+
+                    return;
+                }
+
+                queryStatus.textContent = "Waiting...";
+
+                debounceTimer = setTimeout(executeQuery, 300);
+            }
+
+            queryInput.addEventListener("input", scheduleSearch);
+
+            queryInput.addEventListener("keydown", event => {
+                if (event.key === "Enter") {
+                    clearTimeout(debounceTimer);
+                    executeQuery();
+                }
+            });
+
+            searchButton.addEventListener("click", executeQuery);
+
+            clearButton.addEventListener("click", () => {
+                clearTimeout(debounceTimer);
+
+                if (currentRequest) {
+                    currentRequest.abort();
+                    currentRequest = null;
+                }
+
+                queryInput.value = "";
+                queryError.classList.add("d-none");
+                searchButton.disabled = false;
+
+                resetResults();
+                queryInput.focus();
+            });
+
+            document.querySelectorAll(".example-query").forEach(button => {
+                button.addEventListener("click", () => {
+                    queryInput.value = button.dataset.query;
+                    executeQuery();
+                });
+            });
+        });
+    </script>
+}
