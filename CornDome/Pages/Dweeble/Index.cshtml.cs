@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Cards;
 using CornDome.Models.Main.DailyCard;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
@@ -82,6 +83,28 @@ namespace CornDome.Pages.Dweeble
             var game = await GetGameAsync();
 
             var dailyCard = await gameRepository.GetTodayCardAsync();
+
+            return new JsonResult(BuildResponse(game, dailyCard));
+        }
+
+        public async Task<IActionResult> OnPostGuessFullAsync([FromBody] GuessRequest request)
+        {
+            var game = await GetGameAsync();
+            var dailyCard = await gameRepository.GetTodayCardAsync();
+            var card = cardRepository.GetCard(dailyCard.CardId);
+
+            var guess = request.Value?.Trim().ToUpperInvariant();
+
+            if (guess == null || guess.Length != card.Name.Length)
+            {
+                return BadRequest(new { error = "Invalid guess." });
+            }
+
+            if (game.IsComplete)
+                return BadRequest(new { error = "Game already completed." });
+
+
+            await gameRepository.UpdateGameNameGuess(game, card, guess, MaxMistakes);
 
             return new JsonResult(BuildResponse(game, dailyCard));
         }

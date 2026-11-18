@@ -163,6 +163,38 @@
         }
     }
 
+    async function guessFull(key) {
+        if (state.isComplete || state[key] !== null) return;
+
+        const input = document.getElementById(key + "Guess");
+        const value = input.value.trim();
+
+        if (!value) {
+            message("Enter a guess first.", "error");
+            return;
+        }
+
+        try {
+            state = await api("GuessFull", {
+                key,
+                value
+            });
+
+            input.value = "";
+
+            message(
+                state[key] !== null
+                    ? `Correct! ${key} revealed.`
+                    : "Incorrect guess!",
+                state[key] !== null ? "success" : "error"
+            );
+
+            render();
+        } catch (error) {
+            message(error.message, "error");
+        }
+    }
+
     async function guessAttribute(key) {
         if (state.isComplete || state[key] !== null) return;
 
@@ -304,6 +336,12 @@
         });
     });
 
+    root.querySelectorAll("[data-guess-full]").forEach(button => {
+        button.addEventListener("click", () => {
+            guessFull(button.dataset.guessFull);
+        });
+    });
+
     root.querySelectorAll(".attribute-input input").forEach(input => {
         input.addEventListener("keydown", event => {
             if (event.key === "Enter") {
@@ -311,6 +349,33 @@
                 guessAttribute(key);
             }
         });
+    });
+
+    document.addEventListener("keydown", async (e) => {
+        // Ignore keyboard shortcuts
+        if (e.ctrlKey || e.altKey || e.metaKey || e.repeat)
+            return;
+
+        // Only accept individual letters
+        if (!/^[a-zA-Z0-9]$/i.test(e.key))
+            return;
+
+        // Don't interfere with text inputs or dropdowns
+        if (e.target.closest("input, textarea, select, [contenteditable='true']"))
+            return;
+
+        // Don't accept guesses after the game ends
+        if (state.isComplete)
+            return;
+
+        const letter = e.key.toUpperCase();
+
+        // Ignore letters already guessed
+        if (state.guessedLetters.includes(letter))
+            return;
+
+        // Submit guess using existing API
+        guessLetter(letter)
     });
 
     refresh();

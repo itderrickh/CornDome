@@ -11,6 +11,7 @@ namespace CornDome.Repository.Main
         Task AddGame(DailyCardGame game, string playerKey);
         Task UpdateGameAttributeGuess(DailyCardGame game, Card card, string guess, string answer, string key, int maxMistakes);
         Task UpdateGameLetterGuess(DailyCardGame game, Card card, string guess, int maxMistakes);
+        Task UpdateGameNameGuess(DailyCardGame game, Card card, string guess, int maxMistakes);
         Task<IList<DailyCardGame>> GetSuccessfulDweeblesToday();
         Task<List<DailyCardGame>> GetAllTimeDweebles();
     }
@@ -178,6 +179,32 @@ namespace CornDome.Repository.Main
             if (!card.Name.Contains(guess, StringComparison.OrdinalIgnoreCase))
             {
                 game.Mistakes++;
+            }
+
+            if (game.Mistakes >= maxMistakes)
+            {
+                game.FinishGame(false);
+            }
+            else if (game.IsNameComplete(card.Name))
+            {
+                game.AddAttribute("ability");
+
+                game.CheckWin(card.Name);
+            }
+
+            await mainContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateGameNameGuess(DailyCardGame game, Card card, string guess, int maxMistakes)
+        {
+            if (!card.Name.Contains(guess, StringComparison.OrdinalIgnoreCase))
+            {
+                game.Mistakes++;
+            }
+            else
+            {
+                // User ripped the guess right
+                game.FinishGame(true);
             }
 
             if (game.Mistakes >= maxMistakes)
