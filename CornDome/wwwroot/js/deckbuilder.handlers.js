@@ -47,59 +47,6 @@ document.getElementById("nameFilter").oninput = function () {
     callFilter()
 };
 
-document.getElementById("validateButton").onclick = function () {
-    function mapToProp(data, prop) {
-        return data
-            .reduce((res, item) => Object
-                .assign(res, {
-                    [item[prop]]: 1 + (res[item[prop]] || 0)
-                }), Object.create(null))
-            ;
-    }
-
-    let warnings = [];
-    let errors = [];
-    let validationSummary = "";
-
-    if (deck.hero === null)
-        warnings.push("Deck list does not have a Hero card.")
-
-    if (deck.cards.length < 40) 
-        errors.push("Deck does not have the minimum amount of cards (40).")
-
-    if (deck.landscapes.length < 4)
-        errors.push("Deck does not have the mimimum amount of Landscapes (4).")
-
-    let collapsedCards = mapToProp(deck.cards, 'name');
-    for (let card in collapsedCards) {
-        if (collapsedCards[card] > 3) {
-            errors.push("A maximum of 3 copies of a card can be in the deck (violation: " + card + ")");
-        }
-    }
-
-    if (errors.length === 0 && warnings.length === 0) {
-        validationSummary = "The deck is valid!";
-    } else {
-        if (warnings.length > 0) {
-            validationSummary += "Warnings:\n";
-            for (let warning of warnings) {
-                validationSummary += warning + "\n";
-            }
-            validationSummary += "\n";
-        }
-
-        if (errors.length > 0) {
-            validationSummary += "Errors:\n";
-            for (let err of errors) {
-                validationSummary += err + "\n";
-            }
-            validationSummary += "\n";
-        }
-    }
-
-    alert(validationSummary);
-};
-
 function getDeckText() {
     var landscapes = {};
     for (var landscape of deck.landscapes) {
@@ -246,29 +193,18 @@ function getDeckTextUntapGG() {
 }
 
 document.getElementById("textExport").onclick = function () {
-    this.textContent = "Text Export (Click again to reload)"
     var deckList = getDeckText();
     var field = document.getElementById("textExportField");
 
-    field.style.display = "block";
     field.value = deckList;
 };
 
 document.getElementById("textExportUntap").onclick = function () {
-    this.textContent = "Untap.in Export (Click again to reload)"
     var deckList = getDeckTextUntapGG();
     var field = document.getElementById("textExportField");
 
-    field.style.display = "block";
     field.value = deckList;
 }
-
-document.getElementById("decklistExport").onclick = function () {
-    var deckList = getDeckText();
-    
-    navigator.clipboard.writeText(deckList);
-    alert('Copied to clipboard!');
-};
 
 document.getElementById("permalinkExport").onclick = function () {
     var query = new URLSearchParams(document.location.search);

@@ -148,6 +148,14 @@ fieldset {
     padding: 5px;
 }
 
+.action-link {
+    cursor: pointer;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 1250px) {
     .card:hover {
         transform: scale(1.2);

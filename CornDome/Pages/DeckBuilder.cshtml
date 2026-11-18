@@ -23,6 +23,7 @@
 
 <div class="builder-area">
     @Html.AntiForgeryToken()
+
     <div class="tool-area">
         <fieldset class="stats">
             <legend>Stats</legend>
@@ -44,33 +45,29 @@
             <div>Rainbow: <span id="rb-stat">0</span></div>
             <div>LavaFlats: <span id="lf-stat">0</span></div>
         </fieldset>
-
-        <fieldset id="actions">
-            <legend>Actions</legend>
-            <button id="validateButton" type="button" class="btn btn-lg btn-block btn-primary">Validate Deck</button>
-            <button id="decklistExport" type="button" class="btn btn-lg btn-block btn-primary">Copy decklist to clipboard</button>
-            <button id="permalinkExport" type="button" class="btn btn-lg btn-block btn-primary">Copy permalink to clipboard</button>
-            <a class="btn btn-lg btn-block btn-primary" asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)">Try it out</a>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <button id="saveDatabaseButton2" type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
-                    Save Deck
-                </button>
-            }
-            else
-            {
-                <button id="disabledSave" type="button" class="btn btn-lg btn-block btn-secondary btn-disabled" disabled>
-                    Login to Save Decks
-                </button>
-            }
-            
-            <button id="textExportUntap" type="button" class="btn btn-lg btn-block btn-primary">Untap.in Export</button>
-            <button id="textExport" type="button" class="btn btn-lg btn-block btn-primary">Text Export</button>
-            <textarea id="textExportField" style="width: 100%; display: none;" rows="20"></textarea>
-            <!--<button id="" type="button" class="btn btn-lg btn-block btn-primary">Data Dive</button>-->
-        </fieldset>
     </div>
     <div class="deck-area">
+        <div class="row mb-4 mt-4 align-items-center justify-content-center" style="padding-left: 10px; padding-right: 10px;">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="col-2 action-link" data-bs-toggle="modal" data-bs-target="#saveModal">
+                    <i class="bi bi-floppy save-icon" ></i> Save Deck
+                </div>
+            }
+            <div class="col-2 action-link" id="permalinkExport">
+                <i class="bi bi-link-45deg"></i> Copy Permalink
+            </div>
+            <div class="col-2 action-link" data-bs-toggle="modal" data-bs-target="#exportModal" id="textExport">
+                <i class="bi bi-file-text"></i> Text Export
+            </div>
+            <div class="col-2 action-link" data-bs-toggle="modal" data-bs-target="#exportModal" id="textExportUntap">
+                <i class="bi bi-file-earmark-text"></i> Untap Export
+            </div>
+            <div class="col-2 action-link">
+                <a asp-page="Goldfish" asp-route-deck="@(Model.NonGZDeck)" asp-route-gzdeck="@(Model.GzDeck)" asp-route-id="@(Model.DeckId)" style="color: inherit; text-decoration: none;">🐟 Try It Out</a>
+            </div>
+        </div>
+
         <h2>Hero</h2>
         <div id="deck-hero">
             @if (Model.QueryDeck != null)
@@ -324,6 +321,32 @@
     </div>
 </div>
 
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true" style="color: black;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">Export</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <textarea id="textExportField" style="width: 100%;" rows="20"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script src="~/js/enums.js" asp-append-version="true"></script>
@@ -350,4 +373,5 @@
     <link rel="stylesheet" href="~/css/deckbuilder.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom-checkbox.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/lazy-card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
