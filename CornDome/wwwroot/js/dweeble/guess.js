@@ -75,7 +75,8 @@
             "cost",
             "attack",
             "defense",
-            "type"
+            "type",
+            "cardName"
         ];
 
         fields.forEach(key => {
@@ -105,6 +106,8 @@
             button.disabled =
                 state.isComplete || value !== null;
         });
+
+
 
         renderKeyboard();
         renderResult();
@@ -332,13 +335,12 @@
 
     root.querySelectorAll("[data-guess]").forEach(button => {
         button.addEventListener("click", () => {
-            guessAttribute(button.dataset.guess);
-        });
-    });
-
-    root.querySelectorAll("[data-guess-full]").forEach(button => {
-        button.addEventListener("click", () => {
-            guessFull(button.dataset.guessFull);
+            if (button.dataset.guess === "cardName") {
+                guessFull(button.dataset.guess);
+            } else {
+                guessAttribute(button.dataset.guess);
+            }
+            
         });
     });
 
