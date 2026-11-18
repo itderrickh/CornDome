@@ -197,7 +197,7 @@ namespace CornDome.Pages.Dweeble
             return new
             {
                 date = dailyCard.Date.ToString("yyyy-MM-dd"),
-                namePattern,
+                namePattern = game.IsComplete ? card.Name : namePattern,
                 abilityPattern = nameComplete ? card.Ability : abilityPattern,
                 guessedLetters = game.GuessedLetters,
                 mistakes = game.Mistakes,

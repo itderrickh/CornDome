@@ -255,11 +255,17 @@
             `Today's mystery card was ${state.cardName}. ` +
             `You made ${state.mistakes} incorrect guesses.`;
 
-        if (state.won) {
-            document.getElementById("daily-name-section").classList.add("win");
-            document.getElementById("mysteryCard").src = state.cardImage;
-            launchConfetti();
+        if (state.isComplete) {
+            if (state.won) {
+                document.getElementById("daily-name-section").classList.add("win");
+                document.getElementById("mysteryCard").src = state.cardImage;
+                launchConfetti();
+            } else {
+                document.getElementById("daily-name-section").classList.add("loss");
+                document.getElementById("mysteryCard").src = state.cardImage;
+            }
         }
+        
 
         message(
             state.won
