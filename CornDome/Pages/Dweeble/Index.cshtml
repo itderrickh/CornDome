@@ -164,21 +164,25 @@
             <h2 id="resultTitle"></h2>
             <p id="resultDescription"></p>
 
-            <div>
-                <a asp-page="/Dweeble/Leaderboard" class="leaderboard-button" style="margin-right: 20px;">
+        </div>
+
+        <div class="daily-footer row mb-2">
+            
+            <div class="col-6">
+                <a asp-page="/Dweeble/Leaderboard" class="leaderboard-button">
                     Daily Leaderboard
                 </a>
+            </div>
 
+            <div class="col-6">
                 <a asp-page="/Dweeble/AllTimeLeaderboard" class="alltime-button">
                     All Time Leaderboard
                 </a>
             </div>
-            
-
         </div>
 
         <div class="daily-footer">
-            <span>New mystery card every day at midnight Central Time.</span>
+            <span>New Dweeble every day at midnight UTC.</span>
         </div>
 
     </main>

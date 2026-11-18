@@ -267,6 +267,8 @@
     padding: 11px 22px;
     font-weight: 800;
     cursor: pointer;
+    display: block;
+    text-decoration: none;
 }
 
 .alltime-button {
@@ -277,6 +279,8 @@
     padding: 11px 22px;
     font-weight: 800;
     cursor: pointer;
+    display: block;
+    text-decoration: none;
 }
 
 .daily-footer {
