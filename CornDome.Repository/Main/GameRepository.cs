@@ -19,18 +19,20 @@ namespace CornDome.Repository.Main
     {
         public static DateOnly GetToday()
         {
-            var timezone = TimeZoneInfo.FindSystemTimeZoneById(
-                OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
-                    : "America/Chicago"
-            );
+            //var timezone = TimeZoneInfo.FindSystemTimeZoneById(
+            //    OperatingSystem.IsWindows()
+            //        ? "Central Standard Time"
+            //        : "America/Chicago"
+            //);
 
-            var now = TimeZoneInfo.ConvertTimeFromUtc(
-                DateTime.UtcNow,
-                timezone
-            );
+            //var now = TimeZoneInfo.ConvertTimeFromUtc(
+            //    DateTime.UtcNow,
+            //    timezone
+            //);
 
-            return DateOnly.FromDateTime(now);
+            //return DateOnly.FromDateTime(now);
+            // Just reset at UTC
+            return DateOnly.FromDateTime(DateTime.UtcNow);
         }
 
         public async Task AddGame(DailyCardGame game, string playerKey)
@@ -154,6 +156,7 @@ namespace CornDome.Repository.Main
             else
             {
                 game.Mistakes++;
+                game.AddAttribute(key);
             }
 
             if (game.Mistakes >= maxMistakes)
