@@ -47,6 +47,10 @@
                                    asp-route-userId="@deck.UserId">
                                     @deck.User.UserName
                                 </a>
+                                @if (deck.User.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false)
+                                {
+                                    <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                                }
                             </div>
                         </div>
 

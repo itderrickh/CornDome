@@ -26,6 +26,8 @@ namespace CornDome.Repository.Users
         public async Task<User> GetUserById(int id)
         {
             return context.Users
+                .Include(x => x.UserRoles)
+                .ThenInclude(y => y.Role)
                 .FirstOrDefault(x => x.Id == id);
         }
 
@@ -90,6 +92,8 @@ namespace CornDome.Repository.Users
         public async Task<List<User>> GetByIds(int[] ids)
         {
             return await context.Users
+                .Include(x => x.UserRoles)
+                    .ThenInclude(y => y.Role)
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();
         }

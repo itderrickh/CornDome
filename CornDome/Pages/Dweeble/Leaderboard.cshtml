@@ -132,6 +132,11 @@
                                     <td class="player-cell">
                                         @player.DisplayName
 
+                                        @if (player.IsCoolGuy)
+                                        {
+                                            <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                                        }
+
                                         @if (player.IsCurrentPlayer)
                                         {
                                             <span class="you-badge">

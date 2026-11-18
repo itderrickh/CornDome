@@ -37,7 +37,13 @@ else
             </div>
             <div class="row">
                 <div class="col">
-                    <h5><u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i></h5>
+                    <h5>
+                        <u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i>
+                        @if (Model.IsAuthorCoolGuy)
+                        {
+                            <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                        }
+                    </h5>
                 </div>
             </div>
             <div class="row mb-4">

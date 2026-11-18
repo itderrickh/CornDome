@@ -59,13 +59,16 @@ namespace CornDome.Pages.Dweeble
                         displayName = user.UserName;
                     }
 
+                    var isCoolGuy = user.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
+
                     return new
                     {
                         PlayerKey = group.Key,
                         DisplayName = displayName,
                         TotalWins = totalWins,
                         LongestStreak = longestStreak,
-                        AverageMistakes = averageMistakes
+                        AverageMistakes = averageMistakes,
+                        IsCoolGuy = isCoolGuy,
                     };
                 })
                 .OrderByDescending(x => x.TotalWins)
@@ -79,7 +82,8 @@ namespace CornDome.Pages.Dweeble
                     TotalWins = x.TotalWins,
                     LongestStreak = x.LongestStreak,
                     AverageMistakes = x.AverageMistakes,
-                    IsCurrentPlayer = x.PlayerKey == playerKey
+                    IsCurrentPlayer = x.PlayerKey == playerKey,
+                    IsCoolGuy = x.IsCoolGuy
                 })
                 .ToList();
 
@@ -169,6 +173,7 @@ namespace CornDome.Pages.Dweeble
             public double AverageMistakes { get; set; }
 
             public bool IsCurrentPlayer { get; set; }
+            public bool IsCoolGuy { get; set; }
         }
     }
 }

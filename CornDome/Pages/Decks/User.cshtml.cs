@@ -22,6 +22,7 @@ namespace CornDome.Pages.Decks
         public int? UserId { get; set; }
         public string DisplayUsername { get; set; }
         public bool UserNotFound = false;
+        public bool IsCoolGuy { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -46,6 +47,7 @@ namespace CornDome.Pages.Decks
             if (user != null)
             {
                 DisplayUsername = user.UserName;
+                IsCoolGuy = user.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
 
                 var results = deckRepository.GetPublicUsersDecks(user.Id, PageNumber, PageSize);
                 TotalPages = (int)Math.Ceiling(results.count / (double)PageSize);

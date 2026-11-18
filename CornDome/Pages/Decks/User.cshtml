@@ -16,7 +16,14 @@ else if (Model.UserId != null)
     }
     else
     {
-        <h2>@(Model.DisplayUsername)'s decks</h2>
+        <h2>
+            @(Model.DisplayUsername)'s decks
+            @if (Model.IsCoolGuy)
+            {
+            <img src="~/img/logo-cool.png" style="height: 40px; width: 40px;" />
+            }
+        </h2>
+        
     }
     
     <div class="row g-4">

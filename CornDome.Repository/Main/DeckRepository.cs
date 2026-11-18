@@ -96,6 +96,8 @@ namespace CornDome.Repository.Main
             return ApplyDeckSort(
                     mainContext.Decks
                         .Include(card => card.User)
+                        .ThenInclude(user => user.UserRoles)
+                        .ThenInclude(ur => ur.Role)
                         .Include(x => x.DeckLikes)
                         .Include(x => x.DeckComments)
                         .Where(u => u.UserId == userId),
@@ -128,6 +130,8 @@ namespace CornDome.Repository.Main
         {
             var query = mainContext.Decks
                 .Include(deck => deck.User)
+                .ThenInclude(user => user.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .Include(x => x.DeckComments)
                 .Include(x => x.DeckLikes)
                 .Where(deck => deck.Visibility == DeckVisibility.Visible)
@@ -158,6 +162,8 @@ namespace CornDome.Repository.Main
         {
             var query = mainContext.Decks
                 .Include(card => card.User)
+                .ThenInclude(user => user.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .Include(x => x.DeckComments)
                 .Include(x => x.DeckLikes)
                 .Where(u => u.UserId == userId &&
@@ -296,6 +302,8 @@ namespace CornDome.Repository.Main
         {
             return mainContext.DeckComments
                 .Include(x => x.User)
+                .ThenInclude(user => user.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .Where(x => x.DeckId == deckId)
                 .OrderByDescending(x => x.Timestamp)
                 .ToList();
