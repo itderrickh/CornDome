@@ -4,6 +4,21 @@ namespace CornDome.Helpers
 {
     public class UserRoleHelper
     {
+        public bool IsPatreonMember(ClaimsPrincipal principal)
+        {
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            string[] patreonRoles = [
+                AppConstants.ROLE_ADMIN,
+                AppConstants.ROLE_PATREON_COOLGUY,
+                AppConstants.ROLE_PATREON_DWEEB,
+                AppConstants.ROLE_PATREON_FLOOPER
+            ];
+
+            return IsInAnyRole(principal, patreonRoles);
+        }
+
         public bool IsServedAds(ClaimsPrincipal principal)
         {
             if (principal == null || !principal.Identity.IsAuthenticated)
@@ -11,7 +26,10 @@ namespace CornDome.Helpers
 
             string[] noAdsRoles = [
                 AppConstants.ROLE_ADMIN,
-                AppConstants.ROLE_COOL_GUY
+                AppConstants.ROLE_COOL_GUY,
+                AppConstants.ROLE_PATREON_COOLGUY,
+                AppConstants.ROLE_PATREON_DWEEB,
+                AppConstants.ROLE_PATREON_FLOOPER
             ];
 
             return !IsInAnyRole(principal, noAdsRoles);
