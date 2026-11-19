@@ -127,12 +127,10 @@ namespace CornDome
                     policy.RequireRole(AppConstants.ROLE_TOURNAMENT_MANAGER, AppConstants.ROLE_ADMIN));
                 options.AddPolicy("cardManager", policy =>
                     policy.RequireRole(AppConstants.ROLE_CARD_MANAGER, AppConstants.ROLE_ADMIN));
-                options.AddPolicy("rulingManager", policy =>
-                    policy.RequireRole(AppConstants.ROLE_RULING_MANAGER, AppConstants.ROLE_ADMIN));
                 options.AddPolicy("coolGuy", policy =>
                     policy.RequireRole(AppConstants.ROLE_COOL_GUY));
                 options.AddPolicy("editor", policy =>
-                    policy.RequireRole(AppConstants.ROLE_ADMIN, AppConstants.ROLE_CARD_MANAGER, AppConstants.ROLE_RULING_MANAGER));
+                    policy.RequireRole(AppConstants.ROLE_ADMIN, AppConstants.ROLE_CARD_MANAGER));
                 options.AddPolicy("patreon", policy =>
                     policy.RequireRole(AppConstants.ROLE_PATREON_COOLGUY, AppConstants.ROLE_PATREON_DWEEB, AppConstants.ROLE_PATREON_FLOOPER, AppConstants.ROLE_ADMIN));
             });

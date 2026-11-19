@@ -61,19 +61,6 @@ namespace CornDome.Helpers
             return IsInAnyRole(principal, cardManagerRoles);
         }
 
-        public bool IsRulingManager(ClaimsPrincipal principal)
-        {
-            if (principal == null || !principal.Identity.IsAuthenticated)
-                return false;
-
-            string[] cardManagerRoles = [
-                AppConstants.ROLE_ADMIN,
-                AppConstants.ROLE_RULING_MANAGER
-            ];
-
-            return IsInAnyRole(principal, cardManagerRoles);
-        }
-
         public bool IsAdmin(ClaimsPrincipal principal)
         {
             if (principal == null || !principal.Identity.IsAuthenticated)

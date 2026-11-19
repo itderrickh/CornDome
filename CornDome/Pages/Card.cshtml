@@ -124,13 +124,6 @@ else
                 </div>
             }
 
-            @if (UserRoleHelper.IsRulingManager(User))
-            {
-                <div class="card-text-section">
-                    <a class="bold-label btn btn-primary" asp-page="/CardManage/Rulings" asp-route-id="@selectedRevision.Id">Edit Rulings</a>
-                </div>
-            }
-
             @if (UserRoleHelper.IsServedAds(User))
             {
                 <div class="mt-5">

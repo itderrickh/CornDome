@@ -1,87 +1,281 @@
 ﻿@page
 @model CornDome.Pages.Admin.UserManagementModel
+
 @{
     ViewData["Title"] = "User Management";
-}
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    var activeUsers = Model.Users.Count(x => x.LastLogin > DateTime.Now.AddDays(-30));
+    var inactiveUsers = Model.Users.Count - activeUsers;
 }
 
 <div class="container py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <div class="text-primary fw-semibold small text-uppercase mb-2">
-                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Admin/UserManagement">Users</a>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Header -->
+    <div class="mb-4">
+        <div class="text-primary fw-semibold small text-uppercase mb-2">
+            CardDweeb /
+            <a asp-page="/Admin/Index" class="text-decoration-none">Administration</a> /
+            <a asp-page="/Admin/UserManagement">Users</a>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h1 class="fw-bold mb-1">
+                    <i class="bi bi-people me-2"></i>User Management
+                </h1>
+                <p class="text-muted mb-0">
+                    Manage accounts, permissions, and user roles.
+                </p>
             </div>
-            <h1 class="fw-bold mb-2">User Management</h1>
-            <p class="text-muted mb-0">
-                Edit user and roles. (Users active in the last 30 days: @Model.Users.Where(x => x.LastLogin > DateTime.Now.AddDays(-30)).Count())
-            </p>
         </div>
     </div>
 
+    <!-- Statistics -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-3">
+                        <i class="bi bi-people fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Total Users</div>
+                        <div class="fs-3 fw-bold">@Model.Users.Count</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-success bg-opacity-10 text-success p-3">
+                        <i class="bi bi-person-check fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Active (30 Days)</div>
+                        <div class="fs-3 fw-bold">@activeUsers</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="rounded-3 bg-secondary bg-opacity-10 text-secondary p-3">
+                        <i class="bi bi-person-dash fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Inactive (30 Days)</div>
+                        <div class="fs-3 fw-bold">@inactiveUsers</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Table -->
     <div class="card shadow-sm">
+
+        <div class="card-header bg-transparent py-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div class="fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>All Users
+                </div>
+
+                <div class="position-relative" style="width: 100%; max-width: 350px;">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input type="search"
+                           id="userSearch"
+                           class="form-control ps-5"
+                           placeholder="Search email, username, or ID..."
+                           autocomplete="off" />
+                </div>
+            </div>
+        </div>
+
         <div class="table-responsive">
-            <table class="table table-striped w-100 table-hover align-middle mb-0">
-                <thead>
+            <table class="table table-hover align-middle mb-0" id="userTable">
+                <thead class="table-light">
                     <tr>
-                        <th>Id</th>
-                        <th>Email</th>
-                        <th>Username</th>
+                        <th class="ps-3">User</th>
                         <th>Last Login</th>
                         <th>Roles</th>
+                        <th class="text-end pe-3">Manage Roles</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var user in Model.Users.OrderBy(x => x.Id))
                     {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Email</td>
-                            <td>@user.UserName</td>
-                            <td>@(user.LastLogin == DateTime.MinValue ? "" : user.LastLogin)</td>
+                        var userRoles = Model.UserRoles.Where(x => x.UserId == user.Id).ToList();
+
+                        <tr class="user-row">
+                            <td class="ps-3">
+                                <div class="fw-semibold user-email">@user.Email</div>
+                                <div class="text-muted small">
+                                    <span class="user-username">@(user.UserName ?? "No username")</span>
+                                    <span class="mx-1">·</span>
+                                    <span class="user-id">ID: @user.Id</span>
+                                </div>
+                            </td>
+
                             <td>
-                                <ul>
-                                    <form method="post" asp-page-handler="AddRole">
-                                        <input type="text" name="AddRoleUserId" value="@user.Id" class="d-none" />
-                                        <select asp-for="AddRoleId">
-                                            <option value="">- Select a Role -</option>
-                                            @foreach (var role in Model.Roles)
+                                @if (user.LastLogin == DateTime.MinValue)
+                                {
+                                    <span class="text-muted small">Never</span>
+                                }
+                                else
+                                {
+                                    <div class="small fw-medium">
+                                        @user.LastLogin.ToString("MMM dd, yyyy")
+                                    </div>
+                                    <div class="text-muted small">
+                                        @user.LastLogin.ToString("h:mm tt")
+                                    </div>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="d-flex flex-wrap gap-1 user-role-list">
+                                    @if (userRoles.Count == 0)
+                                    {
+                                        <span class="text-muted small">No roles assigned</span>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var userRole in userRoles)
+                                        {
+                                            var roleName = Model.Roles.SingleOrDefault(x => x.Id == userRole.RoleId)?.Name ?? "Unknown";
+
+                                            <span class="badge rounded-pill text-bg-secondary">
+                                                @roleName
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                            </td>
+
+                            <td class="text-end pe-3">
+                                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+
+                                    <form method="post" asp-page-handler="AddRole" class="d-flex gap-1">
+                                        <input type="hidden" name="AddRoleUserId" value="@user.Id" />
+
+                                        <select name="AddRoleId"
+                                                class="form-select form-select-sm"
+                                                style="max-width: 140px;"
+                                                required>
+                                            <option value="">Add role...</option>
+                                            @foreach (var role in Model.Roles.Where(r => !userRoles.Any(ur => ur.RoleId == r.Id)))
                                             {
                                                 <option value="@role.Id">@role.Name</option>
                                             }
                                         </select>
-                                        <button type="submit" class="btn btn-primary">Add Role</button>
-                                    </form>
-                                    @if (Model.UserRoles.Where(x => x.UserId == user.Id).Count() > 0)
-                                    {
-                                        <hr />
-                                    }
 
-                                    @foreach (var userRole in Model.UserRoles.Where(x => x.UserId == user.Id))
+                                        <button type="submit"
+                                                class="btn btn-sm btn-primary"
+                                                title="Add role">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+
+                                    @if (userRoles.Count > 0)
                                     {
-                                        <li>
-                                            @Model.Roles.SingleOrDefault(y => y.Id == userRole.RoleId).Name
-                                            <form method="post" asp-page-handler="RemoveRole" class="d-inline">
-                                                <input type="text" name="AddRoleUserId" value="@userRole.UserId" class="d-none" />
-                                                <input type="text" name="AddRoleId" value="@userRole.RoleId" class="d-none" />
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </li>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown">
+                                                <i class="bi bi-shield-lock me-1"></i>Roles
+                                            </button>
+
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                @foreach (var userRole in userRoles)
+                                                {
+                                                    var roleName = Model.Roles.SingleOrDefault(x => x.Id == userRole.RoleId)?.Name ?? "Unknown";
+
+                                                    <li>
+                                                        <form method="post" asp-page-handler="RemoveRole">
+                                                            <input type="hidden" name="AddRoleUserId" value="@userRole.UserId" />
+                                                            <input type="hidden" name="AddRoleId" value="@userRole.RoleId" />
+
+                                                            <button type="submit"
+                                                                    class="dropdown-item text-danger"
+                                                                    onclick="return confirm('Remove the @roleName role from this user?');">
+                                                                <i class="bi bi-trash me-2"></i>
+                                                                Remove @roleName
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
                                     }
-                                </ul>
+                                </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
+
+        <div class="card-footer bg-transparent text-muted small d-flex justify-content-between">
+            <span id="userCount">@Model.Users.Count users</span>
+            <span id="noResults" class="text-warning d-none">
+                <i class="bi bi-search me-1"></i>No matching users found.
+            </span>
+        </div>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const search = document.getElementById('userSearch');
+            const rows = Array.from(document.querySelectorAll('.user-row'));
+            const count = document.getElementById('userCount');
+            const noResults = document.getElementById('noResults');
+
+            function filterUsers() {
+                const query = search.value.trim().toLowerCase();
+                let visible = 0;
+
+                rows.forEach(row => {
+                    const matches = row.textContent.toLowerCase().includes(query);
+
+                    row.classList.toggle('d-none', !matches);
+
+                    if (matches) visible++;
+                });
+
+                count.textContent = `${visible} of ${rows.length} users`;
+                noResults.classList.toggle('d-none', visible !== 0);
+            }
+
+            search.addEventListener('input', filterUsers);
+        });
+    </script>
+}

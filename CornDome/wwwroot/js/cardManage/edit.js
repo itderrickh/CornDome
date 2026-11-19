@@ -59,7 +59,7 @@ function showOnlyRelevantFields(fieldsToShow) {
     editableFields[fieldsToShow].forEach((value) => {
         var fields = document.getElementsByClassName(value);
         Array.from(fields).forEach(field => {
-            field.style.display = 'inherit';
+            field.style.display = '';
         });
     });
 }

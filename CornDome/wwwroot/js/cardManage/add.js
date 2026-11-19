@@ -38,7 +38,7 @@ document.getElementById("cardType").onchange = function (e) {
     });
 
     availableFields[fieldsToShow].forEach((value) => {
-        document.getElementById(value).style.display = 'inherit';
+        document.getElementById(value).style.display = '';
     });
 };
 

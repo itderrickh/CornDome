@@ -1,88 +1,228 @@
 ﻿@page
 @model CornDome.Pages.CardManage.AddModel
+
 @{
     ViewData["Title"] = "Add Card";
 }
 
-<div>
-    <h2>Add a Card</h2>
-    <form method="post" enctype="multipart/form-data" style="border: 1px solid white; padding: 8px 10px;" id="addCardForm">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" asp-for="AddCard.IsCustomCard" /> <label class="form-check-label">Is Custom Card?</label>
-        </div>
-        <div class="form-group mb-1">
-            <label>Name: </label><input type="text" asp-for="AddCard.Name" class="form-control" />
-        </div>
-        <div class="form-group mb-1">
-            <label>Card Type: </label>
-            <select class="form-control" asp-for="AddCard.TypeId" id="cardType">
-                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
-                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
-                <option value="@((int)CardTypeEnum.Building)">Building</option>
-                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
-                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
-                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
-            </select>
-        </div>
-
-
-        <div id="optionalFields">
-            <div class="form-group mb-1" id="landscapeField">
-                <label>Landscape: </label>
-                <select class="form-control" asp-for="AddCard.LandscapeId">
-                    <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
-                    <option value="@((int)LandscapeEnum.CornField)">@LandscapeConverter.ToString(LandscapeEnum.CornField)</option>
-                    <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
-                    <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
-                    <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
-                    <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
-                    <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
-                    <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
-                </select>
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/CardManage/Index">Card Management</a>
             </div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-plus-circle me-2"></i>Add a Card
+            </h2>
+            <p class="text-muted mb-0">Create a new card and configure its properties.</p>
+        </div>
+    </div>
 
-            <div class="form-group mb-1" id="abilityField">
-                <label>Ability: </label>
-                <input type="text" class="form-control" asp-for="AddCard.Ability" />
-            </div>
-            <div class="form-group mb-1" id="setField">
-                <label>Set: </label>
-                <div class="tag-container" id="tagContainer">
-                    <input type="text" id="tag-input" placeholder="Add set..." />
+    <form method="post" enctype="multipart/form-data" id="addCardForm">
+        <div class="row g-4">
+            <div class="col">
+                <!-- Basic Information -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-card-text me-2 text-primary"></i>Basic Information
+                        </h5>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="form-check form-switch mb-4 p-3 rounded border">
+                            <input type="checkbox" class="form-check-input ms-0 me-3"
+                                   asp-for="AddCard.IsCustomCard" />
+                            <label asp-for="AddCard.IsCustomCard" class="form-check-label fw-semibold">
+                                Custom Card
+                            </label>
+                            <div class="small text-muted mt-1 ms-5">
+                                Mark this card as a custom-created card.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AddCard.Name" class="form-label fw-semibold">
+                                Card Name
+                            </label>
+                            <input type="text" asp-for="AddCard.Name"
+                                   class="form-control form-control"
+                                   placeholder="Enter card name..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AddCard.TypeId" class="form-label fw-semibold">
+                                Card Type
+                            </label>
+                            <select class="form-select" asp-for="AddCard.TypeId" id="cardType">
+                                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                                <option value="@((int)CardTypeEnum.Building)">Building</option>
+                                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+                            </select>
+                        </div>
+
+                        <div id="optionalFields" class="pt-3 border-top">
+                            <div class="mb-3" id="landscapeField">
+                                <label class="form-label fw-semibold">Landscape</label>
+                                <select class="form-select" asp-for="AddCard.LandscapeId">
+                                    <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
+                                    <option value="@((int)LandscapeEnum.CornField)">@LandscapeConverter.ToString(LandscapeEnum.CornField)</option>
+                                    <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
+                                    <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
+                                    <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
+                                    <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
+                                    <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
+                                    <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3" id="abilityField">
+                                <label asp-for="AddCard.Ability" class="form-label fw-semibold">
+                                    Ability
+                                </label>
+                                <input type="text" class="form-control"
+                                       asp-for="AddCard.Ability"
+                                       placeholder="Enter card ability..." />
+                            </div>
+
+                            <div class="mb-3" id="setField">
+                                <label class="form-label fw-semibold">Sets</label>
+                                <div class="tag-container" id="tagContainer">
+                                    <input type="text" id="tag-input" placeholder="Add set..." />
+                                </div>
+                                <div class="tag-dropdown" id="tag-dropdown"></div>
+                                <input type="hidden" asp-for="AddCard.SetIds" id="setIdsInput" />
+                                <div class="form-text">Select one or more sets for this card.</div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-4" id="costField">
+                                    <label asp-for="AddCard.Cost" class="form-label fw-semibold">Cost</label>
+                                    <input type="number" class="form-control" asp-for="AddCard.Cost" />
+                                </div>
+
+                                <div class="col-md-4" id="attackField">
+                                    <label asp-for="AddCard.Attack" class="form-label fw-semibold">Attack</label>
+                                    <input type="number" class="form-control" asp-for="AddCard.Attack" />
+                                </div>
+
+                                <div class="col-md-4" id="defenseField">
+                                    <label asp-for="AddCard.Defense" class="form-label fw-semibold">Defense</label>
+                                    <input type="number" class="form-control" asp-for="AddCard.Defense" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="tag-dropdown" id="tag-dropdown"></div>
-                <input type="hidden" asp-for="AddCard.SetIds" id="setIdsInput" />
-            </div>
-            <div class="form-group mb-1" id="costField">
-                <label>Cost: </label>
-                <input type="number" class="form-control" asp-for="AddCard.Cost" />
-            </div>
-            <div class="form-group mb-1" id="attackField">
-                <label>Attack: </label>
-                <input type="number" class="form-control" asp-for="AddCard.Attack" />
-            </div>
-            <div class="form-group mb-1" id="defenseField">
-                <label>Defense: </label>
-                <input type="number" class="form-control" asp-for="AddCard.Defense" />
-            </div>
-        </div>
 
-        <div class="form-group mb-2">
-            <label>Image: </label>
-            <input class="form-control mb-2" id="fileInput" type="file" asp-for="AddCard.Image" />
+                <!-- Image Upload -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-image me-2 text-primary"></i>Card Artwork
+                        </h5>
+                    </div>
 
-            <img class="newPreview" src="" alt="Image Preview">
-        </div>
-        
-        <div class="form-group mb-1">
-            <button class="btn btn-primary" type="submit" id="submitButton">Submit</button>
+                    <div class="card-body p-4">
+                        <label asp-for="AddCard.Image" class="form-label fw-semibold">
+                            Upload Image
+                        </label>
+                        <input class="form-control" id="fileInput" type="file"
+                               asp-for="AddCard.Image" accept="image/*" />
+                        <div class="form-text mb-3">
+                            Select an image to use as the card artwork.
+                        </div>
+
+                        <div class="image-preview-container text-center rounded border p-3">
+                            <img class="newPreview" src="" alt="Image Preview" />
+                            <div class="preview-placeholder text-muted py-5">
+                                <i class="bi bi-card-image display-4 d-block mb-2"></i>
+                                <span>Image preview will appear here</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex flex-wrap justify-content-end gap-2">
+                    <a asp-page="/CardManage/Index" class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
+                    <button class="btn btn-primary px-4" type="submit" id="submitButton">
+                        <i class="bi bi-plus-lg me-2"></i>Create Card
+                    </button>
+                </div>
+            </div>
         </div>
     </form>
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/cardManage/add.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/css/setTag.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/cardManage/add.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/setTag.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .image-preview-container {
+            background: var(--bs-tertiary-bg);
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .newPreview {
+            display: none;
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        .image-preview-container.has-image .newPreview {
+            display: block;
+        }
+
+        .image-preview-container.has-image .preview-placeholder {
+            display: none;
+        }
+
+        .form-check.form-switch {
+            padding-left: 3.5rem;
+        }
+
+            .form-check.form-switch .form-check-input {
+                margin-left: -2.5rem;
+                width: 2.5rem;
+                height: 1.25rem;
+                cursor: pointer;
+            }
+
+            .form-check.form-switch .form-check-label {
+                cursor: pointer;
+            }
+
+        .card {
+            border-radius: 0.75rem;
+        }
+
+        .card-header {
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+        }
+
+        #tagContainer {
+            min-height: 42px;
+        }
+
+        @@media (max-width: 991.98px) {
+            .sticky-lg-top {
+                position: static !important;
+            }
+        }
+    </style>
 }
 
 @section Scripts {
@@ -92,18 +232,49 @@
         const allSets = JSON.parse('@Json.Serialize(Model.AllSets)');
         const selected = [];
     </script>
+
     <script src="~/js/setTag.js" asp-append-version="true"></script>
+
     <script>
         document.getElementById("addCardForm").addEventListener("submit", function () {
             const submitButton = document.getElementById("submitButton");
 
-            // Prevent additional submissions
             if (submitButton.disabled) {
                 return;
             }
 
             submitButton.disabled = true;
-            submitButton.innerText = "Submitting...";
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Card...';
+        });
+
+        const fileInput = document.getElementById("fileInput");
+        const previewContainer = document.querySelector(".image-preview-container");
+        const previewImage = document.querySelector(".newPreview");
+
+        fileInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (!file) {
+                previewImage.src = "";
+                previewContainer.classList.remove("has-image");
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                this.value = "";
+                previewImage.src = "";
+                previewContainer.classList.remove("has-image");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewContainer.classList.add("has-image");
+            };
+
+            reader.readAsDataURL(file);
         });
     </script>
 }

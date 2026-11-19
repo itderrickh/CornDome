@@ -273,6 +273,35 @@
     min-width: 130px;
 }
 
+.tooltip-hover {
+    position: relative;
+}
+
+.tooltip-hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #212529;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: normal;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+}
+
+.tooltip-hover:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
 @media(max-width: 600px) {
     .comments-header {
         align-items: flex-start;

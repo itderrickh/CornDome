@@ -60,6 +60,11 @@ html[data-color-mode="0"] {
     color: var(--text-color);
 }
 
+.form-select {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
 .table-hover > tbody > tr:hover {
     color: var(--text-color);
 }

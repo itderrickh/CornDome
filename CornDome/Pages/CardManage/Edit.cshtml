@@ -1,109 +1,277 @@
 ﻿@page
 @model CornDome.Pages.CardManage.EditModel
+
 @{
     ViewData["Title"] = "Edit Card";
 }
 
-<div>
+<div class="container py-4">
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
-    <form method="post" enctype="multipart/form-data">
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <div class="text-primary fw-semibold small text-uppercase mb-2">
+                CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/CardManage/Index">Card Management</a>
+            </div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pencil-square me-2"></i>Edit Card
+            </h2>
+            <p class="text-muted mb-0">
+                Update card information, properties, sets, and artwork.
+            </p>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="editCardForm">
         <input type="hidden" asp-for="CardId" />
-        <div class="form-group mb-1">
-            <label>Name: </label><input type="text" class="form-control" asp-for="EditCard.Name" />
-        </div>
 
-        <div class="form-group mb-1">
-            <label>Card Type: </label>
-            <select class="form-control cardType" asp-for="EditCard.TypeId">
-                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
-                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
-                <option value="@((int)CardTypeEnum.Building)">Building</option>
-                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
-                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
-                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
-            </select>
-        </div>
+        <div class="row g-4">
+            <!-- Main Form -->
+            <div class="col">
 
-        <div id="optionalFields">
-            <div class="form-group mb-1 landscapeField">
-                <label>Landscape: </label>
-                <select class="form-control" asp-for="EditCard.LandscapeId">
-                    <option value="@null">-- Select a Landscape --</option>
-                    <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
-                    <option value="@((int)LandscapeEnum.CornField)">@LandscapeConverter.ToString(LandscapeEnum.CornField)</option>
-                    <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
-                    <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
-                    <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
-                    <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
-                    <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
-                    <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
-                </select>
-            </div>
+                <!-- Basic Information -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-card-text me-2 text-primary"></i>Basic Information
+                        </h5>
+                    </div>
 
-            <div class="form-group mb-1 abilityField">
-                <label>Ability: </label>
-                <input type="text" class="form-control" asp-for="EditCard.Ability" />
-            </div>
-            <div class="form-group mb-1 setField">
-                <label>Set: </label>
-                <div class="tag-container" id="tagContainer">
-                    <input type="text" id="tag-input" placeholder="Add set..." />
-                </div>
-                <div class="tag-dropdown" id="tag-dropdown"></div>
-                <input type="hidden" asp-for="SetIds" id="setIdsInput" />
-            </div>
-            <div class="form-group mb-1 costField">
-                <label>Cost: </label>
-                <input type="number" class="form-control" asp-for="EditCard.Cost" />
-            </div>
-            <div class="form-group mb-1 attackField">
-                <label>Attack: </label>
-                <input type="number" class="form-control" asp-for="EditCard.Attack" />
-            </div>
-            <div class="form-group mb-1 defenseField">
-                <label>Defense: </label>
-                <input type="number" class="form-control" asp-for="EditCard.Defense" />
-            </div>
-        </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label asp-for="EditCard.Name" class="form-label fw-semibold">
+                                Card Name
+                            </label>
+                            <input type="text" class="form-control form-control"
+                                   asp-for="EditCard.Name" placeholder="Enter card name..." />
+                        </div>
 
-        <div class="form-group mb-1 imageField">
-            <div class="row">
-                <h3>Image Editing:</h3>
-                @* Only show the regular image for posting *@
-                <div class="col-6 preview-box">
-                    <h4>Old Image</h4>
-                    <img class="oldPreview" src="@(Model.BaseUrl + Model.EditCard.ImageUrl)" alt="Old Card">
-                </div>
+                        <div class="mb-3">
+                            <label asp-for="EditCard.TypeId" class="form-label fw-semibold">
+                                Card Type
+                            </label>
+                            <select class="form-select cardType" asp-for="EditCard.TypeId">
+                                <option value="@((int)CardTypeEnum.Creature)">Creature</option>
+                                <option value="@((int)CardTypeEnum.Spell)">Spell</option>
+                                <option value="@((int)CardTypeEnum.Building)">Building</option>
+                                <option value="@((int)CardTypeEnum.Landscape)">Landscape</option>
+                                <option value="@((int)CardTypeEnum.Hero)">Hero</option>
+                                <option value="@((int)CardTypeEnum.Teamwork)">Teamwork</option>
+                            </select>
+                        </div>
 
-                <div class="col-6 preview-box">
-                    <h4>New Image</h4>
-                    <img class="newPreview" src="" alt="Preview">
-                    <div class="upload-section">
-                        <input type="file" asp-for="RevisionImageUpload.File" class="fileInput" accept="image/*">
+                        <div id="optionalFields" class="pt-3 border-top">
+                            <div class="mb-3 landscapeField">
+                                <label asp-for="EditCard.LandscapeId" class="form-label fw-semibold">
+                                    Landscape
+                                </label>
+                                <select class="form-select" asp-for="EditCard.LandscapeId">
+                                    <option value="@null">-- Select a Landscape --</option>
+                                    <option value="@((int)LandscapeEnum.BluePlains)">@LandscapeConverter.ToString(LandscapeEnum.BluePlains)</option>
+                                    <option value="@((int)LandscapeEnum.CornField)">@LandscapeConverter.ToString(LandscapeEnum.CornField)</option>
+                                    <option value="@((int)LandscapeEnum.UselessSwamp)">@LandscapeConverter.ToString(LandscapeEnum.UselessSwamp)</option>
+                                    <option value="@((int)LandscapeEnum.SandyLands)">@LandscapeConverter.ToString(LandscapeEnum.SandyLands)</option>
+                                    <option value="@((int)LandscapeEnum.NiceLands)">@LandscapeConverter.ToString(LandscapeEnum.NiceLands)</option>
+                                    <option value="@((int)LandscapeEnum.IcyLands)">@LandscapeConverter.ToString(LandscapeEnum.IcyLands)</option>
+                                    <option value="@((int)LandscapeEnum.Rainbow)">@LandscapeConverter.ToString(LandscapeEnum.Rainbow)</option>
+                                    <option value="@((int)LandscapeEnum.LavaFlats)">@LandscapeConverter.ToString(LandscapeEnum.LavaFlats)</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3 abilityField">
+                                <label asp-for="EditCard.Ability" class="form-label fw-semibold">
+                                    Ability
+                                </label>
+                                <input type="text" class="form-control"
+                                       asp-for="EditCard.Ability"
+                                       placeholder="Enter card ability..." />
+                            </div>
+
+                            <div class="mb-3 setField">
+                                <label class="form-label fw-semibold">Sets</label>
+                                <div class="tag-container" id="tagContainer">
+                                    <input type="text" id="tag-input" placeholder="Add set..." />
+                                </div>
+                                <div class="tag-dropdown" id="tag-dropdown"></div>
+                                <input type="hidden" asp-for="SetIds" id="setIdsInput" />
+                                <div class="form-text">Manage the sets associated with this card.</div>
+                            </div>
+
+                            <div class="row mb-3 g-3">
+                                <div class="col-md-4 costField form-group">
+                                    <label asp-for="EditCard.Cost" class="form-label fw-semibold">Cost</label>
+                                    <input type="number" class="form-control" asp-for="EditCard.Cost" />
+                                </div>
+
+                                <div class="col-md-4 attackField form-group">
+                                    <label asp-for="EditCard.Attack" class="form-label fw-semibold">Attack</label>
+                                    <input type="number" class="form-control" asp-for="EditCard.Attack" />
+                                </div>
+
+                                <div class="col-md-4 defenseField form-group">
+                                    <label asp-for="EditCard.Defense" class="form-label fw-semibold">Defense</label>
+                                    <input type="number" class="form-control" asp-for="EditCard.Defense" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-group mb-1 rulingField">
+                                    <label>Rulings: </label>
+                                    <textarea class="form-control" asp-for="EditCard.Rulings"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Image Editing -->
+                <div class="card shadow-sm border-0 mb-4 imageField">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-images me-2 text-primary"></i>Card Artwork
+                        </h5>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <p class="text-muted small mb-3">
+                            Compare the current artwork with your replacement before saving.
+                        </p>
+
+                        <div class="row g-3">
+                            <!-- Current Image -->
+                            <div class="col-md-6 preview-box">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h6 class="fw-semibold mb-0">Current Image</h6>
+                                </div>
+
+                                <div class="image-preview-container">
+                                    <img class="oldPreview"
+                                         src="@(Model.BaseUrl + Model.EditCard.ImageUrl)"
+                                         alt="Current Card Artwork" />
+                                </div>
+                            </div>
+
+                            <!-- New Image -->
+                            <div class="col-md-6 preview-box">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h6 class="fw-semibold mb-0">New Image</h6>
+                                </div>
+
+                                <div class="image-preview-container new-image-container">
+                                    <img class="newPreview" src="" alt="New Card Artwork Preview" />
+                                    <div class="new-image-placeholder text-muted">
+                                        <i class="bi bi-cloud-arrow-up display-5 d-block mb-2"></i>
+                                        <span>Choose an image to preview</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label asp-for="RevisionImageUpload.File" class="form-label fw-semibold">
+                                Replace Card Artwork
+                            </label>
+                            <input type="file" asp-for="RevisionImageUpload.File"
+                                   class="form-control fileInput" accept="image/*" />
+                            <div class="form-text">
+                                Leave empty to keep the existing artwork.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Actions -->
+                <div class="d-flex flex-wrap justify-content-end gap-2">
+                    <a asp-page="/CardManage/Index" class="btn btn-outline-secondary px-4">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="btn btn-primary px-4" id="saveButton">
+                        <i class="bi bi-check-lg me-2"></i>Save Changes
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="mt-2">
-            <button type="submit" class="btn btn-primary">
-                Submit
-            </button>
         </div>
     </form>
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/cardManage/edit.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/cardManage/edit.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/setTag.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .card {
+            border-radius: 0.75rem;
+        }
+
+        .card-header {
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+        }
+
+        .image-preview-container {
+            background: var(--bs-tertiary-bg);
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            min-height: 260px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .oldPreview,
+        .newPreview {
+            max-width: 100%;
+            max-height: 380px;
+            object-fit: contain;
+        }
+
+        .newPreview {
+            display: none;
+        }
+
+        .new-image-placeholder {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .new-image-container.has-image .newPreview {
+            display: block;
+        }
+
+        .new-image-container.has-image .new-image-placeholder {
+            display: none;
+        }
+
+        #tagContainer {
+            min-height: 42px;
+        }
+
+        @@media (max-width: 991.98px) {
+            .sticky-lg-top {
+                position: static !important;
+            }
+        }
+    </style>
 }
 
 @section Scripts {
@@ -122,9 +290,56 @@
     }
 
     <script src="~/js/cardManage/edit.js" asp-append-version="true"></script>
+
     <script>
         const allSets = JSON.parse('@Json.Serialize(Model.AllSets)');
         const selected = JSON.parse('@Json.Serialize(Model.EditCard.CardSets)');
     </script>
+
     <script src="~/js/setTag.js" asp-append-version="true"></script>
+
+    <script>
+        // New image preview
+        const imageInput = document.querySelector(".fileInput");
+        const newPreview = document.querySelector(".newPreview");
+        const newImageContainer = document.querySelector(".new-image-container");
+
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (!file) {
+                newPreview.src = "";
+                newImageContainer.classList.remove("has-image");
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                this.value = "";
+                newPreview.src = "";
+                newImageContainer.classList.remove("has-image");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                newPreview.src = e.target.result;
+                newImageContainer.classList.add("has-image");
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Prevent duplicate submissions
+        document.getElementById("editCardForm").addEventListener("submit", function () {
+            const button = document.getElementById("saveButton");
+
+            if (button.disabled) {
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving Changes...';
+        });
+    </script>
 }

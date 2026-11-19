@@ -11,7 +11,6 @@
         public const string ROLE_ADMIN = "Admin";
         public const string ROLE_TOURNAMENT_MANAGER = "TournamentManager";
         public const string ROLE_CARD_MANAGER = "CardManager";
-        public const string ROLE_RULING_MANAGER = "RulingManager";
         public const string ROLE_COOL_GUY = "CoolGuy";
         public const string ROLE_EARLY_BACKER = "Early_Backer";
 

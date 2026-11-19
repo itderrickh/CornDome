@@ -108,6 +108,7 @@ namespace CornDome.Pages.CardManage
                 card.Defense = EditCard.Defense;
                 card.LandscapeId = EditCard.LandscapeId;
                 card.CardSets = setsToUpdate;
+                card.Rulings = EditCard.Rulings;
 
                 isSuccess = cardRepository.UpdateCard(card);
             }
@@ -129,6 +130,7 @@ namespace CornDome.Pages.CardManage
                 Defense = card.Defense,
                 Id = card.Id,
                 ImageUrl = card.GetOptimizedImage,
+                Rulings = card.Rulings,
                 CardSets = [.. card.CardSets]
             };
             return RedirectToPage(new { id = CardId });
@@ -232,5 +234,6 @@ namespace CornDome.Pages.CardManage
         public IFormFile Image { get; set; }
         public string ImageUrl { get; set; }
         public int Id { get; set; }
+        public string Rulings { get; set; }
     }
 }
