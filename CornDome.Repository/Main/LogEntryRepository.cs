@@ -27,7 +27,8 @@ namespace CornDome.Repository.Main
         {
             var query = context.LogEntries
                 .AsNoTracking()
-                .OrderByDescending(x => x.Timestamp);
+                .OrderByDescending(x => x.Timestamp)
+                .Where(x => x.Timestamp > DateTime.Now.AddDays(-14));
 
             var totalCount = await query.CountAsync();
 

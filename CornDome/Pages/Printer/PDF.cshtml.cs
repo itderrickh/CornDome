@@ -31,6 +31,12 @@ namespace CornDome.Pages.Printer
 
             var pdfCreator = new PDFCreator(config);
             var printableCards = new List<PrintableCard>();
+
+            if (QueryDeck == null)
+            {
+                return NotFound();
+            }
+
             if (QueryDeck.Hero != null)
             {
                 printableCards.Add(
