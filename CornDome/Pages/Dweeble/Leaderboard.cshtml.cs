@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Repository.Main;
 using CornDome.Repository.Users;
@@ -50,14 +51,12 @@ public class LeaderboardModel(IGameRepository gameRepository, IUserRepository us
                     displayName = user.UserName;
                 }
 
-                var isCoolGuy = user.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
-
                 return new
                 {
                     x.PlayerKey,
                     DisplayName = displayName,
                     x.Mistakes,
-                    IsCoolGuy = isCoolGuy,
+                    UserIcon = IconHelper.GetUserIcon(user),
                     Seconds = Math.Max(
                         0,
                         (int)(x.Completed!.Value - x.Started).TotalSeconds
@@ -74,7 +73,7 @@ public class LeaderboardModel(IGameRepository gameRepository, IUserRepository us
                 DisplayName = x.DisplayName,
                 Mistakes = x.Mistakes,
                 Seconds = x.Seconds,
-                IsCoolGuy = x.IsCoolGuy,
+                UserIcon = x.UserIcon,
                 IsCurrentPlayer = x.PlayerKey == playerKey
             })
             .ToList();
@@ -137,6 +136,6 @@ public class LeaderboardModel(IGameRepository gameRepository, IUserRepository us
         public int Seconds { get; set; }
 
         public bool IsCurrentPlayer { get; set; }
-        public bool IsCoolGuy { get; set; }
+        public UserIcon UserIcon { get; set; }
     }
 }

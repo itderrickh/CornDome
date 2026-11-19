@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository.Cards;
@@ -22,7 +23,7 @@ namespace CornDome.Pages.Decks
         public int? UserId { get; set; }
         public string DisplayUsername { get; set; }
         public bool UserNotFound = false;
-        public bool IsCoolGuy { get; set; }
+        public UserIcon UserIcon { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -47,7 +48,7 @@ namespace CornDome.Pages.Decks
             if (user != null)
             {
                 DisplayUsername = user.UserName;
-                IsCoolGuy = user.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
+                UserIcon = IconHelper.GetUserIcon(user);
 
                 var results = deckRepository.GetPublicUsersDecks(user.Id, PageNumber, PageSize);
                 TotalPages = (int)Math.Ceiling(results.count / (double)PageSize);

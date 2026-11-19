@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Repository.Main;
 using CornDome.Repository.Users;
@@ -59,8 +60,6 @@ namespace CornDome.Pages.Dweeble
                         displayName = user.UserName;
                     }
 
-                    var isCoolGuy = user.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
-
                     return new
                     {
                         PlayerKey = group.Key,
@@ -68,7 +67,7 @@ namespace CornDome.Pages.Dweeble
                         TotalWins = totalWins,
                         LongestStreak = longestStreak,
                         AverageMistakes = averageMistakes,
-                        IsCoolGuy = isCoolGuy,
+                        UserIcon = IconHelper.GetUserIcon(user)
                     };
                 })
                 .OrderByDescending(x => x.TotalWins)
@@ -83,7 +82,7 @@ namespace CornDome.Pages.Dweeble
                     LongestStreak = x.LongestStreak,
                     AverageMistakes = x.AverageMistakes,
                     IsCurrentPlayer = x.PlayerKey == playerKey,
-                    IsCoolGuy = x.IsCoolGuy
+                    UserIcon = x.UserIcon
                 })
                 .ToList();
 
@@ -173,7 +172,7 @@ namespace CornDome.Pages.Dweeble
             public double AverageMistakes { get; set; }
 
             public bool IsCurrentPlayer { get; set; }
-            public bool IsCoolGuy { get; set; }
+            public UserIcon UserIcon { get; set; }
         }
     }
 }

@@ -132,9 +132,13 @@
                                     <td class="player-cell">
                                         @player.DisplayName
 
-                                        @if (player.IsCoolGuy)
+                                        @if (player.UserIcon == UserIcon.CoolGuy)
                                         {
                                             <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                                        }
+                                        else if (player.UserIcon == UserIcon.Dweeb)
+                                        {
+                                            <img src="~/img/logo.png" style="height: 30px; width: 30px;" />
                                         }
 
                                         @if (player.IsCurrentPlayer)

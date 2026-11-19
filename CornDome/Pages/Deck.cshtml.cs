@@ -1,3 +1,4 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Models.Main;
@@ -34,7 +35,7 @@ namespace CornDome.Pages
         public int IconCard { get; set; }
         public string Author { get; set; }
         public int AuthorId { get; set; }
-        public bool IsAuthorCoolGuy { get; set; }
+        public UserIcon AuthorIcon { get; set; }
 
         public Deck DbDeck { get; set; }
 
@@ -80,7 +81,7 @@ namespace CornDome.Pages
                         IconCard = deck.IconCardId;
                         Visibility = deck.Visibility;
                         Author = author.UserName;
-                        IsAuthorCoolGuy = author.UserRoles?.Any(x => x.Role.Name == "CoolGuy") ?? false;
+                        AuthorIcon = IconHelper.GetUserIcon(author);
                         AuthorId = author.Id;
                         IsDbDeck = true;
                         DbDeck = deck;
