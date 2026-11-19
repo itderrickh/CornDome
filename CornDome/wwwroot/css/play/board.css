@@ -1,0 +1,415 @@
+﻿
+.play-board {
+    color: var(--text-color);
+}
+
+/* Header */
+.play-board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+    .play-board-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--text-color);
+    }
+
+.play-board .text-muted {
+    color: var(--text-color) !important;
+    opacity: .65;
+}
+
+/* Discord profile */
+.discord-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 10px 14px;
+    border-radius: 12px;
+}
+
+.discord-profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Join board notice */
+.join-board-notice {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--card-bg);
+}
+
+.notice-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: rgba(var(--bs-primary-rgb), .12);
+    color: var(--bs-primary);
+    font-size: 1.3rem;
+}
+
+.join-board-notice .btn {
+    white-space: nowrap;
+}
+
+/* Board container */
+.board-container {
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card-bg);
+}
+
+.board-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+}
+
+    .board-title h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+        color: var(--text-color);
+    }
+
+.player-count {
+    font-size: .8rem;
+    color: #198754;
+    background: rgba(25, 135, 84, .12);
+    padding: 6px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+    .player-count i {
+        font-size: .55rem;
+        margin-right: 4px;
+    }
+
+/* Player table */
+.play-table {
+    min-width: 850px;
+    color: var(--text-color);
+    background: var(--card-bg);
+    --bs-table-bg: var(--card-bg);
+    --bs-table-color: var(--text-color);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-hover-bg: var(--card-detail-color);
+    --bs-table-hover-color: var(--text-color);
+}
+
+    .play-table thead th {
+        padding: 13px 16px;
+        background: var(--card-detail-color);
+        color: var(--text-color);
+        font-size: .75rem;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        font-weight: 700;
+        white-space: nowrap;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .play-table tbody td {
+        padding: 16px;
+        border-color: var(--border-color);
+        color: var(--text-color);
+    }
+
+    .play-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .play-table tbody tr:hover {
+        background: var(--card-detail-color);
+    }
+
+/* Pronouns and formats */
+.pronoun-badge,
+.format-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--card-detail-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-size: .85rem;
+    white-space: nowrap;
+}
+
+.format-badge {
+    color: var(--bs-primary);
+    border-color: rgba(var(--bs-primary-rgb), .25);
+    background: rgba(var(--bs-primary-rgb), .08);
+}
+
+/* Time zone and availability */
+.timezone-text {
+    white-space: nowrap;
+    font-size: .9rem;
+    color: var(--text-color);
+}
+
+    .timezone-text i {
+        opacity: .6;
+        margin-right: 4px;
+    }
+
+.availability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 190px;
+}
+
+.availability-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: .85rem;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
+.availability-day {
+    display: inline-block;
+    min-width: 42px;
+    font-weight: 600;
+    color: var(--bs-primary);
+}
+
+.availability-tz {
+    display: inline-block;
+    min-width: 42px;
+    font-weight: 600;
+    color: var(--bs-secondary);
+}
+
+
+/* Empty state */
+.empty-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 45px 15px;
+    color: var(--text-color);
+}
+
+    .empty-board i {
+        font-size: 2.5rem;
+        opacity: .5;
+        margin-bottom: 5px;
+    }
+
+/* Discord join card */
+.discord-join-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 45px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+    .discord-join-card > i {
+        font-size: 3rem;
+        color: #5865F2;
+        margin-bottom: 15px;
+    }
+
+    .discord-join-card h4 {
+        font-weight: 700;
+        color: var(--text-color);
+    }
+
+    .discord-join-card .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 8px;
+    }
+
+        .discord-join-card .btn img {
+            width: 22px;
+            height: 22px;
+        }
+
+/* Mobile */
+@media (max-width: 600px) {
+    .play-board-header {
+        align-items: flex-start;
+    }
+
+        .play-board-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .discord-profile {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .join-board-notice {
+        flex-wrap: wrap;
+    }
+
+        .join-board-notice .btn {
+            width: 100%;
+        }
+
+    .board-title {
+        padding: 15px;
+    }
+}
+
+
+/* Mobile player cards */
+@media (max-width: 767px) {
+    .table-responsive {
+        overflow: visible;
+    }
+
+    .play-table {
+        min-width: 0;
+        width: 100%;
+        display: block;
+    }
+
+        .play-table thead {
+            display: none;
+        }
+
+        .play-table tbody {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px;
+        }
+
+            .play-table tbody tr {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                background: var(--card-bg);
+                overflow: hidden;
+            }
+
+                .play-table tbody tr td {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    padding: 10px 14px;
+                    border: none;
+                    background: transparent;
+                    min-width: 0;
+                    overflow-wrap: anywhere;
+                }
+
+                    /* Column labels */
+                    .play-table tbody tr td[data-label]::before {
+                        content: attr(data-label);
+                        font-size: .7rem;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: .05em;
+                        color: var(--text-color);
+                        opacity: .55;
+                    }
+
+                    /* Player name */
+                    .play-table tbody tr td:first-child {
+                        padding-top: 14px;
+                    }
+
+                    /* Availability section */
+                    .play-table tbody tr td[data-label="Availability"] {
+                        border-top: 1px solid var(--border-color);
+                        margin-top: 4px;
+                        padding-top: 12px;
+                        padding-bottom: 14px;
+                    }
+
+    .availability-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .availability-item {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1fr);
+        align-items: start;
+        gap: 8px;
+        font-size: .85rem;
+        min-width: 0;
+    }
+
+    .availability-day {
+        font-weight: 600;
+    }
+
+    .availability-tz {
+        font-weight: 600;
+    }
+
+    .availability-item span:last-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .format-badge {
+        white-space: normal;
+        width: fit-content;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    /* Empty state */
+    .play-table tbody tr td[colspan] {
+        display: block;
+        text-align: center;
+    }
+
+        .play-table tbody tr td[colspan]::before {
+            display: none;
+        }
+}

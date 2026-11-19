@@ -4,85 +4,140 @@
     ViewData["Title"] = "Play Board";
 }
 
-<h1>Public Play Board</h1>
-<div class="mb-3">Connected as: #@Model.DiscordConnection.Username <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" /></div>
+<div class="play-board">
+    <div class="play-board-header">
+        <div>
+            <h1><i class="bi bi-controller"></i> Public Play Board</h1>
+            <p class="text-muted mb-0">Find players and coordinate your next game.</p>
+        </div>
 
-@if (!Model.AmIOnTheBoard)
-{
-    <p>Want to play? <a asp-page="/Play/Settings">Setup your preferences here</a></p>
-}
+        <div class="discord-profile">
+            <div class="discord-profile-info">
+                <span class="text-muted small">Connected as</span>
+                <strong>#@Model.DiscordConnection.Username</strong>
+            </div>
+            <img src="@Model.DiscordConnection.AvatarUrl" class="avatar" alt="Discord avatar" />
+        </div>
+    </div>
 
-@if (Model.IsUserInServer)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Discord User</th>
-                <th>Address Them As</th>
-                <th>Pronouns</th>
-                <th>Game Format</th>
-                <th>Time Zone</th>
-                <th>Availability</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Board.PlayPreferences.Count == 0)
-            {
-                <tr>
-                    <td>Nobody has signed up yet.</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var item in Model.Board.PlayPreferences)
-                {
-                    <tr>
-                        <td>@Model.Board.UserTable[item.UserId].Username</td>
-                        <td>@item.AddressMeAs</td>
-                        <td>@item.Pronouns</td>
-                        <td>@item.GameFormat</td>
-                        <td>@item.TimeZone</td>
-                        <td>
-                            @foreach (var avail in Model.Board.Availability[item.UserId])
-                            {
-                                <div>
-                                    @(avail.Day.ToString()) @(avail.StartTime)-@(avail.EndTime)
-                                </div>   
-                            }
-                        </td>
-                    </tr>
-                }
-            }
+    @if (!Model.AmIOnTheBoard)
+    {
+        <div class="join-board-notice">
+            <div class="notice-icon">
+                <i class="bi bi-person-plus"></i>
+            </div>
+            <div class="flex-grow-1">
+                <strong>Looking for a game?</strong>
+                <p class="mb-0 text-muted">Set up your preferences to let other players know you're available.</p>
+            </div>
+            <a asp-page="/Play/Settings" class="btn btn-primary">
+                Setup Preferences <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    }
+
+    @if (Model.IsUserInServer)
+    {
+        <div class="board-container">
+            <div class="board-title">
+                <div>
+                    <h4><i class="bi bi-people"></i> Available Players</h4>
+                    <span class="text-muted small">
+                        @Model.Board.PlayPreferences.Count player(s) on the board
+                    </span>
+                </div>
+                <span class="player-count">
+                    <i class="bi bi-circle-fill"></i> Public Board
+                </span>
+            </div>
+
             
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Please join the CardWars discord server to continue: </p><a href="https://discord.gg/k6AdsejJYD" target="_blank"><img alt="Card Wars Discord" style="width: 36px; height: 36px;" src="~/img/discord.png" /></a>
-}
+            <div class="table-responsive">
+                <table class="table play-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Discord User (Address them as)</th>
+                            <th>Pronouns</th>
+                            <th>Game Format</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Board.PlayPreferences.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-board">
+                                        <i class="bi bi-controller"></i>
+                                        <strong>No players yet</strong>
+                                        <span class="text-muted">Be the first to sign up!</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.Board.PlayPreferences)
+                            {
+                                <tr>
+                                    <td data-label="Discord User">
+                                        <strong>
+                                            @Model.Board.UserTable[item.UserId].Username
+                                            @if (!string.IsNullOrEmpty(item.AddressMeAs))
+                                            {
+                                                <span>(@item.AddressMeAs)</span>
+                                            }
+                                        </strong>
+                                    </td>
+                                    <td data-label="Pronouns">
+                                        @if (!string.IsNullOrEmpty(item.Pronouns))
+                                        {
+                                            <span class="pronoun-badge">@item.Pronouns</span>
+                                        }
+                                    </td>
+                                    <td data-label="Game Format">
+                                        <span class="format-badge">@item.GameFormat</span>
+                                    </td>
+                                    <td data-label="Availability">
+                                        <div class="availability-list">
+                                            <div class="availability-item">
+                                                <span class="availability-tz">Timezone</span>
+                                                <span>@item.TimeZone</span>
+                                            </div>
+                                            @foreach (var avail in Model.Board.Availability[item.UserId])
+                                            {
+                                                <div class="availability-item">
+                                                    <span class="availability-day">@avail.Day</span>
+                                                    <span>@avail.StartTime - @avail.EndTime</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="discord-join-card">
+            <i class="bi bi-discord"></i>
+            <h4>Join the Card Wars Discord</h4>
+            <p class="text-muted">You need to be a member of the Card Wars Discord server to view the public play board.</p>
+            <a href="https://discord.gg/k6AdsejJYD" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <img alt="" src="~/img/discord.png" />
+                Join Discord Server
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+        </div>
+    }
+</div>
 
 @section Styles {
-    <style>
-        .avatar {
-            border-radius: 50%;
-            cursor: pointer;
-            flex: 0 0 auto;
-            height: var(--chat-avatar-size);
-            inset-inline-start: var(--custom-message-margin-horizontal);
-            margin-top: calc(4px - var(--custom-message-spacing-vertical-container-cozy));
-            overflow: hidden;
-            pointer-events: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-            width: var(--chat-avatar-size);
-            z-index: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/play/board.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
