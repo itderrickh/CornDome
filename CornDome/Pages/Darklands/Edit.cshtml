@@ -1,129 +1,394 @@
 ﻿@page "{id:int}"
 @model CornDome.Pages.Darklands.EditModel
+
 @{
-    ViewData["Title"] = "Edit Darklands Card";
+    ViewData["Title"] = "Edit DarkLands Card";
 }
 
-<div>
+<div class="container py-4 darklands-edit">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <div class="text-primary fw-semibold small text-uppercase mb-2">
+            CardDweeb / <a asp-page="/Admin/Index">Administration</a> / <a asp-page="/Darklands/Manage">DarkLand Card Management</a>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h1 class="fw-bold mb-2">
+                    <i class="bi bi-pencil-square me-2 text-primary"></i>
+                    Edit DarkLands Card
+                </h1>
+                <p class="text-muted mb-0">
+                    Update card information, attributes, and artwork.
+                </p>
+            </div>
+
+            <a asp-page="/Darklands/Manage" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Cards
+            </a>
+        </div>
+    </div>
+
+    <!-- Notifications -->
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
     <form method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CardId" />
 
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly"
+             class="alert alert-danger"
+             role="alert"></div>
 
-        <div class="form-group mb-1">
-            <label>Name:</label>
-            <input type="text" class="form-control" asp-for="EditCard.Name" />
-        </div>
+        <div class="row g-4">
 
-        <div class="form-group mb-1">
-            <label>Card Type:</label>
-            <select class="form-control" asp-for="EditCard.CardTypeId">
-                @foreach (var cardType in Model.CardTypes)
-                {
-                    <option value="@cardType.Id">@cardType.Description</option>
-                }
-            </select>
-        </div>
+            <!-- Main Form -->
+            <div class="col-12 col-lg-8">
 
-        <div class="form-group mb-1">
-            <label>Overlord:</label>
-            <select class="form-control" asp-for="EditCard.OverlordId">
-                <option value="">-- None --</option>
-                @foreach (var overlord in Model.Overlords)
-                {
-                    <option value="@overlord.Id">@overlord.Description</option>
-                }
-            </select>
-        </div>
+                <!-- Basic Information -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-body border-0 px-4 pt-4">
+                        <h5 class="fw-bold mb-1">
+                            <i class="bi bi-card-text text-primary me-2"></i>
+                            Card Information
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            Update the card's name, type, and overlord.
+                        </p>
+                    </div>
 
-        <div class="form-group mb-1">
-            <label>Ability:</label>
-            <textarea class="form-control" asp-for="EditCard.Ability" rows="3"></textarea>
-        </div>
+                    <div class="card-body p-4">
 
-        <div class="form-group mb-1">
-            <label>Attack:</label>
-            <input type="number" class="form-control" asp-for="EditCard.Attack" />
-        </div>
+                        <div class="mb-3">
+                            <label asp-for="EditCard.Name" class="form-label fw-semibold">
+                                Card Name
+                            </label>
+                            <input type="text"
+                                   asp-for="EditCard.Name"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter card name..." />
+                            <span asp-validation-for="EditCard.Name" class="text-danger small"></span>
+                        </div>
 
-        <div class="form-group mb-1">
-            <label>Defense:</label>
-            <input type="number" class="form-control" asp-for="EditCard.Defense" />
-        </div>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label asp-for="EditCard.CardTypeId" class="form-label fw-semibold">
+                                    Card Type
+                                </label>
+                                <select class="form-select"
+                                        asp-for="EditCard.CardTypeId">
+                                    @foreach (var cardType in Model.CardTypes)
+                                    {
+                                        <option value="@cardType.Id">@cardType.Description</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="EditCard.CardTypeId" class="text-danger small"></span>
+                            </div>
 
-        <div class="form-group mb-1 imageField">
-            <div class="row">
-                <h3>Image Editing:</h3>
+                            <div class="col-12 col-md-6">
+                                <label asp-for="EditCard.OverlordId" class="form-label fw-semibold">
+                                    Overlord
+                                </label>
+                                <select class="form-select"
+                                        asp-for="EditCard.OverlordId">
+                                    <option value="">No Overlord</option>
+                                    @foreach (var overlord in Model.Overlords)
+                                    {
+                                        <option value="@overlord.Id">@overlord.Description</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="EditCard.OverlordId" class="text-danger small"></span>
+                            </div>
+                        </div>
 
-                <div class="col-6 preview-box">
-                    <h4>Old Image</h4>
-                    @if (Model.OldImageUrl != null)
-                    {
-                        <img class="oldPreview"
-                             src="@(Model.BaseUrl + Model.OldImageUrl)"
-                             alt="Old Darklands Card" />
-                    }
-                    else
-                    {
-                        <p>No image available.</p>
-                    }
-                </div>
+                        <div class="mb-4">
+                            <label asp-for="EditCard.Ability" class="form-label fw-semibold">
+                                Ability
+                            </label>
+                            <textarea class="form-control"
+                                      asp-for="EditCard.Ability"
+                                      rows="5"
+                                      placeholder="Describe the card's ability..."></textarea>
+                            <span asp-validation-for="EditCard.Ability" class="text-danger small"></span>
+                        </div>
 
-                <div class="col-6 preview-box">
-                    <h4>New Image</h4>
-                    <img class="newPreview" src="" alt="Image Preview" />
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label asp-for="EditCard.Attack" class="form-label fw-semibold">
+                                    Attack
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       asp-for="EditCard.Attack"
+                                       placeholder="Attack value" />
+                                <span asp-validation-for="EditCard.Attack" class="text-danger small"></span>
+                            </div>
 
-                    <div class="upload-section">
-                        <input type="file"
-                               asp-for="Image"
-                               class="fileInput"
-                               accept="image/*" />
-                        <span asp-validation-for="Image" class="text-danger"></span>
+                            <div class="col-12 col-md-6">
+                                <label asp-for="EditCard.Defense" class="form-label fw-semibold">
+                                    Defense
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       asp-for="EditCard.Defense"
+                                       placeholder="Defense value" />
+                                <span asp-validation-for="EditCard.Defense" class="text-danger small"></span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="mt-2">
-            <button type="submit" class="btn btn-primary">
-                Submit
-            </button>
+                <!-- Actions -->
+                <div class="d-flex flex-wrap justify-content-between gap-2">
+                    <a asp-page="/Darklands/Manage" class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-check-lg me-2"></i>
+                        Save Changes
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Image Editing -->
+            <div class="col-12 col-lg-4">
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-body border-0 px-4 pt-4">
+                        <h5 class="fw-bold mb-1">
+                            <i class="bi bi-image text-primary me-2"></i>
+                            Card Artwork
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            Replace the existing card image.
+                        </p>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <!-- Current Image -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-semibold mb-0">Current Image</label>
+                                @if (Model.OldImageUrl != null)
+                                {
+                                    <span class="badge bg-success-subtle text-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Uploaded
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">
+                                        No Image
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="darklands-image-preview">
+                                @if (Model.OldImageUrl != null)
+                                {
+                                    <img src="@(Model.BaseUrl + Model.OldImageUrl)"
+                                         alt="Current DarkLands card artwork" />
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted">
+                                        <i class="bi bi-card-image display-4 d-block mb-2"></i>
+                                        <span class="small">No existing image</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- New Image -->
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label asp-for="Image" class="form-label fw-semibold mb-0">
+                                    New Image
+                                </label>
+                                <span class="badge bg-primary-subtle text-primary">
+                                    Optional
+                                </span>
+                            </div>
+
+                            <div class="darklands-image-preview" id="newPreviewContainer">
+                                <div id="previewPlaceholder" class="text-center text-muted">
+                                    <i class="bi bi-cloud-upload display-4 d-block mb-2"></i>
+                                    <span class="small">Select an image to preview it here</span>
+                                </div>
+
+                                <img id="imagePreview"
+                                     class="d-none"
+                                     src=""
+                                     alt="New card artwork preview" />
+                            </div>
+
+                            <input type="file"
+                                   asp-for="Image"
+                                   class="form-control mt-3"
+                                   id="fileInput"
+                                   accept="image/*" />
+
+                            <span asp-validation-for="Image" class="text-danger small"></span>
+
+                            <div class="text-muted small mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Leave this empty to keep the existing image.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     </form>
 </div>
 
 @section Styles {
     <link rel="stylesheet" href="~/css/cardManage/edit.css" asp-append-version="true" />
+
+    <style>
+        .darklands-edit .card {
+            border-radius: 12px;
+        }
+
+        .darklands-edit .card-header {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .darklands-edit .form-label {
+            margin-bottom: .5rem;
+        }
+
+        .darklands-edit .form-control,
+        .darklands-edit .form-select {
+            padding: .65rem .85rem;
+        }
+
+        .darklands-edit textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .darklands-edit .darklands-image-preview {
+            width: 100%;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px dashed var(--bs-border-color);
+            border-radius: 10px;
+            background: var(--bs-tertiary-bg);
+            padding: 12px;
+        }
+
+            .darklands-edit .darklands-image-preview img {
+                display: block;
+                max-width: 100%;
+                max-height: 350px;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                border-radius: 6px;
+            }
+
+                .darklands-edit .darklands-image-preview img.d-none {
+                    display: none !important;
+                }
+
+            .darklands-edit .darklands-image-preview.has-image {
+                border-style: solid;
+            }
+
+        .darklands-edit .btn {
+            font-weight: 600;
+        }
+    </style>
 }
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
-        document.querySelectorAll('.fileInput').forEach((input) => {
-            input.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
+        (() => {
+            const fileInput = document.getElementById("fileInput");
+            const preview = document.getElementById("imagePreview");
+            const placeholder = document.getElementById("previewPlaceholder");
+            const previewContainer = document.getElementById("newPreviewContainer");
 
-                const reader = new FileReader();
+            let currentUrl = null;
 
-                // find the nearest newPreview in the same parent container
-                const preview = event.target.closest('.preview-box').querySelector('img, #newPreview')
-                                || event.target.closest('.col-6').querySelector('.newPreview');
+            fileInput.addEventListener("change", event => {
+                const file = event.target.files?.[0];
 
-                reader.onload = (e) => {
-                    if (preview) preview.src = e.target.result;
+                if (currentUrl) {
+                    URL.revokeObjectURL(currentUrl);
+                    currentUrl = null;
+                }
+
+                if (!file) {
+                    preview.src = "";
+                    preview.classList.add("d-none");
+                    placeholder.classList.remove("d-none");
+                    previewContainer.classList.remove("has-image");
+                    return;
+                }
+
+                if (!file.type.startsWith("image/")) {
+                    preview.src = "";
+                    preview.classList.add("d-none");
+                    placeholder.classList.remove("d-none");
+                    previewContainer.classList.remove("has-image");
+                    return;
+                }
+
+                currentUrl = URL.createObjectURL(file);
+
+                preview.onload = () => {
+                    preview.classList.remove("d-none");
+                    placeholder.classList.add("d-none");
+                    previewContainer.classList.add("has-image");
                 };
-                reader.readAsDataURL(file);
+
+                preview.onerror = () => {
+                    preview.classList.add("d-none");
+                    placeholder.classList.remove("d-none");
+                    previewContainer.classList.remove("has-image");
+                };
+
+                preview.src = currentUrl;
             });
-        });
+
+            window.addEventListener("beforeunload", () => {
+                if (currentUrl) {
+                    URL.revokeObjectURL(currentUrl);
+                }
+            });
+        })();
     </script>
 }
