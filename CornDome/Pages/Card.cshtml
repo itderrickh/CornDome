@@ -90,7 +90,7 @@ else
             @if (!string.IsNullOrEmpty(selectedRevision.Rulings))
             {
                 <div class="card-text-section">
-                    <span class="bold-label">Rulings: </span><span>@selectedRevision.Rulings</span>
+                    <span class="bold-label">Rulings: </span><br /> @Html.Raw(selectedRevision.Rulings)
                 </div>
             }
 

@@ -134,7 +134,7 @@
                             <div class="mb-3">
                                 <div class="form-group mb-1 rulingField">
                                     <label>Rulings: </label>
-                                    <textarea class="form-control" asp-for="EditCard.Rulings"></textarea>
+                                    <textarea class="form-control rich-text-editor" asp-for="EditCard.Rulings"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -340,6 +340,25 @@
 
             button.disabled = true;
             button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving Changes...';
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/hugerte@1/hugerte.min.js"></script>
+
+    <script>
+        hugerte.init({
+            selector: '.rich-text-editor',
+            height: 300,
+            menubar: false,
+            branding: false,
+            plugins: 'lists link',
+            toolbar: 'undo redo | bold italic underline | bullist numlist | link | removeformat',
+            content_style: `
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                        }
+                    `
         });
     </script>
 }

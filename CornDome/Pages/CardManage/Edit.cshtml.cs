@@ -35,6 +35,7 @@ namespace CornDome.Pages.CardManage
                 Attack = cardFound.Attack,
                 Defense = cardFound.Defense,
                 Id = cardFound.Id,
+                Rulings = cardFound.Rulings,
                 CardSets = [.. cardFound.CardSets],
                 ImageUrl = cardFound.GetOptimizedImage
             };
