@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CornDome.Models.Users
 {
@@ -6,6 +7,7 @@ namespace CornDome.Models.Users
     public class UserRole
     {
         public int UserId { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
 
         public int RoleId { get; set; }

@@ -41,13 +41,32 @@
         }
 
         var color = isMyDeck ? "#6551a5" : "lightgreen";
+        var icon = "";
+
+        if (comment.user.userRoles) {
+            for (var role = 0; role < comment.user.userRoles.length; role++) {
+                var roleElement = comment.user.userRoles[role].role;
+
+                if (roleElement.name === "The_Dweeb" || roleElement.name === "The_Flooper") {
+                    icon = `<img src="/img/logo.png" style="height: 30px; width: 30px;" />`;
+                }
+                else if (roleElement.name === "The_CoolGuy" || roleElement.name === "CoolGuy") {
+                    icon = `<img src="/img/logo-cool.png" style="height: 30px; width: 30px;" />`;
+                }
+                else if (roleElement.name === "Early_Backer") {
+                    icon = `<img src="/img/pig.webp" style="height: 30px; width: 30px;" />`;
+                }
+            }
+        }
+        
+
         return `
             <article class="comment" data-id="${comment.id}">
                 ${avatar(comment.user.userName, getInitial(comment.user.userName), color)}
 
                 <div class="comment-body">
                     <div class="comment-meta">
-                        <span class="comment-author">${escapeHtml(comment.user.userName)}</span>
+                        <span class="comment-author">${escapeHtml(comment.user.userName)} ${icon}</span>
                         <span class="comment-time">${formatTime(comment.timestamp)}</span>
                     </div>
 

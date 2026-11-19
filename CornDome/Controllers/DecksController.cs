@@ -311,7 +311,8 @@ namespace CornDome.Controllers
                     user = new
                     {
                         userName = loggedInUser.UserName,
-                        id = loggedInUser.Id
+                        id = loggedInUser.Id,
+                        userRoles = loggedInUser.UserRoles
                     },
                     timestamp = DateTime.Now.ToString("o")
                 }

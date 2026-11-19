@@ -220,7 +220,21 @@ else
                                 </div>
                                 <div class="comment-body">
                                     <div class="comment-meta">
-                                        <span class="comment-author">@comment.User.UserName</span>
+                                        <span class="comment-author">
+                                            @comment.User.UserName
+                                            @if (IconHelper.GetUserIcon(comment.User) == UserIcon.EarlyBacker)
+                                            {
+                                                <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+                                            }
+                                            else if (IconHelper.GetUserIcon(comment.User) == UserIcon.CoolGuy)
+                                            {
+                                                <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                                            }
+                                            else if (IconHelper.GetUserIcon(comment.User) == UserIcon.Dweeb)
+                                            {
+                                                <img src="~/img/logo.png" style="height: 30px; width: 30px;" />
+                                            }
+                                        </span>
                                         <span class="comment-time">@comment.Timestamp.ToString("MMM dd, yyyy h:mm tt")</span>
                                     </div>
                                     <div class="comment-text">@comment.CommentText</div>
