@@ -3,7 +3,6 @@ using CornDome.Models.Cards;
 using CornDome.Repository.Cards;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace CornDome.Pages.Admin

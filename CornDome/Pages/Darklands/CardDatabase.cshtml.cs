@@ -2,9 +2,7 @@ using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Cards;
 using CornDome.Repository.Cards;
-using CornDome.Repository.Main;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Darklands
 {

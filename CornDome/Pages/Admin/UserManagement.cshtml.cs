@@ -1,10 +1,8 @@
 using CornDome.Models;
 using CornDome.Models.Users;
-using CornDome.Repository.Main;
 using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CornDome.Pages.Admin
 {

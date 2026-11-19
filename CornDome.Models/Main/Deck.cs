@@ -1,6 +1,4 @@
-﻿using CornDome.Models.Cards;
-using CornDome.Models.Users;
-using System.Text.Json.Serialization;
+﻿using CornDome.Models.Users;
 
 namespace CornDome.Models.Main
 {

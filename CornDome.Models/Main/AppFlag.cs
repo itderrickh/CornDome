@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CornDome.Repository.Main
+﻿namespace CornDome.Repository.Main
 {
     public class AppFlag
     {

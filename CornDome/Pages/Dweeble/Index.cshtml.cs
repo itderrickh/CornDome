@@ -1,5 +1,4 @@
 using CornDome.Models;
-using CornDome.Models.Cards;
 using CornDome.Models.Main.DailyCard;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;

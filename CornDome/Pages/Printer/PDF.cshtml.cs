@@ -4,7 +4,6 @@ using CornDome.Models.Main;
 using CornDome.Models.Users;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
-using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Printer

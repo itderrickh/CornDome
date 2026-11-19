@@ -1,5 +1,4 @@
-﻿using CornDome.Models.Cards;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CornDome.Models.Main.DailyCard;
 

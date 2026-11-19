@@ -1,5 +1,4 @@
 using CornDome.Models;
-using CornDome.Models.Users;
 using CornDome.Repository.Patreon;
 using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Authorization;
