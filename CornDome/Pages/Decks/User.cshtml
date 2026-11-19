@@ -18,6 +18,10 @@ else if (Model.UserId != null)
     {
         <h2>
             @(Model.DisplayUsername)'s decks
+            @if (Model.UserIcon == UserIcon.EarlyBacker)
+            {
+                <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+            }
             @if (Model.UserIcon == UserIcon.CoolGuy)
             {
                 <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />

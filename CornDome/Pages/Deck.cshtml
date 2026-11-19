@@ -39,6 +39,10 @@ else
                 <div class="col">
                     <h5>
                         <u>Author:</u> <i><a asp-page="/Decks/User" asp-route-userId="@Model.AuthorId">@Model.Author</a></i>
+                        @if (Model.AuthorIcon == UserIcon.EarlyBacker)
+                        {
+                            <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+                        }
                         @if (Model.AuthorIcon == UserIcon.CoolGuy)
                         {
                             <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />

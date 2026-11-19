@@ -12,7 +12,11 @@
         {
             <li>
                 <strong>@patreonUser.UserName</strong>
-                @if (IconHelper.GetUserIcon(patreonUser) == UserIcon.CoolGuy)
+                @if (IconHelper.GetUserIcon(patreonUser) == UserIcon.EarlyBacker)
+                {
+                    <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+                }
+                else if (IconHelper.GetUserIcon(patreonUser) == UserIcon.CoolGuy)
                 {
                     <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
                 }

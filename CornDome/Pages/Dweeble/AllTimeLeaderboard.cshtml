@@ -131,8 +131,11 @@
 
                                     <td class="player-cell">
                                         @player.DisplayName
-
-                                        @if (player.UserIcon == UserIcon.CoolGuy)
+                                        @if (player.UserIcon == UserIcon.EarlyBacker)
+                                        {
+                                            <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+                                        }
+                                        else if (player.UserIcon == UserIcon.CoolGuy)
                                         {
                                             <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
                                         }

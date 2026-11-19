@@ -47,8 +47,11 @@
                                    asp-route-userId="@deck.UserId">
                                     @deck.User.UserName
                                 </a>
-
-                                @if (IconHelper.GetUserIcon(deck.User) == UserIcon.CoolGuy)
+                                @if (IconHelper.GetUserIcon(deck.User) == UserIcon.EarlyBacker)
+                                {
+                                    <img src="~/img/pig.webp" style="height: 30px; width: 30px;" />
+                                }
+                                else if (IconHelper.GetUserIcon(deck.User) == UserIcon.CoolGuy)
                                 {
                                     <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
                                 }
