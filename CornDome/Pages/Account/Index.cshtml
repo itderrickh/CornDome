@@ -37,4 +37,38 @@
             <button type="submit" class="btn btn-primary">Update</button>
         </div>
     </form>
+
+    <hr class="my-4" />
+
+    <h4>Patreon</h4>
+
+    @if (Model.LocalUser.PatreonConnected)
+    {
+        <div class="alert alert-success d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+                <strong>Patreon Connected</strong>
+                <div class="small">Your Patreon account is linked to CardDweeb.</div>
+            </div>
+        </div>
+
+        <form method="post" action="/Patreon/Disconnect">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-unlink"></i>
+                Disconnect Patreon
+            </button>
+        </form>
+    }
+    else
+    {
+        <p class="text-muted">
+            Connect your Patreon account to receive supporter perks on CardDweeb.
+        </p>
+
+        <a href="/Patreon/Connect" class="btn btn-primary">
+            <i class="bi bi-patreon"></i>
+            Connect Patreon
+        </a>
+    }
 </div>

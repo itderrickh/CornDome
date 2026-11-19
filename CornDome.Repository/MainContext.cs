@@ -24,6 +24,7 @@ namespace CornDome.Repository
         public DbSet<AppFlag> AppFlags { get; set; }
         public DbSet<DailyCard> DailyCards { get; set; }
         public DbSet<DailyCardGame> DailyCardGames { get; set; }
+        public DbSet<PatreonConnection> PatreonConnections { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -129,6 +130,17 @@ namespace CornDome.Repository
                 .WithMany(x => x.Games)
                 .HasForeignKey(x => x.DailyCardId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PatreonConnection>()
+                .HasOne(x => x.User)
+                .WithOne(x => x.PatreonConnection)
+                .HasForeignKey<PatreonConnection>(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PatreonConnection>()
+                .HasIndex(x => x.PatreonUserId)
+                .IsUnique();
+
         }
     }
 }

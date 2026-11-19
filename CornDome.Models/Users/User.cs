@@ -10,6 +10,7 @@ namespace CornDome.Models.Users
         public ICollection<UserRole> UserRoles { get; set; } = [];
         public ICollection<DiscordConnection> DiscordConnections { get; set; } = [];
         public ICollection<PlayAvailability> PlayAvailabilities { get; set; } = [];
+        public PatreonConnection PatreonConnection { get; set; }
         public DateTime LastLogin { get; set; }
         public int ColorMode { get; set; }
     }

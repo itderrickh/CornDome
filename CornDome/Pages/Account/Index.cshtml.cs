@@ -1,4 +1,6 @@
 using CornDome.Models;
+using CornDome.Models.Users;
+using CornDome.Repository.Patreon;
 using CornDome.Repository.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,11 @@ namespace CornDome.Pages.Account
         public string Username { get; set; }
         public string Email { get; set; }
         public int ColorMode { get; set; }
+        public bool PatreonConnected { get; set; }
     }
 
     [Authorize]
-    public class IndexModel(IUserRepository userRepository) : BasePageModel
+    public class IndexModel(IUserRepository userRepository, IPatreonRepository patreonRepository) : BasePageModel
     {
         [BindProperty]
         public LocalUser LocalUser { get; set; } = new LocalUser();
@@ -26,6 +29,9 @@ namespace CornDome.Pages.Account
             LocalUser.Email = loggedInUser?.Email;
             LocalUser.Username = User.Identity.Name;
             LocalUser.ColorMode = loggedInUser.ColorMode;
+
+            var patreonConnection = await patreonRepository.GetUserConnection(loggedInUser.Id);
+            LocalUser.PatreonConnected = patreonConnection != null;
         }
 
         public async Task<IActionResult> OnPost()
