@@ -13,6 +13,7 @@ namespace CornDome.Repository.Users
         Task<IEnumerable<User>> GetAll();
         Task<bool> LoginSuccess(User user);
         Task<List<User>> GetByIds(int[] ids);
+        Task<List<User>> GetPatreonSupporters(string[] patreonRoles);
     }
 
     public class UserRepository(MainContext context) : IUserRepository
@@ -95,6 +96,15 @@ namespace CornDome.Repository.Users
                 .Include(x => x.UserRoles)
                     .ThenInclude(y => y.Role)
                 .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetPatreonSupporters(string[] patreonRoles)
+        {
+            return await context.Users
+                .Include(x => x.UserRoles)
+                .ThenInclude(y => y.Role)
+                .Where(u => u.UserRoles.Any(x => patreonRoles.Contains(x.Role.Name)))
                 .ToListAsync();
         }
     }

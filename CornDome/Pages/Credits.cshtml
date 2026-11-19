@@ -5,7 +5,28 @@
 }
 
 <div class="mb-4">
-    <h1>Supporters</h1>
+    <h1>Patreon Supporters</h1>
+    <p>Thank you to the following individuals for supporting our Patreon</p>
+    <ul>
+        @foreach (var patreonUser in Model.PatreonSupporters)
+        {
+            <li>
+                <strong>@patreonUser.UserName</strong>
+                @if (IconHelper.GetUserIcon(patreonUser) == UserIcon.CoolGuy)
+                {
+                    <img src="~/img/logo-cool.png" style="height: 30px; width: 30px;" />
+                }
+                else if (IconHelper.GetUserIcon(patreonUser) == UserIcon.Dweeb)
+                {
+                    <img src="~/img/logo.png" style="height: 30px; width: 30px;" />
+                }
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="mb-4">
+    <h1>Paypal Supporters</h1>
     <p>Thank you to the following individuals for monetary support keeping the server alive and the projects continuation</p>
     <ul>
         <li><strong>Mataio Wilson</strong></li>

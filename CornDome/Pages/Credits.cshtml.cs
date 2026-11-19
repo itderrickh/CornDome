@@ -1,11 +1,15 @@
 using CornDome.Models;
+using CornDome.Models.Users;
+using CornDome.Repository.Users;
 
 namespace CornDome.Pages
 {
-    public class CreditsModel : BasePageModel
+    public class CreditsModel(IUserRepository userRepository) : BasePageModel
     {
-        public void OnGet()
+        public List<User> PatreonSupporters { get; set; }
+        public async Task OnGet()
         {
+            PatreonSupporters = await userRepository.GetPatreonSupporters(AppConstants.PATREON_ROLES);
         }
     }
 }

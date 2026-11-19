@@ -21,5 +21,10 @@
         public const string LOCALHOST = "127.0.0.1";
         public const string DISCORD_TOKEN_ROUTE = "https://discord.com/api/oauth2/token";
         public const string CARD_STATIC_IMAGE_ROUTE = "/CardImages";
+        public static string[] PATREON_ROLES = [
+            ROLE_PATREON_COOLGUY,
+            ROLE_PATREON_DWEEB,
+            ROLE_PATREON_FLOOPER
+        ];
     }
 }

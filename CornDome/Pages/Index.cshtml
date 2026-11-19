@@ -13,7 +13,6 @@
             @if (UserRoleHelper.IsServedAds(User))
             {
                 <div class="mt-4 container">
-                    <p>Card Dweeb is maintained monetarily with advertisements. We do not profit directly from the site and all ad revenue goes directly into maintaining Card Dweeb for community members like you!</p>
                     <partial name="_BannerAd" />
                 </div>
             }
@@ -24,6 +23,16 @@
                 <a asp-page="/Card" asp-route-id="@Model.CardOfTheDay.Id">
                     <img class="w-100" style="max-width: 250px;" alt="@Model.CardOfTheDay.Name" src="@(Model.BaseUrl + Model.CardOfTheDay.GetOptimizedImage)" />
                 </a>
+            </div>
+            <div style="padding: 10px 5px; border-bottom: 1px solid lightgray">
+                <h3>Thank you to our Patreon Supporters</h3>
+                <p>Every penny goes directly into maintaining and improving Card Dweeb.</p>
+                @if (Model.PatreonSupporters.Count > 0)
+                {
+                    <h5>
+                        Supporters: @string.Join(", ", Model.PatreonSupporters.Select(x => x.UserName))
+                    </h5>
+                }
             </div>
             <div style="padding: 10px 5px; border-bottom: 1px solid lightgray">
                 <h3>Please support the 3rd Kickstarter if you can! It is fully funded with more stretch goals coming!</h3>

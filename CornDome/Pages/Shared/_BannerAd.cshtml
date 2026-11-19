@@ -1,12 +1,84 @@
-﻿<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1907330476230243"
-     crossorigin="anonymous"></script>
-<!-- banner-ad -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-1907330476230243"
-     data-ad-slot="5556004927"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+﻿<div class="mb-2 container" id="bannerAdContainer">
+    <!-- Google Ad -->
+    <div id="actualBannerAd">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1907330476230243"
+                crossorigin="anonymous"></script>
+
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1907330476230243"
+             data-ad-slot="5556004927"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- Alternative content -->
+    <div id="alternativeAd" class="d-none">
+        <div class="card text-center p-3">
+            <div>
+                <a href="https://patreon.com/carddweeb">
+                    <svg data-prefix="fab" data-icon="patreon" class="svg-inline--fa fa-patreon text-patreon me-2"
+                        role="img" viewBox="0 0 512 512" aria-hidden="false"
+                        style="box-sizing: content-box; color: #fc293d; display: var(--fa-display,inline-block);height: 1em;overflow: visible;vertical-align: -.125em;width: var(--fa-width,1.25em);"
+                        aria-label="Support us on Patreon">
+                        <path fill="currentColor"d="M490 153.8c-.1-65.4-51-119-110.7-138.3-74.2-24-172-20.5-242.9 12.9-85.8 40.5-112.8 129.3-113.8 217.8-.8 72.8 6.4 264.4 114.6 265.8 80.3 1 92.3-102.5 129.5-152.3 26.4-35.5 60.5-45.5 102.4-55.9 72-17.8 121.1-74.7 121-150l-.1 0z"></path>
+                    </svg>
+                    Support us on Patreon to remove ads and more!
+                </a>
+            </div>
+            <div>
+                <p>Card Dweeb is maintained monetarily with advertisements. We do not profit directly from the site and all ad revenue goes directly into maintaining Card Dweeb for community members like you!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
+    (function () {
+    const checkAdBlocker = function () {
+        const actualAd = document.getElementById("actualBannerAd");
+        const alternativeAd = document.getElementById("alternativeAd");
+
+        if (!actualAd || !alternativeAd) return;
+
+        const adsScript = document.querySelector(
+            'script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]'
+        );
+
+        const adSlot = actualAd.querySelector(".adsbygoogle");
+
+        // Check whether the AdSense script was blocked.
+        const scriptBlocked = !adsScript || !adsScript.dataset.loaded;
+
+        // Check whether the ad element was hidden by an ad blocker.
+        const style = window.getComputedStyle(adSlot);
+
+        const elementBlocked =
+            style.display === "none" ||
+            style.visibility === "hidden" ||
+            adSlot.offsetHeight === 0 ||
+            adSlot.offsetWidth === 0;
+
+        if (scriptBlocked || elementBlocked) {
+            actualAd.classList.add("d-none");
+            alternativeAd.classList.remove("d-none");
+        }
+    };
+
+    const script = document.querySelector(
+        'script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]'
+    );
+
+    if (script) {
+        script.addEventListener("load", function () {
+            script.dataset.loaded = "true";
+        });
+    }
+
+    setTimeout(checkAdBlocker, 2000);
+})();
 </script>
