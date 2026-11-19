@@ -4,6 +4,7 @@ using CornDome.Repository;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Discord;
 using CornDome.Repository.Main;
+using CornDome.Repository.Patreon;
 using CornDome.Repository.Tournaments;
 using CornDome.Repository.Users;
 using CornDome.Stores;
@@ -132,10 +133,12 @@ namespace CornDome
                     policy.RequireRole(AppConstants.ROLE_COOL_GUY));
                 options.AddPolicy("editor", policy =>
                     policy.RequireRole(AppConstants.ROLE_ADMIN, AppConstants.ROLE_CARD_MANAGER, AppConstants.ROLE_RULING_MANAGER));
+                options.AddPolicy("patreon", policy =>
+                    policy.RequireRole(AppConstants.ROLE_PATREON_COOLGUY, AppConstants.ROLE_PATREON_DWEEB, AppConstants.ROLE_PATREON_FLOOPER, AppConstants.ROLE_ADMIN));
             });
         }
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -160,12 +163,21 @@ namespace CornDome
                 client.Timeout = TimeSpan.FromSeconds(DISCORD_TIMEOUT);
             });
 
+            builder.Services.Configure<PatreonOptions>(
+                builder.Configuration.GetSection("Patreon"));
+
+            builder.Services.AddHttpClient<IPatreonRepository, PatreonRepository>();
+            builder.Services.AddScoped<IPatreonRoleService, PatreonRoleService>();
+            builder.Services.AddScoped<IPatreonSyncService, PatreonSyncService>();
+            builder.Services.AddHostedService<PatreonSyncHostedService>();
+            builder.Services.AddSingleton<IconHelper>();
 
             AddDbContext(builder, builder.Services);
             AddRepositories(builder.Services);
             AddHelpers(builder.Services);
             AddAuthentication(builder);
             builder.Services.AddScoped<UserRoleHelper>();
+            builder.Services.AddScoped<AppConstants>();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {

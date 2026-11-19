@@ -15,7 +15,7 @@ partial class MainContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261117211331_AddingDweebleFlag";
+    public override string LastMigrationId => "20261119014931_AddPatreonRoles";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -366,6 +366,44 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.ToTable("DiscordConnections");
             });
 
+        modelBuilder.Entity("CornDome.Models.Users.PatreonConnection", b =>
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("AccessToken")
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("CurrentTierId")
+                    .HasColumnType("TEXT");
+
+                b.Property<bool>("IsActive")
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateTime>("LastSyncedAt")
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("PatreonMemberId")
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("PatreonUserId")
+                    .IsRequired()
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("RefreshToken")
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime>("TokenExpiresAt")
+                    .HasColumnType("TEXT");
+
+                b.HasKey("UserId");
+
+                b.HasIndex("PatreonUserId")
+                    .IsUnique();
+
+                b.ToTable("PatreonConnection");
+            });
+
         modelBuilder.Entity("CornDome.Models.Users.Role", b =>
             {
                 b.Property<int>("Id")
@@ -582,6 +620,17 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.Navigation("User");
             });
 
+        modelBuilder.Entity("CornDome.Models.Users.PatreonConnection", b =>
+            {
+                b.HasOne("CornDome.Models.Users.User", "User")
+                    .WithOne("PatreonConnection")
+                    .HasForeignKey("CornDome.Models.Users.PatreonConnection", "UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("User");
+            });
+
         modelBuilder.Entity("CornDome.Models.Users.UserRole", b =>
             {
                 b.HasOne("CornDome.Models.Users.Role", "Role")
@@ -621,6 +670,8 @@ partial class MainContextModelSnapshot : ModelSnapshot
         modelBuilder.Entity("CornDome.Models.Users.User", b =>
             {
                 b.Navigation("DiscordConnections");
+
+                b.Navigation("PatreonConnection");
 
                 b.Navigation("PlayAvailabilities");
 
