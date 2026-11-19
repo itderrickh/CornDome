@@ -14,6 +14,7 @@ namespace CornDome.Pages.Account
         public string Email { get; set; }
         public int ColorMode { get; set; }
         public bool PatreonConnected { get; set; }
+        public string PatreonTier { get; set; }
     }
 
     [Authorize]
@@ -31,7 +32,25 @@ namespace CornDome.Pages.Account
             LocalUser.ColorMode = loggedInUser.ColorMode;
 
             var patreonConnection = await patreonRepository.GetUserConnection(loggedInUser.Id);
-            LocalUser.PatreonConnected = patreonConnection != null;
+            
+
+            if (patreonConnection != null)
+            {
+                LocalUser.PatreonConnected = patreonConnection != null;
+
+                if (loggedInUser.UserRoles.Any(x => x.Role.Name == AppConstants.ROLE_PATREON_COOLGUY))
+                {
+                    LocalUser.PatreonTier = "The Cool Guy";
+                }
+                else if (loggedInUser.UserRoles.Any(x => x.Role.Name == AppConstants.ROLE_PATREON_DWEEB))
+                {
+                    LocalUser.PatreonTier = "The Dweeb";
+                }
+                else if (loggedInUser.UserRoles.Any(x => x.Role.Name == AppConstants.ROLE_PATREON_FLOOPER))
+                {
+                    LocalUser.PatreonTier = "The Flooper";
+                }
+            }
         }
 
         public async Task<IActionResult> OnPost()

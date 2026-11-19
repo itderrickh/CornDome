@@ -174,6 +174,7 @@ namespace CornDome
             AddHelpers(builder.Services);
             AddAuthentication(builder);
             builder.Services.AddScoped<UserRoleHelper>();
+            builder.Services.AddScoped<AppConstants>();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {

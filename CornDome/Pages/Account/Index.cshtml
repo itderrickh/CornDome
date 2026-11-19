@@ -48,7 +48,13 @@
             <i class="bi bi-check-circle-fill"></i>
             <div>
                 <strong>Patreon Connected</strong>
-                <div class="small">Your Patreon account is linked to CardDweeb.</div>
+                <div class="small">
+                    Your Patreon account is linked to CardDweeb.
+                    @if (!string.IsNullOrEmpty(Model.LocalUser.PatreonTier))
+                    {
+                        <span> You are subscribed at the "@(Model.LocalUser.PatreonTier)" tier</span>
+                    }
+                </div>
             </div>
         </div>
 
