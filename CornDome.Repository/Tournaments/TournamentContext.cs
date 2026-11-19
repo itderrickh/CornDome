@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Tournaments;
+using CornDome.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace CornDome.Repository.Tournaments
@@ -22,6 +23,9 @@ namespace CornDome.Repository.Tournaments
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Ignore<User>();
+            modelBuilder.Ignore<UserRole>();
 
             var tournament = modelBuilder.Entity<Tournament>();
             var round = modelBuilder.Entity<Round>();
