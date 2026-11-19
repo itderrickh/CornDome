@@ -168,6 +168,8 @@ namespace CornDome
 
             builder.Services.AddHttpClient<IPatreonRepository, PatreonRepository>();
             builder.Services.AddScoped<IPatreonRoleService, PatreonRoleService>();
+            builder.Services.AddScoped<IPatreonSyncService, PatreonSyncService>();
+            builder.Services.AddHostedService<PatreonSyncHostedService>();
 
             AddDbContext(builder, builder.Services);
             AddRepositories(builder.Services);

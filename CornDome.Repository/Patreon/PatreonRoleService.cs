@@ -7,9 +7,7 @@ namespace CornDome.Repository.Patreon
 {
     public interface IPatreonRoleService
     {
-        Task SyncRolesAsync(
-            User user,
-            IEnumerable<string> entitledTierIds);
+        Task SyncRolesAsync(User user, IEnumerable<string> entitledTierIds);
     }
 
     public class PatreonRoleService(MainContext context, IOptions<PatreonOptions> options) : IPatreonRoleService
@@ -71,11 +69,20 @@ namespace CornDome.Repository.Patreon
                 {
                     UserId = user.Id,
                     RoleId = roleId
-                });
+                })
+                .ToList();
 
             context.UserRoles.AddRange(rolesToAdd);
 
             await context.SaveChangesAsync();
+
+            // Update the security stamp when roles change.
+            // This triggers revalidation of the user's authentication cookie.
+            if (rolesToRemove.Count > 0 || rolesToAdd.Count > 0)
+            {
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
