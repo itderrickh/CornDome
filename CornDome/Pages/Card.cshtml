@@ -1,5 +1,4 @@
 ﻿@page
-@inject AppFlagHelper AppFlags
 @model CornDome.Pages.CardModel
 @{
     if (Model.QueryCard == null)
@@ -10,7 +9,6 @@
     {
         ViewData["Title"] = Model.QueryCard?.Name;
     }
-    var user = await Model.GetUser();
 }
 
 @if (Model.QueryCard == null)
@@ -119,21 +117,21 @@ else
                 </div>
             </div>
 
-            @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
+            @if (UserRoleHelper.IsCardManager(User))
             {
                 <div class="card-text-section">
                     <a class="bold-label btn btn-primary" asp-page="/CardManage/Edit" asp-route-id="@selectedRevision.Id">Edit Card</a>
                 </div>
             }
 
-            @if (User.IsInRole("Admin") || User.IsInRole("RulingManager"))
+            @if (UserRoleHelper.IsRulingManager(User))
             {
                 <div class="card-text-section">
                     <a class="bold-label btn btn-primary" asp-page="/CardManage/Rulings" asp-route-id="@selectedRevision.Id">Edit Rulings</a>
                 </div>
             }
 
-            @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+            @if (UserRoleHelper.IsServedAds(User))
             {
                 <div class="mt-5">
                     <partial name="_BannerAd" />

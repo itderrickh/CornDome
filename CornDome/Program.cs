@@ -165,6 +165,7 @@ namespace CornDome
             AddRepositories(builder.Services);
             AddHelpers(builder.Services);
             AddAuthentication(builder);
+            builder.Services.AddScoped<UserRoleHelper>();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {

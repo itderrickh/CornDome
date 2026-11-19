@@ -1,47 +1,91 @@
-﻿using CornDome.Models.Users;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace CornDome.Helpers
 {
-    public class UserRoleHelper(UserManager<User> userManager)
+    public class UserRoleHelper
     {
-        public async Task<bool> IsInRoleAsync(User user, string role)
+        public bool IsServedAds(ClaimsPrincipal principal)
         {
-            return await userManager.IsInRoleAsync(user, role);
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return true;
+
+            string[] noAdsRoles = [
+                AppConstants.ROLE_ADMIN,
+                AppConstants.ROLE_COOL_GUY
+            ];
+
+            return !IsInAnyRole(principal, noAdsRoles);
         }
 
-        public async Task<bool> IsInRoleAsync(ClaimsPrincipal principal, string role)
+        public bool IsCardManager(ClaimsPrincipal principal)
         {
-            var user = await userManager.GetUserAsync(principal);
-            return user != null && await userManager.IsInRoleAsync(user, role);
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            string[] cardManagerRoles = [
+                AppConstants.ROLE_ADMIN,
+                AppConstants.ROLE_CARD_MANAGER
+            ];
+
+            return IsInAnyRole(principal, cardManagerRoles);
         }
 
-        // Returns true if the user has at least one of the specified roles.
-        public async Task<bool> IsInAnyRoleAsync(User user, params string[] roles)
+        public bool IsTournamentManager(ClaimsPrincipal principal)
         {
-            var userRoles = await userManager.GetRolesAsync(user);
-            return roles.Any(role => userRoles.Contains(role));
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            string[] cardManagerRoles = [
+                AppConstants.ROLE_ADMIN,
+                AppConstants.ROLE_TOURNAMENT_MANAGER
+            ];
+
+            return IsInAnyRole(principal, cardManagerRoles);
         }
 
-        // Returns true if the user has every specified role.
-        public async Task<bool> IsInAllRolesAsync(User user, params string[] roles)
+        public bool IsRulingManager(ClaimsPrincipal principal)
         {
-            var userRoles = await userManager.GetRolesAsync(user);
-            return roles.All(role => userRoles.Contains(role));
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            string[] cardManagerRoles = [
+                AppConstants.ROLE_ADMIN,
+                AppConstants.ROLE_RULING_MANAGER
+            ];
+
+            return IsInAnyRole(principal, cardManagerRoles);
         }
 
-        // ClaimsPrincipal versions.
-        public async Task<bool> IsInAnyRoleAsync(ClaimsPrincipal principal, params string[] roles)
+        public bool IsAdmin(ClaimsPrincipal principal)
         {
-            var user = await userManager.GetUserAsync(principal);
-            return user != null && await IsInAnyRoleAsync(user, roles);
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            return IsInRole(principal, AppConstants.ROLE_ADMIN);
         }
 
-        public async Task<bool> IsInAllRolesAsync(ClaimsPrincipal principal, params string[] roles)
+        public bool IsInRole(ClaimsPrincipal principal, string role)
         {
-            var user = await userManager.GetUserAsync(principal);
-            return user != null && await IsInAllRolesAsync(user, roles);
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            return principal.IsInRole(role);
+        }
+
+        public bool IsInAnyRole(ClaimsPrincipal principal, params string[] roles)
+        {
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            return roles.Any(role => principal.IsInRole(role));
+        }
+
+        public bool IsInAllRoles(ClaimsPrincipal principal, params string[] roles)
+        {
+            if (principal == null || !principal.Identity.IsAuthenticated)
+                return false;
+
+            return roles.All(role => principal.IsInRole(role));
         }
     }
 }

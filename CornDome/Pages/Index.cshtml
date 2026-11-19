@@ -1,9 +1,7 @@
 ﻿@page
-@inject AppFlagHelper AppFlags
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
-    var user = await Model.GetUser();
 }
 
 <div class="text-center">
@@ -12,7 +10,7 @@
     <section class="article-area">
         <div class="left-area">
             <img src="~/img/card-dweeb.jpg" alt="Jake holding a Dweeb and Cool Guy cups" class="w-100" />
-            @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+            @if (UserRoleHelper.IsServedAds(User))
             {
                 <div class="mt-4 container">
                     <p>Card Dweeb is maintained monetarily with advertisements. We do not profit directly from the site and all ad revenue goes directly into maintaining Card Dweeb for community members like you!</p>

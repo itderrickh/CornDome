@@ -1,13 +1,10 @@
 ﻿@page
-@inject AppFlagHelper AppFlags
 @model CornDome.Pages.CardDatabaseModel
 @{
     ViewData["Title"] = "Card Database";
-
-    var user = await Model.GetUser();
 }
 
-@if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+@if (UserRoleHelper.IsServedAds(User))
 {
     <div>
         <partial name="_BannerAd" />
