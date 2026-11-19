@@ -1,5 +1,4 @@
 ﻿@page "{id:int}"
-@inject AppFlagHelper AppFlags
 @model CornDome.Pages.Darklands.CardModel
 
 @{
@@ -11,7 +10,6 @@
     {
         ViewData["Title"] = Model.QueryCard.Name;
     }
-    var user = await Model.GetUser();
 }
 
 @if (Model.QueryCard == null)
@@ -95,7 +93,7 @@ else
                 </div>
             }
 
-            @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
+            @if (UserRoleHelper.IsCardManager(User))
             {
                 <div class="card-text-section">
                     <a class="bold-label btn btn-primary"
@@ -106,7 +104,7 @@ else
                 </div>
             }
 
-            @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+            @if (UserRoleHelper.IsServedAds(User))
             {
                 <div class="mt-5">
                     <partial name="_BannerAd" />

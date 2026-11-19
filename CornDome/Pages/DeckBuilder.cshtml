@@ -1,13 +1,11 @@
 ﻿@page
-@inject AppFlagHelper AppFlags
 @model DeckBuilderModel
 @{
     ViewData["RenderMode"] = "wide";
     ViewData["Title"] = "Deck Builder";
-    var user = await Model.GetUser();
 }
 
-@if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+@if (UserRoleHelper.IsServedAds(User))
 {
     <div class="mb-2 container">
         <partial name="_BannerAd" />

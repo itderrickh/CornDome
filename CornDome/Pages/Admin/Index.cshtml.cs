@@ -1,10 +1,11 @@
+using CornDome.Helpers;
 using CornDome.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "editor")]
-    public class IndexModel : BasePageModel
+    public class IndexModel(UserRoleHelper userRoleHelper) : BasePageModel
     {
         public List<AdminArea> AdminAreas { get; set; } = [];
 
@@ -12,7 +13,7 @@ namespace CornDome.Pages.Admin
         {
             var adminAreas = new List<AdminArea>();
 
-            if (User.IsInRole("CardManager") || User.IsInRole("Admin"))
+            if (userRoleHelper.IsInAnyRole(User, "CardManager", "Admin"))
             {
                 adminAreas.Add(new AdminArea()
                 {
@@ -42,12 +43,12 @@ namespace CornDome.Pages.Admin
                 });
             }
 
-            if (User.IsInRole("RulingManager") || User.IsInRole("Admin"))
+            if (userRoleHelper.IsInAnyRole(User, "RulingManager", "Admin"))
             {
 
             }
 
-            if (User.IsInRole("Admin"))
+            if (userRoleHelper.IsInAnyRole(User, "Admin"))
             {
                 adminAreas.Add(new AdminArea()
                 {

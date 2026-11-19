@@ -1,5 +1,4 @@
-﻿@inject AppFlagHelper AppFlags
-@inject Config Config
+﻿@inject Config Config
 @inject IWebHostEnvironment hostingEnv
 @{
     var logoHeight = 48;
@@ -28,7 +27,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
-    @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+    @if (UserRoleHelper.IsServedAds(User))
     {
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1907330476230243" crossorigin="anonymous"></script>
     }
@@ -38,7 +37,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-image: url('/img/background.png')">
             <div class="container">
-                @if (User.Identity.IsAuthenticated && User.IsInRole("CoolGuy")) {
+                @if (UserRoleHelper.IsInRole(User, "CoolGuy")) {
                     <a asp-area="" asp-page="/Index" aria-label="Home page link"><img style="height: @(logoHeight)px" src="/img/logo-cool.png" alt="Card Dweeb Logo" /></a>
                 }
                 else {
@@ -76,7 +75,7 @@
                                 <li><a class="dropdown-item" asp-area="" asp-page="/Resources/Rulebook">Official Rulebook</a></li>
                             </ul>
                         </li>
-                        @if (AppFlags.IsActive("EnableDarkLands") || User.IsInRole("Admin"))
+                        @if (AppFlags.IsActive("EnableDarkLands") || UserRoleHelper.IsInRole(User, "Admin"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="top-nav-item dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -130,16 +129,16 @@
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Account/TournamentDashboard">Tournament Dashboard</a></li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
-                                    @if (User.IsInRole("Admin") || User.IsInRole("CardManager"))
+                                    @if (UserRoleHelper.IsCardManager(User))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Admin/Index">Admin Panel</a></li>
                                     }
-                                    @if (AppFlags.IsActive("EnableTournaments") && User.IsInRole("Admin") || User.IsInRole("TournamentManager"))
+                                    @if (AppFlags.IsActive("EnableTournaments") && UserRoleHelper.IsTournamentManager(User))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-page="/Tournaments/Admin">Manage Tournaments</a></li>
                                     }
 
-                                    @if (User.IsInRole("Admin") || User.IsInRole("TournamentManager") || User.IsInRole("CardManager"))
+                                    @if (UserRoleHelper.IsInAnyRole(User, "Admin", "TournamentManager", "CardManager"))
                                     {
                                         <li><hr class="dropdown-divider"></li>
                                     }

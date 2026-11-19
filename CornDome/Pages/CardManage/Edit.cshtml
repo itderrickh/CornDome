@@ -108,7 +108,7 @@
 
 @section Scripts {
     @* This isn't meant to be super secure. Only as a way to allow me to make data edits *@
-    @if (User.IsInRole("Admin"))
+    @if (UserRoleHelper.IsAdmin(User))
     {
         <script>
             var isAdmin = true;

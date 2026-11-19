@@ -1,10 +1,8 @@
 ﻿@page
-@inject AppFlagHelper AppFlags
 @model CornDome.Pages.Dweeble.IndexModel
 @{
     ViewData["Title"] = "Dweeble";
     ViewData["RenderMode"] = "wide";
-    var user = await Model.GetUser();
 }
 
 @Html.AntiForgeryToken()
@@ -12,7 +10,7 @@
 <div class="dweeble-layout">
     <!-- Left advertisement -->
     <aside class="dweeble-ad dweeble-ad-left">
-        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        @if (UserRoleHelper.IsServedAds(User))
         {
             <partial name="_BannerAd" />
         }
@@ -21,7 +19,7 @@
     
     <!-- Left advertisement -->
     <aside class="dweeble-ad dweeble-ad-top">
-        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        @if (UserRoleHelper.IsServedAds(User))
         {
             <partial name="_BannerAd" />
         }
@@ -201,7 +199,7 @@
     
     <!-- Left advertisement -->
     <aside class="dweeble-ad dweeble-ad-right">
-        @if (AppFlags.IsActive("EnableAds") && (user == null || !User.IsInRole("CoolGuy") || !User.IsInRole("Admin")))
+        @if (UserRoleHelper.IsServedAds(User))
         {
             <partial name="_BannerAd" />
         }
