@@ -423,8 +423,14 @@ namespace CornDome.Repository.Cards
 
         public Card GetCardOfTheDay(DateTime day)
         {
+            // List of cards that are too hard to guess
+            int[] houseBanList = [
+                315, 526, 532, 634, 644, 647, 670
+            ];
+
             var cards = CardQuery()
                 .Where(x => x.TypeId != (int)CardTypeEnum.Landscape)
+                .Where(x => !houseBanList.Contains(x.Id))
                 .OrderBy(x => x.Id)
                 .ToList();
 

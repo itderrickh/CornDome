@@ -111,7 +111,7 @@
                         <th>Cost</th>
                         <th>Attack</th>
                         <th>Defense</th>
-                        <th>Custom</th>
+                        <th>Id</th>
                     </tr>
                 </thead>
                 <tbody id="resultsBody">
@@ -360,7 +360,7 @@
                         card.cost ?? "-",
                         card.attack ?? "-",
                         card.defense ?? "-",
-                        card.isCustomCard ? "Yes" : "No"
+                        card.id
                     ];
 
                     for (const value of values) {
