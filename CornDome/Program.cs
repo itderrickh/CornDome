@@ -45,6 +45,9 @@ namespace CornDome
         public static void AddHelpers(IServiceCollection services)
         {
             services.AddScoped<AppFlagHelper>();
+            services.AddScoped<UserRoleHelper>();
+            services.AddScoped<AppConstants>();
+            services.AddSingleton<IconHelper>();
         }
 
         public static void AddDbContext(WebApplicationBuilder builder, IServiceCollection services)
@@ -136,6 +139,17 @@ namespace CornDome
             });
         }
 
+        public static void AddPatreon(WebApplicationBuilder builder)
+        {
+            builder.Services.Configure<PatreonOptions>(
+                builder.Configuration.GetSection("Patreon"));
+
+            builder.Services.AddHttpClient<IPatreonRepository, PatreonRepository>();
+            builder.Services.AddScoped<IPatreonRoleService, PatreonRoleService>();
+            builder.Services.AddScoped<IPatreonSyncService, PatreonSyncService>();
+            builder.Services.AddHostedService<PatreonSyncHostedService>();
+        }
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -161,21 +175,11 @@ namespace CornDome
                 client.Timeout = TimeSpan.FromSeconds(DISCORD_TIMEOUT);
             });
 
-            builder.Services.Configure<PatreonOptions>(
-                builder.Configuration.GetSection("Patreon"));
-
-            builder.Services.AddHttpClient<IPatreonRepository, PatreonRepository>();
-            builder.Services.AddScoped<IPatreonRoleService, PatreonRoleService>();
-            builder.Services.AddScoped<IPatreonSyncService, PatreonSyncService>();
-            builder.Services.AddHostedService<PatreonSyncHostedService>();
-            builder.Services.AddSingleton<IconHelper>();
-
+            AddPatreon(builder);
             AddDbContext(builder, builder.Services);
             AddRepositories(builder.Services);
             AddHelpers(builder.Services);
             AddAuthentication(builder);
-            builder.Services.AddScoped<UserRoleHelper>();
-            builder.Services.AddScoped<AppConstants>();
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -192,7 +196,6 @@ namespace CornDome
             AddAuthorization(builder);
 
             var app = builder.Build();
-
             app.UseForwardedHeaders();
 
             // Configure the HTTP request pipeline.

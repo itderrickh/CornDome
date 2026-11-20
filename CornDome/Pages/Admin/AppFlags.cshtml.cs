@@ -6,25 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace CornDome.Pages.Admin
 {
     [Authorize(Policy = "admin")]
-    public class AppFlagsModel : BasePageModel
+    public class AppFlagsModel(IAppFlagRepository appFlagRepository) : BasePageModel
     {
-        private readonly IAppFlagRepository _appFlagRepository;
-
-        public AppFlagsModel(IAppFlagRepository appFlagRepository)
-        {
-            _appFlagRepository = appFlagRepository;
-        }
-
-        public List<AppFlag> Flags { get; set; } = new();
+        public List<AppFlag> Flags { get; set; } = [];
 
         public void OnGet()
         {
-            Flags = _appFlagRepository.GetAll();
+            Flags = appFlagRepository.GetAll();
         }
 
         public IActionResult OnPostToggleAsync(int id)
         {
-            var flags = _appFlagRepository.GetAll();
+            var flags = appFlagRepository.GetAll();
             var flag = flags.FirstOrDefault(x => x.Id == id);
 
             if (flag == null)
@@ -34,7 +27,7 @@ namespace CornDome.Pages.Admin
 
             flag.Active = !flag.Active;
 
-            _appFlagRepository.Update(flag);
+            appFlagRepository.Update(flag);
 
             return RedirectToPage();
         }

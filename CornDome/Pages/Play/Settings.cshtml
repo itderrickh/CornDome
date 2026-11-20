@@ -97,63 +97,9 @@ else
 }
 
 @section Scripts {
-    <script>
-        var days = document.querySelectorAll(".day");
-        var starts = document.querySelectorAll(".startTime");
-        var ends = document.querySelectorAll(".endTime");
-
-        function toggleDisplays() {
-            days.forEach((day) => {
-                var dayValue = day.dataset.day;
-
-                if (day.checked) {
-                    starts.forEach((start) => {
-                        if (start.dataset.day === dayValue) {
-                            start.style.display = "inline";
-                        }
-                    });
-
-                    ends.forEach((end) => {
-                        if (end.dataset.day === dayValue) {
-                            end.style.display = "inline";
-                        }
-                    });
-                } else {
-                    starts.forEach((start) => {
-                        if (start.dataset.day === dayValue) {
-                            start.style.display = "none";
-                        }
-                    });
-
-                    ends.forEach((end) => {
-                        if (end.dataset.day === dayValue) {
-                            end.style.display = "none";
-                        }
-                    });
-                }
-            });
-        }
-
-        toggleDisplays();
-    </script>
+    <script src="~/js/play/settings.js" asp-append-version="true"></script>
 }
 
 @section Styles {
-    <style>
-        .avatar {
-            border-radius: 50%;
-            cursor: pointer;
-            flex: 0 0 auto;
-            height: var(--chat-avatar-size);
-            inset-inline-start: var(--custom-message-margin-horizontal);
-            margin-top: calc(4px - var(--custom-message-spacing-vertical-container-cozy));
-            overflow: hidden;
-            pointer-events: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-            width: var(--chat-avatar-size);
-            z-index: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/play/settings.css" asp-append-version="true" />
 }

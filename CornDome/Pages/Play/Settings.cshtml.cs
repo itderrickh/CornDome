@@ -35,7 +35,6 @@ namespace CornDome.Pages.Play
         public PlayPreferencesForm Form { get; set; }
         public List<TimeZoneInfo> TimeZones { get; set; } = [.. TimeZoneInfo.GetSystemTimeZones()];
 
-
         public async Task<IActionResult> OnGet()
         {
             var loggedInUser = await GetUser();

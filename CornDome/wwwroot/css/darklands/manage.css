@@ -45,7 +45,7 @@
     border-color: var(--bs-primary);
 }
 
-@@media (max-width: 576px) {
+@media (max-width: 576px) {
     .darklands-manager .darklands-table {
         min-width: 650px;
     }

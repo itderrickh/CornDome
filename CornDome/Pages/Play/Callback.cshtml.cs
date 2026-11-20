@@ -8,11 +8,7 @@ using System.Text.Json;
 
 namespace CornDome.Pages.Play;
 
-public class CallbackModel(
-    Config config,
-    IDiscordRepository discordRepository,
-    ITokenProtector tokenProtector,
-    IHttpClientFactory httpClientFactory) : BasePageModel
+public class CallbackModel(Config config, IDiscordRepository discordRepository, ITokenProtector tokenProtector, IHttpClientFactory httpClientFactory) : BasePageModel
 {
 
     public async Task<IActionResult> OnGetAsync(string code)

@@ -59,7 +59,7 @@
     min-height: 42px;
 }
 
-@@media (max-width: 991.98px) {
+@media (max-width: 991.98px) {
     .sticky-lg-top {
         position: static !important;
     }

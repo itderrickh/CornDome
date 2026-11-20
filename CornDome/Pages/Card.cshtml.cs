@@ -12,7 +12,6 @@ namespace CornDome.Pages
     [AllowAnonymous]
     public class CardModel(ICardRepository cardRepository, IFeedbackRepository feedbackRepository) : BasePageModel
     {
-        private readonly ICardRepository _cardRepository = cardRepository;
         public Card QueryCard { get; set; } = null;
 
         [BindProperty(Name = "id", SupportsGet = true)]
@@ -22,7 +21,7 @@ namespace CornDome.Pages
         {
             if (CardId.HasValue)
             {
-                QueryCard = _cardRepository.GetCard(CardId.Value);
+                QueryCard = cardRepository.GetCard(CardId.Value);
             }
         }
 
