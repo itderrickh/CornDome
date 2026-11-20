@@ -6,9 +6,7 @@ namespace CornDome.Helpers
 {
     public class ErrorLoggerMiddleware(RequestDelegate next)
     {
-        public async Task InvokeAsync(
-        HttpContext context,
-        ILogEntryRepository repository)
+        public async Task InvokeAsync(HttpContext context, ILogEntryRepository repository)
         {
             var stopwatch = Stopwatch.StartNew();
 

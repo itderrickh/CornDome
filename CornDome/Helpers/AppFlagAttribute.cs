@@ -3,19 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CornDome.Helpers
 {
-    [AttributeUsage(
-        AttributeTargets.Class | AttributeTargets.Method,
-        AllowMultiple = false,
-        Inherited = true)]
-    public class AppFlagAttribute : Attribute, IAsyncActionFilter, IAsyncPageFilter
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class AppFlagAttribute(string flagName) : Attribute, IAsyncActionFilter, IAsyncPageFilter
     {
-        private readonly string _flagName;
-
-        public AppFlagAttribute(string flagName)
-        {
-            _flagName = flagName;
-        }
-
         public async Task OnActionExecutionAsync(
             ActionExecutingContext context,
             ActionExecutionDelegate next)
@@ -23,7 +13,7 @@ namespace CornDome.Helpers
             var appFlags = context.HttpContext.RequestServices
                 .GetRequiredService<AppFlagHelper>();
 
-            var isActive = appFlags.IsActive(_flagName);
+            var isActive = appFlags.IsActive(flagName);
 
             if (!isActive)
             {
@@ -46,7 +36,7 @@ namespace CornDome.Helpers
             var appFlags = context.HttpContext.RequestServices
                 .GetRequiredService<AppFlagHelper>();
 
-            var isActive = appFlags.IsActive(_flagName);
+            var isActive = appFlags.IsActive(flagName);
 
             if (!isActive)
             {

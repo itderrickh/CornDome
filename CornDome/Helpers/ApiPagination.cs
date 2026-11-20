@@ -8,11 +8,7 @@ namespace CornDome.Helpers
         public const int MaxLimit = 2000;
         public const int DefaultOffset = 0;
 
-        public static string GetNextUrl(
-            HttpRequest request,
-            int total,
-            int limit,
-            int offset)
+        public static string GetNextUrl(HttpRequest request, int total, int limit, int offset)
         {
             if (offset + limit >= total)
                 return null;

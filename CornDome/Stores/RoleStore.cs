@@ -6,39 +6,37 @@ namespace CornDome.Stores
 {
     public class RoleStore(IRoleRepository roleRepository) : IRoleStore<Role>, IQueryableRoleStore<Role>
     {
-        private readonly IRoleRepository _roleRepo = roleRepository;
-
         public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
         {
-            var result = await _roleRepo.CreateRole(new Role() { Id = role.Id, Name = role.Name });
+            var result = await roleRepository.CreateRole(new Role() { Id = role.Id, Name = role.Name });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "Role creation failed." });
         }
 
         public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
         {
-            var result = await _roleRepo.UpdateRole(new Role() { Id = role.Id, Name = role.Name });
+            var result = await roleRepository.UpdateRole(new Role() { Id = role.Id, Name = role.Name });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "Role update failed." });
         }
 
         public async Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
         {
-            var result = await _roleRepo.DeleteRole(new Role() { Id = role.Id, Name = role.Name });
+            var result = await roleRepository.DeleteRole(new Role() { Id = role.Id, Name = role.Name });
             return result ? IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = "Role deletion failed." });
         }
 
         public async Task<Role> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            var result = await _roleRepo.FindById(int.Parse(roleId));
+            var result = await roleRepository.FindById(int.Parse(roleId));
             return result;
         }
 
         public async Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            var result = await _roleRepo.FindByName(normalizedRoleName);
+            var result = await roleRepository.FindByName(normalizedRoleName);
             return result;
         }
 
-        public IQueryable<Role> Roles => _roleRepo.GetAllRolesQueryable();
+        public IQueryable<Role> Roles => roleRepository.GetAllRolesQueryable();
 
         public void Dispose()
         {

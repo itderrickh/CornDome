@@ -13,13 +13,7 @@ namespace CornDome.Controllers
 {
     [Authorize]
     [Route("Patreon")]
-    public class PatreonController(
-        IPatreonRepository patreonRepository,
-        IPatreonRoleService patreonRoleService,
-        UserManager<User> userManager,
-        MainContext context,
-        IDataProtectionProvider dataProtectionProvider,
-        Config config) : Controller
+    public class PatreonController(IPatreonRepository patreonRepository, IPatreonRoleService patreonRoleService, UserManager<User> userManager, MainContext context, IDataProtectionProvider dataProtectionProvider, Config config) : Controller
     {
         private readonly ITimeLimitedDataProtector _stateProtector =
             dataProtectionProvider
@@ -50,7 +44,7 @@ namespace CornDome.Controllers
 
         // Patreon redirects back here after authorization.
         [HttpGet("Callback")]
-        public async Task<IActionResult> Callback(string? code, string? state, string? error)
+        public async Task<IActionResult> Callback(string code, string state, string error)
         {
             if (!string.IsNullOrEmpty(error))
                 return Redirect("/Account?patreon=denied");
@@ -58,7 +52,7 @@ namespace CornDome.Controllers
             if (string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(state))
                 return BadRequest("Missing authorization code or state.");
 
-            OAuthState? statePayload;
+            OAuthState statePayload;
 
             try
             {
@@ -178,7 +172,7 @@ namespace CornDome.Controllers
                 .ToList();
         }
 
-        private static string? GetRelationshipId(PatreonResource resource, string relationshipName)
+        private static string GetRelationshipId(PatreonResource resource, string relationshipName)
         {
             if (!resource.Relationships.TryGetValue(relationshipName, out var relationship))
                 return null;

@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
-    <PackageReference Include="DotnetBadWordDetector" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="11.0.0">

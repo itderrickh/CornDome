@@ -6,8 +6,7 @@ namespace CornDome.Helpers
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
     public sealed class RequireUserAgentAttribute : ActionFilterAttribute
     {
-        public override void OnActionExecuting(
-            ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             var userAgent = context.HttpContext.Request.Headers.UserAgent.ToString();
 
