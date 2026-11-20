@@ -75,37 +75,5 @@
 </div>
 
 @section Scripts {
-    <script src="../js/deckStorage.js" asp-append-version="true"></script>
-    <script>
-        async function populateDeckView(field) {
-            var db = new DecksDatabase();
-
-            try {
-                await db.open();
-
-                const allDecks = await db.getAll();
-
-                for (var i = 0; i < allDecks.length; i++) {
-                    var option = document.createElement("option");
-                    option.value = allDecks[i].content;
-                    option.text = allDecks[i].name;
-
-                    field.appendChild(option);
-                }
-            } catch (ex) {
-                alert("Error loading decks: ", ex);
-            }
-        }
-
-        var addDeck = document.getElementById("addDeck");
-        var updateDeck = document.getElementById("updateDeck");
-
-        if (addDeck) {
-            populateDeckView(addDeck);
-        }
-
-        if (updateDeck) {
-            populateDeckView(updateDeck);
-        }
-    </script>
+    
 }
