@@ -259,6 +259,11 @@
     border-color: var(--bs-border-color) !important;
 }
 
+.action-item {
+    display: inline-block;
+    margin-right: 2em;
+}
+
 .comment-text {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -327,4 +332,56 @@
     #statsSection, #actionsSection {
         display: none;
     }
+}
+
+.deck-header-edit {
+    margin-bottom: 4px;
+}
+
+.deck-editable {
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background .15s ease;
+}
+
+    .deck-editable:hover {
+        background: rgba(128, 128, 128, .10);
+    }
+
+.edit-indicator {
+    font-size: 13px;
+    opacity: 0;
+    margin-left: 6px;
+    transition: opacity .15s ease;
+}
+
+.deck-editable:hover .edit-indicator {
+    opacity: .6;
+}
+
+.deck-visibility-pill {
+    background: rgba(128, 128, 128, .15);
+    border: 1px solid rgba(128, 128, 128, .3);
+    color: inherit;
+    font-weight: 600;
+    padding: 6px 13px;
+    transition: background .15s ease;
+}
+
+    .deck-visibility-pill:hover {
+        background: rgba(128, 128, 128, .25);
+        color: inherit;
+    }
+
+.deck-inline-field {
+    min-width: 0;
+}
+
+#deckTitleInput {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#deckDescriptionInput {
+    resize: vertical;
 }
