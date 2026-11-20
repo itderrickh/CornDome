@@ -7,3 +7,60 @@
     display: block;
     text-align: center;
 }
+
+.image-preview-container {
+    background: var(--bs-tertiary-bg);
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.newPreview {
+    display: none;
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.image-preview-container.has-image .newPreview {
+    display: block;
+}
+
+.image-preview-container.has-image .preview-placeholder {
+    display: none;
+}
+
+.form-check.form-switch {
+    padding-left: 3.5rem;
+}
+
+    .form-check.form-switch .form-check-input {
+        margin-left: -2.5rem;
+        width: 2.5rem;
+        height: 1.25rem;
+        cursor: pointer;
+    }
+
+    .form-check.form-switch .form-check-label {
+        cursor: pointer;
+    }
+
+.card {
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+#tagContainer {
+    min-height: 42px;
+}
+
+@@media (max-width: 991.98px) {
+    .sticky-lg-top {
+        position: static !important;
+    }
+}

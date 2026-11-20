@@ -97,3 +97,61 @@ document.querySelectorAll('.fileInput').forEach((input) => {
         reader.readAsDataURL(file);
     });
 });
+
+// New image preview
+const imageInput = document.querySelector(".fileInput");
+const newPreview = document.querySelector(".newPreview");
+const newImageContainer = document.querySelector(".new-image-container");
+
+imageInput.addEventListener("change", function () {
+    const file = this.files[0];
+
+    if (!file) {
+        newPreview.src = "";
+        newImageContainer.classList.remove("has-image");
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        this.value = "";
+        newPreview.src = "";
+        newImageContainer.classList.remove("has-image");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        newPreview.src = e.target.result;
+        newImageContainer.classList.add("has-image");
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// Prevent duplicate submissions
+document.getElementById("editCardForm").addEventListener("submit", function () {
+    const button = document.getElementById("saveButton");
+
+    if (button.disabled) {
+        return;
+    }
+
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving Changes...';
+});
+
+hugerte.init({
+    selector: '.rich-text-editor',
+    height: 300,
+    menubar: false,
+    branding: false,
+    plugins: 'lists link',
+    toolbar: 'undo redo | bold italic underline | bullist numlist | link | removeformat',
+    content_style: `
+                        body {
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                        }
+                    `
+});

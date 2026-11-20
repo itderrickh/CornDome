@@ -56,3 +56,44 @@ document.getElementById('fileInput').addEventListener('change', (event) => {
     };
     reader.readAsDataURL(file);
 });
+
+document.getElementById("addCardForm").addEventListener("submit", function () {
+    const submitButton = document.getElementById("submitButton");
+
+    if (submitButton.disabled) {
+        return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Card...';
+});
+
+const fileInput = document.getElementById("fileInput");
+const previewContainer = document.querySelector(".image-preview-container");
+const previewImage = document.querySelector(".newPreview");
+
+fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+
+    if (!file) {
+        previewImage.src = "";
+        previewContainer.classList.remove("has-image");
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        this.value = "";
+        previewImage.src = "";
+        previewContainer.classList.remove("has-image");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        previewImage.src = e.target.result;
+        previewContainer.classList.add("has-image");
+    };
+
+    reader.readAsDataURL(file);
+});

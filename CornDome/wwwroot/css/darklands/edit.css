@@ -1,0 +1,56 @@
+﻿.darklands-edit .card {
+    border-radius: 12px;
+}
+
+.darklands-edit .card-header {
+    border-radius: 12px 12px 0 0;
+}
+
+.darklands-edit .form-label {
+    margin-bottom: .5rem;
+}
+
+.darklands-edit .form-control,
+.darklands-edit .form-select {
+    padding: .65rem .85rem;
+}
+
+.darklands-edit textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.darklands-edit .darklands-image-preview {
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px dashed var(--bs-border-color);
+    border-radius: 10px;
+    background: var(--bs-tertiary-bg);
+    padding: 12px;
+}
+
+    .darklands-edit .darklands-image-preview img {
+        display: block;
+        max-width: 100%;
+        max-height: 350px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+        .darklands-edit .darklands-image-preview img.d-none {
+            display: none !important;
+        }
+
+    .darklands-edit .darklands-image-preview.has-image {
+        border-style: solid;
+    }
+
+.darklands-edit .btn {
+    font-weight: 600;
+}

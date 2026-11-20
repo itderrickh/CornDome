@@ -23,3 +23,57 @@
 input[type="file"] {
     margin-top: 10px;
 }
+
+.card {
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+.image-preview-container {
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    min-height: 260px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.oldPreview,
+.newPreview {
+    max-width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+}
+
+.newPreview {
+    display: none;
+}
+
+.new-image-placeholder {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.new-image-container.has-image .newPreview {
+    display: block;
+}
+
+.new-image-container.has-image .new-image-placeholder {
+    display: none;
+}
+
+#tagContainer {
+    min-height: 42px;
+}
+
+@media (max-width: 991.98px) {
+    .sticky-lg-top {
+        position: static !important;
+    }
+}

@@ -1,0 +1,58 @@
+﻿.darklands-manager .darklands-stat-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.5rem;
+}
+
+.darklands-manager .darklands-table thead th {
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-secondary-color);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.darklands-manager .darklands-table tbody td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.darklands-manager .darklands-table .badge {
+    font-weight: 600;
+    padding: .45em .7em;
+}
+
+.darklands-manager .input-group-text {
+    border-right: 0;
+}
+
+.darklands-manager .input-group .form-control {
+    border-left: 0;
+}
+
+.darklands-manager .input-group:focus-within .input-group-text,
+.darklands-manager .input-group:focus-within .form-control {
+    border-color: var(--bs-primary);
+}
+
+@@media (max-width: 576px) {
+    .darklands-manager .darklands-table {
+        min-width: 650px;
+    }
+
+    .darklands-manager .card-header,
+    .darklands-manager .card-body {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}

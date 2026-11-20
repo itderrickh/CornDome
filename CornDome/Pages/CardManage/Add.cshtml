@@ -163,65 +163,6 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/cardManage/add.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/setTag.css" asp-append-version="true" />
-
-    <style>
-        .image-preview-container {
-            background: var(--bs-tertiary-bg);
-            min-height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .newPreview {
-            display: none;
-            max-width: 100%;
-            max-height: 400px;
-            object-fit: contain;
-        }
-
-        .image-preview-container.has-image .newPreview {
-            display: block;
-        }
-
-        .image-preview-container.has-image .preview-placeholder {
-            display: none;
-        }
-
-        .form-check.form-switch {
-            padding-left: 3.5rem;
-        }
-
-            .form-check.form-switch .form-check-input {
-                margin-left: -2.5rem;
-                width: 2.5rem;
-                height: 1.25rem;
-                cursor: pointer;
-            }
-
-            .form-check.form-switch .form-check-label {
-                cursor: pointer;
-            }
-
-        .card {
-            border-radius: 0.75rem;
-        }
-
-        .card-header {
-            border-radius: 0.75rem 0.75rem 0 0 !important;
-        }
-
-        #tagContainer {
-            min-height: 42px;
-        }
-
-        @@media (max-width: 991.98px) {
-            .sticky-lg-top {
-                position: static !important;
-            }
-        }
-    </style>
 }
 
 @section Scripts {
@@ -233,47 +174,4 @@
     </script>
 
     <script src="~/js/setTag.js" asp-append-version="true"></script>
-
-    <script>
-        document.getElementById("addCardForm").addEventListener("submit", function () {
-            const submitButton = document.getElementById("submitButton");
-
-            if (submitButton.disabled) {
-                return;
-            }
-
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Card...';
-        });
-
-        const fileInput = document.getElementById("fileInput");
-        const previewContainer = document.querySelector(".image-preview-container");
-        const previewImage = document.querySelector(".newPreview");
-
-        fileInput.addEventListener("change", function () {
-            const file = this.files[0];
-
-            if (!file) {
-                previewImage.src = "";
-                previewContainer.classList.remove("has-image");
-                return;
-            }
-
-            if (!file.type.startsWith("image/")) {
-                this.value = "";
-                previewImage.src = "";
-                previewContainer.classList.remove("has-image");
-                return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                previewImage.src = e.target.result;
-                previewContainer.classList.add("has-image");
-            };
-
-            reader.readAsDataURL(file);
-        });
-    </script>
 }
