@@ -16,6 +16,8 @@ namespace CornDome.Pages.Admin
         public int AddRoleId { get; set; }
         [BindProperty]
         public int AddRoleUserId { get; set; }
+        [BindProperty]
+        public int DeleteUserId { get; set; }
 
         public async void OnGet()
         {
@@ -80,6 +82,37 @@ namespace CornDome.Pages.Admin
 
             await PopulateTables();
             TempData["ErrorMessage"] = "Remove role failed";
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteUser()
+        {
+            if (DeleteUserId <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid user.";
+                await PopulateTables();
+                return Page();
+            }
+
+            var user = await userRepository.GetUserById(DeleteUserId);
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                await PopulateTables();
+                return Page();
+            }
+
+            
+
+            var success = await userRepository.DeleteUser(DeleteUserId);
+
+            if (success)
+                TempData["SuccessMessage"] = $"Successfully deleted {user.Email}.";
+            else
+                TempData["ErrorMessage"] = "Failed to delete user.";
+
+            await PopulateTables();
             return Page();
         }
     }

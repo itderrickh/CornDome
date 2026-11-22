@@ -93,7 +93,8 @@ namespace CornDome.Repository.Main
                 .Where(x =>
                     x.IsComplete &&
                     x.Won &&
-                    x.Completed != null)
+                    x.Completed != null &&
+                    x.PlayerKey != "user:1") // Remove the carddweeb from the overall leaderboard
                 .ToListAsync();
 
             return games;

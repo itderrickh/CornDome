@@ -5,6 +5,7 @@ namespace CornDome.Repository.Users
 {
     public interface IUserRepository
     {
+        Task<bool> DeleteUser(int id);
         Task<User> GetUserByEmail(string email);
         Task<bool> UpdateUser(User user);
         Task<bool> CreateUser(User user);
@@ -106,6 +107,70 @@ namespace CornDome.Repository.Users
                 .ThenInclude(y => y.Role)
                 .Where(u => u.UserRoles.Any(x => patreonRoles.Contains(x.Role.Name)))
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteUser(int id)
+        {
+            try
+            {
+                var user = await context.Users
+                    .Include(x => x.UserRoles)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (user == null)
+                    return false;
+
+                // Remove associated user roles.
+                context.UserRoles.RemoveRange(user.UserRoles);
+
+                // Remove all user-related records.
+                await context.BugReports
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.DeckComments
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.DeckLikes
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.Decks
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.DiscordConnections
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.PatreonConnections
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.PlayAvailabilities
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.PlayPreferences
+                    .Where(x => x.UserId == id)
+                    .ExecuteDeleteAsync();
+
+                await context.DailyCardGames
+                    .Where(x => x.PlayerKey == $"user:{id}")
+                    .ExecuteDeleteAsync();
+
+
+                // Remove the user.
+                context.Users.Remove(user);
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

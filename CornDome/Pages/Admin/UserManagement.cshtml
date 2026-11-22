@@ -120,7 +120,7 @@
                         <th class="ps-3">User</th>
                         <th>Last Login</th>
                         <th>Roles</th>
-                        <th class="text-end pe-3">Manage Roles</th>
+                        <th class="text-end pe-3">Manage</th>
                     </tr>
                 </thead>
 
@@ -196,6 +196,20 @@
                                                 class="btn btn-sm btn-primary"
                                                 title="Add role">
                                             <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+
+                                    <form method="post"
+                                          asp-page-handler="DeleteUser"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.');">
+
+                                        <input type="hidden" name="DeleteUserId" value="@user.Id" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Delete user">
+                                            <i class="bi bi-person-x"></i>
                                         </button>
                                     </form>
 
