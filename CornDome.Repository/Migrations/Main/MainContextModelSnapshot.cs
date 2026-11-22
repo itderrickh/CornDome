@@ -15,7 +15,7 @@ partial class MainContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261119165956_EarlyBackerRole";
+    public override string LastMigrationId => "20261122014830_AddingNotices2";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -262,6 +262,38 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.HasKey("Id");
 
                 b.ToTable("LogEntries");
+            });
+
+        modelBuilder.Entity("CornDome.Models.Main.Notice", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("TEXT");
+
+                b.Property<bool>("IsActive")
+                    .HasColumnType("INTEGER");
+
+                b.Property<bool>("IsPublished")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Message")
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime>("ScheduledEnd")
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime>("ScheduledStart")
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("Title")
+                    .HasColumnType("TEXT");
+
+                b.HasKey("Id");
+
+                b.ToTable("Notices");
             });
 
         modelBuilder.Entity("CornDome.Models.Play.PlayAvailability", b =>

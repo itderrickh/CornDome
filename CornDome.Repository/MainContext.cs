@@ -25,6 +25,7 @@ namespace CornDome.Repository
         public DbSet<DailyCard> DailyCards { get; set; }
         public DbSet<DailyCardGame> DailyCardGames { get; set; }
         public DbSet<PatreonConnection> PatreonConnections { get; set; }
+        public DbSet<Notice> Notices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

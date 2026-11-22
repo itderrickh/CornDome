@@ -1,0 +1,145 @@
+﻿@page
+@model CornDome.Pages.Admin.NoticesModel
+@{
+    ViewData["Title"] = "Notices";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Maintenance Announcements</h2>
+            <p class="text-muted mb-0">Schedule and publish maintenance notifications to users.</p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Create Announcement</h5><span>Current Server Time @DateTime.Now</span>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Title" class="form-label">Title</label>
+                    <input asp-for="Input.Title" class="form-control" placeholder="Scheduled Maintenance" />
+                    <span asp-validation-for="Input.Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Message" class="form-label">Message</label>
+                    <textarea asp-for="Input.Message" class="form-control" rows="3"
+                              placeholder="We will be performing scheduled maintenance..."></textarea>
+                    <span asp-validation-for="Input.Message" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.ScheduledStart" class="form-label">Maintenance Start</label>
+                        <input asp-for="Input.ScheduledStart" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+                        <span asp-validation-for="Input.ScheduledStart" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.ScheduledEnd" class="form-label">Expected End</label>
+                        <input asp-for="Input.ScheduledEnd" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+                        <span asp-validation-for="Input.ScheduledEnd" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="Input.PublishImmediately" class="form-check-input" />
+                    <label asp-for="Input.PublishImmediately" class="form-check-label">
+                        Publish announcement immediately
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-megaphone me-1"></i> Create Announcement
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Existing Announcements</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Notices.Count == 0)
+            {
+                <p class="text-muted mb-0">No maintenance announcements found.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Scheduled Start</th>
+                                <th>Expected End</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var notice in Model.Notices)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@notice.Title</strong>
+                                        <div class="small text-muted">@notice.Message</div>
+                                    </td>
+                                    <td>@notice.ScheduledStart.ToLocalTime().ToString("g")</td>
+                                    <td>@notice.ScheduledEnd.ToLocalTime().ToString("g")</td>
+                                    <td>
+                                        @if (notice.IsPublished && notice.IsActive)
+                                        {
+                                            <span class="badge bg-success">Published</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Unpublished</span>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @if (!notice.IsPublished && notice.IsActive)
+                                        {
+                                            <form method="post" asp-page-handler="Publish" class="d-inline">
+                                                <input type="hidden" name="id" value="@notice.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-megaphone-fill"></i> Publish
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (notice.IsPublished)
+                                        {
+                                            <form method="post" asp-page-handler="Cancel" class="d-inline"
+                                                  onsubmit="return confirm('Cancel this announcement?');">
+                                                <input type="hidden" name="id" value="@notice.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

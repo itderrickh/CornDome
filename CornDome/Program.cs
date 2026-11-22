@@ -1,4 +1,5 @@
 using CornDome.Helpers;
+using CornDome.Hubs;
 using CornDome.Models.Users;
 using CornDome.Repository;
 using CornDome.Repository.Cards;
@@ -7,6 +8,7 @@ using CornDome.Repository.Main;
 using CornDome.Repository.Patreon;
 using CornDome.Repository.Tournaments;
 using CornDome.Repository.Users;
+using CornDome.Services;
 using CornDome.Stores;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -39,6 +41,7 @@ namespace CornDome
             services.AddTransient<IDeckRepository, DeckRepository>();
             services.AddTransient<IAppFlagRepository, AppFlagRepository>();
             services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<INoticeRepository, NoticeRepository>();
             services.AddScoped<DweebQueryLanguage>();
         }
 
@@ -181,6 +184,8 @@ namespace CornDome
             AddHelpers(builder.Services);
             AddAuthentication(builder);
 
+            builder.Services.AddSignalR();
+
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
@@ -192,11 +197,14 @@ namespace CornDome
             });
 
             builder.Services.AddSingleton<ICardChangeLogger, CardChangeLogger>();
+            builder.Services.AddHostedService<NoticeBackgroundService>();
 
             AddAuthorization(builder);
 
             var app = builder.Build();
             app.UseForwardedHeaders();
+
+            app.MapHub<NoticeHub>("/notices");
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

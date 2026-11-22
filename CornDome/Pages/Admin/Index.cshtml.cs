@@ -43,11 +43,6 @@ namespace CornDome.Pages.Admin
                 });
             }
 
-            if (userRoleHelper.IsInAnyRole(User, "RulingManager", "Admin"))
-            {
-
-            }
-
             if (userRoleHelper.IsInAnyRole(User, "Admin"))
             {
                 adminAreas.Add(new AdminArea()
@@ -120,6 +115,15 @@ namespace CornDome.Pages.Admin
                     Icon = "bi-database-fill-gear",
                     Area = "/Admin/DatabaseRestore",
                     LinkText = "Open restore tools"
+                });
+
+                adminAreas.Add(new AdminArea()
+                {
+                    Name = "Notices",
+                    Description = "Alert users to an upcoming notice.",
+                    Icon = "bi-megaphone-fill",
+                    Area = "/Admin/Notices",
+                    LinkText = "Open Notice Manager"
                 });
             }
             

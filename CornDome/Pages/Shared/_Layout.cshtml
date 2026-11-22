@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/10.0.0/signalr.min.js"></script>
+    <script src="~/js/notices.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Styles", required: false)
     @if (UserRoleHelper.IsServedAds(User))
     {
@@ -158,6 +160,7 @@
             </div>
         </nav>
     </header>
+    <div id="notice"></div>
     <div class="@(bodyClass)">
         <main role="main" class="pb-3">
             @RenderBody()
