@@ -1,0 +1,97 @@
+{
+  "name": "Normal Hero",
+  "layoutData": {
+    "style": {
+      "width": "238px",
+      "height": "333px"
+    },
+    "childZones": [
+      {
+        "type": "image",
+        "imageDataKey": "card_art",
+        "style": {
+          "left": "4px",
+          "top": "4px",
+          "width": "230px",
+          "height": "230px"
+        }
+      },
+      {
+        "type": "image",
+        "imageDataKey": "card_frame",
+        "style": {
+          "left": "0px",
+          "top": "0px",
+          "width": "238px",
+          "height": "333px"
+        },
+        "childZones": [
+          {
+            "type": "text",
+            "textDataKey": "card_name",
+            "style": {
+              "left": "15px",
+              "top": "16px",
+              "width": "208px",
+              "height": "20px",
+              "fontSize": "17px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.1",
+              "paddingLeft": "1px",
+              "paddingRight": "1px",
+              "paddingTop": "1px",
+              "paddingBottom": "1px",
+              "textAlign": "left"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_ability",
+            "style": {
+              "left": "15px",
+              "top": "251px",
+              "width": "208px",
+              "height": "60px",
+              "fontSize": "10.5px",
+              "fontFamily": "pendlefont_medium",
+              "lineHeight": "1.45",
+              "paddingLeft": "4px",
+              "paddingRight": "4px",
+              "alignItems": "flex-start"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "authors",
+            "style": {
+              "left": "70px",
+              "top": "304.5px",
+              "width": "98px",
+              "height": "18.5px",
+              "fontSize": "7px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_rarity",
+            "text": "<p>CUSTOM</p>",
+            "style": {
+              "left": "187px",
+              "top": "311px",
+              "width": "35px",
+              "height": "9px",
+              "fontSize": "6px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05",
+              "background": "rgba(255, 255, 255, 1)",
+              "borderRadius": "44px 44px 44px 44px",
+              "fontWeight": "bold"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

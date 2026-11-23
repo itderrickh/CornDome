@@ -1,0 +1,65 @@
+{
+  "name": "Landscape (hand-made, Dextrous format; frame is 1050x1500, window measured at x40-1010 y40-1170)",
+  "layoutData": {
+    "style": {
+      "left": "0px",
+      "top": "0px",
+      "width": "238px",
+      "height": "340px"
+    },
+    "childZones": [
+      {
+        "type": "image",
+        "imageDataKey": "card_art",
+        "style": {
+          "left": "8px",
+          "top": "8px",
+          "width": "222px",
+          "height": "259px"
+        }
+      },
+      {
+        "type": "image",
+        "imageDataKey": "card_frame",
+        "style": {
+          "left": "0px",
+          "top": "0px",
+          "width": "238px",
+          "height": "340px"
+        },
+        "childZones": [
+          {
+            "type": "text",
+            "textDataKey": "authors",
+            "style": {
+              "left": "45px",
+              "top": "317px",
+              "width": "140px",
+              "height": "12px",
+              "fontSize": "7px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_rarity",
+            "text": "<p>CUSTOM</p>",
+            "style": {
+              "left": "189px",
+              "top": "319px",
+              "width": "35px",
+              "height": "9px",
+              "fontSize": "6px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05",
+              "background": "rgba(255, 255, 255, 1)",
+              "borderRadius": "44px 44px 44px 44px",
+              "fontWeight": "bold"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

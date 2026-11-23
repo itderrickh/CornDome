@@ -1,0 +1,130 @@
+@page
+@model CardCreatorModel
+@{
+    ViewData["Title"] = "Card Creator";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cardCreator.css" asp-append-version="true" />
+}
+
+<div class="container card-creator">
+    <h1 class="h3 mb-3">Card Creator</h1>
+    <div class="row g-4">
+        <div class="col-lg-6 order-2 order-lg-1">
+            <form id="cc-form" autocomplete="off">
+                <fieldset class="cc-section">
+                    <legend>Template</legend>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <label class="form-label" for="cc-type">Card Type</label>
+                            <select class="form-select" id="cc-type"></select>
+                        </div>
+                        <div class="col-sm-6" id="cc-landscape-group">
+                            <label class="form-label" for="cc-landscape">Landscape</label>
+                            <select class="form-select" id="cc-landscape"></select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="cc-section" data-field="card_name card_cost card_ability card_atk card_def">
+                    <legend>Basics</legend>
+                    <div class="row g-2">
+                        <div class="col-9" data-field="card_name">
+                            <label class="form-label" for="cc-name">Name</label>
+                            <input class="form-control" id="cc-name" maxlength="40" />
+                        </div>
+                        <div class="col-3" data-field="card_cost">
+                            <label class="form-label" for="cc-cost">Cost</label>
+                            <input class="form-control" id="cc-cost" type="number" min="0" max="99" />
+                        </div>
+                        <div class="col-12" data-field="card_ability">
+                            <label class="form-label" for="cc-ability">Ability</label>
+                            <textarea class="form-control" id="cc-ability" rows="3" maxlength="300"></textarea>
+                            <div class="form-text"><code>**bold**</code>, <code>*italic*</code>, <code>***both***</code>, <code>[ATTACK]</code> for the attack icon.</div>
+                        </div>
+                        <div class="col-6" data-field="card_atk">
+                            <label class="form-label" for="cc-atk">Attack</label>
+                            <input class="form-control" id="cc-atk" type="number" min="0" max="99" />
+                        </div>
+                        <div class="col-6" data-field="card_def">
+                            <label class="form-label" for="cc-def">Defense</label>
+                            <input class="form-control" id="cc-def" type="number" min="0" max="99" />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="cc-section" data-field="authors">
+                    <legend>Credits</legend>
+                    <div class="row g-2">
+                        <div class="col-sm-6" data-field="author">
+                            <label class="form-label" for="cc-author">Author</label>
+                            <input class="form-control" id="cc-author" maxlength="30" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label" for="cc-artist">Artist</label>
+                            <input class="form-control" id="cc-artist" maxlength="30" />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="cc-section" data-field="icon">
+                    <legend>Icon</legend>
+                    <div class="input-group">
+                        <input class="form-control" id="cc-icon" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+                        <button type="button" class="btn btn-outline-danger" id="cc-icon-remove" hidden><i class="bi bi-trash"></i> Remove</button>
+                    </div>
+                    <div class="form-text">Small image next to the credits. PNG, JPG, WebP or SVG, up to 10 MB.</div>
+                    <div class="text-danger small mt-1" id="cc-icon-error" hidden></div>
+                </fieldset>
+
+                <fieldset class="cc-section">
+                    <legend>Artwork</legend>
+                    <div class="input-group">
+                        <input class="form-control" id="cc-art" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+                        <button type="button" class="btn btn-outline-danger" id="cc-art-remove" hidden><i class="bi bi-trash"></i> Remove</button>
+                    </div>
+                    <div class="form-text">PNG, JPG, WebP or SVG, up to 10 MB. Drag the image on the card to move it, scroll over the card to zoom.</div>
+                    <div class="text-danger small mt-1" id="cc-art-error" hidden></div>
+
+                    <div class="cc-image-editor mt-2" id="cc-art-editor" hidden>
+                        <div class="row g-2 align-items-end">
+                            <div class="col-4">
+                                <label class="form-label" for="cc-art-x">X (px)</label>
+                                <input class="form-control" id="cc-art-x" type="number" step="1" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" for="cc-art-y">Y (px)</label>
+                                <input class="form-control" id="cc-art-y" type="number" step="1" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" for="cc-art-zoom">Zoom (%)</label>
+                                <input class="form-control" id="cc-art-zoom" type="number" min="10" max="10000" step="1" />
+                            </div>
+                            <div class="col-12">
+                                <input class="form-range" id="cc-art-zoom-range" type="range" min="10" max="400" step="1" aria-label="Zoom" />
+                            </div>
+                        </div>
+                        <div class="form-text">X/Y move the image centre from the centre of the art window, in pixels of the downloaded PNG. 100% zoom fills the window; the image can go past its edges.</div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="cc-art-fit">Fit to window</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="col-lg-6 order-1 order-lg-2">
+            <div class="cc-preview">
+                <div id="cc-stage"></div>
+                <button type="button" class="btn btn-primary w-100 mt-3" id="cc-export"><i class="bi bi-download"></i> Download PNG</button>
+                <button type="button" class="btn btn-outline-danger w-100 mt-2" id="cc-clear"><i class="bi bi-x-circle"></i> Clear all</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/konva/konva.min.js"></script>
+    <script src="~/js/cardCreator/config.js" asp-append-version="true"></script>
+    <script src="~/js/cardCreator/renderer.js" asp-append-version="true"></script>
+    <script src="~/js/cardCreator/editor.js" asp-append-version="true"></script>
+}
