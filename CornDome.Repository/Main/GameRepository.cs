@@ -112,7 +112,7 @@ namespace CornDome.Repository.Main
 
             // Only select official cards.
             var eligibleCards = cardDatabaseContext.Cards
-                .Where(x => !x.IsCustomCard);
+                .Where(x => !x.IsCustomCard && x.TypeId != (int)CardTypeEnum.Landscape);
 
             var count = await eligibleCards.CountAsync();
 
