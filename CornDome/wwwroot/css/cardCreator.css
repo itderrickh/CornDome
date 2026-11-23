@@ -1,0 +1,33 @@
+@font-face {
+    font-family: pendlefont_heavy;
+    src: url("/img/card_generator/fonts/pendlefonts/Pendlefont%20Heavy.TTF") format("truetype");
+}
+
+@font-face {
+    font-family: pendlefont_medium;
+    src: url("/img/card_generator/fonts/pendlefonts/Pendlefont%20Medium.TTF") format("truetype");
+}
+
+.card-creator .cc-section {
+    margin-bottom: 1.25rem;
+}
+
+.card-creator .cc-section legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    padding-bottom: .25rem;
+    margin-bottom: .75rem;
+}
+
+.card-creator .cc-preview {
+    position: sticky;
+    top: 1rem;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.card-creator #cc-stage {
+    width: 100%;
+    touch-action: none; 
+}

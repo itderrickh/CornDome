@@ -1,0 +1,151 @@
+{
+  "name": "Normal Building/Spell",
+  "layoutData": {
+    "style": {
+      "width": "238px",
+      "height": "333px"
+    },
+    "childZones": [
+      {
+        "type": "image",
+        "imageDataKey": "card_art",
+        "style": {
+          "left": "4px",
+          "top": "4px",
+          "width": "230px",
+          "height": "230px"
+        }
+      },
+      {
+        "type": "image",
+        "imageDataKey": "card_frame",
+        "style": {
+          "left": "0px",
+          "top": "0px",
+          "width": "238px",
+          "height": "333px"
+        },
+        "childZones": [
+          {
+            "type": "text",
+            "textDataKey": "card_name",
+            "style": {
+              "left": "65px",
+              "top": "14px",
+              "width": "128px",
+              "height": "20px",
+              "fontSize": "14.7px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.1",
+              "paddingLeft": "1px",
+              "paddingRight": "1px",
+              "paddingTop": "1px",
+              "paddingBottom": "1px"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_cost",
+            "style": {
+              "left": "16px",
+              "top": "16px",
+              "width": "41px",
+              "height": "41px",
+              "fontSize": "36px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.1",
+              "paddingLeft": "2px",
+              "paddingTop": "4px"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_type",
+            "style": {
+              "left": "9px",
+              "top": "201px",
+              "width": "220px",
+              "height": "19px",
+              "fontSize": "14px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.1"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_ability",
+            "style": {
+              "left": "17px",
+              "top": "223px",
+              "width": "204px",
+              "height": "80px",
+              "fontSize": "11px",
+              "fontFamily": "pendlefont_medium",
+              "lineHeight": "1.45",
+              "paddingLeft": "4px",
+              "paddingRight": "4px",
+              "alignItems": "flex-start"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_comment",
+            "style": {
+              "left": "17px",
+              "top": "269.5px",
+              "width": "204px",
+              "height": "22.5px",
+              "fontSize": "9px",
+              "fontFamily": "pendlefont_medium",
+              "lineHeight": "1.45",
+              "paddingLeft": "4px",
+              "paddingRight": "4px",
+              "fontStyle": "italic",
+              "alignItems": "flex-start"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "authors",
+            "style": {
+              "left": "60px",
+              "top": "304px",
+              "width": "98px",
+              "height": "18.5px",
+              "fontSize": "7px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05"
+            }
+          },
+          {
+            "type": "image",
+            "imageDataKey": "icon",
+            "style": {
+              "left": "158.5px",
+              "top": "304px",
+              "width": "18px",
+              "height": "18px"
+            }
+          },
+          {
+            "type": "text",
+            "textDataKey": "card_rarity",
+            "text": "<p>CUSTOM</p>",
+            "style": {
+              "left": "187px",
+              "top": "311px",
+              "width": "35px",
+              "height": "9px",
+              "fontSize": "6px",
+              "fontFamily": "'pendlefont_heavy'",
+              "lineHeight": "1.05",
+              "background": "rgba(255, 255, 255, 1)",
+              "borderRadius": "44px 44px 44px 44px",
+              "fontWeight": "bold"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
