@@ -15,7 +15,7 @@ partial class MainContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261119165956_EarlyBackerRole";
+    public override string LastMigrationId => "20261125182824_AddingCustomCards";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -48,6 +48,74 @@ partial class MainContextModelSnapshot : ModelSnapshot
                 b.HasIndex("UserId");
 
                 b.ToTable("BugReports");
+            });
+
+        modelBuilder.Entity("CornDome.Models.Main.CustomCard", b =>
+            {
+                b.Property<int>("CardId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Ability")
+                    .IsRequired()
+                    .HasMaxLength(1000)
+                    .HasColumnType("TEXT");
+
+                b.Property<int?>("ApprovedBy")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Artist")
+                    .HasMaxLength(60)
+                    .HasColumnType("TEXT");
+
+                b.Property<int?>("Attack")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Author")
+                    .HasMaxLength(60)
+                    .HasColumnType("TEXT");
+
+                b.Property<int>("CardType")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int?>("Cost")
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("TEXT");
+
+                b.Property<int?>("Defense")
+                    .HasColumnType("INTEGER");
+
+                b.Property<Guid>("Id")
+                    .HasColumnType("TEXT");
+
+                b.Property<string>("ImageUrl")
+                    .HasMaxLength(500)
+                    .HasColumnType("TEXT");
+
+                b.Property<int?>("Landscape")
+                    .HasColumnType("INTEGER");
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime?>("UpdatedAt")
+                    .HasColumnType("TEXT");
+
+                b.Property<int>("UserId")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Visibility")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER")
+                    .HasDefaultValue(2);
+
+                b.HasKey("CardId");
+
+                b.ToTable("CustomCards");
             });
 
         modelBuilder.Entity("CornDome.Models.Main.DailyCard.DailyCard", b =>

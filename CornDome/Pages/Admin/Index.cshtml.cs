@@ -41,6 +41,15 @@ namespace CornDome.Pages.Admin
                     Area = "/Darklands/Manage",
                     LinkText = "Manage Cards"
                 });
+
+                adminAreas.Add(new AdminArea()
+                {
+                    Name = "Custom Card Approval",
+                    Description = "Allow or deny custom cards to be displayed on Card Dweeb.",
+                    Icon = "bi-shield-check",
+                    Area = "/Admin/CustomCardApproval",
+                    LinkText = "Manage Approvals"
+                });
             }
 
             if (userRoleHelper.IsInAnyRole(User, "RulingManager", "Admin"))

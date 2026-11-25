@@ -8,6 +8,7 @@ namespace CornDome
     {
         public const string UPLOADPATH = "Cards:Uploads";
         public const string IMAGEPATH = "Cards:Images";
+        public const string CUSTOMPATH = "Cards:Custom";
         public const string CARD_CHANGE_LOG_PATH = "Cards:CardModifiedLogs";
 
         public const string DBPATH_CARDS = "DatabasePaths:CardsDb";
@@ -56,6 +57,7 @@ namespace CornDome
     {
         public string ImagePath { get; set; }
         public string UploadPath { get; set; }
+        public string CustomPath { get; set; }
         public string CardModifiedLogs { get; set; }
     }
 
@@ -100,6 +102,7 @@ namespace CornDome
             {
                 UploadPath = configuration[ConfigConstants.UPLOADPATH],
                 ImagePath = configuration[ConfigConstants.IMAGEPATH],
+                CustomPath = configuration[ConfigConstants.CUSTOMPATH],
                 CardModifiedLogs = configuration[ConfigConstants.CARD_CHANGE_LOG_PATH]
             };
             DatabasePaths = new DatabasePaths()
