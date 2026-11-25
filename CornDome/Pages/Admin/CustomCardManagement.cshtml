@@ -1,0 +1,168 @@
+﻿@page
+@model CornDome.Pages.Admin.CustomCardManagementModel
+@{
+    ViewData["Title"] = "Custom Card Management";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Custom Card Management</h1>
+            <p class="text-muted mb-0">Manage community-created cards and approvals.</p>
+        </div>
+        <a asp-page="Edit" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Create Card
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-body-tertiary">
+                <div class="card-body">
+                    <div class="text-muted">Total Cards</div>
+                    <h2>@Model.TotalCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-body-tertiary">
+                <div class="card-body">
+                    <div class="text-muted">Pending</div>
+                    <h2 class="text-warning">@Model.PendingCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-body-tertiary">
+                <div class="card-body">
+                    <div class="text-muted">Approved</div>
+                    <h2 class="text-success">@Model.ApprovedCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-body-tertiary">
+                <div class="card-body">
+                    <div class="text-muted">Rejected</div>
+                    <h2 class="text-danger">@Model.RejectedCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <input name="search" value="@Model.Search" class="form-control"
+                   placeholder="Search card, author, artist, or user ID..." />
+        </div>
+        <div class="col-md-3">
+            <select name="filter" class="form-select">
+                <option value="all" selected="@(Model.Filter == "all")">All Cards</option>
+                <option value="pending" selected="@(Model.Filter == "pending")">Pending</option>
+                <option value="approved" selected="@(Model.Filter == "approved")">Approved</option>
+                <option value="rejected" selected="@(Model.Filter == "rejected")">Rejected</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary">Search</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Clear</a>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Card</th>
+                        <th>Author</th>
+                        <th>User ID</th>
+                        <th>Created</th>
+                        <th>Visibility</th>
+                        <th>Approval</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in Model.Cards)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    @if (!string.IsNullOrWhiteSpace(card.ImageUrl))
+                                    {
+                                        <img src="@card.ImageUrl" alt="@card.Name"
+                                             style="width:55px;height:76px;object-fit:contain;" />
+                                    }
+                                    <div>
+                                        <strong>@card.Name</strong>
+                                        <div class="text-muted small">ID: @card.Id</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@(card.Author ?? "Unknown")</td>
+                            <td>@card.UserId</td>
+                            <td>@card.CreatedAt.ToLocalTime().ToString("MMM d, yyyy")</td>
+                            <td>@card.Visibility</td>
+                            <td>
+                                @if (card.ApprovedBy == null)
+                                {
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                }
+                                else if (card.ApprovedBy == 0)
+                                {
+                                    <span class="badge bg-danger">Rejected</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Approved</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-1 flex-wrap">
+                                    @if (card.ApprovedBy == null)
+                                    {
+                                        <form method="post" asp-page-handler="Approve" asp-route-id="@card.Id">
+                                            <button class="btn btn-sm btn-success">Approve</button>
+                                        </form>
+                                        <form method="post" asp-page-handler="Reject" asp-route-id="@card.Id">
+                                            <button class="btn btn-sm btn-warning">Reject</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-page-handler="ResetApproval" asp-route-id="@card.Id">
+                                            <button class="btn btn-sm btn-outline-secondary">Reset</button>
+                                        </form>
+                                    }
+
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@card.Id"
+                                          onsubmit="return confirm('Permanently delete this card?');">
+                                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Cards.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                No custom cards found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

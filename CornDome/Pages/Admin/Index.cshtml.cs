@@ -79,6 +79,15 @@ namespace CornDome.Pages.Admin
 
                 adminAreas.Add(new AdminArea()
                 {
+                    Name = "Custom Card Manager",
+                    Description = "Manage the custom cards displayed on Card Dweeb",
+                    Icon = "bi-shield-check",
+                    Area = "/Admin/CustomCardManagement",
+                    LinkText = "Manage Custom Cards"
+                });
+
+                adminAreas.Add(new AdminArea()
+                {
                     Name = "App Flags",
                     Description = "Enable or disable features without deploying application code.",
                     Icon = "bi-toggles",

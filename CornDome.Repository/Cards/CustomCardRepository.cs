@@ -16,6 +16,9 @@ namespace CornDome.Repository.Cards
         Task<bool> Approve(Guid id, int adminUserId);
         Task<bool> Deny(Guid id);
         Task<List<CustomCard>> GetAllPublic();
+        Task<List<CustomCard>> GetAll();
+        Task<bool> Update(CustomCard customCard);
+        Task<bool> Delete(Guid id);
     }
 
     public class CustomCardRepository(MainContext mainContext) : ICustomCardRepository
@@ -130,6 +133,53 @@ namespace CornDome.Repository.Cards
                 .ToListAsync();
 
             return cards;
+        }
+
+        public async Task<List<CustomCard>> GetAll()
+        {
+            return await mainContext.CustomCards
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<bool> Update(CustomCard customCard)
+        {
+            var existing = await mainContext.CustomCards
+                .FirstOrDefaultAsync(x => x.Id == customCard.Id);
+
+            if (existing == null)
+                return false;
+
+            existing.Name = customCard.Name;
+            existing.CardType = customCard.CardType;
+            existing.Landscape = customCard.Landscape;
+            existing.Ability = customCard.Ability;
+            existing.Cost = customCard.Cost;
+            existing.Attack = customCard.Attack;
+            existing.Defense = customCard.Defense;
+            existing.Author = customCard.Author;
+            existing.Artist = customCard.Artist;
+            existing.ImageUrl = customCard.ImageUrl;
+            existing.Visibility = customCard.Visibility;
+            existing.ApprovedBy = customCard.ApprovedBy;
+            existing.UpdatedAt = DateTime.UtcNow;
+
+            await mainContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> Delete(Guid id)
+        {
+            var card = await mainContext.CustomCards
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (card == null)
+                return false;
+
+            mainContext.CustomCards.Remove(card);
+            await mainContext.SaveChangesAsync();
+            return true;
         }
     }
 }
