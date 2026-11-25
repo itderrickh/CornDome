@@ -174,6 +174,100 @@
 
         </div>
 
+        
+        @if (Model.MonthlyLeaderboards.Any())
+        {
+            <div class="leaderboard-card mt-4">
+                <div class="leaderboard-card-header">
+                    <h2>
+                        <i class="bi bi-calendar3"></i>
+                        Monthly Champions
+                    </h2>
+                    <span>TOP 3 PER MONTH</span>
+                </div>
+
+                @foreach (var month in Model.MonthlyLeaderboards)
+                {
+                    <div class="p-3">
+                        <h3 class="mb-3">
+                            @month.Month.ToString("MMMM yyyy")
+                        </h3>
+
+                        <div class="leaderboard-table-wrapper">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th>RANK</th>
+                                        <th>PLAYER</th>
+                                        <th>WINS</th>
+                                        <th>BEST STREAK</th>
+                                        <th>AVG. MISTAKES</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var player in month.Players)
+                                    {
+                                        <tr>
+                                            <td class="rank-cell">
+                                                @if (player.Rank == 1)
+                                                {
+                                                    <span>🥇</span>
+                                                }
+                                                else if (player.Rank == 2)
+                                                {
+                                                    <span>🥈</span>
+                                                }
+                                                else if (player.Rank == 3)
+                                                {
+                                                    <span>🥉</span>
+                                                }
+                                            </td>
+
+                                            <td class="player-cell">
+                                                @player.DisplayName
+
+                                                @if (player.UserIcon == UserIcon.EarlyBacker)
+                                                {
+                                                    <img src="~/img/pig.webp"
+                                                         style="height: 30px; width: 30px;" />
+                                                }
+                                                else if (player.UserIcon == UserIcon.CoolGuy)
+                                                {
+                                                    <img src="~/img/logo-cool.png"
+                                                         style="height: 30px; width: 30px;" />
+                                                }
+                                                else if (player.UserIcon == UserIcon.Dweeb)
+                                                {
+                                                    <img src="~/img/logo.png"
+                                                         style="height: 30px; width: 30px;" />
+                                                }
+                                            </td>
+
+                                            <td>
+                                                <strong>@player.TotalWins</strong>
+                                            </td>
+
+                                            <td>
+                                                <i class="bi bi-fire"
+                                                   style="color: #e99b43;"></i>
+                                                @player.LongestStreak days
+                                            </td>
+
+                                            <td>
+                                                @player.AverageMistakes.ToString("0.0")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+
         <div class="leaderboard-footer">
             <div>
                 <a asp-page="/Dweeble/Leaderboard">

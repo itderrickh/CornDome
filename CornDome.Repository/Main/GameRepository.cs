@@ -14,6 +14,7 @@ namespace CornDome.Repository.Main
         Task UpdateGameNameGuess(DailyCardGame game, Card card, string guess, int maxMistakes);
         Task<IList<DailyCardGame>> GetSuccessfulDweeblesToday();
         Task<List<DailyCardGame>> GetAllTimeDweebles();
+        Task<List<DailyCardGame>> GetMonthlyDweebles();
         Task MigrateGuestGame(DailyCardGame game, string newId);
     }
 
@@ -21,20 +22,12 @@ namespace CornDome.Repository.Main
     {
         public static DateOnly GetToday()
         {
-            //var timezone = TimeZoneInfo.FindSystemTimeZoneById(
-            //    OperatingSystem.IsWindows()
-            //        ? "Central Standard Time"
-            //        : "America/Chicago"
-            //);
-
-            //var now = TimeZoneInfo.ConvertTimeFromUtc(
-            //    DateTime.UtcNow,
-            //    timezone
-            //);
-
-            //return DateOnly.FromDateTime(now);
-            // Just reset at UTC
             return DateOnly.FromDateTime(DateTime.UtcNow);
+        }
+
+        public static DateOnly GetFirstOfMonth()
+        {
+            return DateOnly.FromDateTime(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1));
         }
 
         public async Task AddGame(DailyCardGame game, string playerKey)
@@ -95,6 +88,23 @@ namespace CornDome.Repository.Main
                     x.Won &&
                     x.Completed != null &&
                     x.PlayerKey != "user:1") // Remove the carddweeb from the overall leaderboard
+                .ToListAsync();
+
+            return games;
+        }
+
+        public async Task<List<DailyCardGame>> GetMonthlyDweebles()
+        {
+            var firstOfMonth = GetFirstOfMonth();
+            var games = await mainContext.DailyCardGames
+                .Include(x => x.DailyCard)
+                .AsNoTracking()
+                .Where(x =>
+                    x.IsComplete &&
+                    x.Won &&
+                    x.Completed != null &&
+                    x.DailyCard.Date > firstOfMonth &&
+                    x.PlayerKey != "user:1")
                 .ToListAsync();
 
             return games;
