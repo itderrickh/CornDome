@@ -72,7 +72,7 @@
             {
                 @if (Model.QueryDeck.Hero != null)
                 {
-                    CardViewModel cvm = new CardViewModel() { Card = Model.QueryDeck.Hero, IsDeleteable = true, BaseUrl = Model.BaseUrl };
+                    CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(Model.QueryDeck.Hero), IsDeleteable = true, BaseUrl = Model.BaseUrl };
                     <partial name="_Card" model="cvm" />
                 }
             }
@@ -84,7 +84,7 @@
             {
                 @foreach (var landscape in Model.QueryDeck.Landscapes.Where(x => x != null))
                 {
-                    CardViewModel cvm = new CardViewModel() { Card = landscape, IsDeleteable = true, BaseUrl = Model.BaseUrl };
+                    CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(landscape), IsDeleteable = true, BaseUrl = Model.BaseUrl };
                     <partial name="_Card" model="cvm" />
                 }
             }
@@ -96,7 +96,7 @@
             {
                 @foreach (var card in Model.QueryDeck.Cards.Where(x => x != null))
                 {
-                    CardViewModel cvm = new CardViewModel() { Card = card, IsDeleteable = true, BaseUrl = Model.BaseUrl };
+                    CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card), IsDeleteable = true, BaseUrl = Model.BaseUrl };
                     <partial name="_Card" model="cvm" />
                 }
             }
@@ -203,7 +203,7 @@
         <div class="d-flex flex-wrap" id="card-list">
             @foreach (var card in Model.Cards.OrderBy(x => x.Name))
             {
-                CardViewModel cvm = new CardViewModel() { Card = card, IsAddable = true, BaseUrl = Model.BaseUrl };
+                CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card), IsAddable = true, BaseUrl = Model.BaseUrl };
                 <div class="card-element">
                     <partial name="_Card" model="cvm" />
                 </div>
