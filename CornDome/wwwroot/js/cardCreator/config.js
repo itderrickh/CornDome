@@ -33,6 +33,6 @@ window.CardCreatorConfig = {
           windowFill: { x: 9, y: 42, w: 220, h: 208, color: '#ffffff' },
           fields: ['card_name', 'card_ability', 'author', 'authors', 'card_rarity'] },
         { id: 3, name: 'Landscape', layout: 'landscape', frame: '{land}/{file}_Landscape.png', exportWidth: 2100, landscapeCard: true,
-          fields: ['authors', 'card_rarity'] }
+          fields: ['card_name', 'authors', 'card_rarity'] }
     ]
 };
