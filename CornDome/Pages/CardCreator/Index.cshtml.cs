@@ -1,7 +1,7 @@
+
 using CornDome.Helpers;
 using CornDome.Models;
 using CornDome.Models.Main;
-using CornDome.Models.Users;
 using CornDome.Repository.Cards;
 using Microsoft.AspNetCore.Mvc;
 using SkiaSharp;
@@ -33,6 +33,9 @@ namespace CornDome.Pages.CardCreator
         private const int MaxImageWidth = 4096;
         private const int MaxImageHeight = 4096;
         private const long MaxImagePixels = 12_000_000;
+
+        private const string PngDataPrefix = "data:image/png;base64,";
+
         public int FreeCustomCardLimit = 10;
         public int UploadCount { get; set; } = 0;
 
@@ -50,6 +53,9 @@ namespace CornDome.Pages.CardCreator
             if (User.Identity?.IsAuthenticated != true)
                 return Unauthorized();
 
+            if (request == null)
+                return BadRequest(new { success = false, message = "Invalid card data." });
+
             var user = await GetUser();
 
             if (!userRoleHelper.IsPatreonMember(User) && !userRoleHelper.IsAdmin(User))
@@ -65,9 +71,6 @@ namespace CornDome.Pages.CardCreator
                     });
                 }
             }
-
-            if (request == null)
-                return BadRequest(new { success = false, message = "Invalid card data." });
 
             var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -86,17 +89,17 @@ namespace CornDome.Pages.CardCreator
             if (new[] { request.Cost, request.Attack, request.Defense }.Any(x => x.HasValue && (x.Value < 0 || x.Value > 99)))
                 return BadRequest(new { success = false, message = "Card values must be between 0 and 99." });
 
-            if (!request.Image.StartsWith("data:image/png;base64,", StringComparison.Ordinal))
-                return BadRequest(new { success = false, message = "The card image must be a PNG." });
-
             if (!Enum.IsDefined(typeof(Visibility), request.Visibility))
                 return BadRequest(new { success = false, message = "Invalid visibility option." });
+
+            if (string.IsNullOrEmpty(request.Image) || !request.Image.StartsWith(PngDataPrefix, StringComparison.Ordinal))
+                return BadRequest(new { success = false, message = "The card image must be a PNG." });
 
             byte[] imageBytes;
 
             try
             {
-                imageBytes = Convert.FromBase64String(request.Image["data:image/png;base64,".Length..]);
+                imageBytes = Convert.FromBase64String(request.Image[PngDataPrefix.Length..]);
             }
             catch (FormatException)
             {
@@ -106,33 +109,47 @@ namespace CornDome.Pages.CardCreator
             if (imageBytes.Length == 0 || imageBytes.Length > MaxImageBytes)
                 return BadRequest(new { success = false, message = "The generated image is too large." });
 
-            using var imageData = SKData.CreateCopy(imageBytes);
-            using var imageInfo = SKCodec.Create(imageData);
+            byte[] sanitizedImage;
 
-            if (imageInfo == null)
-                return BadRequest(new { success = false, message = "Unable to read the generated image." });
-
-            using (imageInfo)
+            try
             {
-                var imageWidth = imageInfo.Info.Width;
-                var imageHeight = imageInfo.Info.Height;
+                using var imageData = SKData.CreateCopy(imageBytes);
+                using var codec = SKCodec.Create(imageData);
+
+                if (codec == null || codec.EncodedFormat != SKEncodedImageFormat.Png)
+                    return BadRequest(new { success = false, message = "Invalid PNG image." });
+
+                if (codec.FrameCount > 1)
+                    return BadRequest(new { success = false, message = "Animated images are not supported." });
+
+                var imageWidth = codec.Info.Width;
+                var imageHeight = codec.Info.Height;
 
                 if (imageWidth <= 0 || imageHeight <= 0 ||
                     imageWidth > MaxImageWidth || imageHeight > MaxImageHeight ||
                     (long)imageWidth * imageHeight > MaxImagePixels)
+                {
                     return BadRequest(new { success = false, message = "Image dimensions are too large." });
+                }
+
+                using var bitmap = SKBitmap.Decode(codec);
+
+                if (bitmap == null || bitmap.Width != imageWidth || bitmap.Height != imageHeight)
+                    return BadRequest(new { success = false, message = "Unable to decode the generated image." });
+
+                using var skImage = SKImage.FromBitmap(bitmap);
+                using var encoded = skImage.Encode(SKEncodedImageFormat.Png, 100);
+
+                if (encoded == null || encoded.Size == 0)
+                    return BadRequest(new { success = false, message = "Unable to process the generated image." });
+
+                sanitizedImage = encoded.ToArray();
             }
-
-            using var bitmap = SKBitmap.Decode(imageBytes);
-
-            if (bitmap == null)
-                return BadRequest(new { success = false, message = "Unable to decode the generated image." });
-
-            using var image = SKImage.FromBitmap(bitmap);
-            using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
-
-            if (encoded == null)
-                return BadRequest(new { success = false, message = "Unable to process the generated image." });
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                logger.LogWarning(ex, "Invalid image uploaded by user {UserId}", userId);
+                return BadRequest(new { success = false, message = "The uploaded image is invalid or corrupted." });
+            }
 
             var imageDirectory = configuration.AppData.CustomPath;
 
@@ -147,9 +164,9 @@ namespace CornDome.Pages.CardCreator
 
             try
             {
-                await using (var stream = System.IO.File.Create(imagePath))
+                await using (var stream = new FileStream(imagePath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
-                    encoded.SaveTo(stream);
+                    await stream.WriteAsync(sanitizedImage);
                 }
 
                 var card = new CustomCard
