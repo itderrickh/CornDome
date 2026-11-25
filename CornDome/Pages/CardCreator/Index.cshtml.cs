@@ -77,7 +77,7 @@ namespace CornDome.Pages.CardCreator
             if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length > 60)
                 return BadRequest(new { success = false, message = "Card name must be between 1 and 60 characters." });
 
-            if (request.CardType > 0)
+            if (request.CardType < 0)
                 return BadRequest(new { success = false, message = "Invalid card type." });
 
             if (request.Ability?.Length > 1000 || request.Author?.Length > 60 || request.Artist?.Length > 60)

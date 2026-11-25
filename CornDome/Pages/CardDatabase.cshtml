@@ -126,17 +126,13 @@
     <div class="d-flex flex-wrap" id="card-list">
         @foreach (var card in Model.Cards.OrderBy(x => x.Name))
         {
-            CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card, CardImageTypeEnum.XSmall), IsAddable = true, BaseUrl = Model.BaseUrl };
-            <a asp-page="/Card" asp-route-id="@card.Id" class="card-element">
-                <partial name="_Card" model="cvm" />
-            </a>
+            CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card, CardImageTypeEnum.XSmall), IsAddable = true, Link = true };
+            <partial name="_Card" model="cvm" />
         }
         @foreach (var card in Model.CustomCards.OrderBy(x => x.Name))
         {
-            CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card), IsAddable = true, BaseUrl = "" };
-            <a asp-page="/CustomCard" asp-route-id="@card.Id" class="card-element">
-                <partial name="_Card" model="cvm" />
-            </a>
+            CardViewModel cvm = new CardViewModel() { Card = new DisplayCardModel(card), IsAddable = true, Link = true };
+            <partial name="_Card" model="cvm" />
         }
     </div>
 </div>

@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages
 {
-    public class DeckModel(ICardRepository cardRepository, IDeckRepository deckRepository, IUserRepository userRepository) : BasePageModel
+    public class DeckModel(ICardRepository cardRepository, IDeckRepository deckRepository, IUserRepository userRepository, ICustomCardRepository customCardRepository) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
+        public IEnumerable<CustomCard> CustomCards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? DeckId { get; set; }
@@ -42,6 +43,7 @@ namespace CornDome.Pages
         public async Task OnGet()
         {
             Cards = cardRepository.GetAll();
+            CustomCards = await customCardRepository.GetAllPublic();
 
             await BuildDeckFromQuery();
         }
@@ -67,7 +69,7 @@ namespace CornDome.Pages
                     Deck deck = deckRepository.GetDeck(DeckId.Value);
                     if (deck != null)
                     {
-                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards, CustomCards);
 
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
@@ -95,11 +97,11 @@ namespace CornDome.Pages
             }
             else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards, CustomCards);
             }
             else if (!string.IsNullOrWhiteSpace(NonGZDeck))
             {
-                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards, CustomCards);
             }
         }
     }

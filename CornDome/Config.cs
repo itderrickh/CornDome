@@ -30,6 +30,7 @@ namespace CornDome
         public const string GOOGLE_CLIENTSECRET_ENV_PATH = "Authentication:Google:ClientSecret";
 
         public const string IMAGE_URL_PATH = "/CardImages/";
+        public const string CUSTOM_IMAGE_URL = "/api/customcards/{id}/image";
 
         public const string PATREON_CLIENTID = "Patreon:ClientId";
         public const string PATREON_CLIENTSECRET = "Patreon:ClientSecret";
