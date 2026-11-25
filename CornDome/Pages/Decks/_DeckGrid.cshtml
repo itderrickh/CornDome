@@ -5,6 +5,15 @@
     @foreach (var deck in Model.Decks)
     {
         var iconCard = Model.Cards.FirstOrDefault(x => x.Id == deck.IconCardId);
+        var iconImageUrl = "";
+        if (iconCard != null)
+        {
+            iconImageUrl = Model.BaseUrl + iconCard.GetOptimizedImage;
+        }
+        else
+        {
+            iconImageUrl = "../img/lifebackground.jpg";
+        }
 
         <div class="col-12 col-md-6 col-xl-4">
             <div class="deck-card h-100 shadow-sm">
@@ -15,7 +24,7 @@
                    asp-route-id="@deck.Id">
 
                     <div class="card-body card-body-image"
-                         style="background-image: url('@(Model.BaseUrl + iconCard.GetOptimizedImage)');">
+                         style="background-image: url('@iconImageUrl');">
                         <div class="deck-stats-overlay">
                             <div class="deck-stat">
                                 <i class="bi bi-eye"></i>

@@ -1,0 +1,130 @@
+﻿@page
+@model CornDome.Pages.CardCreator.MineModel
+@{
+    ViewData["Title"] = "My Custom Cards";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">My Custom Cards</h1>
+            <p class="text-muted mb-0">
+                Manage your custom cards.
+                @if (!UserRoleHelper.IsPatreonMember(User) && !UserRoleHelper.IsAdmin(User))
+                {
+                    <i>You have used @Model.UploadCount of your free @(Model.FreeCustomCardLimit) uploads. Please subscribe to the Patreon to get unlimited uploads.</i>
+                }
+            </p>
+        </div>
+        <a href="/CardCreator" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create Card
+        </a>
+    </div>
+
+    @Html.AntiForgeryToken()
+
+    @if (!Model.Cards.Any())
+    {
+        <div class="alert alert-info">
+            You haven't created any custom cards yet.
+            <a href="/CardCreator">Create your first card!</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3 mb-2">
+            @foreach (var card in Model.Cards)
+            {
+                <div class="col-12 col-md-6 col-xl-4" id="card-@card.Id">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex gap-3">
+                                <img src="@card.ImageUrl"
+                                     alt="@card.Name"
+                                     class="rounded"
+                                     style="width: 110px; height: auto; object-fit: contain; align-self: flex-start;" />
+
+                                <div class="flex-grow-1 min-width-0">
+                                    <h5 class="card-title mb-1">@card.Name</h5>
+
+                                    <div class="mt-2">
+                                        @if (card.ApprovedBy == 0)
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle"></i> Rejected
+                                            </span>
+                                        }
+                                        else if (card.ApprovedBy.HasValue)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> Approved
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-clock"></i> Pending Approval
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="visibility-@card.Id">
+                                    Visibility
+                                </label>
+                                <select class="form-select custom-card-visibility"
+                                        id="visibility-@card.Id"
+                                        data-id="@card.Id">
+                                    <option value="0" selected="@(card.Visibility == Visibility.Visible)">
+                                        Public
+                                    </option>
+                                    <option value="1" selected="@(card.Visibility == Visibility.Limited)">
+                                        Unlisted
+                                    </option>
+                                    <option value="2" selected="@(card.Visibility == Visibility.Invisible)">
+                                        Private
+                                    </option>
+                                </select>
+                                <div class="form-text">
+                                    Visibility changes do not bypass administrator approval.
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Created @card.CreatedAt.ToLocalTime().ToString("MMM d, yyyy")
+                                </small>
+
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm delete-custom-card"
+                                        data-id="@card.Id"
+                                        data-name="@card.Name">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row text-center">
+            <div class="col-2">
+            </div>
+            <div class="col-8">
+                Approval status will be determined by the Card Dweeb content team.
+                If we decide your content is inappropriate or not fit to be displayed to the public it will be rejected and NO reviews will be allowed.
+                All approval decisions are final.
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/cardCreator/mine.js" asp-append-version="true"></script>
+}

@@ -60,13 +60,15 @@ function renderSaveIconDropdown() {
     var added = new Set();
 
     function addOption(card) {
-        if (card === null || added.has(card.id)) {
+        if (card === null || added.has(card.id) || card.id.indexOf('c') > -1) {
             return;
         }
 
         added.add(card.id);
         dropDown.appendChild(optionTemplate(card));
     }
+
+    addOption({ id: "-1", name: "- None -" });
 
     addOption(deck.hero);
 

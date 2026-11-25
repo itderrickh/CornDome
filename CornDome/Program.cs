@@ -39,6 +39,7 @@ namespace CornDome
             services.AddTransient<IDeckRepository, DeckRepository>();
             services.AddTransient<IAppFlagRepository, AppFlagRepository>();
             services.AddTransient<IGameRepository, GameRepository>();
+            services.AddTransient<ICustomCardRepository, CustomCardRepository>();
             services.AddScoped<DweebQueryLanguage>();
         }
 

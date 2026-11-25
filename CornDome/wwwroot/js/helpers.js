@@ -39,9 +39,9 @@ async function gzipAndBase64(data) {
 }
 
 function deckToString() {
-    var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
-    var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
-    var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
+    var heroString = deck.hero != null ? deck.hero.id : "";
+    var landscapeString = packString(deck.landscapes.map((x) => x.id));
+    var cardString = packString(deck.cards.map((x) => x.id));
     if (heroString || landscapeString || cardString) {
         var data = [heroString, landscapeString, cardString].join(';');
 
@@ -52,11 +52,12 @@ function deckToString() {
 }
 
 async function deckToQuery() {
+    console.log(deck);
     var query = new URLSearchParams(document.location.search);
     var deckId = query.get("id");
-    var heroString = deck.hero != null ? parseInt(deck.hero.id) : "";
-    var landscapeString = packString(deck.landscapes.map((x) => parseInt(x.id)));
-    var cardString = packString(deck.cards.map((x) => parseInt(x.id)));
+    var heroString = deck.hero != null ? deck.hero.id : "";
+    var landscapeString = packString(deck.landscapes.map((x) => x.id));
+    var cardString = packString(deck.cards.map((x) => x.id));
     if (heroString || landscapeString || cardString) {
         var data = [heroString, landscapeString, cardString].join(';');
 

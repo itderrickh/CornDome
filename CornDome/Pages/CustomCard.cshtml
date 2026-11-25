@@ -1,0 +1,151 @@
+﻿@page "{id:guid}"
+@model CornDome.Pages.CustomCardModel
+
+@{
+    ViewData["Title"] = Model.QueryCard?.Name ?? "Invalid card ID";
+}
+
+@if (Model.QueryCard == null)
+{
+    <h1>Invalid card ID.</h1>
+}
+else
+{
+    var selectedRevision = Model.QueryCard;
+
+    <div>
+        <h1>@selectedRevision.Name</h1>
+    </div>
+
+    <div class="card-detail">
+        <div class="w-50">
+            <img class="w-100 card-detail-image"
+                 width="500"
+                 decoding="async"
+                 fetchpriority="high"
+                 alt="@selectedRevision.Name"
+                 src="@selectedRevision.ImageUrl" />
+        </div>
+
+        <div class="w-50 p-4">
+
+            <div class="card-text-section">
+                <span class="bold-label">
+                    This is a custom card made by the Card Dweeb community and is NOT official.
+                </span>
+            </div>
+
+            <div class="card-text-section">
+                <span class="bold-label">Card Type:</span><br />
+                <span>@CardTypeConverter.ToString((CardTypeEnum)selectedRevision.CardType)</span>
+            </div>
+
+            @if (selectedRevision.Landscape != null)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Landscape:</span><br />
+                    <span>@LandscapeConverter.ToString((LandscapeEnum)selectedRevision.Landscape)</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(selectedRevision.Ability))
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Ability:</span><br />
+                    <span>@selectedRevision.Ability</span>
+                </div>
+            }
+
+            @if (selectedRevision.Cost.HasValue)
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Cost:</span>
+                    <span>@selectedRevision.Cost</span>
+                </div>
+            }
+
+            @if (selectedRevision.Attack.HasValue || selectedRevision.Defense.HasValue)
+            {
+                <div class="card-text-section d-flex">
+                    <div class="w-50">
+                        <span class="bold-label">Attack:</span>
+                        <span>@selectedRevision.Attack</span>
+                    </div>
+
+                    <div>
+                        <span class="bold-label">Defense:</span>
+                        <span>@selectedRevision.Defense</span>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(selectedRevision.Author))
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Author:</span><br />
+                    <span>@selectedRevision.Author</span>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(selectedRevision.Artist))
+            {
+                <div class="card-text-section">
+                    <span class="bold-label">Artist:</span><br />
+                    <span>@selectedRevision.Artist</span>
+                </div>
+            }
+
+            <div class="card-text-section">
+                <span class="bold-label">Created:</span>
+                <span>@selectedRevision.CreatedAt.ToString("MMMM dd, yyyy")</span>
+            </div>
+
+            @if (selectedRevision.ApprovedBy == 0)
+            {
+                <div class="card-text-section">
+                    <span class="text-danger bold-label">This card was rejected.</span>
+                </div>
+            }
+            else if (!selectedRevision.ApprovedBy.HasValue)
+            {
+                <div class="card-text-section">
+                    <span class="text-warning bold-label">This card is awaiting approval.</span>
+                </div>
+            }
+
+            @if (UserRoleHelper.IsCardManager(User))
+            {
+                <div class="card-text-section">
+                    <a class="bold-label btn btn-primary"
+                       asp-page="/CardCreator/Approval">
+                        Manage Card Approvals
+                    </a>
+                </div>
+            }
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="card-text-section">
+                    <a class="btn btn-secondary"
+                       asp-page="/CardCreator/Mine">
+                        My Custom Cards
+                    </a>
+                </div>
+            }
+
+            @if (UserRoleHelper.IsServedAds(User))
+            {
+                <div class="mt-5">
+                    <partial name="_BannerAd" />
+                </div>
+            }
+
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/card-page.css"
+          asp-append-version="true" />
+}

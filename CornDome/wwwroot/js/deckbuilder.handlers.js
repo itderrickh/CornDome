@@ -301,7 +301,7 @@ document.getElementById("saveDatabaseButton").onclick = async function () {
             deckContent: deckToString(),
             visibility: visibility,
             description: description,
-            iconId: iconId == "" ? -1 : parseInt(iconId),
+            iconId: iconId == "" ? -1 : iconId,
             deckName: deckName,
             deckId: deckId
         })
