@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CornDome.Pages.Printer
 {
-    public class PDFModel(ICardRepository cardRepository, IDeckRepository deckRepository, Config config) : BasePageModel
+    public class PDFModel(ICardRepository cardRepository, IDeckRepository deckRepository, ICustomCardRepository customCardRepository, Config config) : BasePageModel
     {
         public IEnumerable<Card> Cards { get; set; }
+        public IEnumerable<CustomCard> CustomCards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? DeckId { get; set; }
@@ -26,6 +27,7 @@ namespace CornDome.Pages.Printer
         public async Task<IActionResult> OnGetAsync()
         {
             Cards = cardRepository.GetAll();
+            CustomCards = await customCardRepository.GetAllPublic();
 
             await BuildDeckFromQuery();
 
@@ -42,19 +44,30 @@ namespace CornDome.Pages.Printer
                 printableCards.Add(
                 new()
                 {
-                    ImagePath = QueryDeck.Hero.GetOptimizedImage,
-                    CardType = (CardTypeEnum)QueryDeck.Hero.TypeId
+                    ImagePath = QueryDeck.Hero.IsCustomCard ? $"{QueryDeck.Hero.QueryId}.png" : QueryDeck.Hero.BaseImage,
+                    CardType = (CardTypeEnum)QueryDeck.Hero.TypeId,
+                    IsCustomCard = QueryDeck.Hero.IsCustomCard
                 });
             }
             
             if (QueryDeck.Landscapes != null && QueryDeck.Landscapes.Count > 0)
             {
-                printableCards.AddRange(QueryDeck.Landscapes.Select(x => new PrintableCard() { ImagePath = x.GetOptimizedImage, CardType = (CardTypeEnum)x.TypeId }));
+                printableCards.AddRange(QueryDeck.Landscapes.Select(x =>
+                new PrintableCard() {
+                    ImagePath = x.IsCustomCard ? $"{x.QueryId}.png" : x.BaseImage,
+                    CardType = (CardTypeEnum)x.TypeId,
+                    IsCustomCard = x.IsCustomCard
+                }));
             }
 
             if (QueryDeck.Cards != null && QueryDeck.Cards.Count > 0)
             {
-                printableCards.AddRange(QueryDeck.Cards.Select(x => new PrintableCard() { ImagePath = x.GetOptimizedImage, CardType = (CardTypeEnum)x.TypeId }));
+                printableCards.AddRange(QueryDeck.Cards.Select(x => 
+                    new PrintableCard() {
+                        ImagePath = x.IsCustomCard ? $"{x.QueryId}.png" : x.BaseImage,
+                        CardType = (CardTypeEnum)x.TypeId,
+                        IsCustomCard = x.IsCustomCard
+                    }));
             }
 
             byte[] pdf = await pdfCreator.GeneratePdf(printableCards);
@@ -86,7 +99,7 @@ namespace CornDome.Pages.Printer
                     Deck deck = deckRepository.GetDeck(DeckId.Value);
                     if (deck != null)
                     {
-                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards, CustomCards);
 
                         if (isLoggedIn && deck.UserId == user.Id)
                         {
@@ -99,11 +112,11 @@ namespace CornDome.Pages.Printer
             }
             else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards, CustomCards);
             }
             else if (!string.IsNullOrWhiteSpace(NonGZDeck))
             {
-                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards, CustomCards);
             }
         }
     }

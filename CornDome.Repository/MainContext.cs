@@ -25,6 +25,7 @@ namespace CornDome.Repository
         public DbSet<DailyCard> DailyCards { get; set; }
         public DbSet<DailyCardGame> DailyCardGames { get; set; }
         public DbSet<PatreonConnection> PatreonConnections { get; set; }
+        public DbSet<CustomCard> CustomCards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -141,6 +142,22 @@ namespace CornDome.Repository
                 .HasIndex(x => x.PatreonUserId)
                 .IsUnique();
 
+            modelBuilder.Entity<CustomCard>(entity =>
+            {
+                entity.HasKey(x => x.CardId);
+
+                entity.Property(x => x.Id).IsRequired();
+                entity.Property(x => x.Name).HasMaxLength(60).IsRequired();
+                entity.Property(x => x.Ability).HasMaxLength(1000).IsRequired();
+                entity.Property(x => x.Author).HasMaxLength(60);
+                entity.Property(x => x.Artist).HasMaxLength(60);
+                entity.Property(x => x.ImageUrl).HasMaxLength(500);
+
+                entity.Property(x => x.Visibility)
+                    .HasConversion<int>()
+                    .HasDefaultValue(Visibility.Invisible)
+                    .HasSentinel((Visibility)(-1));
+            });
         }
     }
 }

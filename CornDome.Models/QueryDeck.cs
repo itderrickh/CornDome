@@ -1,4 +1,5 @@
 ﻿using CornDome.Models.Cards;
+using CornDome.Models.Main;
 using Microsoft.AspNetCore.WebUtilities;
 using System.IO.Compression;
 using System.Text;
@@ -7,11 +8,11 @@ namespace CornDome.Models
 {
     public class QueryDeck
     {
-        public Card Hero { get; set; }
-        public List<Card> Landscapes { get; set; } = [];
-        public List<Card> Cards { get; set; } = [];
+        public DisplayCardModel Hero { get; set; }
+        public List<DisplayCardModel> Landscapes { get; set; } = [];
+        public List<DisplayCardModel> Cards { get; set; } = [];
 
-        public static QueryDeck GetDeckFromGzip(string query, IEnumerable<Card> cards)
+        public static QueryDeck GetDeckFromGzip(string query, IEnumerable<Card> cards, IEnumerable<CustomCard> customCards)
         {
             query = query.Replace(" ", "+");
             byte[] compressedBytes;
@@ -35,10 +36,10 @@ namespace CornDome.Models
 
             // Return original data again as Base64
             var finalString = Convert.ToBase64String(outputStream.ToArray());
-            return GetFromQuery(finalString, cards);
+            return GetFromQuery(finalString, cards, customCards);
         }
 
-        public static QueryDeck GetFromQuery(string query, IEnumerable<Card> cards)
+        public static QueryDeck GetFromQuery(string query, IEnumerable<Card> cards, IEnumerable<CustomCard> customCards)
         {
             // Handle an old use case where legacy URL wasn't handled correctly
             query = query.PadRight(query.Length + (4 - query.Length % 4) % 4, '=');
@@ -46,10 +47,10 @@ namespace CornDome.Models
             var converted = Convert.FromBase64String(query);
             var deckString = Encoding.UTF8.GetString(converted);
 
-            return GetFromString(deckString, cards);
+            return GetFromString(deckString, cards, customCards);
         }
 
-        public static QueryDeck GetFromString(string deckString, IEnumerable<Card> cards)
+        public static QueryDeck GetFromString(string deckString, IEnumerable<Card> cards, IEnumerable<CustomCard> customCards)
         {
             var deckToReturn = new QueryDeck();
             var split = deckString.Split(';');
@@ -58,20 +59,58 @@ namespace CornDome.Models
             var cardString = split[2];
 
             if (!string.IsNullOrEmpty(heroString) && !heroString.Equals("-1"))
-                deckToReturn.Hero = cards.FirstOrDefault(x => x.Id == int.Parse(heroString));
-
+            {
+                if (heroString.StartsWith("c"))
+                {
+                    var cardId = int.Parse(heroString.Substring(1));
+                    var card = customCards.FirstOrDefault(x => x.CardId == cardId);
+                    if (card != null)
+                    {
+                        deckToReturn.Hero = new DisplayCardModel(card);
+                    }
+                }
+                else
+                {
+                    var cardId = int.Parse(heroString);
+                    var card = cards.FirstOrDefault(x => x.Id == cardId);
+                    if (card != null)
+                    {
+                        deckToReturn.Hero = new DisplayCardModel(card);
+                    }
+                }
+                
+            }
+                
             if (!string.IsNullOrEmpty(landscapeString))
             {
                 foreach (var lsString in landscapeString.Split(','))
                 {
-                    var cardId = int.Parse(lsString.Split(":")[0]);
-                    var count = int.Parse(lsString.Split(":")[1]);
-                    var card = cards.FirstOrDefault(x => x.Id == cardId);
-                    if (card != null)
+                    var part1 = lsString.Split(":")[0];
+
+                    if (part1.StartsWith("c"))
                     {
-                        for (var i = 0; i < count; i++)
+                        var cardId = int.Parse(part1.Substring(1));
+                        var card = customCards.FirstOrDefault(x => x.CardId == cardId);
+                        var count = int.Parse(lsString.Split(":")[1]);
+                        if (card != null)
                         {
-                            deckToReturn.Landscapes.Add(card);
+                            for (var i = 0; i < count; i++)
+                            {
+                                deckToReturn.Landscapes.Add(new DisplayCardModel(card));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var cardId = int.Parse(part1);
+                        var card = cards.FirstOrDefault(x => x.Id == cardId);
+                        var count = int.Parse(lsString.Split(":")[1]);
+                        if (card != null)
+                        {
+                            for (var i = 0; i < count; i++)
+                            {
+                                deckToReturn.Landscapes.Add(new DisplayCardModel(card));
+                            }
                         }
                     }
                 }
@@ -81,14 +120,32 @@ namespace CornDome.Models
             {
                 foreach (var csString in cardString.Split(','))
                 {
-                    var cardId = int.Parse(csString.Split(":")[0]);
-                    var count = int.Parse(csString.Split(":")[1]);
-                    var card = cards.FirstOrDefault(x => x.Id == cardId);
-                    if (card != null)
+                    var part1 = csString.Split(":")[0];
+
+                    if (part1.StartsWith("c"))
                     {
-                        for (var i = 0; i < count; i++)
+                        var cardId = int.Parse(part1.Substring(1));
+                        var card = customCards.FirstOrDefault(x => x.CardId == cardId);
+                        var count = int.Parse(csString.Split(":")[1]);
+                        if (card != null)
                         {
-                            deckToReturn.Cards.Add(card);
+                            for (var i = 0; i < count; i++)
+                            {
+                                deckToReturn.Cards.Add(new DisplayCardModel(card));
+                            }
+                        }
+                    } 
+                    else
+                    {
+                        var cardId = int.Parse(part1);
+                        var count = int.Parse(csString.Split(":")[1]);
+                        var card = cards.FirstOrDefault(x => x.Id == cardId);
+                        if (card != null)
+                        {
+                            for (var i = 0; i < count; i++)
+                            {
+                                deckToReturn.Cards.Add(new DisplayCardModel(card));
+                            }
                         }
                     }
                 }

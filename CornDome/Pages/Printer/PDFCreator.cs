@@ -15,6 +15,7 @@ namespace CornDome.Pages.Printer
         public required string ImagePath { get; set; }
 
         public CardTypeEnum CardType { get; set; }
+        public bool IsCustomCard { get; set; }
     }
 
     public class PDFConstants
@@ -64,6 +65,7 @@ namespace CornDome.Pages.Printer
             float Width);
 
         private string GetImageFullPath(string cardImagePath) => Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(cardImagePath));
+        private string GetCustomImageFullPath(string cardImagePath) => Path.Combine(config.AppData.CustomPath, HttpUtility.UrlDecode(cardImagePath.Replace("-", "")));
 
         public Task<byte[]> GeneratePdf(IEnumerable<PrintableCard> cards)
         {
@@ -79,7 +81,8 @@ namespace CornDome.Pages.Printer
                 if (string.IsNullOrWhiteSpace(card.ImagePath))
                     throw new ArgumentException("A card has an empty image path.");
 
-                if (!File.Exists(GetImageFullPath(card.ImagePath)))
+                var imagePath = card.IsCustomCard ? GetCustomImageFullPath(card.ImagePath) : GetImageFullPath(card.ImagePath);
+                if (!File.Exists(imagePath))
                     throw new FileNotFoundException(
                         $"Card image not found: {card.ImagePath}",
                         card.ImagePath);
@@ -316,7 +319,7 @@ namespace CornDome.Pages.Printer
 
             foreach (var placement in placements)
             {
-                var path = GetImageFullPath(placement.Card.ImagePath);
+                var path = placement.Card.IsCustomCard ? GetCustomImageFullPath(placement.Card.ImagePath) : GetImageFullPath(placement.Card.ImagePath);
                 using var bitmap = SKBitmap.Decode(
                     path)
                     ?? throw new InvalidOperationException(

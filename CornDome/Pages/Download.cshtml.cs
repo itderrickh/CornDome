@@ -11,7 +11,7 @@ using System.Web;
 
 namespace CornDome.Pages
 {
-    public class DownloadModel(Config configuration, ICardRepository cardRepository, IDeckRepository deckRepository) : BasePageModel
+    public class DownloadModel(Config configuration, ICardRepository cardRepository, IDeckRepository deckRepository, ICustomCardRepository customCardRepository) : BasePageModel
     {
         [BindProperty(Name = "id", SupportsGet = true)]
         public int? DeckId { get; set; }
@@ -24,6 +24,7 @@ namespace CornDome.Pages
 
         private readonly Config config = configuration;
         public IEnumerable<Card> Cards { get; set; }
+        public IEnumerable<CustomCard> CustomCards { get; set; }
         public QueryDeck QueryDeck { get; set; } = null;
 
         private const int cardWidth = 86;
@@ -40,6 +41,9 @@ namespace CornDome.Pages
         public ConcurrentDictionary<string, SKBitmap> imageCache = new();
 
         public bool IsInvalid = false;
+
+        private string GetImageFullPath(string cardImagePath) => Path.Combine(config.AppData.ImagePath, HttpUtility.UrlDecode(cardImagePath));
+        private string GetCustomImageFullPath(string cardImagePath) => Path.Combine(config.AppData.CustomPath, HttpUtility.UrlDecode(cardImagePath.Replace("-", "")));
 
         public byte[] CreateCoordinates()
         {
@@ -80,8 +84,7 @@ namespace CornDome.Pages
                 if (decodeUrl)
                     relativePath = HttpUtility.UrlDecode(relativePath);
 
-                var path = Path.Combine(
-                    config.AppData.ImagePath, relativePath);
+                var path = relativePath;
 
                 if (imageCache.TryGetValue(path, out var cached))
                     return cached;
@@ -108,18 +111,27 @@ namespace CornDome.Pages
                 // Preload images into the cache.
                 if (QueryDeck.Hero != null)
                 {
-                    LoadImage(QueryDeck.Hero.GetSmallImage);
+                    var heroImageUrl = QueryDeck.Hero.IsCustomCard ?
+                        GetCustomImageFullPath($"{QueryDeck.Hero.QueryId}.png") :
+                        GetImageFullPath(QueryDeck.Hero.BaseImage);
+                    LoadImage(heroImageUrl);
                 }
 
                 foreach (var landscape in QueryDeck.Landscapes)
                 {
-                    LoadImage(landscape.GetSmallImage);
+                    var landscapeImageUrl = landscape.IsCustomCard ?
+                        GetCustomImageFullPath($"{landscape.QueryId}.png") :
+                        GetImageFullPath(landscape.BaseImage);
+                    LoadImage(landscapeImageUrl);
                 }
 
                 foreach (var card in QueryDeck.Cards.OrderBy(x => x.Name))
                 {
+                    var cardImageUrl = card.IsCustomCard ?
+                        GetCustomImageFullPath($"{card.QueryId}.png") :
+                        GetImageFullPath(card.BaseImage);
                     LoadImage(
-                        card.GetSmallImage,
+                        cardImageUrl,
                         decodeUrl: true);
                 }
 
@@ -144,11 +156,11 @@ namespace CornDome.Pages
 
                 if (QueryDeck.Hero != null)
                 {
-                    var heroPath = Path.Combine(
-                        config.AppData.ImagePath,
-                        QueryDeck.Hero.GetSmallImage);
+                    var cardImageUrl = QueryDeck.Hero.IsCustomCard ?
+                        GetCustomImageFullPath($"{QueryDeck.Hero.QueryId}.png") :
+                        GetImageFullPath(QueryDeck.Hero.BaseImage);
 
-                    if (imageCache.TryGetValue(heroPath, out var heroImage))
+                    if (imageCache.TryGetValue(cardImageUrl, out var heroImage))
                     {
                         var loc = coordinates[coordCounter];
 
@@ -170,12 +182,12 @@ namespace CornDome.Pages
                 {
                     var loc = coordinates[coordCounter];
 
-                    var landPath = Path.Combine(
-                        config.AppData.ImagePath,
-                        landscape.GetSmallImage);
+                    var cardImageUrl = landscape.IsCustomCard ?
+                        GetCustomImageFullPath($"{landscape.QueryId}.png") :
+                        GetImageFullPath(landscape.BaseImage);
 
                     if (imageCache.TryGetValue(
-                        landPath, out var landImage))
+                        cardImageUrl, out var landImage))
                     {
                         canvas.DrawBitmap(
                             landImage,
@@ -195,13 +207,12 @@ namespace CornDome.Pages
                 {
                     var loc = coordinates[coordCounter];
 
-                    var cardPath = Path.Combine(
-                        config.AppData.ImagePath,
-                        HttpUtility.UrlDecode(
-                            card.GetSmallImage));
+                    var cardImageUrl = card.IsCustomCard ?
+                        GetCustomImageFullPath($"{card.QueryId}.png") :
+                        GetImageFullPath(card.BaseImage);
 
                     if (imageCache.TryGetValue(
-                        cardPath, out var cardImage))
+                        cardImageUrl, out var cardImage))
                     {
                         canvas.DrawBitmap(
                             cardImage,
@@ -239,6 +250,7 @@ namespace CornDome.Pages
         public async Task<IActionResult> OnGet()
         {
             Cards = cardRepository.GetAll();
+            CustomCards = await customCardRepository.GetAllPublic();
 
             await BuildDeckFromQuery();
 
@@ -274,17 +286,17 @@ namespace CornDome.Pages
                     Deck deck = deckRepository.GetDeck(DeckId.Value);
                     if (deck != null)
                     {
-                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards);
+                        QueryDeck = QueryDeck.GetFromString(deck.DeckString, Cards, CustomCards);
                     }
                 }
             }
             else if (!string.IsNullOrWhiteSpace(GzDeck))
             {
-                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards);
+                QueryDeck = QueryDeck.GetDeckFromGzip(GzDeck, Cards, CustomCards);
             }
             else if (!string.IsNullOrWhiteSpace(NonGZDeck))
             {
-                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards);
+                QueryDeck = QueryDeck.GetFromQuery(NonGZDeck, Cards, CustomCards);
             }
         }
     }
