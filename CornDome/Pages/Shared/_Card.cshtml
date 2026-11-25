@@ -1,15 +1,6 @@
 ﻿@model Models.CardViewModel
 
 @{
-    var cardImage = Model.Card.GetOptimizedImage;
-
-    if (Model.CardImageType == CardImageTypeEnum.XSmall)
-        cardImage = Model.Card.GetExtraSmallImage;
-    else if (Model.CardImageType == CardImageTypeEnum.Small)
-        cardImage = Model.Card.GetSmallImage;
-    else if (Model.CardImageType == CardImageTypeEnum.Large)
-        cardImage = Model.Card.GetLargeImage;
-
     var customCardStyle = Model.Card.IsCustomCard ? "display: none;" : "";
     var cardSets = Model.Card.CardSets;
     var cardSetText = "";
@@ -23,7 +14,7 @@
      class="card-container"
      data-id="@Model.Card.Id"
      data-custom="@Model.Card.IsCustomCard"
-     data-card-image="@(Model.BaseUrl + cardImage)"
+     data-card-image="@(Model.BaseUrl + Model.Card.Image)"
      data-card-type="@Model.Card.TypeId"
      data-landscape="@(Model.Card.LandscapeId)"
      data-name="@Model.Card.Name"
@@ -33,7 +24,7 @@
      data-attack="@(Model.Card.Attack.HasValue ? Model.Card.Attack.ToString() : "")"
      data-defense="@(Model.Card.Defense.HasValue ? Model.Card.Defense.ToString() : "")">
     <div class="card-image">
-        <img data-src="@(Model.BaseUrl + cardImage)"
+        <img data-src="@(Model.BaseUrl + Model.Card.Image)"
              alt="@Model.Card.Name"
              class="lazy-image w-100"
              loading="lazy" />
