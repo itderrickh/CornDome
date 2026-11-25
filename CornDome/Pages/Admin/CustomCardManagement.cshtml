@@ -84,8 +84,7 @@
                 <thead>
                     <tr>
                         <th>Card</th>
-                        <th>Author</th>
-                        <th>User ID</th>
+                        <th>User</th>
                         <th>Created</th>
                         <th>Visibility</th>
                         <th>Approval</th>
@@ -109,8 +108,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>@(card.Author ?? "Unknown")</td>
-                            <td>@card.UserId</td>
+                            <td title="@card.UserId">@card.User.UserName</td>
                             <td>@card.CreatedAt.ToLocalTime().ToString("MMM d, yyyy")</td>
                             <td>@card.Visibility</td>
                             <td>
@@ -124,7 +122,7 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-success">Approved</span>
+                                    <span class="badge bg-success">Approved by @card.Approver.UserName</span>
                                 }
                             </td>
                             <td class="text-end">

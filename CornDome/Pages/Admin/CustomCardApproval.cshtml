@@ -55,7 +55,7 @@
                                     <div>
                                         <h4 class="mb-1">@card.Name</h4>
                                         <div class="text-muted">
-                                            @card.CardType · @card.Landscape
+                                            @CardTypeConverter.ToString((CardTypeEnum)card.CardType) · @LandscapeConverter.ToString((LandscapeEnum)card.Landscape)
                                         </div>
                                     </div>
 
@@ -103,8 +103,8 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <div class="text-muted small">User ID</div>
-                                        <strong>@card.UserId</strong>
+                                        <div class="text-muted small">User</div>
+                                        <strong title="@card.UserId">@card.User.UserName</strong>
                                     </div>
                                 </div>
 

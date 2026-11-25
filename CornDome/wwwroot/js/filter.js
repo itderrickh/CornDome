@@ -58,8 +58,8 @@ function filterDataset(elements) {
         }
 
 
-        if (!filterFunctions.customCards) {
-            actions.push(ele.dataset.custom !== "True");
+        if (filterFunctions.customCards) {
+            actions.push(ele.dataset.custom === "True");
         }
 
         if (actions.every(v => v)) {

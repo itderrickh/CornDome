@@ -1,4 +1,6 @@
-﻿namespace CornDome.Models.Main
+﻿using CornDome.Models.Users;
+
+namespace CornDome.Models.Main
 {
     public class CustomCard
     {
@@ -26,6 +28,9 @@
         public DateTime? UpdatedAt { get; set; }
         public Visibility Visibility { get; set; } = Visibility.Invisible;
         public int? ApprovedBy { get; set; }
+
+        public virtual User User { get; set; }
+        public virtual User? Approver { get; set; }
     }
 
     public enum Visibility

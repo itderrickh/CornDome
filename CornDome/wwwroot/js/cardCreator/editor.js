@@ -67,6 +67,8 @@
             card_landscape: landOf().id,
             card_cardtype: typeOf().id,
             card_ability: v('cc-ability'),
+            card_author: v('cc-author'),
+            card_artist: v('cc-artist'),
             card_atk: v('cc-atk'),
             card_def: v('cc-def'),
             authors
@@ -166,7 +168,7 @@
             // Replace "renderer" with the variable holding your CardRenderer instance.
             const image = renderer.toDataURL(1200);
             var visibility = parseInt(document.getElementById("cc-visibility").value)
-
+            debugger;
             const request = {
                 name: card.card_name,
                 cardType: card.card_cardtype,
@@ -175,8 +177,8 @@
                 cost: card.card_cost ? parseInt(card.card_cost, 10) : null,
                 attack: card.card_atk ? parseInt(card.card_atk, 10) : null,
                 defense: card.card_def ? parseInt(card.card_def, 10) : null,
-                author: card.author || null,
-                artist: card.artist || null,
+                author: card.card_author || null,
+                artist: card.card_artist || null,
                 image: image,
                 visibility: visibility
             };

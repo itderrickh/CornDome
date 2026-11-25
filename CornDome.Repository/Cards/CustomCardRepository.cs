@@ -34,6 +34,8 @@ namespace CornDome.Repository.Cards
         {
             return await mainContext.CustomCards
                 .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Approver)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -90,6 +92,8 @@ namespace CornDome.Repository.Cards
         {
             return await mainContext.CustomCards
                 .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Approver)
                 .Where(x => x.ApprovedBy == null)
                 .OrderBy(x => x.CreatedAt)
                 .ToListAsync();
@@ -129,6 +133,8 @@ namespace CornDome.Repository.Cards
         {
             var cards = await mainContext.CustomCards
                 .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Approver)
                 .Where(x => x.ApprovedBy != null && x.ApprovedBy > 0 && x.Visibility == Visibility.Visible)
                 .ToListAsync();
 
@@ -139,6 +145,8 @@ namespace CornDome.Repository.Cards
         {
             return await mainContext.CustomCards
                 .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Approver)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
         }

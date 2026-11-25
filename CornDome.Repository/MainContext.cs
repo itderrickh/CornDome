@@ -157,6 +157,14 @@ namespace CornDome.Repository
                     .HasConversion<int>()
                     .HasDefaultValue(Visibility.Invisible)
                     .HasSentinel((Visibility)(-1));
+
+                entity.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId);
+
+                entity.HasOne(x => x.Approver)
+                    .WithMany()
+                    .HasForeignKey(x => x.ApprovedBy);
             });
         }
     }
