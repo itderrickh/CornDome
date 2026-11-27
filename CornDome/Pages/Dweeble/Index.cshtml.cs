@@ -1,4 +1,5 @@
 using CornDome.Models;
+using CornDome.Models.Main;
 using CornDome.Models.Main.DailyCard;
 using CornDome.Repository.Cards;
 using CornDome.Repository.Main;
@@ -8,21 +9,47 @@ using System.Security.Claims;
 namespace CornDome.Pages.Dweeble
 {
     [IgnoreAntiforgeryToken]
-    public class IndexModel(IGameRepository gameRepository, ICardRepository cardRepository) : BasePageModel
+    public class IndexModel(IGameRepository gameRepository, ICardRepository cardRepository, ILogEntryRepository logRepository) : BasePageModel
     {
         private const int MaxMistakes = 7;
+        private string CheaterCheckCookie = "CardDweebCC";
+        private string GuestCookie = "CardDweebDailyGuest";
 
         public void OnGet()
         {
+            
+        }
+
+        private bool IsSuspectedCheater()
+        {
+            var hasCookie = Request.Cookies.TryGetValue(CheaterCheckCookie, out var cookie);
+            if (hasCookie && !string.IsNullOrEmpty(cookie))
+            {
+                return cookie == "true";
+            }
+            else
+            {
+                Response.Cookies.Append(
+                    CheaterCheckCookie,
+                    "false",
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        IsEssential = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(1)
+                    }
+                );
+                return false;
+            }
         }
 
         private async Task<string> GetPlayerKeyAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            const string cookieName = "CardDweebDailyGuest";
-
-            var hasGuestCookie = Request.Cookies.TryGetValue(cookieName, out var guestId);
+            var hasGuestCookie = Request.Cookies.TryGetValue(GuestCookie, out var guestId);
             var hasGuestId = Guid.TryParse(guestId, out var parsedGuestId);
 
             // Authenticated user
@@ -52,7 +79,7 @@ namespace CornDome.Pages.Dweeble
                     }
 
                     // Remove the guest cookie after processing.
-                    Response.Cookies.Delete(cookieName);
+                    Response.Cookies.Delete(GuestCookie);
                 }
 
                 return userKey;
@@ -68,7 +95,7 @@ namespace CornDome.Pages.Dweeble
             var newGuestId = Guid.NewGuid().ToString();
 
             Response.Cookies.Append(
-                cookieName,
+                GuestCookie,
                 newGuestId,
                 new CookieOptions
                 {
@@ -82,44 +109,6 @@ namespace CornDome.Pages.Dweeble
 
             return $"guest:{newGuestId}";
         }
-
-        //private string GetPlayerKey()
-        //{
-        //    var userId = User.FindFirstValue(
-        //        ClaimTypes.NameIdentifier
-        //    );
-
-        //    if (User.Identity?.IsAuthenticated == true &&
-        //        !string.IsNullOrWhiteSpace(userId))
-        //    {
-        //        return $"user:{userId}";
-        //    }
-
-        //    const string cookieName = "CardDweebDailyGuest";
-
-        //    if (Request.Cookies.TryGetValue(cookieName, out var guestId) &&
-        //        Guid.TryParse(guestId, out var parsed))
-        //    {
-        //        return $"guest:{parsed}";
-        //    }
-
-        //    var newGuestId = Guid.NewGuid().ToString();
-
-        //    Response.Cookies.Append(
-        //        cookieName,
-        //        newGuestId,
-        //        new CookieOptions
-        //        {
-        //            HttpOnly = true,
-        //            Secure = Request.IsHttps,
-        //            SameSite = SameSiteMode.Lax,
-        //            IsEssential = true,
-        //            Expires = DateTimeOffset.UtcNow.AddYears(1)
-        //        }
-        //    );
-
-        //    return $"guest:{newGuestId}";
-        //}
 
         private async Task<DailyCardGame> GetGameAsync()
         {
@@ -150,7 +139,8 @@ namespace CornDome.Pages.Dweeble
 
             var dailyCard = await gameRepository.GetTodayCardAsync();
 
-            return new JsonResult(BuildResponse(game, dailyCard));
+            var response = await BuildResponse(game, dailyCard);
+            return new JsonResult(response);
         }
 
         public async Task<IActionResult> OnPostGuessFullAsync([FromBody] GuessRequest request)
@@ -172,7 +162,8 @@ namespace CornDome.Pages.Dweeble
 
             await gameRepository.UpdateGameNameGuess(game, card, guess, MaxMistakes);
 
-            return new JsonResult(BuildResponse(game, dailyCard));
+            var response = await BuildResponse(game, dailyCard);
+            return new JsonResult(response);
         }
 
         public async Task<IActionResult> OnPostGuessLetterAsync([FromBody] GuessRequest request)
@@ -198,7 +189,8 @@ namespace CornDome.Pages.Dweeble
             var card = cardRepository.GetCard(game.DailyCard.CardId);
             await gameRepository.UpdateGameLetterGuess(game, card, letter, MaxMistakes);
 
-            return new JsonResult(BuildResponse(game, dailyCard));
+            var response = await BuildResponse(game, dailyCard);
+            return new JsonResult(response);
         }
 
         public async Task<IActionResult> OnPostGuessAttributeAsync([FromBody] GuessRequest request)
@@ -245,7 +237,8 @@ namespace CornDome.Pages.Dweeble
 
             await gameRepository.UpdateGameAttributeGuess(game, card, value, answer, key, MaxMistakes);
 
-            return new JsonResult(BuildResponse(game, dailyCard));
+            var response = await BuildResponse(game, dailyCard);
+            return new JsonResult(response);
         }
 
         private static bool IsInCharacters(char s)
@@ -253,7 +246,7 @@ namespace CornDome.Pages.Dweeble
             return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(s.ToString(), StringComparison.CurrentCultureIgnoreCase);
         }
 
-        private object BuildResponse(DailyCardGame game, DailyCard dailyCard)
+        private async Task<object> BuildResponse(DailyCardGame game, DailyCard dailyCard)
         {
             var card = cardRepository.GetCard(dailyCard.CardId);
 
@@ -282,6 +275,37 @@ namespace CornDome.Pages.Dweeble
                         : '_'
                 ).ToArray()
             );
+
+            var cheaterAlert = !game.IsComplete && IsSuspectedCheater();
+            if (cheaterAlert)
+            {
+                await logRepository.InsertAsync(new LogEntry
+                {
+                    Timestamp = DateTime.Now,
+                    Method = "AntiCheat",
+                    Path = "/Dweeble",
+                    QueryString = "",
+                    StatusCode = StatusCodes.Status418ImATeapot,
+                    DurationMs = 0,
+                    UserName = game.PlayerKey,
+                    RemoteIp = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    UserAgent = HttpContext.Request.Headers.UserAgent.ToString(),
+                    Exception = "Possible cheater detected."
+                });
+
+                Response.Cookies.Append(
+                    "CardDweebCC",
+                    "false",
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        IsEssential = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(1)
+                    }
+                );
+            }
 
             return new
             {
@@ -316,7 +340,7 @@ namespace CornDome.Pages.Dweeble
                     : null,
 
                 // Only expose the actual card name after the game ends.
-                cardName = revealed ? card.Name : null
+                cardName = revealed ? card.Name : null,
             };
         }
 

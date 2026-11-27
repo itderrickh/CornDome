@@ -20,6 +20,29 @@ namespace CornDome.Pages
             Cards = cards;
             Sets = sets;
             CustomCards = customCards;
+
+            CheaterCheck();
+        }
+
+        private void CheaterCheck()
+        {
+            const string cookieName = "CardDweebCC";
+            var hasCookie = Request.Cookies.TryGetValue(cookieName, out var cookie);
+            if (hasCookie && !string.IsNullOrEmpty(cookie))
+            {
+                Response.Cookies.Append(
+                    cookieName,
+                    "true",
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        IsEssential = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(1)
+                    }
+                );
+            }
         }
     }
 }
