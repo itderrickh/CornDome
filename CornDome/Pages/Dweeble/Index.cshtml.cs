@@ -292,19 +292,11 @@ namespace CornDome.Pages.Dweeble
                     UserAgent = HttpContext.Request.Headers.UserAgent.ToString(),
                     Exception = "Possible cheater detected."
                 });
+            }
 
-                Response.Cookies.Append(
-                    "CardDweebCC",
-                    "false",
-                    new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = Request.IsHttps,
-                        SameSite = SameSiteMode.Lax,
-                        IsEssential = true,
-                        Expires = DateTimeOffset.UtcNow.AddDays(1)
-                    }
-                );
+            if (game.IsComplete)
+            {
+                Response.Cookies.Delete("CardDweebCC");
             }
 
             return new
